@@ -11,5 +11,3 @@ $$
 $$
 
 {#eq:id}
-
-{noteText: this is something I want to say in a note}

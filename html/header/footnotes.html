@@ -12,28 +12,62 @@
         text-decoration: none;
         cursor: pointer;
     }
-    .footnote-ref sup{
+    .footnote-ref sup, .eqnRef {
         cursor: pointer;
-        color: blue;
+        color: green !important;
+    }
+    .footnoteTooltip {
+        background-color: #ebebeb;
+        padding: 1rem;
+        border: 1px solid #888;
+        position: absolute;
+        z-index: 1;
+        width: 75%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 2rem;
+        font-size: max(14pt, min(5vw, 1.3rem));
+    }
+    .eqnRef .footnoteTooltip {
+        color: black;
     }
 </style>
 <script>
-    function footnoteOnTooltipClick(id, innerHTML, refId) {
-        innerHTML = innerHTML.replaceAll('@@@', '"')
-        console.log(innerHTML);
+    function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
+        innerHTML = innerHTML.replaceAll('@@@', '"');
         const tooltipEl = document.getElementById(id);
         if (tooltipEl == null) {
             const newEl = document.createElement("span");
             closeEl = document.createElement("div");
             closeEl.classList = ['footnoteTooltipClose'];
             closeEl.innerHTML = '&times;';
-            closeEl.setAttribute("onclick", "removeElById('" + id + "')");
             newEl.appendChild(closeEl);
-            const refEl = document.getElementById(refId);
-            refEl.appendChild(newEl);
+            if (typeof(refElOrId) === 'string'){
+                closeEl.setAttribute("onclick", "removeElById('" + id + "')");
+                document.getElementById(refElOrId).appendChild(newEl);
+            } else {
+                closeEl.onclick = () => removeElById(id);
+                refElOrId.append(newEl);
+            }
             newEl.id = id;
             newEl.innerHTML += innerHTML;
             newEl.classList = ['footnoteTooltip'];
+            for (numEl of newEl.getElementsByClassName('eqnos-number')){
+                numEl.remove();
+            }
+            if (!!origId) {
+                seeOrigEl = document.createElement('a');
+                seeOrigEl.setAttribute('href', '#' + origId);
+                seeOrigEl.innerHTML = 'jump to';
+                seeOrigEl.style.fontSize = '1rem';
+                seeOrigEl.style.float = 'right';
+                seeOrigEl.onclick = () => {
+                    backEl = document.getElementById('back#' + origId + 'Arrow');
+                    backEl.style.display = 'inline';
+                    backEl.setAttribute('href', '#' + id)
+                }
+                newEl.appendChild(seeOrigEl);
+            }
         } else {
             tooltipEl.remove();
         }

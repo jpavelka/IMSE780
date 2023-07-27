@@ -38,18 +38,6 @@
         font-size: max(12pt, min(1.1rem, 5.5vw));
         text-align: center;
     }
-    .footnoteTooltip {
-        background-color: #ebebeb;
-        padding: 1rem;
-        border: 1px solid #888;
-        position: absolute;
-        z-index: 1;
-        width: 75%;
-        left: 50%;
-        transform: translateX(-50%);
-        margin-top: 2rem;
-        font-size: max(14pt, min(5vw, 1.3rem));
-    }
     a {
         color: blue;
     }
@@ -75,6 +63,12 @@
 </style>
 <script>
     window.onload = () => {
+        addRefsToToc();
+        eqRefExpandLinksAndAddTooltips();
+        addRefTooltips();
+        addFootnoteTooltips();
+    }
+    addRefsToToc = () => {
         liEl = document.createElement('li');
         aEl = document.createElement('a');
         aEl.href = '#References';
@@ -82,5 +76,66 @@
         ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
         liEl.appendChild(aEl);
         ulEl.appendChild(liEl);
+    }
+    addTooltips = (els, includeLinkBacks) => {
+        for (el of els) {
+            refId = el.getAttribute('href');
+            refEl = document.getElementById(refId.slice(1));
+            el.setAttribute('href', '#');
+            el.classList = ['eqnRef'];
+            nextEl = document.createElement('span');
+            el.parentNode.insertBefore(nextEl, el.nextSibling);
+            popupId = refId + 'popup' + el.getBoundingClientRect().left + el.getBoundingClientRect().right;
+            elId = popupId + 'Ref';
+            nextEl.id = elId;
+            ((a, b, c, d, e) => {
+                a.onclick = () => {
+                    footnoteOnTooltipClick(b, c, d, e);
+                    return false
+                };                
+            })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+            if (includeLinkBacks) {
+                backId = 'back' + refId;
+                backEl = document.getElementById(backId);
+                if (!!!backEl) {
+                    backEl = document.createElement('div');
+                    backEl.id = backId;
+                    backArrowEl = document.createElement('a');
+                    backArrowEl.id = backId + 'Arrow';
+                    backArrowEl.innerHTML = "↩︎";
+                    backArrowEl.style.float = 'right';
+                    backArrowEl.style.display = 'none';
+                    backEl.onclick = () => backEl.style.display = 'none';
+                    backEl.appendChild(backArrowEl);
+                    refEl.appendChild(backEl);
+                }
+            }
+        }
+    }
+    eqRefExpandLinksAndAddTooltips = () => {
+        els = document.querySelectorAll('[href^="\#eq:"]');
+        addTooltips(els, true)
+        for (const el of els) {
+            sib = el.previousSibling;
+            sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '')
+            prevWord = sibTextSplit[sibTextSplit.length - 1];
+            if (['eq.', 'Equation'].includes(prevWord)){
+                repS = RegExp(`${prevWord}[^a-zA-Z]$`)
+                el.innerHTML = prevWord + ' ' + el.innerHTML;
+                sib.textContent = sib.textContent.replace(repS, '');
+            }
+        }
+    }
+    addRefTooltips = () => {
+        els = document.getElementById('main').getElementsByClassName('citation');
+        addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+    }
+    addFootnoteTooltips = () => {
+        for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
+            fnBack.remove();
+        }
+        els = document.getElementById('main').getElementsByClassName('footnote-ref');
+        addTooltips([...els], false);
+        document.getElementById('footnotes').remove();
     }
 </script>
