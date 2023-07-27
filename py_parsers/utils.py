@@ -111,8 +111,7 @@ def html_post_process(text):
         if re.search('^</nav>$', s):
             text[i] += '\n<div id="main" onclick="closeNavIfSmall()">'
     text = add_citations_header(text)
-    text = add_hover_footnotes(text)
-    return text
+    return '\n'.join(text)
 
 
 def add_citations_header(text_lines):
@@ -121,42 +120,3 @@ def add_citations_header(text_lines):
             text_lines.insert(i, '<h1 id="References">References</h1>')
             break
     return text_lines
-
-
-def add_hover_footnotes(text_lines):
-    final_lines = []
-    removed_lines = []
-    in_footnotes = False
-    for line in text_lines:
-        if in_footnotes:
-            if re.search('^</section>$', line.strip()):
-                in_footnotes = False
-            removed_lines.append(line)
-            continue
-        if re.search('<section id="footnotes"', line):
-            in_footnotes = True
-            removed_lines.append(line)
-            continue
-        final_lines += [line]
-    text = '\n'.join(final_lines)
-    removed_text = ' '.join(removed_lines)
-    matches = re.findall(
-        '<a href=[^<]*class="footnote-ref"[^<]*><sup>[^<]*</sup></a>', text)
-    for match in matches:
-        id = match.split('href="#')[-1].split('"')[0]
-        ref_id = match.split('id="')[-1].split('"')[0]
-        li_str = f'<li id="{id}">'
-        hover_text = '<p>'.join('<a'.join(re.findall(
-            f'{li_str}.*?(?=<\/li>)', removed_text)[0].split('<a')[:-1]).split('<p>')[1:])
-        hover_text = f'<b>Footnote {id[2:]}:</b> ' + hover_text
-        hover_id = f'{id}Hover'
-        match_replace_list = match.split('</sup>')
-        match_replace_list.insert(1, '</sup>')
-        match_replace = ''.join(match_replace_list)
-        match_replace = re.sub('^<a', '<span', match_replace)
-        match_replace = re.sub('a>$', 'span>', match_replace)
-        match_replace = re.sub(f'href="#{id}" ', '', match_replace)
-        match_replace = re.sub(
-            f'<sup>', f"""<sup onclick="footnoteOnTooltipClick('{hover_id}', '{hover_text.replace('"', '@@@')}', '{ref_id}')">""", match_replace)
-        text = text.replace(match, match_replace)
-    return text

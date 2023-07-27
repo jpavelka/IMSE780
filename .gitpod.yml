@@ -7,4 +7,6 @@ tasks:
       mkdir /workspace/bin
       cp /usr/bin/pandoc /workspace/bin/pandoc
       python -m pip install pandoc-fignos pandoc-eqnos pandoc-tablenos pandoc-secnos
-    command: export PATH=/workspace/bin:${PATH}
+    command: |
+      export PATH=/workspace/bin:${PATH}
+      echo 'export PATH=/workspace/bin:${PATH}' >> ~/.bashrc
