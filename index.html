@@ -347,28 +347,62 @@
           text-decoration: none;
           cursor: pointer;
       }
-      .footnote-ref sup{
+      .footnote-ref sup, .eqnRef {
           cursor: pointer;
-          color: blue;
+          color: green !important;
+      }
+      .footnoteTooltip {
+          background-color: #ebebeb;
+          padding: 1rem;
+          border: 1px solid #888;
+          position: absolute;
+          z-index: 1;
+          width: 75%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 2rem;
+          font-size: max(14pt, min(5vw, 1.3rem));
+      }
+      .eqnRef .footnoteTooltip {
+          color: black;
       }
   </style>
   <script>
-      function footnoteOnTooltipClick(id, innerHTML, refId) {
-          innerHTML = innerHTML.replaceAll('@@@', '"')
-          console.log(innerHTML);
+      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
+          innerHTML = innerHTML.replaceAll('@@@', '"');
           const tooltipEl = document.getElementById(id);
           if (tooltipEl == null) {
               const newEl = document.createElement("span");
               closeEl = document.createElement("div");
               closeEl.classList = ['footnoteTooltipClose'];
               closeEl.innerHTML = '&times;';
-              closeEl.setAttribute("onclick", "removeElById('" + id + "')");
               newEl.appendChild(closeEl);
-              const refEl = document.getElementById(refId);
-              refEl.appendChild(newEl);
+              if (typeof(refElOrId) === 'string'){
+                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
+                  document.getElementById(refElOrId).appendChild(newEl);
+              } else {
+                  closeEl.onclick = () => removeElById(id);
+                  refElOrId.append(newEl);
+              }
               newEl.id = id;
               newEl.innerHTML += innerHTML;
               newEl.classList = ['footnoteTooltip'];
+              for (numEl of newEl.getElementsByClassName('eqnos-number')){
+                  numEl.remove();
+              }
+              if (!!origId) {
+                  seeOrigEl = document.createElement('a');
+                  seeOrigEl.setAttribute('href', '#' + origId);
+                  seeOrigEl.innerHTML = 'jump to';
+                  seeOrigEl.style.fontSize = '1rem';
+                  seeOrigEl.style.float = 'right';
+                  seeOrigEl.onclick = () => {
+                      backEl = document.getElementById('back#' + origId + 'Arrow');
+                      backEl.style.display = 'inline';
+                      backEl.setAttribute('href', '#' + id)
+                  }
+                  newEl.appendChild(seeOrigEl);
+              }
           } else {
               tooltipEl.remove();
           }
@@ -418,18 +452,6 @@
           font-size: max(12pt, min(1.1rem, 5.5vw));
           text-align: center;
       }
-      .footnoteTooltip {
-          background-color: #ebebeb;
-          padding: 1rem;
-          border: 1px solid #888;
-          position: absolute;
-          z-index: 1;
-          width: 75%;
-          left: 50%;
-          transform: translateX(-50%);
-          margin-top: 2rem;
-          font-size: max(14pt, min(5vw, 1.3rem));
-      }
       a {
           color: blue;
       }
@@ -455,6 +477,12 @@
   </style>
   <script>
       window.onload = () => {
+          addRefsToToc();
+          eqRefExpandLinksAndAddTooltips();
+          addRefTooltips();
+          addFootnoteTooltips();
+      }
+      addRefsToToc = () => {
           liEl = document.createElement('li');
           aEl = document.createElement('a');
           aEl.href = '#References';
@@ -462,6 +490,67 @@
           ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
           liEl.appendChild(aEl);
           ulEl.appendChild(liEl);
+      }
+      addTooltips = (els, includeLinkBacks) => {
+          for (el of els) {
+              refId = el.getAttribute('href');
+              refEl = document.getElementById(refId.slice(1));
+              el.setAttribute('href', '#');
+              el.classList = ['eqnRef'];
+              nextEl = document.createElement('span');
+              el.parentNode.insertBefore(nextEl, el.nextSibling);
+              popupId = refId + 'popup' + el.getBoundingClientRect().left + el.getBoundingClientRect().right;
+              elId = popupId + 'Ref';
+              nextEl.id = elId;
+              ((a, b, c, d, e) => {
+                  a.onclick = () => {
+                      footnoteOnTooltipClick(b, c, d, e);
+                      return false
+                  };                
+              })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+              if (includeLinkBacks) {
+                  backId = 'back' + refId;
+                  backEl = document.getElementById(backId);
+                  if (!!!backEl) {
+                      backEl = document.createElement('div');
+                      backEl.id = backId;
+                      backArrowEl = document.createElement('a');
+                      backArrowEl.id = backId + 'Arrow';
+                      backArrowEl.innerHTML = "↩︎";
+                      backArrowEl.style.float = 'right';
+                      backArrowEl.style.display = 'none';
+                      backEl.onclick = () => backEl.style.display = 'none';
+                      backEl.appendChild(backArrowEl);
+                      refEl.appendChild(backEl);
+                  }
+              }
+          }
+      }
+      eqRefExpandLinksAndAddTooltips = () => {
+          els = document.querySelectorAll('[href^="\#eq:"]');
+          addTooltips(els, true)
+          for (const el of els) {
+              sib = el.previousSibling;
+              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '')
+              prevWord = sibTextSplit[sibTextSplit.length - 1];
+              if (['eq.', 'Equation'].includes(prevWord)){
+                  repS = RegExp(`${prevWord}[^a-zA-Z]$`)
+                  el.innerHTML = prevWord + ' ' + el.innerHTML;
+                  sib.textContent = sib.textContent.replace(repS, '');
+              }
+          }
+      }
+      addRefTooltips = () => {
+          els = document.getElementById('main').getElementsByClassName('citation');
+          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+      }
+      addFootnoteTooltips = () => {
+          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
+              fnBack.remove();
+          }
+          els = document.getElementById('main').getElementsByClassName('footnote-ref');
+          addTooltips([...els], false);
+          document.getElementById('footnotes').remove();
       }
   </script>
   <script defer=""
@@ -556,8 +645,8 @@ Additionally, I encourage students to use the textbook <em>Introduction
 to Operations Research</em> <span class="citation"
 data-cites="classText">(<a href="#ref-classText"
 role="doc-biblioref">Hillier and Lieberman 2021</a>)</span> as a
-reference<span class="footnote-ref" id="fnref1"
-role="doc-noteref"><sup onclick="footnoteOnTooltipClick('fn1Hover', '<b>Footnote 1:</b> The most recent version of this textbook is the 11th edition, which came out in 2021. I’m actually working from a 10th edition copy from 2015. Nothing about the course will require you to have a certain edition, or any book at all. But I think it’s a very useful reference.', 'fnref1')">1</sup></span>. The syllabus, assignments, and
+reference<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>. The syllabus, assignments, and
 other course materials may be found via the <a
 href="https://k-state.instructure.com/">class Canvas site</a>.</p>
 <h1 data-number="2" id="introduction"><span
@@ -584,8 +673,8 @@ optimal or near-optimal solutions to decision-making problems.</p>
 </blockquote>
 <p>Right. So the practice of OR involves using mathematical techniques
 to find the best decision possible in a given situation (“optimal” is
-just fancy way of saying “best”<span class="footnote-ref"
-id="fnref2" role="doc-noteref"><sup onclick="footnoteOnTooltipClick('fn2Hover', '<b>Footnote 2:</b> The pedant in me wants to point out that this word “optimal” is horribly misused in conversation fairly regularly, in the common misguided phrase “more optimal”. As I mentioned, “optimal” really just means “best”, and “best” is not on a sliding scale; either you have the best answer or you don’t. One choice can’t be “more best” than another, just as one solution can’t be “more optimal” than another. I think I’m fighting a losing battle on this, but maybe for the sake of this course we can all agree to never put the words “more” and “optimal” next to each other? Thanks.', 'fnref2')">2</sup></span>).</p>
+just fancy way of saying “best”<a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a>).</p>
 <h2 data-number="2.2" id="can-you-give-me-some-examples"><span
 class="header-section-number">2.2</span> Can you give me some
 examples?</h2>
@@ -611,9 +700,9 @@ the simple, relatable exposition, paired with the fact that it is
 actually quite computationally challenging. And yet despite the
 challenges, modern methods are able to solve problem instances where the
 number of cities is in the 10,000s! The image below shows the optimal
-tour through selected cities in the continental US<span href="#fn3"
+tour through selected cities in the continental US<a href="#fn3"
 class="footnote-ref" id="fnref3"
-role="doc-noteref"><sup onclick="footnoteOnTooltipClick('fn3Hover', '<b>Footnote 3:</b> You can tell from the image that this map is pretty old. <a href=@@@https://www.math.uwaterloo.ca/tsp/usa50/@@@>The site from which it came</a> tells a neat story about how this instance was solved, by hand, way back in 1954! There are some other interesting bits there too, well worth a read in my opinion.', 'fnref3')">3</sup></span>.</p>
+role="doc-noteref"><sup>3</sup></a>.</p>
 <figure>
 <img
 src="https://www.math.uwaterloo.ca/tsp/usa50/img/newsweek_medium.jpg"
@@ -706,12 +795,6 @@ form:</p>
 &amp;&amp;x&amp;\geq0
 \end{align*}
 </span><span class="eqnos-number">(1)</span></span></p>
-<details>
-<summary>
-Note
-</summary>
-this is something I want to say in a note
-</details>
 <h1 data-number="5" id="integer-programming"><span
 class="header-section-number">5</span> Integer Programming</h1>
 <p>An integer program is an optimization problem with form <a
@@ -731,6 +814,34 @@ href="https://www.math.uwaterloo.ca/tsp/"
 class="uri">https://www.math.uwaterloo.ca/tsp/</a>.
 </div>
 </div>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The most recent version of this textbook is the 11th
+edition, which came out in 2021. I’m actually working from a 10th
+edition copy from 2015. Nothing about the course will require you to
+have a certain edition, or any book at all. But I think it’s a very
+useful reference.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The pedant in me wants to point out that this word
+“optimal” is horribly misused in conversation fairly regularly, in the
+common misguided phrase “more optimal”. As I mentioned, “optimal” really
+just means “best”, and “best” is not on a sliding scale; either you have
+the best answer or you don’t. One choice can’t be “more best” than
+another, just as one solution can’t be “more optimal” than another. I
+think I’m fighting a losing battle on this, but maybe for the sake of
+this course we can all agree to never put the words “more” and “optimal”
+next to each other? Thanks.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>You can tell from the image that this map is pretty old.
+<a href="https://www.math.uwaterloo.ca/tsp/usa50/">The site from which
+it came</a> tells a neat story about how this instance was solved, by
+hand, way back in 1954! There are some other interesting bits there too,
+well worth a read in my opinion.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 </div>
 </body>
 </html>
