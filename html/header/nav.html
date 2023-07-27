@@ -1,0 +1,122 @@
+<!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+<style>
+    nav#TOC:nth-child(2) {
+        margin-top: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+    }
+    nav#TOC li {
+        list-style-type: none;
+    }
+    nav#TOC li {
+        margin-left: -20pt;
+    }
+    nav#TOC > ul {
+        padding-left: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    nav#TOC {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #ebebeb;
+        overflow-x: hidden;
+        padding-top: 1rem;
+        transition: 0.5s;
+        overflow-y: auto;
+    }
+    nav#TOC a {
+        text-decoration: none;
+        font-size: max(14pt, min(5vw, 1.3rem));
+        color: #000;
+        display: block;
+        transition: 0.3s;
+        padding-top: 0.2rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 1pt solid lightgray;
+    }
+    nav#TOC a:hover {
+        color: #888;
+    }
+    #tocTop {
+        height: 1.5em;
+        display: flex;
+        justify-content: space-between;
+        padding-top: 0.5rem;
+        padding-bottom: 0.95rem;
+        position: fixed;
+        top: 0;
+        visibility: hidden;
+        background-color: #ebebeb;
+        z-index: 1;
+        border-bottom: 1pt solid gray;
+    }
+    .tocHeader {
+        font-size: max(14pt, min(1.5rem, 5vw));
+        padding-left: 0.5rem;
+    }
+    .closeBtn {
+        font-size: 36px !important;
+        margin-right: 2rem;
+        margin-top: -0.5rem;
+        border: none !important;
+    }
+    #main {
+        transition: margin-left .5s;
+        padding: 20px;
+    }
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        font-size: max(14pt, min(5vw, 1.3rem));
+        background-color: #ebebeb;
+        width: 100%;
+        border-bottom: 1pt solid gray;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        z-index: 1;
+    }
+    @media screen and (max-height: 450px) {
+        .sidenav {
+            padding-top: 15px;
+        }
+
+        .sidenav a {
+            font-size: 18px;
+        }
+    }
+</style>
+<script>
+    function openNav() {
+        document.getElementById("TOC").style.width = "min(45%, 250px)";
+        document.getElementById("main").style.marginLeft = "calc(min(45%, 250px) / 2)";
+        document.getElementById("tocTop").style.width = "min(45%, 250px)";
+        document.getElementById("tocTop").style.visibility = "visible";
+        setTimeout(() => {
+            if (isTight()){
+                document.getElementById("main").style.marginLeft = 0;
+            }
+        }, 300)
+    }
+    function closeNav() {
+        document.getElementById("TOC").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        document.getElementById("tocTop").style.visibility = "hidden";
+    }
+    function isTight() {
+        const mainLeft = document.getElementById('main').getBoundingClientRect().left
+        const tocRight = document.getElementById('TOC').getBoundingClientRect().right
+        return tocRight - mainLeft > 40
+    }
+    function closeNavIfSmall() {
+        if (isTight()){
+            closeNav()
+        }
+    }
+</script>

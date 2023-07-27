@@ -1,0 +1,45 @@
+<style>
+    .footnoteTooltipClose {
+        color: #222;
+        float: right;
+        font-size: 36px;
+        font-weight: bold;
+        margin-top: -1.5rem;
+        margin-right: -0.5rem;
+    }
+    .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .footnote-ref sup{
+        cursor: pointer;
+        color: blue;
+    }
+</style>
+<script>
+    function footnoteOnTooltipClick(id, innerHTML, refId) {
+        innerHTML = innerHTML.replaceAll('@@@', '"')
+        console.log(innerHTML);
+        const tooltipEl = document.getElementById(id);
+        if (tooltipEl == null) {
+            const newEl = document.createElement("span");
+            closeEl = document.createElement("div");
+            closeEl.classList = ['footnoteTooltipClose'];
+            closeEl.innerHTML = '&times;';
+            closeEl.setAttribute("onclick", "removeElById('" + id + "')");
+            newEl.appendChild(closeEl);
+            const refEl = document.getElementById(refId);
+            refEl.appendChild(newEl);
+            newEl.id = id;
+            newEl.innerHTML += innerHTML;
+            newEl.classList = ['footnoteTooltip'];
+        } else {
+            tooltipEl.remove();
+        }
+        
+    }
+    function removeElById(id) {
+        document.getElementById(id).remove();
+    }
+</script>
