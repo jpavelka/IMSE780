@@ -1,7 +1,7 @@
 <style>
     #main {
-        font-size: max(14pt, min(1.5rem, 5vw));
-        width: max(min(80%, 20rem), calc(100% - min(45%, 250px) - 1rem));
+        font-size: max(15pt, min(1.4rem, 4vw));
+        width: min(max(min(90%, 20rem), calc(100% - min(50%, 300px) - 1rem)), 850px);
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
@@ -94,6 +94,28 @@
         addRefTooltips();
         addFootnoteTooltips();
         addCodeCopyButtons();
+        tocIndentHelp();
+    }
+    tocIndentHelp = () => {
+        for (el of document.querySelectorAll('#TOC a')){
+            if ([...el.classList].includes('closeBtn')) {
+                continue
+            }
+            parentEl = el.parentNode;
+            numUlsNested = 0;
+            while (!!parentEl){
+                numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
+                parentEl = parentEl.parentNode
+            }
+            innerHTML = el.innerHTML;
+            el.innerHTML = '';
+            newEl = document.createElement('div');
+            newEl.innerHTML = innerHTML;
+            newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
+            newEl.style.display = 'flex';
+            newEl.innerHTML = innerHTML;
+            el.appendChild(newEl);
+        }
     }
     addCodeCopyButtons = () => {
         buttonAddFunc = () => {
