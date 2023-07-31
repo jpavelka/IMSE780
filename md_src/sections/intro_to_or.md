@@ -16,7 +16,7 @@ Right. So the practice of OR involves using mathematical techniques to find the 
 
 [^moreOptimal]: The pedant in me wants to point out that this word "optimal" is horribly misused in conversation fairly regularly, in the common misguided phrase "more optimal". As I mentioned, "optimal" really just means "best", and "best" is not on a sliding scale; either you have the best answer or you don't. One choice can't be "more best" than another, just as one solution can't be "more optimal" than another. I think I'm fighting a losing battle on this, but maybe for the sake of this course we can all agree to never put the words "more" and "optimal" next to each other? Thanks.
 
-## Can you give me some examples?
+## Example OR problems
 
 The above definitions were great, but maybe it's feeling a little too abstract at this point. Fair enough. Let's outline a few common problems in the OR space.
 
@@ -40,20 +40,52 @@ You have some money to invest, and a list of potential project/assets to invest 
 
 ## OR in practice
 
-So we've given a few broad classes of OR problems, but maybe this is still too abstract. Let's get to real applications. Are people actually using OR out in the wild? Do these methods make a difference? In this section I'll point you to some real-life case studies where OR methods have been used to great effect.
+So we've given a few broad classes of OR problems, but maybe this is still too abstract. You'd probably like some concrete examples, instances where OR is used in the real world.
 
-### Textbook case studies
+### Origins of OR
+
+We'll come to the present day soon, but let's start with a (brief) history lesson. Most sources trace the beginning of OR back to early 1900s and the two World Wars. This _research_ on military _operations_ is where the discipline's name is derived. Here's how @classText explains it:
+
+> The roots of OR can be traced back many decades, when early attempts were made to
+> use a scientific approach in the management of organizations. However, the beginning of
+> the activity called operations research has generally been attributed to the military services
+> early in World War II. Because of the war effort, there was an urgent need to allocate scarce
+> resources to the various military operations and to the activities within each operation in an
+> effective manner. Therefore, the British and then the U.S. military management called
+> upon a large number of scientists to apply a scientific approach to dealing with this and
+> other strategic and tactical problems. In effect, they were asked to do _research_ on (military)
+> _operations_. These teams of scientists were the first OR teams. By developing effective
+> methods of using the new tool of radar, these teams were instrumental in winning the Air Battle
+> of Britain. Through their research on how to better manage convoy and antisubmarine
+> operations, they also played a major role in winning the Battle of the North Atlantic. Similar
+> efforts assisted the Island Campaign in the Pacific.
+
+After the war, these techniques were adopted by industry as well. As the sheer scale of organizations began to grow, so did the potential benefit of the optimized systems brought by OR methodologies. And techniques and (especially) computing power improved, the types and scale of problems that were tackled continued to grow. Today almost all major corporations benefit from OR.
+
+### Case studies
 
 Your textbook handily comes chock full of case studies explaining how companies have used OR to inform their decision-making. Below I've copied part of the summary table. Check out the book to get more background on anything that piques your interest.
 
 ![Selected OR case studies [@classText]](images/or-case-studies.png)
 
-It's pretty staggering to look at the Annual Savings figures, which taken together sum to the billions. OR is an enormously valuable tool.
+It's pretty staggering to look at the figures in the "Annual Savings" column, which taken together sum to the billions. OR is an enormously valuable tool.
 
 ### Edelman Prize
 
 Now, admittedly, some of those case studies are a little stale. But don't fret, OR is still relevant in industry today. The [Institute for Operations Research and Management Science (INFORMS)](https://www.informs.org/) annually gives an award called the Edelman Prize for the best application of OR methodologies in industry. You can take a look at the [program for the 2023 edition of the award](https://3449182.fs1.hubspotusercontent-na1.net/hubfs/3449182/2023_Edelman_Gala_Book.pdf) and find cases submitted by names like DHL, Huawei, Lyft, and the winner Walmart.
 
-## A brief history of OR
+## Topics we'll cover[^thisMayChange]
 
-## Topics we'll cover
+[^thisMayChange]: Note that we are early in the semester, so some of this may be subject to change.
+
+My main goal for this course is for you to be able to apply the methods we learn. We will apply our knowledge using various packages written for the Python programming language. While this is not a programming course, I realize some of you may have limited (or no) knowledge of the language, thus I've provided a small unit on the basics of the language. But if you are a true beginner this may not suffice, and you may need to spend time on your own to get comfortable with it.
+
+After that, we will jump into the first big success in Operations Research history, Linear Programming. We'll learn about the basics of these models, a little history, and a few ways to solve them (with special emphasis on the simplex method). We'll also touch on the theory of duality and sensitivity analysis.
+
+After Linear Programming comes its cousin, Integer Programming. As far as solving techniques, we'll focus on Branch-and-Bound. Since Integer Programming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
+
+Next will be several topics in Nonlinear Programming where we will talk about convexity, optimality conditions, and selected solution procedures.
+
+We will also include a section on Stochastic Processes, where we will cover topics in Markov chains, queueing theory, and perhaps Markov Decision Processes.
+
+There are a few other topics on my mind (dynamic programming, network models) that I may decide to cover depending on time and class interest.

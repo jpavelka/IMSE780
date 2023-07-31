@@ -1,7 +1,7 @@
 <style>
     #main {
-        font-size: max(14pt, min(1.5rem, 5vw));
-        width: max(min(80%, 20rem), calc(100% - min(45%, 250px) - 1rem));
+        font-size: max(15pt, min(1.4rem, 4vw));
+        width: min(max(min(90%, 20rem), calc(100% - min(50%, 300px) - 1rem)), 850px);
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
@@ -17,6 +17,11 @@
     }
     blockquote {
         margin: 1rem 0.5rem;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        border-left: 2px solid #e6e6e6;
+        border-right: 2px solid #e6e6e6;
+        color: #444;
     }
     blockquote p {
         background-color: #ebebeb;
@@ -60,13 +65,97 @@
     *[role="doc-biblioref"] {
         color: green !important;
     }
+    div.sourceCode {
+        background-color: #dfdfdf;
+        padding: 0.5rem;
+        border: 1pt solid black;
+        font-size: max(12pt, min(1.1rem, 5.5vw));
+    }
+    .copyButton {
+        float: right;
+        cursor: pointer;
+    }
+    @keyframes fade {
+        0%,100% { opacity: 0 }
+        15% { opacity: 1 }
+        85% { opacity: 1 }
+    }
+    .copyMessage {
+        position: absolute;
+        transform: translate(-2rem, -2.8rem);
+        width: 4rem;
+        font-size: max(10pt, min(0.7rem, 4vw));
+        text-align: center;
+        background-color: #eee;
+        border: 1pt solid black;
+        border-radius: 0.25rem;
+        animation: fade 2s linear;
+    }
 </style>
 <script>
     window.onload = () => {
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
-        addRefTooltips();
+        citeRefExpandLinksAndAddTooltips();
         addFootnoteTooltips();
+        addCodeCopyButtons();
+        tocIndentHelp();
+    }
+    tocIndentHelp = () => {
+        for (el of document.querySelectorAll('#TOC a')){
+            if ([...el.classList].includes('closeBtn')) {
+                continue
+            }
+            parentEl = el.parentNode;
+            numUlsNested = 0;
+            while (!!parentEl){
+                numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
+                parentEl = parentEl.parentNode
+            }
+            innerHTML = el.innerHTML;
+            el.innerHTML = '';
+            newEl = document.createElement('div');
+            newEl.innerHTML = innerHTML;
+            newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
+            newEl.style.display = 'flex';
+            newEl.innerHTML = innerHTML;
+            el.appendChild(newEl);
+        }
+    }
+    addCodeCopyButtons = () => {
+        buttonAddFunc = () => {
+            copyButtons = document.querySelectorAll('.copyButton');
+            wide = 700;
+            if (copyButtons.length > 0) {
+                if (window.innerWidth < wide) {
+                    for (cb of copyButtons){
+                        cb.remove();
+                    }
+                }
+            } else {
+                if (window.innerWidth >= wide) {
+                    for (el of document.querySelectorAll('div.sourceCode')){
+                        copyEl = document.createElement('span');
+                        el.insertBefore(copyEl, el.firstChild);
+                        copyEl.innerHTML = '📋';
+                        copyEl.classList = ['copyButton'];
+                        ((el, copyEl) => {
+                            copyEl.onclick = () => {
+                                text = el.getElementsByTagName('pre')[0].textContent;
+                                navigator.clipboard.writeText(text);
+                                infoEl = document.createElement('div');
+                                infoEl.textContent = 'Copied!';
+                                infoEl.classList = ['copyMessage']
+                                copyEl.appendChild(infoEl);
+                                setTimeout(() => infoEl.remove(), 2000);
+                            };
+                        })(el, copyEl)
+                    }
+                }
+            }
+        }
+        buttonAddFunc();
+        window.addEventListener("resize", buttonAddFunc);
     }
     addRefsToToc = () => {
         liEl = document.createElement('li');
@@ -126,9 +215,19 @@
             }
         }
     }
-    addRefTooltips = () => {
+    citeRefExpandLinksAndAddTooltips = () => {
         els = document.getElementById('main').getElementsByClassName('citation');
         addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+        for (el of els) {
+            textContent = el.textContent;
+            el.getElementsByTagName('a')[0].textContent = textContent;
+            for (childEl of el.childNodes) {
+                console.log(childEl.tagName)
+                if (!!!childEl.tagName) {
+                    childEl.textContent = '';
+                }
+            }
+        }
     }
     addFootnoteTooltips = () => {
         for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {

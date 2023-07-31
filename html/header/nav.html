@@ -1,18 +1,19 @@
 <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
 <style>
     nav#TOC:nth-child(2) {
-        margin-top: 1rem;
+        margin-top: 0.6rem;
         box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
     }
     nav#TOC li {
         list-style-type: none;
     }
-    nav#TOC li {
-        margin-left: -20pt;
-    }
     nav#TOC > ul {
-        padding-left: 1.5rem;
-        margin-bottom: 3rem;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+        line-height: 1.7rem;
+    }
+    #TOC ul {
+        padding-left: 0;
     }
     nav#TOC {
         height: 100%;
@@ -29,7 +30,7 @@
     }
     nav#TOC a {
         text-decoration: none;
-        font-size: max(14pt, min(5vw, 1.3rem));
+        font-size: max(15pt, min(1.3rem, 4vw));
         color: #000;
         display: block;
         transition: 0.3s;
@@ -39,6 +40,9 @@
     }
     nav#TOC a:hover {
         color: #888;
+    }
+    #TOC .toc-section-number::after {
+        content: ':\00a0'
     }
     #tocTop {
         height: 1.5em;
@@ -54,7 +58,7 @@
         border-bottom: 1pt solid gray;
     }
     .tocHeader {
-        font-size: max(14pt, min(1.5rem, 5vw));
+        font-size: max(15pt, min(1.3rem, 4vw));
         padding-left: 0.5rem;
     }
     .closeBtn {
@@ -72,7 +76,7 @@
         top: 0;
         left: 0;
         right: 0;
-        font-size: max(14pt, min(5vw, 1.3rem));
+        font-size: max(15pt, min(1.3rem, 4vw));
         background-color: #ebebeb;
         width: 100%;
         border-bottom: 1pt solid gray;
@@ -94,9 +98,11 @@
 </style>
 <script>
     function openNav() {
-        document.getElementById("TOC").style.width = "min(45%, 250px)";
-        document.getElementById("main").style.marginLeft = "calc(min(45%, 250px) / 2)";
-        document.getElementById("tocTop").style.width = "min(45%, 250px)";
+        document.getElementById("TOC").style.width = "min(50%, 300px)";
+        if (window.innerWidth >= 700){
+            document.getElementById("main").style.marginLeft = "calc(min(50%, 300px) / 2)";
+        }
+        document.getElementById("tocTop").style.width = "min(50%, 300px)";
         document.getElementById("tocTop").style.visibility = "visible";
         setTimeout(() => {
             if (isTight()){

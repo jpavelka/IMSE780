@@ -7,6 +7,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dest_ftype', default='html')
     parser.add_argument('--dest_fname', default='converted')
+    parser.add_argument('--update_gists', default=False, action='store_true')
     args = parser.parse_args()
     text = Path('md_src/src.md').read_text()
-    py_parse(text, args.dest_ftype, args.dest_fname)
+    py_parse(text, args.dest_ftype, args.dest_fname, args.update_gists)
