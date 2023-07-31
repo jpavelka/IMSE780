@@ -198,18 +198,19 @@
   <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
   <style>
       nav#TOC:nth-child(2) {
-          margin-top: 1rem;
+          margin-top: 0.6rem;
           box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
       }
       nav#TOC li {
           list-style-type: none;
       }
-      nav#TOC li {
-          margin-left: -20pt;
-      }
       nav#TOC > ul {
-          padding-left: 1.5rem;
-          margin-bottom: 3rem;
+          margin-bottom: 1.5rem;
+          margin-top: 1.5rem;
+          line-height: 1.7rem;
+      }
+      #TOC ul {
+          padding-left: 0;
       }
       nav#TOC {
           height: 100%;
@@ -226,7 +227,7 @@
       }
       nav#TOC a {
           text-decoration: none;
-          font-size: max(14pt, min(5vw, 1.3rem));
+          font-size: max(15pt, min(1.3rem, 4vw));
           color: #000;
           display: block;
           transition: 0.3s;
@@ -236,6 +237,9 @@
       }
       nav#TOC a:hover {
           color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
       }
       #tocTop {
           height: 1.5em;
@@ -251,7 +255,7 @@
           border-bottom: 1pt solid gray;
       }
       .tocHeader {
-          font-size: max(14pt, min(1.5rem, 5vw));
+          font-size: max(15pt, min(1.3rem, 4vw));
           padding-left: 0.5rem;
       }
       .closeBtn {
@@ -269,7 +273,7 @@
           top: 0;
           left: 0;
           right: 0;
-          font-size: max(14pt, min(5vw, 1.3rem));
+          font-size: max(15pt, min(1.3rem, 4vw));
           background-color: #ebebeb;
           width: 100%;
           border-bottom: 1pt solid gray;
@@ -291,9 +295,11 @@
   </style>
   <script>
       function openNav() {
-          document.getElementById("TOC").style.width = "min(45%, 250px)";
-          document.getElementById("main").style.marginLeft = "calc(min(45%, 250px) / 2)";
-          document.getElementById("tocTop").style.width = "min(45%, 250px)";
+          document.getElementById("TOC").style.width = "min(50%, 300px)";
+          if (window.innerWidth >= 700){
+              document.getElementById("main").style.marginLeft = "calc(min(50%, 300px) / 2)";
+          }
+          document.getElementById("tocTop").style.width = "min(50%, 300px)";
           document.getElementById("tocTop").style.visibility = "visible";
           setTimeout(() => {
               if (isTight()){
@@ -361,7 +367,7 @@
           left: 50%;
           transform: translateX(-50%);
           margin-top: 2rem;
-          font-size: max(14pt, min(5vw, 1.3rem));
+          font-size: max(15pt, min(1.3rem, 4vw));
       }
       .eqnRef .footnoteTooltip {
           color: black;
@@ -414,8 +420,8 @@
   </script>
   <style>
       #main {
-          font-size: max(14pt, min(1.5rem, 5vw));
-          width: max(min(80%, 20rem), calc(100% - min(45%, 250px) - 1rem));
+          font-size: max(15pt, min(1.4rem, 4vw));
+          width: min(max(min(90%, 20rem), calc(100% - min(50%, 300px) - 1rem)), 850px);
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
@@ -431,6 +437,11 @@
       }
       blockquote {
           margin: 1rem 0.5rem;
+          padding-left: 0.5em;
+          padding-right: 0.5em;
+          border-left: 2px solid #e6e6e6;
+          border-right: 2px solid #e6e6e6;
+          color: #444;
       }
       blockquote p {
           background-color: #ebebeb;
@@ -474,13 +485,97 @@
       *[role="doc-biblioref"] {
           color: green !important;
       }
+      div.sourceCode {
+          background-color: #dfdfdf;
+          padding: 0.5rem;
+          border: 1pt solid black;
+          font-size: max(12pt, min(1.1rem, 5.5vw));
+      }
+      .copyButton {
+          float: right;
+          cursor: pointer;
+      }
+      @keyframes fade {
+          0%,100% { opacity: 0 }
+          15% { opacity: 1 }
+          85% { opacity: 1 }
+      }
+      .copyMessage {
+          position: absolute;
+          transform: translate(-2rem, -2.8rem);
+          width: 4rem;
+          font-size: max(10pt, min(0.7rem, 4vw));
+          text-align: center;
+          background-color: #eee;
+          border: 1pt solid black;
+          border-radius: 0.25rem;
+          animation: fade 2s linear;
+      }
   </style>
   <script>
       window.onload = () => {
           addRefsToToc();
           eqRefExpandLinksAndAddTooltips();
-          addRefTooltips();
+          citeRefExpandLinksAndAddTooltips();
           addFootnoteTooltips();
+          addCodeCopyButtons();
+          tocIndentHelp();
+      }
+      tocIndentHelp = () => {
+          for (el of document.querySelectorAll('#TOC a')){
+              if ([...el.classList].includes('closeBtn')) {
+                  continue
+              }
+              parentEl = el.parentNode;
+              numUlsNested = 0;
+              while (!!parentEl){
+                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
+                  parentEl = parentEl.parentNode
+              }
+              innerHTML = el.innerHTML;
+              el.innerHTML = '';
+              newEl = document.createElement('div');
+              newEl.innerHTML = innerHTML;
+              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
+              newEl.style.display = 'flex';
+              newEl.innerHTML = innerHTML;
+              el.appendChild(newEl);
+          }
+      }
+      addCodeCopyButtons = () => {
+          buttonAddFunc = () => {
+              copyButtons = document.querySelectorAll('.copyButton');
+              wide = 700;
+              if (copyButtons.length > 0) {
+                  if (window.innerWidth < wide) {
+                      for (cb of copyButtons){
+                          cb.remove();
+                      }
+                  }
+              } else {
+                  if (window.innerWidth >= wide) {
+                      for (el of document.querySelectorAll('div.sourceCode')){
+                          copyEl = document.createElement('span');
+                          el.insertBefore(copyEl, el.firstChild);
+                          copyEl.innerHTML = '📋';
+                          copyEl.classList = ['copyButton'];
+                          ((el, copyEl) => {
+                              copyEl.onclick = () => {
+                                  text = el.getElementsByTagName('pre')[0].textContent;
+                                  navigator.clipboard.writeText(text);
+                                  infoEl = document.createElement('div');
+                                  infoEl.textContent = 'Copied!';
+                                  infoEl.classList = ['copyMessage']
+                                  copyEl.appendChild(infoEl);
+                                  setTimeout(() => infoEl.remove(), 2000);
+                              };
+                          })(el, copyEl)
+                      }
+                  }
+              }
+          }
+          buttonAddFunc();
+          window.addEventListener("resize", buttonAddFunc);
       }
       addRefsToToc = () => {
           liEl = document.createElement('li');
@@ -540,9 +635,19 @@
               }
           }
       }
-      addRefTooltips = () => {
+      citeRefExpandLinksAndAddTooltips = () => {
           els = document.getElementById('main').getElementsByClassName('citation');
           addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+          for (el of els) {
+              textContent = el.textContent;
+              el.getElementsByTagName('a')[0].textContent = textContent;
+              for (childEl of el.childNodes) {
+                  console.log(childEl.tagName)
+                  if (!!!childEl.tagName) {
+                      childEl.textContent = '';
+                  }
+              }
+          }
       }
       addFootnoteTooltips = () => {
           for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
@@ -597,29 +702,28 @@ class="toc-section-number">2</span> Introduction</a>
 id="toc-what-is-operations-research"><span
 class="toc-section-number">2.1</span> What is Operations
 Research?</a></li>
-<li><a href="#can-you-give-me-some-examples"
-id="toc-can-you-give-me-some-examples"><span
-class="toc-section-number">2.2</span> Can you give me some
-examples?</a></li>
+<li><a href="#example-or-problems" id="toc-example-or-problems"><span
+class="toc-section-number">2.2</span> Example OR problems</a></li>
 <li><a href="#or-in-practice" id="toc-or-in-practice"><span
 class="toc-section-number">2.3</span> OR in practice</a></li>
-<li><a href="#a-brief-history-of-or"
-id="toc-a-brief-history-of-or"><span
-class="toc-section-number">2.4</span> A brief history of OR</a></li>
-<li><a href="#topics-well-cover" id="toc-topics-well-cover"><span
-class="toc-section-number">2.5</span> Topics we’ll cover</a></li>
+<li><a href="#topics-well-coverthismaychange"
+id="toc-topics-well-coverthismaychange"><span
+class="toc-section-number">2.4</span> Topics we’ll cover</a></li>
 </ul></li>
-<li><a href="#the-python-programming-language"
-id="toc-the-python-programming-language"><span
-class="toc-section-number">3</span> The Python programming language</a>
+<li><a href="#programming-with-python"
+id="toc-programming-with-python"><span
+class="toc-section-number">3</span> Programming with Python</a>
 <ul>
 <li><a href="#google-colab-notebooks"
 id="toc-google-colab-notebooks"><span
 class="toc-section-number">3.1</span> Google Colab notebooks</a></li>
 <li><a href="#some-python-basics" id="toc-some-python-basics"><span
 class="toc-section-number">3.2</span> Some python basics</a></li>
+<li><a href="#other-coding-environments"
+id="toc-other-coding-environments"><span
+class="toc-section-number">3.3</span> Other coding environments</a></li>
 <li><a href="#more-references" id="toc-more-references"><span
-class="toc-section-number">3.3</span> More references</a></li>
+class="toc-section-number">3.4</span> More references</a></li>
 </ul></li>
 <li><a href="#sec:lp" id="toc-sec:lp"><span
 class="toc-section-number">4</span> Linear Programming</a></li>
@@ -675,9 +779,8 @@ optimal or near-optimal solutions to decision-making problems.</p>
 to find the best decision possible in a given situation (“optimal” is
 just fancy way of saying “best”<a href="#fn2" class="footnote-ref"
 id="fnref2" role="doc-noteref"><sup>2</sup></a>).</p>
-<h2 data-number="2.2" id="can-you-give-me-some-examples"><span
-class="header-section-number">2.2</span> Can you give me some
-examples?</h2>
+<h2 data-number="2.2" id="example-or-problems"><span
+class="header-section-number">2.2</span> Example OR problems</h2>
 <p>The above definitions were great, but maybe it’s feeling a little too
 abstract at this point. Fair enough. Let’s outline a few common problems
 in the OR space.</p>
@@ -735,12 +838,44 @@ still likely generating a good profit?</p>
 <h2 data-number="2.3" id="or-in-practice"><span
 class="header-section-number">2.3</span> OR in practice</h2>
 <p>So we’ve given a few broad classes of OR problems, but maybe this is
-still too abstract. Let’s get to real applications. Are people actually
-using OR out in the wild? Do these methods make a difference? In this
-section I’ll point you to some real-life case studies where OR methods
-have been used to great effect.</p>
-<h3 data-number="2.3.1" id="textbook-case-studies"><span
-class="header-section-number">2.3.1</span> Textbook case studies</h3>
+still too abstract. You’d probably like some concrete examples,
+instances where OR is used in the real world.</p>
+<h3 data-number="2.3.1" id="origins-of-or"><span
+class="header-section-number">2.3.1</span> Origins of OR</h3>
+<p>We’ll come to the present day soon, but let’s start with a (brief)
+history lesson. Most sources trace the beginning of OR back to early
+1900s and the two World Wars. This <em>research</em> on military
+<em>operations</em> is where the discipline’s name is derived. Here’s
+how <span class="citation" data-cites="classText">Hillier and Lieberman
+(<a href="#ref-classText" role="doc-biblioref">2021</a>)</span> explains
+it:</p>
+<blockquote>
+<p>The roots of OR can be traced back many decades, when early attempts
+were made to use a scientific approach in the management of
+organizations. However, the beginning of the activity called operations
+research has generally been attributed to the military services early in
+World War II. Because of the war effort, there was an urgent need to
+allocate scarce resources to the various military operations and to the
+activities within each operation in an effective manner. Therefore, the
+British and then the U.S. military management called upon a large number
+of scientists to apply a scientific approach to dealing with this and
+other strategic and tactical problems. In effect, they were asked to do
+<em>research</em> on (military) <em>operations</em>. These teams of
+scientists were the first OR teams. By developing effective methods of
+using the new tool of radar, these teams were instrumental in winning
+the Air Battle of Britain. Through their research on how to better
+manage convoy and antisubmarine operations, they also played a major
+role in winning the Battle of the North Atlantic. Similar efforts
+assisted the Island Campaign in the Pacific.</p>
+</blockquote>
+<p>After the war, these techniques were adopted by industry as well. As
+the sheer scale of organizations began to grow, so did the potential
+benefit of the optimized systems brought by OR methodologies. And
+techniques and (especially) computing power improved, the types and
+scale of problems that were tackled continued to grow. Today almost all
+major corporations benefit from OR.</p>
+<h3 data-number="2.3.2" id="case-studies"><span
+class="header-section-number">2.3.2</span> Case studies</h3>
 <p>Your textbook handily comes chock full of case studies explaining how
 companies have used OR to inform their decision-making. Below I’ve
 copied part of the summary table. Check out the book to get more
@@ -752,11 +887,11 @@ alt="Selected OR case studies (Hillier and Lieberman 2021)" />
 class="citation" data-cites="classText">(<a href="#ref-classText"
 role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
 </figure>
-<p>It’s pretty staggering to look at the Annual Savings figures, which
-taken together sum to the billions. OR is an enormously valuable
-tool.</p>
-<h3 data-number="2.3.2" id="edelman-prize"><span
-class="header-section-number">2.3.2</span> Edelman Prize</h3>
+<p>It’s pretty staggering to look at the figures in the “Annual Savings”
+column, which taken together sum to the billions. OR is an enormously
+valuable tool.</p>
+<h3 data-number="2.3.3" id="edelman-prize"><span
+class="header-section-number">2.3.3</span> Edelman Prize</h3>
 <p>Now, admittedly, some of those case studies are a little stale. But
 don’t fret, OR is still relevant in industry today. The <a
 href="https://www.informs.org/">Institute for Operations Research and
@@ -766,24 +901,78 @@ You can take a look at the <a
 href="https://3449182.fs1.hubspotusercontent-na1.net/hubfs/3449182/2023_Edelman_Gala_Book.pdf">program
 for the 2023 edition of the award</a> and find cases submitted by names
 like DHL, Huawei, Lyft, and the winner Walmart.</p>
-<h2 data-number="2.4" id="a-brief-history-of-or"><span
-class="header-section-number">2.4</span> A brief history of OR</h2>
-<h2 data-number="2.5" id="topics-well-cover"><span
-class="header-section-number">2.5</span> Topics we’ll cover</h2>
-<h1 data-number="3" id="the-python-programming-language"><span
-class="header-section-number">3</span> The Python programming
-language</h1>
+<h2 data-number="2.4" id="topics-well-coverthismaychange"><span
+class="header-section-number">2.4</span> Topics we’ll cover<a
+href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></h2>
+<p>My main goal for this course is for you to be able to apply the
+methods we learn. We will apply our knowledge using various packages
+written for the Python programming language. While this is not a
+programming course, I realize some of you may have limited (or no)
+knowledge of the language, thus I’ve provided a small unit on the basics
+of the language. But if you are a true beginner this may not suffice,
+and you may need to spend time on your own to get comfortable with
+it.</p>
+<p>After that, we will jump into the first big success in Operations
+Research history, Linear Programming. We’ll learn about the basics of
+these models, a little history, and a few ways to solve them (with
+special emphasis on the simplex method). We’ll also touch on the theory
+of duality and sensitivity analysis.</p>
+<p>After Linear Programming comes its cousin, Integer Programming. As
+far as solving techniques, we’ll focus on Branch-and-Bound. Since
+Integer Programming is so powerful, we will spend significant time
+talking about how to model these problems, and how to set them up and
+solve them with Python.</p>
+<p>Next will be several topics in Nonlinear Programming where we will
+talk about convexity, optimality conditions, and selected solution
+procedures.</p>
+<p>We will also include a section on Stochastic Processes, where we will
+cover topics in Markov chains, queueing theory, and perhaps Markov
+Decision Processes.</p>
+<p>There are a few other topics on my mind (dynamic programming, network
+models) that I may decide to cover depending on time and class
+interest.</p>
+<h1 data-number="3" id="programming-with-python"><span
+class="header-section-number">3</span> Programming with Python</h1>
+<p>A main focus of the course is to show you how to model and solve
+real-world problems. In order to do that, you’ll need some programming
+abilities. <a href="https://www.python.org/">Python</a> is a great
+choice for this since it is widely-used and relatively easy to learn.
+You may have some experience with Python already, which is great! If
+you’ve never used Python before, don’t worry. We’ll spend a little time
+on the basics here, and we won’t require you to do much out of the
+ordinary. Beginners will want to get some more practice outside of
+class.</p>
 <h2 data-number="3.1" id="google-colab-notebooks"><span
 class="header-section-number">3.1</span> Google Colab notebooks</h2>
-<p>https://colab.google/</p>
+<p>You can code Python in many different environments, but I think the
+easiest way to get started is with <a
+href="https://colab.google/">Google Colab</a>. This is a <a
+href="https://jupyter.org/">Jupyter</a>-like<a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>
+notebook environment that is free to use and requires only a web
+browser. I’ll be using this in class to go through coding examples. Note
+that you’ll do need a Google account in order to use Colab<a href="#fn6"
+class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a>.</p>
+<p>In Colab (and other notebook environments) code is organized into
+cells where related blocks of code are written. You can execute code one
+cell at a time to work through the notebook and check outputs as you go.
+I’ll use a Colab notebook in the next section to walk through some
+basics of Python.</p>
 <h2 data-number="3.2" id="some-python-basics"><span
 class="header-section-number">3.2</span> Some python basics</h2>
-<h3 data-number="3.2.1" id="something"><span
-class="header-section-number">3.2.1</span> something</h3>
-<h3 data-number="3.2.2" id="something-else"><span
-class="header-section-number">3.2.2</span> something else</h3>
-<h2 data-number="3.3" id="more-references"><span
-class="header-section-number">3.3</span> More references</h2>
+<p>Below, you should see a read-only image of a Colab notebook. The
+notebook gives some exposition and samples of basic Python principles.
+Click the “Open in Colab” button to open a version of the notebook in a
+new window.</p>
+<iframe src="https://gist.github.com/dcd6305c13b79bbdba7c49dc5c76d3c7.pibb" style="width: 100%; height: 500px; border: 0;">
+</iframe>
+<h2 data-number="3.3" id="other-coding-environments"><span
+class="header-section-number">3.3</span> Other coding environments</h2>
+<p>jupyter, vscode, pycharm, gitpod, google cloud ide.</p>
+<h2 data-number="3.4" id="more-references"><span
+class="header-section-number">3.4</span> More references</h2>
 <h1 data-number="4" id="sec:lp"><span
 class="header-section-number">4</span> Linear Programming</h1>
 <p>A linear program is an optimization problem of the following
@@ -839,6 +1028,17 @@ role="doc-backlink">↩︎</a></p></li>
 it came</a> tells a neat story about how this instance was solved, by
 hand, way back in 1954! There are some other interesting bits there too,
 well worth a read in my opinion.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Note that we are early in the semester, so some of this
+may be subject to change.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>It’s not exactly like Jupyter, but the same in spirit.
+Also, don’t worry if you don’t know about Jupyter or coding notebooks
+yet.<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>This shouldn’t be a huge hurdle. If you don’t have one
+already you can always create a burner account for the sake of the
+class.<a href="#fnref6" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
