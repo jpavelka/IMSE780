@@ -7,11 +7,12 @@ from pathlib import Path
 from py_parsers import utils
 
 
-def py_parse(text, dest_ftype, dest_fname):
+def py_parse(text, dest_ftype, dest_fname, update_gists):
     text = utils.add_sections(text)
     text = utils.youtube_embed(text, dest_ftype)
     text = utils.alter_eq_refs(text)
     text = utils.format_notes(text, dest_ftype)
+    text = utils.colab_gist(text, update_gists=update_gists)
     fpath = Path(tempfile.gettempdir()) / 'IMSE780.md'
     fpath.write_text(text)
     final_fpath = Path(f'converted/{dest_fname}.{dest_ftype}')

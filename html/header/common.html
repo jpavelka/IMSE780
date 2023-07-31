@@ -17,6 +17,11 @@
     }
     blockquote {
         margin: 1rem 0.5rem;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        border-left: 2px solid #e6e6e6;
+        border-right: 2px solid #e6e6e6;
+        color: #444;
     }
     blockquote p {
         background-color: #ebebeb;
@@ -91,7 +96,7 @@
     window.onload = () => {
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
-        addRefTooltips();
+        citeRefExpandLinksAndAddTooltips();
         addFootnoteTooltips();
         addCodeCopyButtons();
         tocIndentHelp();
@@ -210,9 +215,19 @@
             }
         }
     }
-    addRefTooltips = () => {
+    citeRefExpandLinksAndAddTooltips = () => {
         els = document.getElementById('main').getElementsByClassName('citation');
         addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+        for (el of els) {
+            textContent = el.textContent;
+            el.getElementsByTagName('a')[0].textContent = textContent;
+            for (childEl of el.childNodes) {
+                console.log(childEl.tagName)
+                if (!!!childEl.tagName) {
+                    childEl.textContent = '';
+                }
+            }
+        }
     }
     addFootnoteTooltips = () => {
         for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {

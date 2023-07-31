@@ -2,6 +2,39 @@ import os
 import re
 from pathlib import Path
 
+from .gh_gist import update_colab_gist
+
+
+def pandoc_convert(fpath, dest_fpath):
+    fpath = Path(fpath)
+    dest_fpath = Path(dest_fpath)
+    dest_ftype = dest_fpath.suffix[1:]
+    os.system('pandoc citations.bibtex -s -f bibtex -t markdown > citations.md')
+    cmds = [
+        'pandoc',
+        '-s {}'.format(fpath),
+        '-o {}'.format(dest_fpath),
+        '--toc',
+        '--toc-depth 2',
+        '--number-sections',
+        '--filter pandoc-xnos',
+        '--citeproc citations.md',
+        '-M link-citations=true'
+    ]
+    if dest_ftype == 'html':
+        cmds += [
+            '--katex=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/',
+            '--metadata pagetitle="{}"'.format(fpath.stem),
+        ]
+        for fname in os.listdir('html/header'):
+            cmds.append('--include-in-header=html/header/' + fname)
+        for fname in os.listdir('html/before-body'):
+            cmds.append('--include-before-body=html/before-body/' + fname)
+        for fname in os.listdir('html/after-body'):
+            cmds.append('--include-after-body=html/after-body/' + fname)
+    cmd = ' '.join(cmds)
+    os.system(' '.join(cmds))
+
 
 def add_sections(text):
     text = text.split('\n')
@@ -71,37 +104,6 @@ def format_notes(text, dest_ftype):
     return '\n'.join(text)
 
 
-def pandoc_convert(fpath, dest_fpath):
-    fpath = Path(fpath)
-    dest_fpath = Path(dest_fpath)
-    dest_ftype = dest_fpath.suffix[1:]
-    os.system('pandoc citations.bibtex -s -f bibtex -t markdown > citations.md')
-    cmds = [
-        'pandoc',
-        '-s {}'.format(fpath),
-        '-o {}'.format(dest_fpath),
-        '--toc',
-        '--toc-depth 2',
-        '--number-sections',
-        '--filter pandoc-xnos',
-        '--citeproc citations.md',
-        '-M link-citations=true'
-    ]
-    if dest_ftype == 'html':
-        cmds += [
-            '--katex=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/',
-            '--metadata pagetitle="{}"'.format(fpath.stem),
-        ]
-        for fname in os.listdir('html/header'):
-            cmds.append('--include-in-header=html/header/' + fname)
-        for fname in os.listdir('html/before-body'):
-            cmds.append('--include-before-body=html/before-body/' + fname)
-        for fname in os.listdir('html/after-body'):
-            cmds.append('--include-after-body=html/after-body/' + fname)
-    cmd = ' '.join(cmds)
-    os.system(' '.join(cmds))
-
-
 def html_post_process(text):
     text = text.split('\n')
     for i, s in enumerate(text):
@@ -120,3 +122,19 @@ def add_citations_header(text_lines):
             text_lines.insert(i, '<h1 id="References">References</h1>')
             break
     return text_lines
+
+
+def colab_gist(text, update_gists):
+    matches = re.findall('{colabGist:[^,]*,[^,]*,[^\}]*}', text)
+    for match in matches:
+        colab_id, gist_id, fname = match.split(':')[-1].split(',')
+        fname = fname[:-1]
+        new = (
+            f'<iframe src="https://gist.github.com/{gist_id}.pibb" '
+            'style="width: 100%; height: 500px; border: 0;"></iframe>'
+        )
+        text = text.replace(match, new)
+        if update_gists:
+            update_colab_gist(colab_id=colab_id,
+                              gist_id=gist_id, gist_fname=fname)
+    return text
