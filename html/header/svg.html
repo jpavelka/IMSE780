@@ -1,31 +1,52 @@
 <style>
-    .drawSvg {
+    .lpDraw {
         position: relative;
         left: 50%;
         transform: translateX(-50%);
     }
 </style>
 <script>
+    const baseLps = {
+        prototypeLp: {
+            xMin: -1,
+            xMax: 8.99,
+            yMin: -1,
+            yMax: 10.99,
+            ineqs: [[3, 2, 18, "l"], [1, 0, 4, "l"], [0, 2, 12, "l"]],
+            ineqTextPlaces: [[5, 2.5], [2.25, 8], [6, 6.9]]
+        }
+    }
     const drawPlot = (svg) => {
-        const xMin = svg.getAttribute('xmin');
-        const xMax = svg.getAttribute('xmax');
-        const yMin = svg.getAttribute('ymin');
-        const yMax = svg.getAttribute('ymax');
-        const showVertices = ['yes', 'y', 'true', 't'].includes(svg.getAttribute('showvertices').toLowerCase());
-        const ineqs = JSON.parse(svg.getAttribute('ineqs'));
-        const ineqTextPlaces = JSON.parse(svg.getAttribute('ineqtextplaces'));
+        svgId = 'svg' + Date.now();
+        svg.id = svgId;
+        parentDiv = document.createElement('div');
+        svg.parentNode.insertBefore(parentDiv, svg);
+        parentDiv.appendChild(svg);
+        const args = { ...baseLps[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))}
+        const xMin = args['xMin'];
+        const xMax = args['xMax'];
+        const yMin = args['yMin'];
+        const yMax = args['yMax'];
+        const ineqs = args['ineqs'];
+        const ineqTextPlaces = args['ineqTextPlaces'];
+        const showVertices = ['yes', 'y', 'true', 't'].includes((args['showVertices'] || 'n').toLowerCase());
+        const choosePoints = args['choosePoints'] || false;
+        const extraEqns = args['extraEqns'] || [];
         const w = svg.getAttribute('width');
         const h = svg.getAttribute('height');
         const leq = String.fromCharCode(8804);
         const geq = String.fromCharCode(8805);
-        // const x1Str = 'x' + String.fromCharCode(8321);  // subscripts not showing on some browsers
-        // const x2Str = 'x' + String.fromCharCode(8322);
-        const x1Str = 'x1';
-        const x2Str = 'x2';
         const coordToPix = (xCoord, yCoord) => {
             xPix = w * (xCoord - xMin) / (xMax - xMin);
             yPix = h - h * (yCoord - yMin) / (yMax - yMin);
             return [xPix, yPix]
+        }
+        const unitPixToCoordX = (xMax - xMin) / w;
+        const unitPixToCoordY = (yMax - yMin) / h;
+        const pixToCoord = (xPix, yPix) => {
+            xCoord = xPix * ((xMax - xMin) / w) + xMin;
+            yCoord = (yPix - h) * (-(yMax - yMin) / h) + yMin;
+            return [xCoord, yCoord]
         }
         const lineBetweenCoords = (x1, y1, x2, y2, style) => {
             el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -48,24 +69,42 @@
             }
             svg.appendChild(txt);
         }
+        const addMathText = (math, x, y, attrs) => {
+            forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+            mathEl = document.createElement('span');
+            katex.render(math, mathEl, {
+                throwOnError: false
+            });
+            forObj.setAttribute('x', x);
+            forObj.setAttribute('y', y);
+            attrs['height'] = attrs['height'] || '1rem'
+            attrs['width'] = attrs['width'] || '10rem'
+            for (const [k, v] of Object.entries(attrs || {})){
+                forObj.setAttribute(k, v);
+            }
+            forObj.appendChild(mathEl);
+            svg.appendChild(forObj);
+        }
         const drawEqns = () => {
+            style = 'stroke:#777'
             for ([xCoef, yCoef, rhs] of ineqs) {
                 if (xCoef === 0) {
-                    lineBetweenCoords(0, rhs / yCoef, xMax, rhs / yCoef);
+                    lineBetweenCoords(0, rhs / yCoef, xMax, rhs / yCoef, style);
                 } else if (yCoef === 0) {
-                    lineBetweenCoords(rhs / xCoef, 0, rhs / xCoef, yMax);
+                    lineBetweenCoords(rhs / xCoef, 0, rhs / xCoef, yMax, style);
                 } else {
-                    lineBetweenCoords(0, rhs / yCoef, rhs / xCoef, 0);
+                    lineBetweenCoords(0, rhs / yCoef, rhs / xCoef, 0, style);
                 }
             }
         }
         const drawTickMarks = () => {
             xTick = 0
+            style = {'font-size': '10pt', 'font-family': 'KaTeX_Main,Times New Roman,serif'}
             while (xTick <= xMax) {
                 if (xTick >= 0) {
                     lineBetweenCoords(xTick, 0, xTick, (yMax - yMin) / 30);
                     [xText, yText] = coordToPix(xTick, -(yMax - yMin) / 30);
-                    addText(xTick, xText - 4, yText + 4, {'font-size': '10pt'});
+                    addText(xTick, xText - 4, yText + 4, style);
                     xTick += 1;
                 }
             }
@@ -74,10 +113,28 @@
                 if (yTick >= 0) {
                     lineBetweenCoords(0, yTick, (xMax - xMin) / 30, yTick);
                     [xText, yText] = coordToPix(-(xMax - xMin) / 30, yTick);
-                    addText(yTick, xText - 4, yText + 4, {'font-size': '10pt'});
+                    addText(yTick, xText - 4, yText + 4, style);
                     yTick += 1;
                 }
             }
+        }
+        const isFeasible = (x, y) => {
+            allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
+            let feasible = true;
+            for ([xCoef, yCoef, rhs, sense] of allIneqs) {
+                if (sense === "l") {
+                    if (x * xCoef + y * yCoef > rhs) {
+                            feasible = false;
+                            break;
+                    }
+                } else {
+                    if (x * xCoef + y * yCoef < rhs) {
+                            feasible = false;
+                            break;
+                    }
+                }
+            }
+            return feasible
         }
         const getVertices = () => {
             let intersections = [];
@@ -99,21 +156,7 @@
                 }
                 let vertices = []
                 for ([x, y, i, j] of intersections) {
-                    let good = true;
-                    for ([xCoef, yCoef, rhs, sense] of allIneqs) {
-                        if (sense === "l") {
-                            if (x * xCoef + y * yCoef > rhs) {
-                                    good = false;
-                                    break;
-                            }
-                        } else {
-                            if (x * xCoef + y * yCoef < rhs) {
-                                    good = false;
-                                    break;
-                            }
-                        }
-                    }
-                    if (good) {
+                    if (isFeasible(x, y)) {
                         vertices.push([x, y, i, j]);
                     }
                 }
@@ -135,59 +178,123 @@
                 }
             return orderedVertexIndices.map(i => vertices[i].slice(0, 2))
         }
-        const shadeFeasibleRegion = (vertices) => {
-            poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-            poly.setAttribute('points', vertices.map(v => coordToPix(...v)).join(' '));
-            poly.setAttribute('style', "fill:#ddd;stroke:black");
+        const polygonFromPoints = (points, attrs) => {
+            const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            poly.setAttribute('points', points.map(v => coordToPix(...v)).join(' '));
+            for (const [k, v] of Object.entries(attrs || {})){
+                poly.setAttribute(k, v);
+            }
             svg.appendChild(poly);
-            const xWeighted = vertices.map(v => v[0]).reduce((a, b) => a + b) / vertices.length
-            const yWeighted = vertices.map(v => v[1]).reduce((a, b) => a + b) / vertices.length
+        }
+        const shadeFeasibleRegion = (vertices) => {
+            polygonFromPoints(vertices, {'style': "fill:#ddd;stroke:black"})
+            const xWeighted = vertices.map(v => v[0]).reduce((a, b) => a + b) / vertices.length;
+            const yWeighted = vertices.map(v => v[1]).reduce((a, b) => a + b) / vertices.length;
             const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
             addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
             addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
         }
+        const placePoint = (x, y, attrs) => {
+            circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const [xPix, yPix] = coordToPix(x, y);
+            circ.setAttribute('cx', xPix);
+            circ.setAttribute('cy', yPix);
+            circ.setAttribute('r', 3.5);
+            for (const [k, v] of Object.entries(attrs || {})){
+                circ.setAttribute(k, v);
+            }
+            svg.appendChild(circ);
+        }
         const plotVertices = (vertices) => {
             for ([x, y] of vertices) {
-                circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                const [xPix, yPix] = coordToPix(x, y);
-                circ.setAttribute('cx', xPix);
-                circ.setAttribute('cy', yPix);
-                circ.setAttribute('r', 3.5);
-                svg.appendChild(circ);
+                placePoint(x, y);
             }
         }
         const drawAxes = () => {
-            const fontStyle = {'font-size': '12pt', 'font-weight': 'bold', 'font-style': 'italic'};
-            [xLabelPix, yLabelPix] = coordToPix(xMax, 0.25);
-            addText(x1Str, xLabelPix - 22, yLabelPix, fontStyle);
-            [xLabelPix, yLabelPix] = coordToPix(0.25, yMax);
-            addText(x2Str, xLabelPix, yLabelPix + 15, fontStyle);
+            const fontStyle = {'font-size': '12pt', 'font-family': 'KaTeX_Main,Times New Roman,serif'};
             lineBetweenCoords(0, 0, xMax, 0);
+            xDiff = 10 * unitPixToCoordX
+            yDiff = 4 * unitPixToCoordY
+            polygonFromPoints([[xMax, 0], [xMax - xDiff, yDiff], [xMax - xDiff, -yDiff]], {'style': "fill:black;stroke:black"});
+            [xLabelPix, yLabelPix] = coordToPix(Math.ceil(xMax) - 0.5, 0);
+            addMathText('x_1', xLabelPix, yLabelPix, fontStyle);
+            [xLabelPix, yLabelPix] = coordToPix(0, Math.ceil(yMax) - 0.5);
+            addMathText('x_2', xLabelPix - 24, yLabelPix - 20, fontStyle);
             lineBetweenCoords(0, 0, 0, yMax);
-            }
+            xDiff = 4 * unitPixToCoordX
+            yDiff = 10 * unitPixToCoordY
+            polygonFromPoints([[0, yMax], [xDiff, yMax - yDiff], [-xDiff, yMax - yDiff]], {'style': "fill:black;stroke:black"});
+        }
         const labelIneqs = () => {
             for (i in ineqTextPlaces) {
                 ineq = ineqs[i];
                 ineqText = ''
-                ineqText += ineq[0] === 0 ? '' : (ineq[0] == 1 ? '' : ineq[0]) + x1Str
-                ineqText += ineq[1] === 0 ? '' : (ineqText === '' ? '' : ' + ') + (ineq[1] == 1 ? '' : ineq[1]) + x2Str
+                ineqText += ineq[0] === 0 ? '' : (ineq[0] == 1 ? '' : ineq[0]) + 'x_1'
+                ineqText += ineq[1] === 0 ? '' : (ineqText === '' ? '' : ' + ') + (ineq[1] == 1 ? '' : ineq[1]) + 'x_2'
                 ineqText += ' ' + (ineq[3] === 'l' ? leq : geq) + ' ' + ineq[2];
-                fontStyle = {'font-style': 'italic', 'font-weight': 'bold', 'font-size': '12pt'}
-                addText(ineqText, ...coordToPix(...ineqTextPlaces[i]), fontStyle);
+                fontStyle = {'font-size': '12pt'}
+                addMathText(ineqText, ...coordToPix(...ineqTextPlaces[i]), fontStyle);
             }
         }
         const vertices = getVertices();
         drawEqns();
-        labelIneqs(ineqs, ineqTextPlaces)
+        labelIneqs();
         shadeFeasibleRegion(vertices);
         drawTickMarks();
         if (showVertices){
             plotVertices(vertices);
         }
         drawAxes();
+        if (choosePoints) {
+            pointChooseDiv = document.createElement('div');
+            pointChooseDiv.classList = ['pointChooseDiv'];
+            parentDiv.appendChild(pointChooseDiv);
+            input1 = document.createElement('input');
+            label1 = document.createElement('label');
+            label1.classList = ['pointChooseLabel']
+            katex.render('x_1', label1, {throwOnError: false});
+            input2 = document.createElement('input');
+            input2.id = svgId = 'input2'
+            label2 = document.createElement('label');
+            label2.classList = ['pointChooseLabel'];
+            katex.render('x_2', label2, {throwOnError: false});
+            input2.setAttribute('type', 'number');
+            for (inputEl of [input1, input2]) {
+                inputEl.setAttribute('type', 'number');
+                inputEl.setAttribute('min', 0);
+                inputEl.classList = ['pointChooseInput'];
+            }
+            input1.setAttribute('max', Math.floor(xMax));
+            input2.setAttribute('max', Math.floor(yMax));
+            inputChangeFunc = () => {
+                if (input1.value == parseFloat(input1.value) && input2.value == parseFloat(input2.value)){
+                    pointId = svgId + 'placedPoint';
+                    pointEl = document.getElementById(pointId);
+                    if (!!pointEl) {
+                        pointEl.remove();
+                    }
+                    color = isFeasible(input1.value, input2.value) ? 'black' : 'red'
+                    placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
+                }
+            }
+            input1.addEventListener("change", inputChangeFunc);
+            input2.addEventListener("change", inputChangeFunc);
+            svg.onclick = (e) => {                
+                let rect = svg.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                [xPix, yPix] = pixToCoord(x, y);
+                input1.value = Math.round(10 * xPix) / 10;
+                input2.value = Math.round(10 * yPix) / 10;
+                inputChangeFunc();
+            }
+            for (el of [label1, input1, label2, input2]) {
+                pointChooseDiv.appendChild(el);
+            }
+        }
     }
     const drawAllSvgPlots = () => {
-        for (svgEl of document.querySelectorAll('svg.drawSvg')){
+        for (svgEl of document.querySelectorAll('svg.lpDraw')){
             drawPlot(svgEl)
         }
     }

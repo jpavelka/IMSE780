@@ -61,19 +61,21 @@ Lastly, we know that $x_1$ and $x_2$ cannot be negative (there is no way to prod
 
 $$
 \begin{align*}
-\max              && 3x_1 && + && 5x_2 && &&\\
-\text{subject to} && x_1  &&   &&      && \leq && 4  \\
-                  &&      &&   && 2x_2 && \leq && 12 \\
-                  && 3x_1 && + && 2x_2 && \leq && 18 \\
-                  &&      &&   && x_1,x_2 && \geq && 0
+\max        && 3x_1 + 5x_2 & \\
+\text{s.t.} && x_1 & \leq \ \ 4  \\
+            && 2x_2 & \leq 12 \\
+            && 3x_1 + 2x_2 & \leq 18 \\
+            && x_1,x_2 & \geq \ \ 0
 \end{align*}
 $$
 
 {#eq:prototypeLp}
 
+(In this formulation and going forward, we use "s.t." as a shorthand for "subject to" leading into the constraints section.)
+
 ## LP terminology
 
-With this example in hand, let's get back to some definitions. The **decision variables** are the quantities we're deciding how to set. In +@eq:prototypeLp these are $x_1$ and $x_2$. The **objective** is the value we'd like to optimize, which in the example is the profit equation $Z = 3x_1 + 5x_2$. The **constraints** are the limitations on how we set the decision variables, which in this case is everything after the "subject to". Notice that the final constraint, $x_1,x_2\geq0$, is really two constraints so this is a abusing notation a bit. But these types of constraints (called _variable bound_ constraints, or in this case _nonnegativity_ constraints since they restrict variables to $\geq0$) are often treated separately in solution techniques, so it is common to see them grouped or written slightly differently like this.
+With this example in hand, let's get back to some definitions. The **decision variables** are the quantities we're deciding how to set. In our example these are $x_1$ and $x_2$, the number of batches run per week for the two products. The **objective** is the value we'd like to optimize, which in the example is the profit equation $3x_1 + 5x_2$. The **constraints** are the limitations on how we set the decision variables, which in this case is everything after the "subject to". Notice that the final constraint, $x_1,x_2\geq0$, is really two constraints so this is a abusing notation a bit. But these types of constraints (called _variable bound_ constraints, or in this case _nonnegativity_ constraints since they restrict variables to $\geq0$) are often treated separately in solution techniques, so it is common to see them grouped or written slightly differently like this.
 
 A **solution** to an LP is any specification of values for the decision variables. And I do mean _any_, it doesn't matter if the values imply a good objective value or even if they satisfy the constraints. They are still called a solution. Hence $x_1=0, x_2=0$, $x_1=-20, x_2=6$, or $x_1=2, x_2=3$ are all solutions to our sample problem.
 
@@ -83,31 +85,20 @@ When solving an LP, the goal is to find an **optimal solution**, a feasible solu
 
 [^mostFavorable]: The smallest value if we have a minimization problem, or the largest value for a maximization problem.
 
-## Solving our first model
+## LP visualized
 
-How should we go about solving out sample problem? Since the problem is in two dimensions it will be straightforward to solve it graphically with our eyes. This is not good (or usually even feasible) method in practice, but for a toy problem it can really help build some intuition for what is going on.
+Now that we have some more definitions in tow, let's get hands-on again to see them in action. Since our sample problem includes only two decision variables, we can visualize what's going on in a plot:
 
-<svg
-	class="drawSvg"
-	width="350"
-	height="350"
-	xMin="-0.5"
-	xMax="8.75"
-	yMin="-0.75"
-	yMax="10.75"
-	ineqs='[[3, 2, 18, "l"], [1, 0, 4, "l"], [0, 2, 12, "l"]]'
-	ineqTextPlaces="[[5, 2], [4.25, 8.5], [6, 6.25]]"
-	showVertices="n"
->Sorry, your browser does not support inline SVG.</svg>
+<svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"choosePoints": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-                
+Here we have a plot with $x_1$ on the horizontal axis, $x_2$ and the vertical axis, and a line drawn for each of the model constraints in +@eq:prototypeLp. The feasible region is plainly visible as the gray-shaded region in the bottom-left.
 
-### Graphical solution
+<!-- examples of infeasible and unbounded problems -->
 
-<!-- examples of infeasible and unbounded solutions -->
+<!-- How should we go about solving our sample problem? Since the problem is in two dimensions it will be straightforward to solve it graphically with our eyes. This is not a good (or usually even feasible) method in practice, but for a toy problem it can really help build some intuition for what's going on. -->
 
-### Software solution
+## LP forms
 
-## Linear Programming Forms
+## Solving LPs with software
 
 <!-- book section 4.5 -->
