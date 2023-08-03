@@ -22,10 +22,7 @@
         border-left: 2px solid #e6e6e6;
         border-right: 2px solid #e6e6e6;
         color: #444;
-    }
-    blockquote p {
         background-color: #ebebeb;
-        padding: 0.5rem;
     }
     details {
         cursor: pointer;
@@ -100,6 +97,7 @@
         addFootnoteTooltips();
         addCodeCopyButtons();
         tocIndentHelp();
+        drawAllSvgPlots();
     }
     tocIndentHelp = () => {
         for (el of document.querySelectorAll('#TOC a')){
@@ -222,7 +220,6 @@
             textContent = el.textContent;
             el.getElementsByTagName('a')[0].textContent = textContent;
             for (childEl of el.childNodes) {
-                console.log(childEl.tagName)
                 if (!!!childEl.tagName) {
                     childEl.textContent = '';
                 }

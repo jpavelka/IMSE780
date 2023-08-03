@@ -1,0 +1,194 @@
+<style>
+    .drawSvg {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
+<script>
+    const drawPlot = (svg) => {
+        const xMin = svg.getAttribute('xmin');
+        const xMax = svg.getAttribute('xmax');
+        const yMin = svg.getAttribute('ymin');
+        const yMax = svg.getAttribute('ymax');
+        const showVertices = ['yes', 'y', 'true', 't'].includes(svg.getAttribute('showvertices').toLowerCase());
+        const ineqs = JSON.parse(svg.getAttribute('ineqs'));
+        const ineqTextPlaces = JSON.parse(svg.getAttribute('ineqtextplaces'));
+        const w = svg.getAttribute('width');
+        const h = svg.getAttribute('height');
+        const leq = String.fromCharCode(8804);
+        const geq = String.fromCharCode(8805);
+        // const x1Str = 'x' + String.fromCharCode(8321);  // subscripts not showing on some browsers
+        // const x2Str = 'x' + String.fromCharCode(8322);
+        const x1Str = 'x1';
+        const x2Str = 'x2';
+        const coordToPix = (xCoord, yCoord) => {
+            xPix = w * (xCoord - xMin) / (xMax - xMin);
+            yPix = h - h * (yCoord - yMin) / (yMax - yMin);
+            return [xPix, yPix]
+        }
+        const lineBetweenCoords = (x1, y1, x2, y2, style) => {
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            const [x1Pix, y1Pix] = coordToPix(x1, y1);
+            const [x2Pix, y2Pix] = coordToPix(x2, y2);
+            el.setAttribute('x1', x1Pix);
+            el.setAttribute('y1', y1Pix);
+            el.setAttribute('x2', x2Pix);
+            el.setAttribute('y2', y2Pix);
+            el.setAttribute('style', style || 'stroke:black')
+            svg.appendChild(el);
+        }
+        const addText = (text, x, y, attrs) => {
+            txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.textContent = text;
+            txt.setAttribute('x', x);
+            txt.setAttribute('y', y);
+            for (const [k, v] of Object.entries(attrs || {})){
+                txt.setAttribute(k, v);
+            }
+            svg.appendChild(txt);
+        }
+        const drawEqns = () => {
+            for ([xCoef, yCoef, rhs] of ineqs) {
+                if (xCoef === 0) {
+                    lineBetweenCoords(0, rhs / yCoef, xMax, rhs / yCoef);
+                } else if (yCoef === 0) {
+                    lineBetweenCoords(rhs / xCoef, 0, rhs / xCoef, yMax);
+                } else {
+                    lineBetweenCoords(0, rhs / yCoef, rhs / xCoef, 0);
+                }
+            }
+        }
+        const drawTickMarks = () => {
+            xTick = 0
+            while (xTick <= xMax) {
+                if (xTick >= 0) {
+                    lineBetweenCoords(xTick, 0, xTick, (yMax - yMin) / 30);
+                    [xText, yText] = coordToPix(xTick, -(yMax - yMin) / 30);
+                    addText(xTick, xText - 4, yText + 4, {'font-size': '10pt'});
+                    xTick += 1;
+                }
+            }
+            yTick = 0
+            while (yTick <= yMax) {
+                if (yTick >= 0) {
+                    lineBetweenCoords(0, yTick, (xMax - xMin) / 30, yTick);
+                    [xText, yText] = coordToPix(-(xMax - xMin) / 30, yTick);
+                    addText(yTick, xText - 4, yText + 4, {'font-size': '10pt'});
+                    yTick += 1;
+                }
+            }
+        }
+        const getVertices = () => {
+            let intersections = [];
+                allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]])
+                for ([i, [xCoef, yCoef, rhs, sense]] of allIneqs.entries()) {
+                    for ([j, [xCoef1, yCoef1, rhs1, sense1]] of allIneqs.entries()){
+                        if (j <= i){
+                            continue
+                        }
+                        denom = xCoef * yCoef1 - xCoef1 * yCoef
+                        if (denom === 0){
+                            continue
+                        }
+                        num = xCoef * rhs1 - xCoef1 * rhs;
+                        yIntersect = num / denom;
+                        xIntersect = (rhs / xCoef) - (yCoef / xCoef) * num / denom;
+                        intersections.push([xIntersect || 0, yIntersect, i, j]);
+                    }
+                }
+                let vertices = []
+                for ([x, y, i, j] of intersections) {
+                    let good = true;
+                    for ([xCoef, yCoef, rhs, sense] of allIneqs) {
+                        if (sense === "l") {
+                            if (x * xCoef + y * yCoef > rhs) {
+                                    good = false;
+                                    break;
+                            }
+                        } else {
+                            if (x * xCoef + y * yCoef < rhs) {
+                                    good = false;
+                                    break;
+                            }
+                        }
+                    }
+                    if (good) {
+                        vertices.push([x, y, i, j]);
+                    }
+                }
+                orderedVertexIndices = [0];
+                while (orderedVertexIndices.length < vertices.length) {
+                    nextIndex = [...vertices.entries()].filter((val, ind) => {
+                        if (orderedVertexIndices.includes(ind)) {
+                            return false
+                        }
+                        lastInd = orderedVertexIndices[orderedVertexIndices.length - 1];
+                        return (
+                            vertices[ind][2] == vertices[lastInd][2] ||
+                            vertices[ind][2] == vertices[lastInd][3] ||
+                            vertices[ind][3] == vertices[lastInd][2] ||
+                            vertices[ind][3] == vertices[lastInd][3]
+                        )
+                    })[0][0]
+                    orderedVertexIndices.push(nextIndex);
+                }
+            return orderedVertexIndices.map(i => vertices[i].slice(0, 2))
+        }
+        const shadeFeasibleRegion = (vertices) => {
+            poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            poly.setAttribute('points', vertices.map(v => coordToPix(...v)).join(' '));
+            poly.setAttribute('style', "fill:#ddd;stroke:black");
+            svg.appendChild(poly);
+            const xWeighted = vertices.map(v => v[0]).reduce((a, b) => a + b) / vertices.length
+            const yWeighted = vertices.map(v => v[1]).reduce((a, b) => a + b) / vertices.length
+            const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
+            addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
+            addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
+        }
+        const plotVertices = (vertices) => {
+            for ([x, y] of vertices) {
+                circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                const [xPix, yPix] = coordToPix(x, y);
+                circ.setAttribute('cx', xPix);
+                circ.setAttribute('cy', yPix);
+                circ.setAttribute('r', 3.5);
+                svg.appendChild(circ);
+            }
+        }
+        const drawAxes = () => {
+            const fontStyle = {'font-size': '12pt', 'font-weight': 'bold', 'font-style': 'italic'};
+            [xLabelPix, yLabelPix] = coordToPix(xMax, 0.25);
+            addText(x1Str, xLabelPix - 22, yLabelPix, fontStyle);
+            [xLabelPix, yLabelPix] = coordToPix(0.25, yMax);
+            addText(x2Str, xLabelPix, yLabelPix + 15, fontStyle);
+            lineBetweenCoords(0, 0, xMax, 0);
+            lineBetweenCoords(0, 0, 0, yMax);
+            }
+        const labelIneqs = () => {
+            for (i in ineqTextPlaces) {
+                ineq = ineqs[i];
+                ineqText = ''
+                ineqText += ineq[0] === 0 ? '' : (ineq[0] == 1 ? '' : ineq[0]) + x1Str
+                ineqText += ineq[1] === 0 ? '' : (ineqText === '' ? '' : ' + ') + (ineq[1] == 1 ? '' : ineq[1]) + x2Str
+                ineqText += ' ' + (ineq[3] === 'l' ? leq : geq) + ' ' + ineq[2];
+                fontStyle = {'font-style': 'italic', 'font-weight': 'bold', 'font-size': '12pt'}
+                addText(ineqText, ...coordToPix(...ineqTextPlaces[i]), fontStyle);
+            }
+        }
+        const vertices = getVertices();
+        drawEqns();
+        labelIneqs(ineqs, ineqTextPlaces)
+        shadeFeasibleRegion(vertices);
+        drawTickMarks();
+        if (showVertices){
+            plotVertices(vertices);
+        }
+        drawAxes();
+    }
+    const drawAllSvgPlots = () => {
+        for (svgEl of document.querySelectorAll('svg.drawSvg')){
+            drawPlot(svgEl)
+        }
+    }
+</script>
