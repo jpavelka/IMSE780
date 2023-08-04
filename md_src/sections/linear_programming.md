@@ -93,6 +93,8 @@ Now that we have some more definitions in tow, let's get hands-on again to see t
 
 Here we have a plot with $x_1$ on the horizontal axis, $x_2$ and the vertical axis, and a line drawn for each of the model constraints in +@eq:prototypeLp. The feasible region is plainly visible as the gray-shaded region in the bottom-left.
 
+<svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg>
+
 <!-- examples of infeasible and unbounded problems -->
 
 <!-- How should we go about solving our sample problem? Since the problem is in two dimensions it will be straightforward to solve it graphically with our eyes. This is not a good (or usually even feasible) method in practice, but for a toy problem it can really help build some intuition for what's going on. -->
