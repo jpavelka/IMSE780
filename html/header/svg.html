@@ -25,9 +25,23 @@
     .underPlot {
         margin-top: -10pt;
     }
+    @keyframes append-animate {
+        0% {
+            stroke-width: 0;
+        }
+        50% {
+            stroke-width: 4;
+        }
+        100% {
+            stroke-width: 0;
+        }
+    }
+    .violatedIneq {
+        animation: append-animate 0.8s linear;
+    }
 </style>
 <script>
-    const baseLps = {
+    let baseLps = {
         prototypeLp: {
             xMin: -1,
             xMax: 8.99,
@@ -38,20 +52,37 @@
             ineqTextPlaces: [[5, 2.5], [2.25, 8], [6, 6.9]]
         }
     }
-    const drawPlot = (svg) => {
-        svgId = 'svg' + Date.now();
+    const drawPlot = (svg, svgId) => {
         svg.id = svgId;
         const parentDiv = document.createElement('div');
         svg.parentNode.insertBefore(parentDiv, svg);
         parentDiv.appendChild(svg);
-        const args = { ...baseLps[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))}
+        const args = { ...JSON.parse(JSON.stringify(baseLps))[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))};
         const xMin = args['xMin'];
         const xMax = args['xMax'];
         const yMin = args['yMin'];
         const yMax = args['yMax'];
-        const obj = args['obj'];
-        const ineqs = args['ineqs'];
-        const ineqTextPlaces = args['ineqTextPlaces'];
+        const plotExtremePoints = [[0, 0], [xMax, 0], [xMax, yMax], [0, yMax]];
+        let obj = args['obj'];
+        if (Object.keys(args).includes('altObj')){
+            obj = args['altObj'];
+        }
+        let ineqs = args['ineqs'];
+        let ineqTextPlaces = args['ineqTextPlaces'];
+        const removeConstraints = args['removeConstraints'] || [];
+        const addConstraints = args['addConstraints'] || []
+        if (removeConstraints.length > 0) {
+            ineqs = ineqs.filter((x, i) => !removeConstraints.includes(i));
+            ineqTextPlaces = ineqTextPlaces.filter((x, i) => !removeConstraints.includes(i));
+        }
+        if (addConstraints.length > 0) {
+            for (const addConstr of addConstraints){
+                ineqs.push(addConstr[0]);
+                ineqTextPlaces.push(addConstr[1])
+            }
+        }
+        const allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
+        const altFeasRegionTextPlace = args['altFeasRegionTextPlace']
         const showVertices = ['yes', 'y', 'true', 't'].includes((args['showVertices'] || 'n').toLowerCase());
         const choosePoints = args['choosePoints'] || false;
         const chooseObjVals = args['chooseObjVals'] || false;
@@ -133,7 +164,7 @@
                 polyId = svgId + 'ineq' + ineqNum + 'shaded';
                 ((xCoef, yCoef, rhs, sense, polyId) => {
                     hoverLine.onmouseover = () => {
-                        const cornerPoints = [[0, 0], [xMax, 0], [xMax, yMax], [0, yMax]];
+                        const cornerPoints = plotExtremePoints;
                         let pts = getIntersectionWithPoly(xCoef, yCoef, rhs, cornerPoints, false);
                         const cpts = cornerPoints.filter(cp => ineqSatisfied(...cp, xCoef, yCoef, rhs, sense));
                         const getPtStr = (p) => p[0] + '---' + p[1];
@@ -204,14 +235,21 @@
                 }
             }
         }
-        const isFeasible = (x, y) => {
-            allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
+        const isFeasible = (x, y, returnViolated=false) => {
             let feasible = true;
+            let violated = [];
             for ([xCoef, yCoef, rhs, sense] of allIneqs) {
                 if (!ineqSatisfied(x, y, xCoef, yCoef, rhs, sense)){
                     feasible = false;
-                    break
+                    if (returnViolated) {
+                        violated.push([xCoef, yCoef, rhs])
+                    } else {                        
+                        break
+                    }
                 }
+            }
+            if (returnViolated) {
+                return [feasible, violated];
             }
             return feasible
         }
@@ -222,11 +260,14 @@
                 return x * xCoef + y * yCoef >= rhs - 0.0001
             }
         }
-        const getVertices = () => {
+        const getVertices = (includePlotEdges=false) => {
+            let ineqsToUse = allIneqs;
+            if (includePlotEdges) {
+                ineqsToUse = ineqsToUse.concat([[1, 0, xMax, 'l'], [0, 1, yMax, 'l']]);
+            }
             let intersections = [];
-                allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]])
-                for ([i, [xCoef, yCoef, rhs, sense]] of allIneqs.entries()) {
-                    for ([j, [xCoef1, yCoef1, rhs1, sense1]] of allIneqs.entries()){
+                for ([i, [xCoef, yCoef, rhs, sense]] of ineqsToUse.entries()) {
+                    for ([j, [xCoef1, yCoef1, rhs1, sense1]] of ineqsToUse.entries()){
                         if (j <= i){
                             continue
                         }
@@ -236,11 +277,22 @@
                         }
                         num = xCoef * rhs1 - xCoef1 * rhs;
                         yIntersect = num / denom;
-                        xIntersect = (rhs / xCoef) - (yCoef / xCoef) * num / denom;
+                        if (xCoef === 0) {
+                            xIntersect = rhs1 / xCoef1;
+                        } else {
+                            xIntersect = (rhs / xCoef) - (yCoef / xCoef) * num / denom;
+                        }
+                        if (xIntersect == 0){
+                            xIntersect = 0;
+                        }
+                        if (yIntersect == 0){
+                            yIntersect = 0;
+                        }
                         intersections.push([xIntersect || 0, yIntersect, i, j]);
                     }
                 }
-                let vertices = []
+                let vertexStrs = [];
+                let vertices = [];
                 for ([x, y, i, j] of intersections) {
                     if (isFeasible(x, y)) {
                         vertices.push([x, y, i, j]);
@@ -262,6 +314,9 @@
                     })[0][0]
                     orderedVertexIndices.push(nextIndex);
                 }
+            if (vertices.length === 0) {
+                return []
+            }
             return orderedVertexIndices.map(i => vertices[i].slice(0, 2))
         }
         const polygonFromPoints = (points, attrs) => {
@@ -272,11 +327,19 @@
             }
             svg.appendChild(poly);
         }
-        const shadeFeasibleRegion = (vertices) => {
-            polygonFromPoints(vertices, {'style': "fill:#ddd;stroke:black"})
-            const xWeighted = vertices.map(v => v[0]).reduce((a, b) => a + b) / vertices.length;
-            const yWeighted = vertices.map(v => v[1]).reduce((a, b) => a + b) / vertices.length;
-            const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
+        const shadeFeasibleRegion = () => {
+            const verts = getVertices(true);
+            if (verts.length === 0){
+                return
+            }
+            polygonFromPoints(verts, {'style': "fill:#ddd;stroke:black"})
+            if (!!altFeasRegionTextPlace) {
+                const [xPix, yPix] = coordToPix(...altFeasRegionTextPlace);
+            } else {
+                const xWeighted = verts.map(v => v[0]).reduce((a, b) => a + b) / verts.length;
+                const yWeighted = verts.map(v => v[1]).reduce((a, b) => a + b) / verts.length;
+                const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
+            }
             addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
             addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
         }
@@ -291,7 +354,7 @@
             }
             svg.appendChild(circ);
         }
-        const plotVertices = (vertices) => {
+        const plotVertices = () => {
             for ([x, y] of vertices) {
                 placePoint(x, y);
             }
@@ -359,9 +422,10 @@
             return intersections
         }
         const vertices = getVertices();
+        const verticesAndPlotEdges = getVertices(true);
         drawIneqs();
         labelIneqs();
-        shadeFeasibleRegion(vertices);
+        shadeFeasibleRegion();
         drawTickMarks();
         if (showVertices){
             plotVertices(vertices);
@@ -396,7 +460,7 @@
                 inputEl.classList = ['pointChooseInput'];
             }
             input1.setAttribute('max', Math.floor(xMax));
-            input2.setAttribute('max', Math.floor(yMax));
+            input2.setAttribute('max', Math.floor(yMax));  // todo: enforce min/max in onchange function
             const inputChangeFunc = () => {
                 [x1, x2] = [input1.value, input2.value];
                 if (x1 == parseFloat(x1) && x2 == parseFloat(x2)){
@@ -405,7 +469,7 @@
                     if (!!pointEl) {
                         pointEl.remove();
                     }
-                    const feas = isFeasible(x1, x2);
+                    const [feas, violated] = isFeasible(x1, x2, returnViolated=true);
                     const color = feas ? 'black' : 'red';
                     textDiv.innerHTML = '';
                     if (feas) {
@@ -413,6 +477,15 @@
                     }
                     else {
                         textDiv.textContent = `(${x1}, ${x2}) is infeasible.`
+                        const lineClass = 'violatedIneq' + Date.now();
+                        for (v of violated) {
+                            plotEqn(...v, {'style': 'stroke:red;stroke-width:0', 'class': 'violatedIneq ' + lineClass})
+                            setTimeout(() => {
+                                for (violEl of [...document.getElementsByClassName(lineClass)]){
+                                    violEl.remove();
+                                }
+                            }, 800)
+                        }
                     }
                     placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
                 }
@@ -453,7 +526,7 @@
             input.setAttribute('type', 'number');
             input.setAttribute('min', 0);
             maxObjVal = 0;
-            for (extreme of [[0, 0], [xMax, 0], [xMax, yMax], [0, yMax]]) {
+            for (extreme of plotExtremePoints) {
                 exObjVal = getObjVal(...extreme);
                 if (exObjVal > maxObjVal) {
                     maxObjVal = exObjVal;
@@ -470,7 +543,7 @@
                         eqnEl.remove();
                     }
                     plotEqn(...obj, z, {id: eqnId});
-                    const intersectPoints = getIntersectionWithPoly(...obj, z, vertices);
+                    const intersectPoints = getIntersectionWithPoly(...obj, z, verticesAndPlotEdges);
                     const intersectLineId = svgId + 'objLineIntersect';
                     intersectLine = document.getElementById(intersectLineId);
                     if (!!intersectLine) {
@@ -502,8 +575,10 @@
         }
     }
     const drawAllSvgPlots = () => {
-        for (svgEl of document.querySelectorAll('svg.lpDraw')){
-            drawPlot(svgEl)
+        for ([i, svgEl] of document.querySelectorAll('svg.lpDraw').entries()){
+            ((i, svgEl) => {
+                drawPlot(svgEl, 'svg' + i);
+            })(i, svgEl)
         }
     }
 </script>

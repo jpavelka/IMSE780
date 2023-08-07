@@ -1,4 +1,4 @@
-# Programming with Python
+# Python crash course
 
 A main focus of the course is to show you how to model and solve real-world problems. In order to do that, you'll need some programming abilities. [Python](https://www.python.org/) is a great choice for this since it is widely-used and relatively easy to learn. You may have some experience with Python already, which is great! If you've never used Python before, don't worry. We'll spend a little time on the basics here, and we won't require you to do much out of the ordinary. Beginners will want to get some more practice outside of class.
 
