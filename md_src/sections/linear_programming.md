@@ -140,7 +140,7 @@ Here we've removed two constraints, with the only one remaining being $2x_2 <= 1
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"altObj": [6, 4], "chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-In this example, we've altered the objective function to $6x_1 + 4x_2$ so that it has the same slope as one of our constraints. We can see by moving the objective up and down that the optimal solution comes at $Z=36$, where the intersects an entire face (bounding line) of the feasible region.
+In this example, we've altered the objective function to $6x_1 + 4x_2$ so that it has the same slope as one of our constraints. We can see by moving the objective up and down that the optimal solution comes at $Z=36$, where the intersects an entire face (bounding line) of the feasible region. Since any point on that bounding line attains the optimal objective value, they are all optimal solutions.
 
 ## LP forms
 
