@@ -178,172 +178,10 @@
     }
   </style>
   <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-      }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
-  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-  <style>
-      nav#TOC:nth-child(2) {
-          margin-top: 0.6rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
-      }
-      nav#TOC li {
-          list-style-type: none;
-      }
-      nav#TOC > ul {
-          margin-bottom: 1.5rem;
-          margin-top: 1.5rem;
-          line-height: 1.7rem;
-      }
-      #TOC ul {
-          padding-left: 0;
-      }
-      nav#TOC {
-          height: 100%;
-          width: 0;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #ebebeb;
-          overflow-x: hidden;
-          padding-top: 1rem;
-          transition: 0.5s;
-          overflow-y: auto;
-      }
-      nav#TOC a {
-          text-decoration: none;
-          font-size: max(15pt, min(1.3rem, 4vw));
-          color: #000;
-          display: block;
-          transition: 0.3s;
-          padding-top: 0.2rem;
-          padding-bottom: 0.3rem;
-          border-bottom: 1pt solid lightgray;
-      }
-      nav#TOC a:hover {
-          color: #888;
-      }
-      #TOC .toc-section-number::after {
-          content: ':\00a0'
-      }
-      #tocTop {
-          height: 1.5em;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 0.5rem;
-          padding-bottom: 0.95rem;
-          position: fixed;
-          top: 0;
-          visibility: hidden;
-          background-color: #ebebeb;
-          z-index: 1;
-          border-bottom: 1pt solid gray;
-      }
-      .tocHeader {
-          font-size: max(15pt, min(1.3rem, 4vw));
-          padding-left: 0.5rem;
-      }
-      .closeBtn {
-          font-size: 36px !important;
-          margin-right: 2rem;
-          margin-top: -0.5rem;
-          border: none !important;
-      }
-      #main {
-          transition: margin-left .5s;
-          padding: 20px;
-      }
-      .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          font-size: max(15pt, min(1.3rem, 4vw));
-          background-color: #ebebeb;
-          width: 100%;
-          border-bottom: 1pt solid gray;
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          display: flex;
-          justify-content: space-between;
-          z-index: 1;
-      }
-      @media screen and (max-height: 450px) {
-          .sidenav {
-              padding-top: 15px;
-          }
-
-          .sidenav a {
-              font-size: 18px;
-          }
-      }
-  </style>
-  <script>
-      function openNav() {
-          document.getElementById("TOC").style.width = "min(50%, 300px)";
-          if (window.innerWidth >= 700){
-              document.getElementById("main").style.marginLeft = "calc(min(50%, 300px) / 2)";
-          }
-          document.getElementById("tocTop").style.width = "min(50%, 300px)";
-          document.getElementById("tocTop").style.visibility = "visible";
-          setTimeout(() => {
-              if (isTight()){
-                  document.getElementById("main").style.marginLeft = 0;
-              }
-          }, 300)
-      }
-      function closeNav() {
-          document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = "0";
-          document.getElementById("tocTop").style.visibility = "hidden";
-      }
-      function isTight() {
-          const mainLeft = document.getElementById('main').getBoundingClientRect().left
-          const tocRight = document.getElementById('TOC').getBoundingClientRect().right
-          return tocRight - mainLeft > 40
-      }
-      function closeNavIfSmall() {
-          if (isTight()){
-              closeNav()
-          }
-      }
-  </script>
-  <style>
-      .eqnos {
-          display: inline-block;
-          position: relative;
-          width: 100%;
-      }
-      .eqnos br {
-          display: none;
-      }
-      .eqnos-number {
-          position: absolute;
-          right: 0em;
-          top: 50%;
-          line-height: 0;
-      }
-  </style>
-  <style>
       .footnoteTooltipClose {
           color: #222;
           float: right;
-          font-size: 36px;
+          font-size: 30pt;
           font-weight: bold;
           margin-top: -1.5rem;
           margin-right: -0.5rem;
@@ -419,9 +257,764 @@
       }
   </script>
   <style>
+      .eqnos {
+          display: inline-block;
+          position: relative;
+          width: 100%;
+      }
+      .eqnos br {
+          display: none;
+      }
+      .eqnos-number {
+          position: absolute;
+          right: 0em;
+          top: 50%;
+          line-height: 0;
+      }
+  </style>
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
+      }
+  </style>
+  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+  <style>
+      nav#TOC:nth-child(2) {
+          margin-top: 0.6rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+      }
+      nav#TOC li {
+          list-style-type: none;
+      }
+      nav#TOC > ul {
+          margin-bottom: 1.5rem;
+          margin-top: 2rem;
+          line-height: 1.7rem;
+      }
+      #TOC ul {
+          padding-left: 0;
+      }
+      nav#TOC {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #ebebeb;
+          overflow-x: hidden;
+          padding-top: 1rem;
+          transition: 0.5s;
+          overflow-y: scroll;
+      }
+      nav#TOC a {
+          text-decoration: none;
+          font-size: max(15pt, min(1.3rem, 4vw));
+          color: #000;
+          display: block;
+          transition: 0.3s;
+          padding-top: 0.2rem;
+          padding-bottom: 0.3rem;
+          border-bottom: 1pt solid lightgray;
+      }
+      nav#TOC a:hover {
+          color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
+      }
+      #tocTop {
+          height: 1.5em;
+          display: flex;
+          justify-content: space-between;
+          padding-top: 0.5rem;
+          padding-bottom: 0.95rem;
+          position: fixed;
+          top: 0;
+          visibility: hidden;
+          background-color: #ebebeb;
+          z-index: 1;
+          border-bottom: 1pt solid gray;
+      }
+      .tocHeader {
+          font-size: max(15pt, min(1.3rem, 4vw));
+          padding-left: 0.5rem;
+      }
+      .tocHidden {
+          display: none     
+      }
+      .tocExpand {
+          margin-left: auto;
+          font-size: 30pt !important;
+          font-family: 'Courier New', Courier, monospace;
+      }
+      .closeBtn {
+          font-size: 30pt;
+          font-family: 'Courier New', Courier, monospace;
+          cursor: pointer;
+          margin-left: auto;
+          line-height: 1;
+      }
+      #main {
+          transition: margin-left .5s;
+          padding: 20px;
+      }
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-size: max(15pt, min(1.3rem, 4vw));
+          background-color: #ebebeb;
+          width: 100%;
+          border-bottom: 1pt solid gray;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          z-index: 1;
+      }
+      @media screen and (max-height: 450px) {
+          .sidenav {
+              padding-top: 15px;
+          }
+
+          .sidenav a {
+              font-size: 18px;
+          }
+      }
+  </style>
+  <script>
+      function openNav() {
+          document.getElementById("TOC").style.width = "min(60%, 350px)";
+          if (window.innerWidth >= 700){
+              document.getElementById("main").style.marginLeft = "calc(min(50%, 350px) / 2)";
+          }
+          document.getElementById("tocTop").style.width = "min(60%, 350px)";
+          document.getElementById("tocTop").style.visibility = "visible";
+          setTimeout(() => {
+              if (isTight()){
+                  document.getElementById("main").style.marginLeft = 0;
+              }
+          }, 300)
+      }
+      function closeNav() {
+          document.getElementById("TOC").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+          document.getElementById("tocTop").style.visibility = "hidden";
+      }
+      function isTight() {
+          const mainLeft = document.getElementById('main').getBoundingClientRect().left
+          const tocRight = document.getElementById('TOC').getBoundingClientRect().right
+          return tocRight - mainLeft > 40
+      }
+      function closeNavIfSmall() {
+          if (isTight()){
+              closeNav()
+          }
+      }
+  </script>
+  <style>
+      .lpDraw {
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      .pointChooseDiv {
+          text-align: center;
+      }
+      .pointChooseInput {
+          border: solid 1pt black;
+          border-radius: 2pt;
+          width: 2rem;
+          height: 1.1rem;
+      }
+      .pointChooseLabel {
+          font-size: 14pt;
+          padding-left: 5pt;
+          padding-right: 5pt;
+      }
+      .pointChooseText {
+          text-align: center;
+          font-size: max(12pt, min(1.0rem, 5.2vw));
+      }
+      .underPlot {
+          margin-top: -10pt;
+      }
+      @keyframes append-animate {
+          0% {
+              stroke-width: 0;
+          }
+          50% {
+              stroke-width: 4;
+          }
+          100% {
+              stroke-width: 0;
+          }
+      }
+      .violatedIneq {
+          animation: append-animate 0.8s linear;
+      }
+  </style>
+  <script>
+      let baseLps = {
+          prototypeLp: {
+              xMin: -1,
+              xMax: 8.99,
+              yMin: -1,
+              yMax: 10.99,
+              obj: [3, 5],
+              ineqs: [[3, 2, 18, "l"], [1, 0, 4, "l"], [0, 2, 12, "l"]],
+              ineqTextPlaces: [[5, 2.5], [2.25, 8], [6, 6.9]]
+          }
+      }
+      const drawPlot = (svg, svgId) => {
+          svg.id = svgId;
+          const parentDiv = document.createElement('div');
+          svg.parentNode.insertBefore(parentDiv, svg);
+          parentDiv.appendChild(svg);
+          const args = { ...JSON.parse(JSON.stringify(baseLps))[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))};
+          const xMin = args['xMin'];
+          const xMax = args['xMax'];
+          const yMin = args['yMin'];
+          const yMax = args['yMax'];
+          const plotExtremePoints = [[0, 0], [xMax, 0], [xMax, yMax], [0, yMax]];
+          let obj = args['obj'];
+          if (Object.keys(args).includes('altObj')){
+              obj = args['altObj'];
+          }
+          let ineqs = args['ineqs'];
+          let ineqTextPlaces = args['ineqTextPlaces'];
+          const removeConstraints = args['removeConstraints'] || [];
+          const addConstraints = args['addConstraints'] || []
+          if (removeConstraints.length > 0) {
+              ineqs = ineqs.filter((x, i) => !removeConstraints.includes(i));
+              ineqTextPlaces = ineqTextPlaces.filter((x, i) => !removeConstraints.includes(i));
+          }
+          if (addConstraints.length > 0) {
+              for (const addConstr of addConstraints){
+                  ineqs.push(addConstr[0]);
+                  ineqTextPlaces.push(addConstr[1])
+              }
+          }
+          const allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
+          const altFeasRegionTextPlace = args['altFeasRegionTextPlace']
+          const showVertices = ['yes', 'y', 'true', 't'].includes((args['showVertices'] || 'n').toLowerCase());
+          const choosePoints = args['choosePoints'] || false;
+          const chooseObjVals = args['chooseObjVals'] || false;
+          const extraEqns = args['extraEqns'] || [];
+          const x1ObjStr = obj[0] == 0 ? '' : `${obj[0]}x_1`;
+          const x2ObjStr = obj[1] == 0 ? '' : `${obj[1]}x_2`;
+          const betweenObjStr = obj[0] == 0 ? '' : (obj[1] > 0 ? '+' : '');
+          const objStr = x1ObjStr + betweenObjStr + x2ObjStr;
+          const w = svg.getAttribute('width');
+          const h = svg.getAttribute('height');
+          const leq = String.fromCharCode(8804);
+          const geq = String.fromCharCode(8805);
+          const coordToPix = (xCoord, yCoord) => {
+              xPix = w * (xCoord - xMin) / (xMax - xMin);
+              yPix = h - h * (yCoord - yMin) / (yMax - yMin);
+              return [xPix, yPix]
+          }
+          const getObjVal = (x, y) => obj[0] * x + obj[1] * y;
+          const unitPixToCoordX = (xMax - xMin) / w;
+          const unitPixToCoordY = (yMax - yMin) / h;
+          svg.style.marginLeft = -Math.abs(1 / unitPixToCoordX) / 2;
+          const pixToCoord = (xPix, yPix) => {
+              xCoord = xPix * ((xMax - xMin) / w) + xMin;
+              yCoord = (yPix - h) * (-(yMax - yMin) / h) + yMin;
+              return [xCoord, yCoord]
+          }
+          const lineBetweenCoords = (x1, y1, x2, y2, attrs) => {
+              el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+              const [x1Pix, y1Pix] = coordToPix(x1, y1);
+              const [x2Pix, y2Pix] = coordToPix(x2, y2);
+              el.setAttribute('x1', x1Pix);
+              el.setAttribute('y1', y1Pix);
+              el.setAttribute('x2', x2Pix);
+              el.setAttribute('y2', y2Pix);
+              attrs = attrs || {}
+              attrs['style'] = attrs['style'] || 'stroke:black';
+              for (const [k, v] of Object.entries(attrs)){
+                  el.setAttribute(k, v);
+              }
+              svg.appendChild(el);
+          }
+          const addText = (text, x, y, attrs) => {
+              txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+              txt.textContent = text;
+              txt.setAttribute('x', x);
+              txt.setAttribute('y', y);
+              for (const [k, v] of Object.entries(attrs || {})){
+                  txt.setAttribute(k, v);
+              }
+              svg.appendChild(txt);
+          }
+          const addMathText = (math, x, y, attrs) => {
+              forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+              mathEl = document.createElement('span');
+              katex.render(math, mathEl, {
+                  throwOnError: false
+              });
+              forObj.setAttribute('x', x);
+              forObj.setAttribute('y', y);
+              attrs['height'] = attrs['height'] || '1rem'
+              attrs['width'] = attrs['width'] || '15rem'
+              for (const [k, v] of Object.entries(attrs || {})){
+                  forObj.setAttribute(k, v);
+              }
+              forObj.appendChild(mathEl);
+              svg.appendChild(forObj);
+          }
+          const drawIneqs = () => {
+              style = 'stroke:#777;padding:5pt';
+              let ineqNum = 0;
+              for ([xCoef, yCoef, rhs, sense] of ineqs) {
+                  ineqNum += 1;
+                  const ineqId = svgId + 'ineq' + ineqNum
+                  plotEqn(xCoef, yCoef, rhs, {style: style, id: ineqId});
+                  let [e1x, e1y, e2x, e2y] = getEqnEndpoints(xCoef, yCoef, rhs);
+                  hoverLineId = svgId + 'ineq' + ineqNum + 'hoverLine';
+                  lineBetweenCoords(e1x, e1y, e2x, e2y, {'style': 'stroke:black;stroke-width:5;opacity:0', 'id': hoverLineId})
+                  const hoverLine = document.getElementById(hoverLineId);
+                  polyId = svgId + 'ineq' + ineqNum + 'shaded';
+                  ((xCoef, yCoef, rhs, sense, polyId) => {
+                      hoverLine.onmouseover = () => {
+                          const cornerPoints = plotExtremePoints;
+                          let pts = getIntersectionWithPoly(xCoef, yCoef, rhs, cornerPoints, false);
+                          const cpts = cornerPoints.filter(cp => ineqSatisfied(...cp, xCoef, yCoef, rhs, sense));
+                          const getPtStr = (p) => p[0] + '---' + p[1];
+                          const usedPtStrs = pts.map(p => getPtStr(p));
+                          skipPts = [];
+                          foundFirstCorner = false;
+                          lastUsed = pts[pts.length - 1];
+                          for (cp of cpts) {
+                              cpStr = getPtStr(cp)
+                              if (cpStr in usedPtStrs) {
+                                  continue
+                              }
+                              if (foundFirstCorner) {
+                                  usedPtStrs.push(cpStr);
+                                  pts.push(cp);
+                              } else {                            
+                                  if (cp[0] == lastUsed[0] || cp[1] == lastUsed[1]) {
+                                      foundFirstCorner = true;
+                                      usedPtStrs.push(cpStr);
+                                      pts.push(cp);
+                                  } else {
+                                      skipPts.push(cp);
+                                  }
+                              }
+                          }
+                          pts = pts.concat(skipPts);
+                          polygonFromPoints(pts, {id: polyId, style: 'fill:rgb(212,212,212);fill:rgb(212,212,212,0.5)'});
+                      }
+                      hoverLine.onmouseout = () => {
+                          shadePoly = document.getElementById(polyId)
+                          if (!!shadePoly){
+                              shadePoly.remove();
+                          }
+                      }
+                  })(xCoef, yCoef, rhs, sense, polyId)
+              }
+          }
+          const plotEqn = (xCoef, yCoef, rhs, attrs) => {
+              lineBetweenCoords(...getEqnEndpoints(xCoef, yCoef, rhs), attrs);
+          }
+          const getEqnEndpoints = (xCoef, yCoef, rhs) => {
+              if (xCoef === 0) {
+                  return [0, rhs / yCoef, xMax, rhs / yCoef]
+              } else if (yCoef === 0) {
+                  return [rhs / xCoef, 0, rhs / xCoef, yMax]
+              } else {
+                  return [0, rhs / yCoef, rhs / xCoef, 0]
+              }
+          }
+          const drawTickMarks = () => {
+              xTick = 0
+              style = {'font-size': '10pt', 'font-family': 'KaTeX_Main,Times New Roman,serif'}
+              while (xTick <= xMax) {
+                  if (xTick >= 0) {
+                      lineBetweenCoords(xTick, 0, xTick, (yMax - yMin) / 30);
+                      [xText, yText] = coordToPix(xTick, -(yMax - yMin) / 30);
+                      addText(xTick, xText - 4, yText + 4, style);
+                      xTick += 1;
+                  }
+              }
+              yTick = 0
+              while (yTick <= yMax) {
+                  if (yTick >= 0) {
+                      lineBetweenCoords(0, yTick, (xMax - xMin) / 30, yTick);
+                      [xText, yText] = coordToPix(-(xMax - xMin) / 30, yTick);
+                      addText(yTick, xText - 4, yText + 4, style);
+                      yTick += 1;
+                  }
+              }
+          }
+          const isFeasible = (x, y, returnViolated=false) => {
+              let feasible = true;
+              let violated = [];
+              for ([xCoef, yCoef, rhs, sense] of allIneqs) {
+                  if (!ineqSatisfied(x, y, xCoef, yCoef, rhs, sense)){
+                      feasible = false;
+                      if (returnViolated) {
+                          violated.push([xCoef, yCoef, rhs])
+                      } else {                        
+                          break
+                      }
+                  }
+              }
+              if (returnViolated) {
+                  return [feasible, violated];
+              }
+              return feasible
+          }
+          const ineqSatisfied = (x, y, xCoef, yCoef, rhs, sense) => {
+              if (sense === "l") {
+                  return x * xCoef + y * yCoef <= rhs + 0.0001
+              } else {
+                  return x * xCoef + y * yCoef >= rhs - 0.0001
+              }
+          }
+          const getVertices = (includePlotEdges=false) => {
+              let ineqsToUse = allIneqs;
+              if (includePlotEdges) {
+                  ineqsToUse = ineqsToUse.concat([[1, 0, xMax, 'l'], [0, 1, yMax, 'l']]);
+              }
+              let intersections = [];
+                  for ([i, [xCoef, yCoef, rhs, sense]] of ineqsToUse.entries()) {
+                      for ([j, [xCoef1, yCoef1, rhs1, sense1]] of ineqsToUse.entries()){
+                          if (j <= i){
+                              continue
+                          }
+                          denom = xCoef * yCoef1 - xCoef1 * yCoef
+                          if (denom === 0){
+                              continue
+                          }
+                          num = xCoef * rhs1 - xCoef1 * rhs;
+                          yIntersect = num / denom;
+                          if (xCoef === 0) {
+                              xIntersect = rhs1 / xCoef1;
+                          } else {
+                              xIntersect = (rhs / xCoef) - (yCoef / xCoef) * num / denom;
+                          }
+                          if (xIntersect == 0){
+                              xIntersect = 0;
+                          }
+                          if (yIntersect == 0){
+                              yIntersect = 0;
+                          }
+                          intersections.push([xIntersect || 0, yIntersect, i, j]);
+                      }
+                  }
+                  let vertexStrs = [];
+                  let vertices = [];
+                  for ([x, y, i, j] of intersections) {
+                      if (isFeasible(x, y)) {
+                          vertices.push([x, y, i, j]);
+                      }
+                  }
+                  orderedVertexIndices = [0];
+                  while (orderedVertexIndices.length < vertices.length) {
+                      nextIndex = [...vertices.entries()].filter((val, ind) => {
+                          if (orderedVertexIndices.includes(ind)) {
+                              return false
+                          }
+                          lastInd = orderedVertexIndices[orderedVertexIndices.length - 1];
+                          return (
+                              vertices[ind][2] == vertices[lastInd][2] ||
+                              vertices[ind][2] == vertices[lastInd][3] ||
+                              vertices[ind][3] == vertices[lastInd][2] ||
+                              vertices[ind][3] == vertices[lastInd][3]
+                          )
+                      })[0][0]
+                      orderedVertexIndices.push(nextIndex);
+                  }
+              if (vertices.length === 0) {
+                  return []
+              }
+              return orderedVertexIndices.map(i => vertices[i].slice(0, 2))
+          }
+          const polygonFromPoints = (points, attrs) => {
+              const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+              poly.setAttribute('points', points.map(v => coordToPix(...v)).join(' '));
+              for (const [k, v] of Object.entries(attrs || {})){
+                  poly.setAttribute(k, v);
+              }
+              svg.appendChild(poly);
+          }
+          const shadeFeasibleRegion = () => {
+              const verts = getVertices(true);
+              if (verts.length === 0){
+                  return
+              }
+              polygonFromPoints(verts, {'style': "fill:#ddd;stroke:black"})
+              if (!!altFeasRegionTextPlace) {
+                  const [xPix, yPix] = coordToPix(...altFeasRegionTextPlace);
+              } else {
+                  const xWeighted = verts.map(v => v[0]).reduce((a, b) => a + b) / verts.length;
+                  const yWeighted = verts.map(v => v[1]).reduce((a, b) => a + b) / verts.length;
+                  const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
+              }
+              addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
+              addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
+          }
+          const placePoint = (x, y, attrs) => {
+              circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+              const [xPix, yPix] = coordToPix(x, y);
+              circ.setAttribute('cx', xPix);
+              circ.setAttribute('cy', yPix);
+              circ.setAttribute('r', 3.5);
+              for (const [k, v] of Object.entries(attrs || {})){
+                  circ.setAttribute(k, v);
+              }
+              svg.appendChild(circ);
+          }
+          const plotVertices = () => {
+              for ([x, y] of vertices) {
+                  placePoint(x, y);
+              }
+          }
+          const drawAxes = () => {
+              const fontStyle = {'font-size': '12pt', 'font-family': 'KaTeX_Main,Times New Roman,serif'};
+              lineBetweenCoords(0, 0, xMax, 0);
+              xDiff = 10 * unitPixToCoordX
+              yDiff = 4 * unitPixToCoordY
+              polygonFromPoints([[xMax, 0], [xMax - xDiff, yDiff], [xMax - xDiff, -yDiff]], {'style': "fill:black;stroke:black"});
+              [xLabelPix, yLabelPix] = coordToPix(Math.ceil(xMax) - 0.5, 0);
+              addMathText('x_1', xLabelPix, yLabelPix, fontStyle);
+              [xLabelPix, yLabelPix] = coordToPix(0, Math.ceil(yMax) - 0.5);
+              addMathText('x_2', xLabelPix - 24, yLabelPix - 20, fontStyle);
+              lineBetweenCoords(0, 0, 0, yMax);
+              xDiff = 4 * unitPixToCoordX
+              yDiff = 10 * unitPixToCoordY
+              polygonFromPoints([[0, yMax], [xDiff, yMax - yDiff], [-xDiff, yMax - yDiff]], {'style': "fill:black;stroke:black"});
+          }
+          const labelIneqs = () => {
+              for (i in ineqTextPlaces || []) {
+                  ineq = ineqs[i];
+                  ineqText = ''
+                  ineqText += ineq[0] === 0 ? '' : (ineq[0] == 1 ? '' : ineq[0]) + 'x_1'
+                  ineqText += ineq[1] === 0 ? '' : (ineqText === '' ? '' : ' + ') + (ineq[1] == 1 ? '' : ineq[1]) + 'x_2'
+                  ineqText += ' ' + (ineq[3] === 'l' ? leq : geq) + ' ' + ineq[2];
+                  fontStyle = {'font-size': '12pt'}
+                  addMathText(ineqText, ...coordToPix(...ineqTextPlaces[i]), fontStyle);
+              }
+          }
+          const getIntersectionWithPoly = (xCoef, yCoef, rhs, points, checkFeas=true) => {
+              let intersections = [];
+              let intersectionStrs = [];
+              for (i=0; i<points.length; i++){
+                  const [p1, p2] = points[i];
+                  const [q1, q2] = points[(i + 1) % points.length];
+                  const m1 = (p2 - q2) / (p1 - q1);
+                  const b1 = p2 - m1 * p1;
+                  const m2 = -xCoef / yCoef;
+                  const b2 = rhs / yCoef;
+                  if (m1 === m2) {
+                      continue
+                  }
+                  if (Math.abs(m1) === Infinity) {
+                      xIntersect = p1;
+                      yIntersect = m2 * xIntersect + b2;
+                  } else if (Math.abs(m2) === Infinity) {
+                      xIntersect = rhs / xCoef;
+                      yIntersect = m1 * xIntersect + b1
+                  } else {
+                      xIntersect = (b2 - b1) / (m1 - m2);
+                      yIntersect = m1 * xIntersect + b1;
+                  }
+                  xIntersect = Math.round(1000000 * xIntersect) / 1000000;
+                  yIntersect = Math.round(1000000 * yIntersect) / 1000000;
+                  interStr = xIntersect + '---' + yIntersect;
+                  p = [xIntersect, yIntersect]
+                  if (!intersectionStrs.includes(interStr) && xIntersect === xIntersect && yIntersect === yIntersect) {
+                      if (!checkFeas || isFeasible(...p)) {
+                          intersectionStrs.push(interStr);
+                          intersections.push(p)
+                      }
+                  }
+              }
+              return intersections
+          }
+          const vertices = getVertices();
+          const verticesAndPlotEdges = getVertices(true);
+          drawIneqs();
+          labelIneqs();
+          shadeFeasibleRegion();
+          drawTickMarks();
+          if (showVertices){
+              plotVertices(vertices);
+          }
+          drawAxes();
+          if (choosePoints) {
+              const underDiv = document.createElement('div');
+              underDiv.classList = ['underPlot']
+              parentDiv.appendChild(underDiv);
+              const objDiv = document.createElement('div');
+              objDiv.classList = ['pointChooseText'];
+              underDiv.appendChild(objDiv);
+              katex.render(`\\text{Objective: }${objStr}`, objDiv, {throwOnError: false});
+              const pointChooseDiv = document.createElement('div');
+              pointChooseDiv.classList = ['pointChooseDiv'];
+              underDiv.appendChild(pointChooseDiv);
+              const input1 = document.createElement('input');
+              const label1 = document.createElement('label');
+              label1.classList = ['pointChooseLabel']
+              katex.render('x_1:', label1, {throwOnError: false});
+              const input2 = document.createElement('input');
+              const label2 = document.createElement('label');
+              label2.classList = ['pointChooseLabel'];
+              katex.render('x_2:', label2, {throwOnError: false});
+              const textDiv = document.createElement('div');
+              textDiv.classList = ['pointChooseText'];
+              underDiv.appendChild(textDiv);
+              katex.render('\\text{Select values for }x_1\\text{ and }x_2', textDiv, {throwOnError: false})
+              for (inputEl of [input1, input2]) {
+                  inputEl.setAttribute('type', 'number');
+                  inputEl.setAttribute('min', 0);
+                  inputEl.classList = ['pointChooseInput'];
+              }
+              input1.setAttribute('max', Math.floor(xMax));
+              input2.setAttribute('max', Math.floor(yMax));  // todo: enforce min/max in onchange function
+              const inputChangeFunc = () => {
+                  [x1, x2] = [input1.value, input2.value];
+                  if (x1 == parseFloat(x1) && x2 == parseFloat(x2)){
+                      const pointId = svgId + 'placedPoint';
+                      const pointEl = document.getElementById(pointId);
+                      if (!!pointEl) {
+                          pointEl.remove();
+                      }
+                      const [feas, violated] = isFeasible(x1, x2, returnViolated=true);
+                      const color = feas ? 'black' : 'red';
+                      textDiv.innerHTML = '';
+                      if (feas) {
+                          textDiv.textContent = `(${x1}, ${x2}) is feasible, objective value ${getObjVal(x1, x2)}.`
+                      }
+                      else {
+                          textDiv.textContent = `(${x1}, ${x2}) is infeasible.`
+                          const lineClass = 'violatedIneq' + Date.now();
+                          for (v of violated) {
+                              plotEqn(...v, {'style': 'stroke:red;stroke-width:0', 'class': 'violatedIneq ' + lineClass})
+                              setTimeout(() => {
+                                  for (violEl of [...document.getElementsByClassName(lineClass)]){
+                                      violEl.remove();
+                                  }
+                              }, 800)
+                          }
+                      }
+                      placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
+                  }
+              }
+              input1.addEventListener("change", inputChangeFunc);
+              input2.addEventListener("change", inputChangeFunc);
+              svg.onclick = (e) => {                
+                  let rect = svg.getBoundingClientRect();
+                  let x = e.clientX - rect.left;
+                  let y = e.clientY - rect.top;
+                  [xPix, yPix] = pixToCoord(x, y);
+                  input1.value = Math.round(10 * xPix) / 10;
+                  input2.value = Math.round(10 * yPix) / 10;
+                  inputChangeFunc();
+              }
+              for (el of [label1, input1, label2, input2]) {
+                  pointChooseDiv.appendChild(el);
+              }
+          }
+          if (chooseObjVals) {
+              const underDiv = document.createElement('div');
+              underDiv.classList = ['underPlot']
+              parentDiv.appendChild(underDiv);
+              const pointChooseDiv = document.createElement('div');
+              pointChooseDiv.classList = ['pointChooseDiv'];
+              underDiv.appendChild(pointChooseDiv);
+              const pointValDiv = document.createElement('div');
+              pointValDiv.classList = ['pointChooseDiv'];
+              underDiv.appendChild(pointChooseDiv);
+              const input = document.createElement('input');
+              const label = document.createElement('label');
+              label.classList = ['pointChooseLabel'];
+              katex.render(`\\text{Plotting objective: }${objStr}=`, label, {throwOnError: false});
+              const textDiv = document.createElement('div');
+              textDiv.classList = ['pointChooseText'];
+              underDiv.appendChild(textDiv);
+              textDiv.textContent = 'Select a value to plot an objective line.'
+              input.setAttribute('type', 'number');
+              input.setAttribute('min', 0);
+              maxObjVal = 0;
+              for (extreme of plotExtremePoints) {
+                  exObjVal = getObjVal(...extreme);
+                  if (exObjVal > maxObjVal) {
+                      maxObjVal = exObjVal;
+                  }
+              }
+              input.setAttribute('max', maxObjVal);
+              input.classList = ['pointChooseInput'];
+              const inputChangeFunc = () => {
+                  z = input.value;
+                  if (z == parseFloat(z)){
+                      eqnId = svgId + 'objEqn';
+                      eqnEl = document.getElementById(eqnId);
+                      if (!!eqnEl) {
+                          eqnEl.remove();
+                      }
+                      plotEqn(...obj, z, {id: eqnId});
+                      const intersectPoints = getIntersectionWithPoly(...obj, z, verticesAndPlotEdges);
+                      const intersectLineId = svgId + 'objLineIntersect';
+                      intersectLine = document.getElementById(intersectLineId);
+                      if (!!intersectLine) {
+                          intersectLine.remove();
+                      }
+                      if (intersectPoints.length === 0) {
+                          textDiv.textContent = 'No feasible solutions with objective value ' + z;
+                      } else if (intersectPoints.length === 1) {
+                          textDiv.textContent = `Single feasible solution (${intersectPoints[0]}) with objective value ${z}`;
+                          placePoint(...intersectPoints[0], {'style': 'fill:purple', 'id': intersectLineId})
+                      } else {
+                          textDiv.textContent = `Multiple feasible solutions have objective value ${z}`;
+                          lineBetweenCoords(...intersectPoints[0], ...intersectPoints[1], {'style': 'stroke:purple;stroke-width:2pt', 'id': intersectLineId});
+                      }
+                  }
+              }
+              input.addEventListener("change", inputChangeFunc);
+              svg.onclick = (e) => {                
+                  let rect = svg.getBoundingClientRect();
+                  let x = e.clientX - rect.left;
+                  let y = e.clientY - rect.top;
+                  let z = getObjVal(...pixToCoord(x, y));
+                  input.value = Math.round(10 * z) / 10;
+                  inputChangeFunc();
+              }
+              for (el of [label, input]) {
+                  pointChooseDiv.appendChild(el);
+              }
+          }
+      }
+      const drawAllSvgPlots = () => {
+          for ([i, svgEl] of document.querySelectorAll('svg.lpDraw').entries()){
+              ((i, svgEl) => {
+                  drawPlot(svgEl, 'svg' + i);
+              })(i, svgEl)
+          }
+      }
+  </script>
+  <style>
       #main {
           font-size: max(15pt, min(1.4rem, 4vw));
-          width: min(max(min(90%, 20rem), calc(100% - min(50%, 300px) - 1rem)), 850px);
+          width: min(max(min(90%, 20rem), calc(100% - min(60%, 350px) - 1rem)), 850px);
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
@@ -435,6 +1028,11 @@
           overflow-y: hidden;
           max-width: none !important;
       }
+      .loadingMessage {
+          text-align: center;
+          margin-top: 40vh;
+          font-size: 1.2rem;
+      }
       blockquote {
           margin: 1rem 0.5rem;
           padding-left: 0.5em;
@@ -442,10 +1040,7 @@
           border-left: 2px solid #e6e6e6;
           border-right: 2px solid #e6e6e6;
           color: #444;
-      }
-      blockquote p {
           background-color: #ebebeb;
-          padding: 0.5rem;
       }
       details {
           cursor: pointer;
@@ -495,6 +1090,9 @@
           float: right;
           cursor: pointer;
       }
+      .header-section-number::after {
+          content: ':'
+      }
       @keyframes fade {
           0%,100% { opacity: 0 }
           15% { opacity: 1 }
@@ -513,21 +1111,31 @@
       }
   </style>
   <script>
+      document.onreadystatechange = () => {
+          if (document.readyState !== "complete") {
+              document.querySelector("#main").style.display = "none";
+              document.querySelector(".navbar").style.display = "none";
+              document.querySelector("#loader").style.visibility = "visible";
+          } else {
+              document.querySelector("#loader").style.display = "none";
+              document.querySelector(".navbar").style.display = "flex";
+              document.querySelector("#main").style.display = "block";
+          }
+      };
       window.onload = () => {
           addRefsToToc();
           eqRefExpandLinksAndAddTooltips();
           citeRefExpandLinksAndAddTooltips();
           addFootnoteTooltips();
           addCodeCopyButtons();
-          tocIndentHelp();
+          tocHelpers();
+          drawAllSvgPlots();
       }
-      tocIndentHelp = () => {
+      tocHelpers = () => {
           for (el of document.querySelectorAll('#TOC a')){
-              if ([...el.classList].includes('closeBtn')) {
-                  continue
-              }
-              parentEl = el.parentNode;
-              numUlsNested = 0;
+              const hrefId = el.getAttribute('href').slice(1);
+              let parentEl = el.parentNode;
+              let numUlsNested = 0;
               while (!!parentEl){
                   numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
                   parentEl = parentEl.parentNode
@@ -539,6 +1147,38 @@
               newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
               newEl.style.display = 'flex';
               newEl.innerHTML = innerHTML;
+              if (numUlsNested > 1) {
+                  el.parentNode.classList.add('tocHideable');
+                  el.parentNode.classList.add('tocHidden');
+              } 
+              liParent = el.parentNode;
+              if (liParent.getElementsByTagName('UL').length > 0) {
+                  expandEl = document.createElement('span');
+                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                  expandEl.classList = ['tocExpand'];
+                  newEl.appendChild(expandEl);
+                  ((expandEl, liParent) => {
+                      expandEl.onclick = (e) => {
+                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]){
+                              let hideableParent = hideable.parentNode;
+                              while (hideableParent.tagName !== 'LI'){
+                                  hideableParent = hideableParent.parentNode
+                              }
+                              if (hideableParent !== liParent) {
+                                  continue
+                              }
+                              if ([...hideable.classList].includes('tocHidden')) {
+                                  hideable.classList.remove('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
+                              } else {
+                                  hideable.classList.add('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                              }
+                          };
+                          e.preventDefault();
+                      }
+                  })(expandEl, liParent)
+              }
               el.appendChild(newEl);
           }
       }
@@ -642,7 +1282,6 @@
               textContent = el.textContent;
               el.getElementsByTagName('a')[0].textContent = textContent;
               for (childEl of el.childNodes) {
-                  console.log(childEl.tagName)
                   if (!!!childEl.tagName) {
                       childEl.textContent = '';
                   }
@@ -686,49 +1325,98 @@
     <div style="text-align: center">Methods of OR</div>
     <div style="text-align: right; padding-right: 1rem">Fall 2023</div>
 </div>
+<div id="loader" class="loadingMessage">Loading...</div>
 <nav id="TOC" role="doc-toc">
-<div id="tocTop"><div class="tocHeader">Contents</div><div><a href="javascript:void(0)" class="closeBtn" onclick="closeNav()">&times;</a></div></div>
+<div id="tocTop"><div class="tocHeader">Contents</div><div class="closeBtn" onclick="closeNav()">&nbsp;&times;&nbsp;</div></div>
 <ul>
 <li><a href="#welcome" id="toc-welcome"><span
 class="toc-section-number">1</span> Welcome!</a>
 <ul>
-<li><a href="#sec:materials" id="toc-sec:materials"><span
+<li><a href="#course-materials" id="toc-course-materials"><span
 class="toc-section-number">1.1</span> Course materials</a></li>
 </ul></li>
-<li><a href="#introduction" id="toc-introduction"><span
-class="toc-section-number">2</span> Introduction</a>
+<li><a href="#introduction-to-or" id="toc-introduction-to-or"><span
+class="toc-section-number">2</span> Introduction to OR</a>
 <ul>
 <li><a href="#what-is-operations-research"
 id="toc-what-is-operations-research"><span
 class="toc-section-number">2.1</span> What is Operations
 Research?</a></li>
 <li><a href="#example-or-problems" id="toc-example-or-problems"><span
-class="toc-section-number">2.2</span> Example OR problems</a></li>
+class="toc-section-number">2.2</span> Example OR problems</a>
+<ul>
+<li><a href="#traveling-salesman-problem"
+id="toc-traveling-salesman-problem"><span
+class="toc-section-number">2.2.1</span> Traveling Salesman
+Problem</a></li>
+<li><a href="#job-shop-scheduling" id="toc-job-shop-scheduling"><span
+class="toc-section-number">2.2.2</span> Job-shop scheduling</a></li>
+<li><a href="#portfolio-optimization"
+id="toc-portfolio-optimization"><span
+class="toc-section-number">2.2.3</span> Portfolio optimization</a></li>
+</ul></li>
 <li><a href="#or-in-practice" id="toc-or-in-practice"><span
-class="toc-section-number">2.3</span> OR in practice</a></li>
+class="toc-section-number">2.3</span> OR in practice</a>
+<ul>
+<li><a href="#origins-of-or" id="toc-origins-of-or"><span
+class="toc-section-number">2.3.1</span> Origins of OR</a></li>
+<li><a href="#case-studies" id="toc-case-studies"><span
+class="toc-section-number">2.3.2</span> Case studies</a></li>
+<li><a href="#edelman-prize" id="toc-edelman-prize"><span
+class="toc-section-number">2.3.3</span> Edelman Prize</a></li>
+</ul></li>
 <li><a href="#topics-well-coverthismaychange"
 id="toc-topics-well-coverthismaychange"><span
 class="toc-section-number">2.4</span> Topics we’ll cover</a></li>
 </ul></li>
-<li><a href="#programming-with-python"
-id="toc-programming-with-python"><span
-class="toc-section-number">3</span> Programming with Python</a>
+<li><a href="#python-crash-course" id="toc-python-crash-course"><span
+class="toc-section-number">3</span> Python crash course</a>
 <ul>
 <li><a href="#google-colab-notebooks"
 id="toc-google-colab-notebooks"><span
 class="toc-section-number">3.1</span> Google Colab notebooks</a></li>
 <li><a href="#some-python-basics" id="toc-some-python-basics"><span
-class="toc-section-number">3.2</span> Some python basics</a></li>
+class="toc-section-number">3.2</span> Some Python basics</a></li>
 <li><a href="#other-coding-environments"
 id="toc-other-coding-environments"><span
-class="toc-section-number">3.3</span> Other coding environments</a></li>
-<li><a href="#more-references" id="toc-more-references"><span
-class="toc-section-number">3.4</span> More references</a></li>
+class="toc-section-number">3.3</span> Other coding environments</a>
+<ul>
+<li><a href="#local-development" id="toc-local-development"><span
+class="toc-section-number">3.3.1</span> Local development</a></li>
+<li><a href="#cloud-hosted" id="toc-cloud-hosted"><span
+class="toc-section-number">3.3.2</span> Cloud hosted</a></li>
 </ul></li>
-<li><a href="#sec:lp" id="toc-sec:lp"><span
-class="toc-section-number">4</span> Linear Programming</a></li>
-<li><a href="#integer-programming" id="toc-integer-programming"><span
-class="toc-section-number">5</span> Integer Programming</a></li>
+</ul></li>
+<li><a href="#linear-programming" id="toc-linear-programming"><span
+class="toc-section-number">4</span> Linear Programming</a>
+<ul>
+<li><a href="#an-example-lp" id="toc-an-example-lp"><span
+class="toc-section-number">4.1</span> An example LP</a>
+<ul>
+<li><a href="#formulating-our-first-lp"
+id="toc-formulating-our-first-lp"><span
+class="toc-section-number">4.1.1</span> Formulating our first
+LP</a></li>
+</ul></li>
+<li><a href="#lp-terminology" id="toc-lp-terminology"><span
+class="toc-section-number">4.2</span> LP terminology</a></li>
+<li><a href="#lp-visualized" id="toc-lp-visualized"><span
+class="toc-section-number">4.3</span> LP visualized</a>
+<ul>
+<li><a href="#solving-an-lp-visually"
+id="toc-solving-an-lp-visually"><span
+class="toc-section-number">4.3.1</span> Solving an LP visually</a></li>
+<li><a href="#visualizing-other-scenarios"
+id="toc-visualizing-other-scenarios"><span
+class="toc-section-number">4.3.2</span> Visualizing other
+scenarios</a></li>
+</ul></li>
+<li><a href="#lp-forms" id="toc-lp-forms"><span
+class="toc-section-number">4.4</span> LP forms</a></li>
+<li><a href="#solving-lps-with-software"
+id="toc-solving-lps-with-software"><span
+class="toc-section-number">4.5</span> Solving LPs with software</a></li>
+</ul></li>
 </ul>
 </nav>
 <div id="main" onclick="closeNavIfSmall()">
@@ -742,7 +1430,7 @@ students will have a basic familiarity with various OR methodologies and
 be able to recognize when the methods can be applied in real-life
 scenarios. Students should also be able to apply the chosen methodology
 via Python code.</p>
-<h2 data-number="1.1" id="sec:materials"><span
+<h2 data-number="1.1" id="course-materials"><span
 class="header-section-number">1.1</span> Course materials</h2>
 <p>The core of this course will be taught from these notes.
 Additionally, I encourage students to use the textbook <em>Introduction
@@ -753,8 +1441,8 @@ reference<a href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a>. The syllabus, assignments, and
 other course materials may be found via the <a
 href="https://k-state.instructure.com/">class Canvas site</a>.</p>
-<h1 data-number="2" id="introduction"><span
-class="header-section-number">2</span> Introduction</h1>
+<h1 data-number="2" id="introduction-to-or"><span
+class="header-section-number">2</span> Introduction to OR</h1>
 <p>In this section we’ll cover the big picture questions: What is
 Operations Research? Where did it come from? What can I do with it?</p>
 <h2 data-number="2.1" id="what-is-operations-research"><span
@@ -932,8 +1620,8 @@ Decision Processes.</p>
 <p>There are a few other topics on my mind (dynamic programming, network
 models) that I may decide to cover depending on time and class
 interest.</p>
-<h1 data-number="3" id="programming-with-python"><span
-class="header-section-number">3</span> Programming with Python</h1>
+<h1 data-number="3" id="python-crash-course"><span
+class="header-section-number">3</span> Python crash course</h1>
 <p>A main focus of the course is to show you how to model and solve
 real-world problems. In order to do that, you’ll need some programming
 abilities. <a href="https://www.python.org/">Python</a> is a great
@@ -961,34 +1649,358 @@ cell at a time to work through the notebook and check outputs as you go.
 I’ll use a Colab notebook in the next section to walk through some
 basics of Python.</p>
 <h2 data-number="3.2" id="some-python-basics"><span
-class="header-section-number">3.2</span> Some python basics</h2>
+class="header-section-number">3.2</span> Some Python basics</h2>
 <p>Below, you should see a read-only image of a Colab notebook. The
 notebook gives some exposition and samples of basic Python principles.
-Click the “Open in Colab” button to open a version of the notebook in a
-new window.</p>
+Click the “Open in Colab” button to open a copy in a new window.</p>
 <iframe src="https://gist.github.com/dcd6305c13b79bbdba7c49dc5c76d3c7.pibb" style="width: 100%; height: 500px; border: 0;">
 </iframe>
 <h2 data-number="3.3" id="other-coding-environments"><span
 class="header-section-number">3.3</span> Other coding environments</h2>
-<p>jupyter, vscode, pycharm, gitpod, google cloud ide.</p>
-<h2 data-number="3.4" id="more-references"><span
-class="header-section-number">3.4</span> More references</h2>
-<h1 data-number="4" id="sec:lp"><span
+<p>I suggest Colab because it is free and easy to set up, and it should
+work well for what you’ll need during the course. But it is far from the
+only option for Python. Here are a few other options to explore on your
+own:</p>
+<h3 data-number="3.3.1" id="local-development"><span
+class="header-section-number">3.3.1</span> Local development</h3>
+<p>Unlike Colab, which is run through your web browser, these next few
+options run completely on your local machine. They’ll all require
+installing Python<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a> along with other software, but you
+won’t need an internet connection to use them. This is not an exhaustive
+list, just tools that I’ve used and liked.</p>
+<ul>
+<li><a href="https://jupyter.org/">Jupyter</a>: The first popular
+notebook environment for Python. It functions much like Colab does,
+though there are minor differences. Several places offer web-hosted
+versions of Jupyter too.</li>
+<li><a href="https://www.jetbrains.com/pycharm/">Pycharm</a>: Pycharm is
+an <a
+href="https://en.wikipedia.org/wiki/Integrated_development_environment">IDE</a>
+built for Python, and as such comes with support for debugging,
+refactoring, run configurations, and more. There is a free version and a
+pro version, but the free version has plenty of functionality and is
+more than sufficient for the coding in this course.</li>
+<li><a href="https://code.visualstudio.com/">Visual Studio Code</a>: VS
+Code is a popular, free IDE that supports many different programming
+languages. It is highly customizable and there is a broad ecosystem of
+extensions that can enhance functionality.</li>
+</ul>
+<h3 data-number="3.3.2" id="cloud-hosted"><span
+class="header-section-number">3.3.2</span> Cloud hosted</h3>
+<p>There are several cloud-hosted options available for running Python.
+We’ve already mentioned Colab, and there are myriad other places that
+offer cloud-hosted notebooks at varying price points. Offerings that I’m
+familiar with<a href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a>:</p>
+<ul>
+<li><a href="https://ide.cloud.google.com">Google Cloud Shell/IDE</a>:
+If you have a Google Cloud Platform account, you have access to a
+cloud-based virtual machine known as the Google Cloud Shell. The shell
+comes with Python and other common developer tools pre-installed, and
+you can interact with it using their Cloud IDE, a hosted VS Code-like
+environment. The shell runs a pretty small machine, but it is free to
+use and you can use the IDE for up to 50 hours per week.</li>
+<li><a
+href="https://cloud.google.com/vertex-ai/docs/workbench/introduction">Vertex
+AI Notebooks</a>: Managed Jupyter notebooks on Google Cloud Platform.
+You do have to pay for the service and the associated compute time and
+storage. There are similar offerings from <a
+href="https://aws.amazon.com/sagemaker/notebooks/">Amazon Web
+Services</a> and <a
+href="https://learn.microsoft.com/en-us/azure/machine-learning/how-to-run-jupyter-notebooks?view=azureml-api-2">Microsoft
+Azure</a></li>
+<li><a href="https://www.gitpod.io/">Gitpod</a>: Gitpod is a service
+that offers on-demand cloud development environments that are highly
+customizable. This one is a little more advanced, and all machine
+instances need to be backed by some <a
+href="https://git-scm.com/">git</a> repository (e.g. on <a
+href="https://github.com/">GitHub</a>). So I wouldn’t start here, but
+for the right use-case it is a nice service. They’re free plan includes
+50 hours per month.</li>
+</ul>
+<h1 data-number="4" id="linear-programming"><span
 class="header-section-number">4</span> Linear Programming</h1>
-<p>A linear program is an optimization problem of the following
-form:</p>
-<p><span id="eq:id" class="eqnos"><span class="math display">
+<p>In the family of OR techniques, Linear Programming (LP) is certainly
+the matriarch. It was among the first methods to be seriously studied
+and find broad applications. To this day, LPs are relevant and used
+across industry to inform decision-making and help best make use of
+scarce resources.</p>
+<p>So, what is an LP? Let’s step back a bit - linear programming is a
+special type of mathematical programming problem. The word
+<em>programming</em>, in the language of the pre-computer-revolution era
+where these topics were first studied, was more or less a synonym for
+<em>planning</em>. So mathematical programming just means using math to
+make a plan.</p>
+<p>And the linear part? This refers to the form of the mathematical
+objects used. All mathematical programs have <em>variables</em>
+(quantities you get to set in order to get a desirable result),
+<em>constraints</em> (limitations on how you can set your variables),
+and an <em>objective</em> (the quantity you want to maximize/minimize).
+In linear programming, all constraints and objectives must be
+<em>linear</em> functions of your variables.</p>
+<h2 data-number="4.1" id="an-example-lp"><span
+class="header-section-number">4.1</span> An example LP</h2>
+<p>Ok, before we get too far down this path of inscrutable definitions,
+maybe we should see an example problem where we can get more hands-on.
+The following comes from <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>, section 3.1.</p>
+<blockquote>
+<p>The Wyndor Glass Co. produces high-quality glass products, including
+windows and glass doors. It has three plants. Aluminum frames and
+hardware are made in Plant 1, wood frames are made in Plant 2, and Plant
+3 produces the glass and assembles the products. Because of declining
+earnings, top management has decided to revamp the company’s product
+line. Unprofitable products are being discontinued, releasing production
+capacity to launch two new products having large sales potential:</p>
+<ul>
+<li>Product 1: An 8-foot glass door with aluminum framing</li>
+<li>Product 2: A 4 x 6 foot double-hung wood-framed window</li>
+</ul>
+<p>Product 1 requires some of the production capacity in Plants 1 and 3,
+but none in Plant 2. Product 2 needs only Plants 2 and 3. The marketing
+division has concluded that the company could sell as much of either
+product as could be produced by these plants. However, because both
+products would be competing for the same production capacity in Plant 3,
+it is not clear which mix of the two products would be most
+profitable.</p>
+</blockquote>
+<p>Together with management, the company’s OR team defines the problem
+as follows:</p>
+<blockquote>
+<p>Determine what the production rates should be for the two products in
+order to maximize their total profit, subject to the restrictions
+imposed by the limited production capacities available in the three
+plants. (Each product will be produced in batches of 20, so the
+production rate is defined as the number of batches produced per week.)
+Any combination of production rates that satisfies these restrictions is
+permitted, including producing none of one product and as much as
+possible of the other.</p>
+</blockquote>
+<p>The team’s next task is to gather data on production runs and
+potential profits. The findings are summarized in the table below:</p>
+<figure>
+<img src="images/lp-example-data.png"
+alt="Data for the Wyndor Glass Co. problem (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Data for the Wyndor Glass Co. problem
+<span class="citation" data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<h3 data-number="4.1.1" id="formulating-our-first-lp"><span
+class="header-section-number">4.1.1</span> Formulating our first LP</h3>
+<p>How do we go about formulating this problem mathematically? We must
+first decide on the <em>decision variables</em>, the quantities we get
+to choose in order to affect profit. In this case, the variables are the
+quantities of Product 1 and Product 2 that we choose to produce. We will
+denote these quantities by <span class="math inline">x_1</span> and
+<span class="math inline">x_2</span> respectively. That is, <span
+class="math inline">x_1</span> is the number of batches of Product 1 we
+will produce in a week, and <span class="math inline">x_2</span> is the
+number of batches of Product 2 we produce in a week.</p>
+<p>Next let’s talk about the problem’s <em>objective function</em>, the
+quantity that we are trying to optimize. Naturally, we’d like to
+optimize profit. From the table, we know that we get $3,000 in profit
+per batch of Product 1 and $5,000 per batch of Product 2. Thus the
+formula</p>
+<p><span class="math display">
+3x_1 + 5x_2
+</span></p>
+<p>tells us (in thousands of dollars) how much profit we expect for a
+given selection of <span class="math inline">x_1</span> and <span
+class="math inline">x_2</span>.</p>
+<p>Now, we can’t select <span class="math inline">x_1</span> and <span
+class="math inline">x_2</span> to be arbitrarily high. We are restricted
+by the available production time at each plant. So we will add
+<em>constraints</em> relating to these availabilities. We know that each
+batch of Product 1 requires 1 hour of time in Plant 1, while Product 2
+does not require any time at Plant 1. So, adding that 4 hours of
+production time is available per week the constraint associated with
+production at Plant 1 is simply <span class="math inline">x_1 \leq
+4</span>. Similarly, at Plant 2, Product 2 is the only one that requires
+processing, at 2 hours per batch. With 12 hours per week available, the
+constraint for Plant 2 becomes <span class="math inline">2x_2 \leq
+12</span>.<a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a></p>
+<p>What about Plant 3? Both products require time at this facility, so
+they could both contribute to the depletion of its 18 hours per week.
+Every batch of Product 1 requires 3 hours, while every batch of Product
+2 requires 2 hours. So the constraint imposed by Plant 3 is simply <span
+class="math inline">3x_1 + 2x_2 &lt;= 18</span>.</p>
+<p>Lastly, we know that <span class="math inline">x_1</span> and <span
+class="math inline">x_2</span> cannot be negative (there is no way to
+produce a negative number of products), so <span class="math inline">x_1
+\geq 0</span> and <span class="math inline">x_2 \geq 0</span> must be
+part of our formulation as well. Bringing it all together, we can write
+the problem formulation as:</p>
+<p><span id="eq:prototypeLp" class="eqnos"><span class="math display">
 \begin{align*}
-\min&amp;&amp;c^Tx&amp;\\
-\text{subject to}&amp;&amp;Ax&amp;\leq b\\
-&amp;&amp;x&amp;\geq0
+\max        &amp;&amp; 3x_1 + 5x_2 &amp; \\
+\text{s.t.} &amp;&amp; x_1 &amp; \leq \ \ 4  \\
+            &amp;&amp; 2x_2 &amp; \leq 12 \\
+            &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 \\
+            &amp;&amp; x_1,x_2 &amp; \geq \ \ 0
 \end{align*}
 </span><span class="eqnos-number">(1)</span></span></p>
-<h1 data-number="5" id="integer-programming"><span
-class="header-section-number">5</span> Integer Programming</h1>
-<p>An integer program is an optimization problem with form <a
-href="#eq:id">1</a>, but also requiring <span
-class="math inline">x\in\mathbb{I}</span>.</p>
+<h2 data-number="4.2" id="lp-terminology"><span
+class="header-section-number">4.2</span> LP terminology</h2>
+<p>With this example in hand, let’s get back to some definitions. The
+<strong>decision variables</strong> are the quantities we’re deciding
+how to set. In our example these are <span
+class="math inline">x_1</span> and <span class="math inline">x_2</span>,
+the number of batches run per week for the two products. The
+<strong>objective</strong> is the value we’d like to optimize, which in
+the example is the profit equation <span class="math inline">3x_1 +
+5x_2</span>. In this case we’d like to maximize the objective, but
+minimization is possible as well. The <strong>constraints</strong> are
+the limitations on how we set the decision variables, which in this case
+is everything after the “s.t.”<a href="#fn10" class="footnote-ref"
+id="fnref10" role="doc-noteref"><sup>10</sup></a>. Notice that the final
+constraint, <span class="math inline">x_1,x_2\geq0</span>, is really two
+constraints so this is a abusing notation a bit. But these types of
+constraints (called <em>variable bound</em> constraints, or in this case
+<em>nonnegativity</em> constraints since they restrict variables to
+<span class="math inline">\geq0</span>) are often treated separately in
+solution techniques, so it is common to see them grouped or written
+slightly differently like this.</p>
+<p>A <strong>solution</strong> to an LP is any specification of values
+for the decision variables. And I do mean <em>any</em><a href="#fn11"
+class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>,
+it doesn’t matter if the values imply a good objective value or even if
+they satisfy the constraints. They are still called a solution. Hence
+each of:</p>
+<ul>
+<li><span class="math inline">x_1=0, x_2=0</span></li>
+<li><span class="math inline">x_1=-20, x_2=6</span></li>
+<li><span class="math inline">x_1=2, x_2=3</span> are all solutions to
+our sample problem, even though the second one violates
+nonnegativity.</li>
+</ul>
+<p>A <strong>feasible solution</strong> is a solution that satisfies all
+of the problem constraints. In contrast, an <strong>infeasible
+solution</strong> is one that violates <em>at least one</em> constraint.
+The <strong>feasible region</strong> is the set of all feasible
+solutions. It is possible for a problem to have no feasible solutions,
+in which case the problem itself is said to be
+<strong>infeasible</strong>.</p>
+<p>When solving an LP, the goal is to find an <strong>optimal
+solution</strong>, a feasible solution that gives the most favorable
+value<a href="#fn12" class="footnote-ref" id="fnref12"
+role="doc-noteref"><sup>12</sup></a> of the objective function. Notice
+we said <em>an</em> optimal solution, not <em>the</em> optimal solution,
+as it is entirely possible for a problem to have more than one solution
+attain the optimal value. It is also possible to have no optimal
+solutions at all, as in the case of an infeasible problem. Another
+situation with no optimal solution is an <strong>unbounded</strong>
+problem, where there are no constraints to</p>
+<h2 data-number="4.3" id="lp-visualized"><span
+class="header-section-number">4.3</span> LP visualized</h2>
+<p>Let’s get hands-on again to see our new definitions in action. Since
+our sample problem includes only two decision variables, we can
+visualize what’s going on in a plot:</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;choosePoints&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Here we have a plot with <span class="math inline">x_1</span> on the
+horizontal axis, <span class="math inline">x_2</span> on the vertical
+axis, and a line drawn for each of the constraints in eq. <a
+href="#eq:prototypeLp">1</a>. Moreover, if you hover over a constraint
+line, the side of the line satisfied by the inequality is shaded light
+gray<a href="#fn13" class="footnote-ref" id="fnref13"
+role="doc-noteref"><sup>13</sup></a>. The feasible region (where all
+three constraints are satisfied) is plainly visible as the gray-shaded
+region in the bottom-left. If you click on the plot (or enter values in
+the text boxes) a point will be drawn on the plot. If the point is a
+feasible solution, it will be colored black and the objective value at
+the solution is show below the plot. Otherwise, if the solution is
+infeasible the point will be colored red and the violated inequalities
+will flash.</p>
+<p>How can we visualize the objective? Since the objective is given by
+<span class="math inline">3x_1 + 5x_2</span>, any line we draw of the
+form <span class="math inline">3x_1 + 5x_2 = Z</span> (for some number
+<span class="math inline">Z</span>) will show the solutions that give
+objective value <span class="math inline">Z</span>. You can try this
+with the plot below: put your chosen <span class="math inline">Z</span>
+value in the input box (or click on the plot to get a line going through
+that point). The line will show up on the plot, and the intersection
+with the feasible region (if any exists) will be highlighted. These
+highlighted solutions each give objective value <span
+class="math inline">Z</span>.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;chooseObjVals&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<h3 data-number="4.3.1" id="solving-an-lp-visually"><span
+class="header-section-number">4.3.1</span> Solving an LP visually</h3>
+<p>We actually have tools to solve this problem now. For problems in two
+dimensions, it is fairly straightforward to draw a graph and see where
+the best solution is. This is not a good (or usually even feasible)
+method in practice, but for a toy problem it can really help build some
+intuition.</p>
+<p>Let’s look back at the above plot. Since we’re maximizing, we’d like
+to choose the largest <span class="math inline">Z</span> that intersects
+the feasible region. Let’s start with something too big, say <span
+class="math inline">Z=50</span>. When we plot that, we see it is way too
+high above the feasible region. So we can start moving it lower. Maybe
+go to <span class="math inline">Z=40</span>. It’s still totally above
+the feasible region, so that’s not it either. Now jump to <span
+class="math inline">Z=30</span>. This intersects the plot, but there is
+a section of the feasible region above the line, and hence feasible
+solutions with a better objective value.</p>
+<p>So keep searching. When you come to <span
+class="math inline">Z=36</span> the situation looks different. The line
+intersects the plot at a single point, <span class="math inline">x_1=2,
+x_2=6</span>. If you move the objective up just a little bit, say to
+36.1, you get no intersection with the feasible region<a href="#fn14"
+class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>.
+Thus we know we’ve found the optimal solution<a href="#fn15"
+class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>,
+and in this case it is unique.</p>
+<h3 data-number="4.3.2" id="visualizing-other-scenarios"><span
+class="header-section-number">4.3.2</span> Visualizing other
+scenarios</h3>
+<p>Let see some examples of the other scenarios we defined above. In
+each case, we’ll take our initial model eq. <a
+href="#eq:prototypeLp">1</a> and modify it to show the desired
+property.</p>
+<h4 data-number="4.3.2.1" id="infeasible-problem"><span
+class="header-section-number">4.3.2.1</span> Infeasible problem</h4>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;addConstraints&quot;: [[[1, 3, 30, &quot;g&quot;], [5, 9.25]]], &quot;choosePoints&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>In this plot, we’ve added the constraint <span
+class="math inline">x_1 + 3x_2 \geq 30</span>. All the points satisfying
+this inequality are well above the previous feasible region, so no
+solutions are feasible.</p>
+<h4 data-number="4.3.2.2" id="unbounded-problem"><span
+class="header-section-number">4.3.2.2</span> Unbounded problem</h4>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;removeConstraints&quot;: [0, 1], &quot;altFeasRegionTextPlace&quot;: [4.5, 3.5], &quot;chooseObjVals&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Here we’ve removed two constraints, with the only one remaining being
+<span class="math inline">2x_2 &lt;= 12</span>. We can see there is no
+constraint on <span class="math inline">x_1</span> at all now, so we can
+choose it arbitrarily large and still be in the feasible region<a
+href="#fn16" class="footnote-ref" id="fnref16"
+role="doc-noteref"><sup>16</sup></a>.</p>
+<h4 data-number="4.3.2.3" id="multiple-optima"><span
+class="header-section-number">4.3.2.3</span> Multiple optima</h4>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;altObj&quot;: [6, 4], &quot;chooseObjVals&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>In this example, we’ve altered the objective function to <span
+class="math inline">6x_1 + 4x_2</span> so that it has the same slope as
+one of our constraints. We can see by moving the objective up and down
+that the optimal solution comes at <span
+class="math inline">Z=36</span>, where the intersects an entire face
+(bounding line) of the feasible region. Since any point on that bounding
+line attains the optimal objective value, they are all optimal
+solutions.</p>
+<h2 data-number="4.4" id="lp-forms"><span
+class="header-section-number">4.4</span> LP forms</h2>
+<h2 data-number="4.5" id="solving-lps-with-software"><span
+class="header-section-number">4.5</span> Solving LPs with software</h2>
+<!-- book section 4.5 -->
+<!-- {insertSection:sections/integer_programming.md} -->
 <h1 id="References">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="doc-bibliography">
@@ -1040,6 +2052,52 @@ role="doc-backlink">↩︎</a></p></li>
 already you can always create a burner account for the sake of the
 class.<a href="#fnref6" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>You can check out <a
+href="https://www.python.org/downloads/">Python’s downloads page</a> or
+go with <a href="https://www.anaconda.com/">Anaconda</a> for an expanded
+toolset.<a href="#fnref7" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>I’m listing lots of Google Cloud products because that’s
+the cloud platform I’ve used most, but the other big providers have
+similar offerings.<a href="#fnref8" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>You might look at this and think “that just means <span
+class="math inline">x_2 \leq 6</span>.” You would be correct, and it
+would be completely valid to use that constraint instead.<a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>The “s.t.” is an abbreviation for “subject to” and is
+used in formulations leading into the constraints section.<a
+href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>So long as we’re talking about real numbers, of course.
+Something like <span class="math inline">x_1=\text{blue}</span>, <span
+class="math inline">x_2=\text{elephant}</span> is just nonsense and
+isn’t a solution to our problem.<a href="#fnref11" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>The smallest value if we have a minimization problem,
+or the largest value for a maximization problem.<a href="#fnref12"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>I couldn’t think of a good way to do this with touch
+events, so this part doesn’t work as well on a mobile device. Sorry.<a
+href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Actually, my little widget here is not perfect.
+Depending how small of a decimal you add, you may get it to tell you
+there are optimal solutions at a slightly higher objective value. This
+is due to choosing a precision that this setup really can’t handle. It
+is worth mentioning that even the most sophisticated solvers can have
+issues with rounding errors and numerical stability, but they’re
+generally very good. As long as you are careful with your formulations
+you usually won’t run into issues.<a href="#fnref14"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Truth be told, this isn’t a rigorous proof of
+optimality, at least in the strict sense of mathematical proofs. But the
+solution methods we’ll study later do give such proofs.<a
+href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>In most practical applications, infeasiblity is a good
+indicator that you modeled something incorrectly. Like in the prototype
+example, it doesn’t make sense that we could make arbitrarily many of
+some product. So if you find a problem you’re working on is infeasible,
+it’s a good idea to double-check your formulation.<a href="#fnref16"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 </div>
