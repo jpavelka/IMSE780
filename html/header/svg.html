@@ -1,0 +1,584 @@
+<style>
+    .lpDraw {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .pointChooseDiv {
+        text-align: center;
+    }
+    .pointChooseInput {
+        border: solid 1pt black;
+        border-radius: 2pt;
+        width: 2rem;
+        height: 1.1rem;
+    }
+    .pointChooseLabel {
+        font-size: 14pt;
+        padding-left: 5pt;
+        padding-right: 5pt;
+    }
+    .pointChooseText {
+        text-align: center;
+        font-size: max(12pt, min(1.0rem, 5.2vw));
+    }
+    .underPlot {
+        margin-top: -10pt;
+    }
+    @keyframes append-animate {
+        0% {
+            stroke-width: 0;
+        }
+        50% {
+            stroke-width: 4;
+        }
+        100% {
+            stroke-width: 0;
+        }
+    }
+    .violatedIneq {
+        animation: append-animate 0.8s linear;
+    }
+</style>
+<script>
+    let baseLps = {
+        prototypeLp: {
+            xMin: -1,
+            xMax: 8.99,
+            yMin: -1,
+            yMax: 10.99,
+            obj: [3, 5],
+            ineqs: [[3, 2, 18, "l"], [1, 0, 4, "l"], [0, 2, 12, "l"]],
+            ineqTextPlaces: [[5, 2.5], [2.25, 8], [6, 6.9]]
+        }
+    }
+    const drawPlot = (svg, svgId) => {
+        svg.id = svgId;
+        const parentDiv = document.createElement('div');
+        svg.parentNode.insertBefore(parentDiv, svg);
+        parentDiv.appendChild(svg);
+        const args = { ...JSON.parse(JSON.stringify(baseLps))[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))};
+        const xMin = args['xMin'];
+        const xMax = args['xMax'];
+        const yMin = args['yMin'];
+        const yMax = args['yMax'];
+        const plotExtremePoints = [[0, 0], [xMax, 0], [xMax, yMax], [0, yMax]];
+        let obj = args['obj'];
+        if (Object.keys(args).includes('altObj')){
+            obj = args['altObj'];
+        }
+        let ineqs = args['ineqs'];
+        let ineqTextPlaces = args['ineqTextPlaces'];
+        const removeConstraints = args['removeConstraints'] || [];
+        const addConstraints = args['addConstraints'] || []
+        if (removeConstraints.length > 0) {
+            ineqs = ineqs.filter((x, i) => !removeConstraints.includes(i));
+            ineqTextPlaces = ineqTextPlaces.filter((x, i) => !removeConstraints.includes(i));
+        }
+        if (addConstraints.length > 0) {
+            for (const addConstr of addConstraints){
+                ineqs.push(addConstr[0]);
+                ineqTextPlaces.push(addConstr[1])
+            }
+        }
+        const allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
+        const altFeasRegionTextPlace = args['altFeasRegionTextPlace']
+        const showVertices = ['yes', 'y', 'true', 't'].includes((args['showVertices'] || 'n').toLowerCase());
+        const choosePoints = args['choosePoints'] || false;
+        const chooseObjVals = args['chooseObjVals'] || false;
+        const extraEqns = args['extraEqns'] || [];
+        const x1ObjStr = obj[0] == 0 ? '' : `${obj[0]}x_1`;
+        const x2ObjStr = obj[1] == 0 ? '' : `${obj[1]}x_2`;
+        const betweenObjStr = obj[0] == 0 ? '' : (obj[1] > 0 ? '+' : '');
+        const objStr = x1ObjStr + betweenObjStr + x2ObjStr;
+        const w = svg.getAttribute('width');
+        const h = svg.getAttribute('height');
+        const leq = String.fromCharCode(8804);
+        const geq = String.fromCharCode(8805);
+        const coordToPix = (xCoord, yCoord) => {
+            xPix = w * (xCoord - xMin) / (xMax - xMin);
+            yPix = h - h * (yCoord - yMin) / (yMax - yMin);
+            return [xPix, yPix]
+        }
+        const getObjVal = (x, y) => obj[0] * x + obj[1] * y;
+        const unitPixToCoordX = (xMax - xMin) / w;
+        const unitPixToCoordY = (yMax - yMin) / h;
+        svg.style.marginLeft = -Math.abs(1 / unitPixToCoordX) / 2;
+        const pixToCoord = (xPix, yPix) => {
+            xCoord = xPix * ((xMax - xMin) / w) + xMin;
+            yCoord = (yPix - h) * (-(yMax - yMin) / h) + yMin;
+            return [xCoord, yCoord]
+        }
+        const lineBetweenCoords = (x1, y1, x2, y2, attrs) => {
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            const [x1Pix, y1Pix] = coordToPix(x1, y1);
+            const [x2Pix, y2Pix] = coordToPix(x2, y2);
+            el.setAttribute('x1', x1Pix);
+            el.setAttribute('y1', y1Pix);
+            el.setAttribute('x2', x2Pix);
+            el.setAttribute('y2', y2Pix);
+            attrs = attrs || {}
+            attrs['style'] = attrs['style'] || 'stroke:black';
+            for (const [k, v] of Object.entries(attrs)){
+                el.setAttribute(k, v);
+            }
+            svg.appendChild(el);
+        }
+        const addText = (text, x, y, attrs) => {
+            txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.textContent = text;
+            txt.setAttribute('x', x);
+            txt.setAttribute('y', y);
+            for (const [k, v] of Object.entries(attrs || {})){
+                txt.setAttribute(k, v);
+            }
+            svg.appendChild(txt);
+        }
+        const addMathText = (math, x, y, attrs) => {
+            forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+            mathEl = document.createElement('span');
+            katex.render(math, mathEl, {
+                throwOnError: false
+            });
+            forObj.setAttribute('x', x);
+            forObj.setAttribute('y', y);
+            attrs['height'] = attrs['height'] || '1rem'
+            attrs['width'] = attrs['width'] || '15rem'
+            for (const [k, v] of Object.entries(attrs || {})){
+                forObj.setAttribute(k, v);
+            }
+            forObj.appendChild(mathEl);
+            svg.appendChild(forObj);
+        }
+        const drawIneqs = () => {
+            style = 'stroke:#777;padding:5pt';
+            let ineqNum = 0;
+            for ([xCoef, yCoef, rhs, sense] of ineqs) {
+                ineqNum += 1;
+                const ineqId = svgId + 'ineq' + ineqNum
+                plotEqn(xCoef, yCoef, rhs, {style: style, id: ineqId});
+                let [e1x, e1y, e2x, e2y] = getEqnEndpoints(xCoef, yCoef, rhs);
+                hoverLineId = svgId + 'ineq' + ineqNum + 'hoverLine';
+                lineBetweenCoords(e1x, e1y, e2x, e2y, {'style': 'stroke:black;stroke-width:5;opacity:0', 'id': hoverLineId})
+                const hoverLine = document.getElementById(hoverLineId);
+                polyId = svgId + 'ineq' + ineqNum + 'shaded';
+                ((xCoef, yCoef, rhs, sense, polyId) => {
+                    hoverLine.onmouseover = () => {
+                        const cornerPoints = plotExtremePoints;
+                        let pts = getIntersectionWithPoly(xCoef, yCoef, rhs, cornerPoints, false);
+                        const cpts = cornerPoints.filter(cp => ineqSatisfied(...cp, xCoef, yCoef, rhs, sense));
+                        const getPtStr = (p) => p[0] + '---' + p[1];
+                        const usedPtStrs = pts.map(p => getPtStr(p));
+                        skipPts = [];
+                        foundFirstCorner = false;
+                        lastUsed = pts[pts.length - 1];
+                        for (cp of cpts) {
+                            cpStr = getPtStr(cp)
+                            if (cpStr in usedPtStrs) {
+                                continue
+                            }
+                            if (foundFirstCorner) {
+                                usedPtStrs.push(cpStr);
+                                pts.push(cp);
+                            } else {                            
+                                if (cp[0] == lastUsed[0] || cp[1] == lastUsed[1]) {
+                                    foundFirstCorner = true;
+                                    usedPtStrs.push(cpStr);
+                                    pts.push(cp);
+                                } else {
+                                    skipPts.push(cp);
+                                }
+                            }
+                        }
+                        pts = pts.concat(skipPts);
+                        polygonFromPoints(pts, {id: polyId, style: 'fill:rgb(212,212,212);fill:rgb(212,212,212,0.5)'});
+                    }
+                    hoverLine.onmouseout = () => {
+                        shadePoly = document.getElementById(polyId)
+                        if (!!shadePoly){
+                            shadePoly.remove();
+                        }
+                    }
+                })(xCoef, yCoef, rhs, sense, polyId)
+            }
+        }
+        const plotEqn = (xCoef, yCoef, rhs, attrs) => {
+            lineBetweenCoords(...getEqnEndpoints(xCoef, yCoef, rhs), attrs);
+        }
+        const getEqnEndpoints = (xCoef, yCoef, rhs) => {
+            if (xCoef === 0) {
+                return [0, rhs / yCoef, xMax, rhs / yCoef]
+            } else if (yCoef === 0) {
+                return [rhs / xCoef, 0, rhs / xCoef, yMax]
+            } else {
+                return [0, rhs / yCoef, rhs / xCoef, 0]
+            }
+        }
+        const drawTickMarks = () => {
+            xTick = 0
+            style = {'font-size': '10pt', 'font-family': 'KaTeX_Main,Times New Roman,serif'}
+            while (xTick <= xMax) {
+                if (xTick >= 0) {
+                    lineBetweenCoords(xTick, 0, xTick, (yMax - yMin) / 30);
+                    [xText, yText] = coordToPix(xTick, -(yMax - yMin) / 30);
+                    addText(xTick, xText - 4, yText + 4, style);
+                    xTick += 1;
+                }
+            }
+            yTick = 0
+            while (yTick <= yMax) {
+                if (yTick >= 0) {
+                    lineBetweenCoords(0, yTick, (xMax - xMin) / 30, yTick);
+                    [xText, yText] = coordToPix(-(xMax - xMin) / 30, yTick);
+                    addText(yTick, xText - 4, yText + 4, style);
+                    yTick += 1;
+                }
+            }
+        }
+        const isFeasible = (x, y, returnViolated=false) => {
+            let feasible = true;
+            let violated = [];
+            for ([xCoef, yCoef, rhs, sense] of allIneqs) {
+                if (!ineqSatisfied(x, y, xCoef, yCoef, rhs, sense)){
+                    feasible = false;
+                    if (returnViolated) {
+                        violated.push([xCoef, yCoef, rhs])
+                    } else {                        
+                        break
+                    }
+                }
+            }
+            if (returnViolated) {
+                return [feasible, violated];
+            }
+            return feasible
+        }
+        const ineqSatisfied = (x, y, xCoef, yCoef, rhs, sense) => {
+            if (sense === "l") {
+                return x * xCoef + y * yCoef <= rhs + 0.0001
+            } else {
+                return x * xCoef + y * yCoef >= rhs - 0.0001
+            }
+        }
+        const getVertices = (includePlotEdges=false) => {
+            let ineqsToUse = allIneqs;
+            if (includePlotEdges) {
+                ineqsToUse = ineqsToUse.concat([[1, 0, xMax, 'l'], [0, 1, yMax, 'l']]);
+            }
+            let intersections = [];
+                for ([i, [xCoef, yCoef, rhs, sense]] of ineqsToUse.entries()) {
+                    for ([j, [xCoef1, yCoef1, rhs1, sense1]] of ineqsToUse.entries()){
+                        if (j <= i){
+                            continue
+                        }
+                        denom = xCoef * yCoef1 - xCoef1 * yCoef
+                        if (denom === 0){
+                            continue
+                        }
+                        num = xCoef * rhs1 - xCoef1 * rhs;
+                        yIntersect = num / denom;
+                        if (xCoef === 0) {
+                            xIntersect = rhs1 / xCoef1;
+                        } else {
+                            xIntersect = (rhs / xCoef) - (yCoef / xCoef) * num / denom;
+                        }
+                        if (xIntersect == 0){
+                            xIntersect = 0;
+                        }
+                        if (yIntersect == 0){
+                            yIntersect = 0;
+                        }
+                        intersections.push([xIntersect || 0, yIntersect, i, j]);
+                    }
+                }
+                let vertexStrs = [];
+                let vertices = [];
+                for ([x, y, i, j] of intersections) {
+                    if (isFeasible(x, y)) {
+                        vertices.push([x, y, i, j]);
+                    }
+                }
+                orderedVertexIndices = [0];
+                while (orderedVertexIndices.length < vertices.length) {
+                    nextIndex = [...vertices.entries()].filter((val, ind) => {
+                        if (orderedVertexIndices.includes(ind)) {
+                            return false
+                        }
+                        lastInd = orderedVertexIndices[orderedVertexIndices.length - 1];
+                        return (
+                            vertices[ind][2] == vertices[lastInd][2] ||
+                            vertices[ind][2] == vertices[lastInd][3] ||
+                            vertices[ind][3] == vertices[lastInd][2] ||
+                            vertices[ind][3] == vertices[lastInd][3]
+                        )
+                    })[0][0]
+                    orderedVertexIndices.push(nextIndex);
+                }
+            if (vertices.length === 0) {
+                return []
+            }
+            return orderedVertexIndices.map(i => vertices[i].slice(0, 2))
+        }
+        const polygonFromPoints = (points, attrs) => {
+            const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            poly.setAttribute('points', points.map(v => coordToPix(...v)).join(' '));
+            for (const [k, v] of Object.entries(attrs || {})){
+                poly.setAttribute(k, v);
+            }
+            svg.appendChild(poly);
+        }
+        const shadeFeasibleRegion = () => {
+            const verts = getVertices(true);
+            if (verts.length === 0){
+                return
+            }
+            polygonFromPoints(verts, {'style': "fill:#ddd;stroke:black"})
+            if (!!altFeasRegionTextPlace) {
+                const [xPix, yPix] = coordToPix(...altFeasRegionTextPlace);
+            } else {
+                const xWeighted = verts.map(v => v[0]).reduce((a, b) => a + b) / verts.length;
+                const yWeighted = verts.map(v => v[1]).reduce((a, b) => a + b) / verts.length;
+                const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
+            }
+            addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
+            addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
+        }
+        const placePoint = (x, y, attrs) => {
+            circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const [xPix, yPix] = coordToPix(x, y);
+            circ.setAttribute('cx', xPix);
+            circ.setAttribute('cy', yPix);
+            circ.setAttribute('r', 3.5);
+            for (const [k, v] of Object.entries(attrs || {})){
+                circ.setAttribute(k, v);
+            }
+            svg.appendChild(circ);
+        }
+        const plotVertices = () => {
+            for ([x, y] of vertices) {
+                placePoint(x, y);
+            }
+        }
+        const drawAxes = () => {
+            const fontStyle = {'font-size': '12pt', 'font-family': 'KaTeX_Main,Times New Roman,serif'};
+            lineBetweenCoords(0, 0, xMax, 0);
+            xDiff = 10 * unitPixToCoordX
+            yDiff = 4 * unitPixToCoordY
+            polygonFromPoints([[xMax, 0], [xMax - xDiff, yDiff], [xMax - xDiff, -yDiff]], {'style': "fill:black;stroke:black"});
+            [xLabelPix, yLabelPix] = coordToPix(Math.ceil(xMax) - 0.5, 0);
+            addMathText('x_1', xLabelPix, yLabelPix, fontStyle);
+            [xLabelPix, yLabelPix] = coordToPix(0, Math.ceil(yMax) - 0.5);
+            addMathText('x_2', xLabelPix - 24, yLabelPix - 20, fontStyle);
+            lineBetweenCoords(0, 0, 0, yMax);
+            xDiff = 4 * unitPixToCoordX
+            yDiff = 10 * unitPixToCoordY
+            polygonFromPoints([[0, yMax], [xDiff, yMax - yDiff], [-xDiff, yMax - yDiff]], {'style': "fill:black;stroke:black"});
+        }
+        const labelIneqs = () => {
+            for (i in ineqTextPlaces || []) {
+                ineq = ineqs[i];
+                ineqText = ''
+                ineqText += ineq[0] === 0 ? '' : (ineq[0] == 1 ? '' : ineq[0]) + 'x_1'
+                ineqText += ineq[1] === 0 ? '' : (ineqText === '' ? '' : ' + ') + (ineq[1] == 1 ? '' : ineq[1]) + 'x_2'
+                ineqText += ' ' + (ineq[3] === 'l' ? leq : geq) + ' ' + ineq[2];
+                fontStyle = {'font-size': '12pt'}
+                addMathText(ineqText, ...coordToPix(...ineqTextPlaces[i]), fontStyle);
+            }
+        }
+        const getIntersectionWithPoly = (xCoef, yCoef, rhs, points, checkFeas=true) => {
+            let intersections = [];
+            let intersectionStrs = [];
+            for (i=0; i<points.length; i++){
+                const [p1, p2] = points[i];
+                const [q1, q2] = points[(i + 1) % points.length];
+                const m1 = (p2 - q2) / (p1 - q1);
+                const b1 = p2 - m1 * p1;
+                const m2 = -xCoef / yCoef;
+                const b2 = rhs / yCoef;
+                if (m1 === m2) {
+                    continue
+                }
+                if (Math.abs(m1) === Infinity) {
+                    xIntersect = p1;
+                    yIntersect = m2 * xIntersect + b2;
+                } else if (Math.abs(m2) === Infinity) {
+                    xIntersect = rhs / xCoef;
+                    yIntersect = m1 * xIntersect + b1
+                } else {
+                    xIntersect = (b2 - b1) / (m1 - m2);
+                    yIntersect = m1 * xIntersect + b1;
+                }
+                xIntersect = Math.round(1000000 * xIntersect) / 1000000;
+                yIntersect = Math.round(1000000 * yIntersect) / 1000000;
+                interStr = xIntersect + '---' + yIntersect;
+                p = [xIntersect, yIntersect]
+                if (!intersectionStrs.includes(interStr) && xIntersect === xIntersect && yIntersect === yIntersect) {
+                    if (!checkFeas || isFeasible(...p)) {
+                        intersectionStrs.push(interStr);
+                        intersections.push(p)
+                    }
+                }
+            }
+            return intersections
+        }
+        const vertices = getVertices();
+        const verticesAndPlotEdges = getVertices(true);
+        drawIneqs();
+        labelIneqs();
+        shadeFeasibleRegion();
+        drawTickMarks();
+        if (showVertices){
+            plotVertices(vertices);
+        }
+        drawAxes();
+        if (choosePoints) {
+            const underDiv = document.createElement('div');
+            underDiv.classList = ['underPlot']
+            parentDiv.appendChild(underDiv);
+            const objDiv = document.createElement('div');
+            objDiv.classList = ['pointChooseText'];
+            underDiv.appendChild(objDiv);
+            katex.render(`\\text{Objective: }${objStr}`, objDiv, {throwOnError: false});
+            const pointChooseDiv = document.createElement('div');
+            pointChooseDiv.classList = ['pointChooseDiv'];
+            underDiv.appendChild(pointChooseDiv);
+            const input1 = document.createElement('input');
+            const label1 = document.createElement('label');
+            label1.classList = ['pointChooseLabel']
+            katex.render('x_1:', label1, {throwOnError: false});
+            const input2 = document.createElement('input');
+            const label2 = document.createElement('label');
+            label2.classList = ['pointChooseLabel'];
+            katex.render('x_2:', label2, {throwOnError: false});
+            const textDiv = document.createElement('div');
+            textDiv.classList = ['pointChooseText'];
+            underDiv.appendChild(textDiv);
+            katex.render('\\text{Select values for }x_1\\text{ and }x_2', textDiv, {throwOnError: false})
+            for (inputEl of [input1, input2]) {
+                inputEl.setAttribute('type', 'number');
+                inputEl.setAttribute('min', 0);
+                inputEl.classList = ['pointChooseInput'];
+            }
+            input1.setAttribute('max', Math.floor(xMax));
+            input2.setAttribute('max', Math.floor(yMax));  // todo: enforce min/max in onchange function
+            const inputChangeFunc = () => {
+                [x1, x2] = [input1.value, input2.value];
+                if (x1 == parseFloat(x1) && x2 == parseFloat(x2)){
+                    const pointId = svgId + 'placedPoint';
+                    const pointEl = document.getElementById(pointId);
+                    if (!!pointEl) {
+                        pointEl.remove();
+                    }
+                    const [feas, violated] = isFeasible(x1, x2, returnViolated=true);
+                    const color = feas ? 'black' : 'red';
+                    textDiv.innerHTML = '';
+                    if (feas) {
+                        textDiv.textContent = `(${x1}, ${x2}) is feasible, objective value ${getObjVal(x1, x2)}.`
+                    }
+                    else {
+                        textDiv.textContent = `(${x1}, ${x2}) is infeasible.`
+                        const lineClass = 'violatedIneq' + Date.now();
+                        for (v of violated) {
+                            plotEqn(...v, {'style': 'stroke:red;stroke-width:0', 'class': 'violatedIneq ' + lineClass})
+                            setTimeout(() => {
+                                for (violEl of [...document.getElementsByClassName(lineClass)]){
+                                    violEl.remove();
+                                }
+                            }, 800)
+                        }
+                    }
+                    placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
+                }
+            }
+            input1.addEventListener("change", inputChangeFunc);
+            input2.addEventListener("change", inputChangeFunc);
+            svg.onclick = (e) => {                
+                let rect = svg.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                [xPix, yPix] = pixToCoord(x, y);
+                input1.value = Math.round(10 * xPix) / 10;
+                input2.value = Math.round(10 * yPix) / 10;
+                inputChangeFunc();
+            }
+            for (el of [label1, input1, label2, input2]) {
+                pointChooseDiv.appendChild(el);
+            }
+        }
+        if (chooseObjVals) {
+            const underDiv = document.createElement('div');
+            underDiv.classList = ['underPlot']
+            parentDiv.appendChild(underDiv);
+            const pointChooseDiv = document.createElement('div');
+            pointChooseDiv.classList = ['pointChooseDiv'];
+            underDiv.appendChild(pointChooseDiv);
+            const pointValDiv = document.createElement('div');
+            pointValDiv.classList = ['pointChooseDiv'];
+            underDiv.appendChild(pointChooseDiv);
+            const input = document.createElement('input');
+            const label = document.createElement('label');
+            label.classList = ['pointChooseLabel'];
+            katex.render(`\\text{Plotting objective: }${objStr}=`, label, {throwOnError: false});
+            const textDiv = document.createElement('div');
+            textDiv.classList = ['pointChooseText'];
+            underDiv.appendChild(textDiv);
+            textDiv.textContent = 'Select a value to plot an objective line.'
+            input.setAttribute('type', 'number');
+            input.setAttribute('min', 0);
+            maxObjVal = 0;
+            for (extreme of plotExtremePoints) {
+                exObjVal = getObjVal(...extreme);
+                if (exObjVal > maxObjVal) {
+                    maxObjVal = exObjVal;
+                }
+            }
+            input.setAttribute('max', maxObjVal);
+            input.classList = ['pointChooseInput'];
+            const inputChangeFunc = () => {
+                z = input.value;
+                if (z == parseFloat(z)){
+                    eqnId = svgId + 'objEqn';
+                    eqnEl = document.getElementById(eqnId);
+                    if (!!eqnEl) {
+                        eqnEl.remove();
+                    }
+                    plotEqn(...obj, z, {id: eqnId});
+                    const intersectPoints = getIntersectionWithPoly(...obj, z, verticesAndPlotEdges);
+                    const intersectLineId = svgId + 'objLineIntersect';
+                    intersectLine = document.getElementById(intersectLineId);
+                    if (!!intersectLine) {
+                        intersectLine.remove();
+                    }
+                    if (intersectPoints.length === 0) {
+                        textDiv.textContent = 'No feasible solutions with objective value ' + z;
+                    } else if (intersectPoints.length === 1) {
+                        textDiv.textContent = `Single feasible solution (${intersectPoints[0]}) with objective value ${z}`;
+                        placePoint(...intersectPoints[0], {'style': 'fill:purple', 'id': intersectLineId})
+                    } else {
+                        textDiv.textContent = `Multiple feasible solutions have objective value ${z}`;
+                        lineBetweenCoords(...intersectPoints[0], ...intersectPoints[1], {'style': 'stroke:purple;stroke-width:2pt', 'id': intersectLineId});
+                    }
+                }
+            }
+            input.addEventListener("change", inputChangeFunc);
+            svg.onclick = (e) => {                
+                let rect = svg.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                let z = getObjVal(...pixToCoord(x, y));
+                input.value = Math.round(10 * z) / 10;
+                inputChangeFunc();
+            }
+            for (el of [label, input]) {
+                pointChooseDiv.appendChild(el);
+            }
+        }
+    }
+    const drawAllSvgPlots = () => {
+        for ([i, svgEl] of document.querySelectorAll('svg.lpDraw').entries()){
+            ((i, svgEl) => {
+                drawPlot(svgEl, 'svg' + i);
+            })(i, svgEl)
+        }
+    }
+</script>

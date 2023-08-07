@@ -1,7 +1,7 @@
 <style>
     #main {
         font-size: max(15pt, min(1.4rem, 4vw));
-        width: min(max(min(90%, 20rem), calc(100% - min(50%, 300px) - 1rem)), 850px);
+        width: min(max(min(90%, 20rem), calc(100% - min(60%, 350px) - 1rem)), 850px);
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
@@ -15,6 +15,11 @@
         overflow-y: hidden;
         max-width: none !important;
     }
+    .loadingMessage {
+        text-align: center;
+        margin-top: 40vh;
+        font-size: 1.2rem;
+    }
     blockquote {
         margin: 1rem 0.5rem;
         padding-left: 0.5em;
@@ -22,10 +27,7 @@
         border-left: 2px solid #e6e6e6;
         border-right: 2px solid #e6e6e6;
         color: #444;
-    }
-    blockquote p {
         background-color: #ebebeb;
-        padding: 0.5rem;
     }
     details {
         cursor: pointer;
@@ -75,6 +77,9 @@
         float: right;
         cursor: pointer;
     }
+    .header-section-number::after {
+        content: ':'
+    }
     @keyframes fade {
         0%,100% { opacity: 0 }
         15% { opacity: 1 }
@@ -93,21 +98,31 @@
     }
 </style>
 <script>
+    document.onreadystatechange = () => {
+        if (document.readyState !== "complete") {
+            document.querySelector("#main").style.display = "none";
+            document.querySelector(".navbar").style.display = "none";
+            document.querySelector("#loader").style.visibility = "visible";
+        } else {
+            document.querySelector("#loader").style.display = "none";
+            document.querySelector(".navbar").style.display = "flex";
+            document.querySelector("#main").style.display = "block";
+        }
+    };
     window.onload = () => {
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
         citeRefExpandLinksAndAddTooltips();
         addFootnoteTooltips();
         addCodeCopyButtons();
-        tocIndentHelp();
+        tocHelpers();
+        drawAllSvgPlots();
     }
-    tocIndentHelp = () => {
+    tocHelpers = () => {
         for (el of document.querySelectorAll('#TOC a')){
-            if ([...el.classList].includes('closeBtn')) {
-                continue
-            }
-            parentEl = el.parentNode;
-            numUlsNested = 0;
+            const hrefId = el.getAttribute('href').slice(1);
+            let parentEl = el.parentNode;
+            let numUlsNested = 0;
             while (!!parentEl){
                 numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
                 parentEl = parentEl.parentNode
@@ -119,6 +134,38 @@
             newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
             newEl.style.display = 'flex';
             newEl.innerHTML = innerHTML;
+            if (numUlsNested > 1) {
+                el.parentNode.classList.add('tocHideable');
+                el.parentNode.classList.add('tocHidden');
+            } 
+            liParent = el.parentNode;
+            if (liParent.getElementsByTagName('UL').length > 0) {
+                expandEl = document.createElement('span');
+                expandEl.innerHTML = '&nbsp;+&nbsp;';
+                expandEl.classList = ['tocExpand'];
+                newEl.appendChild(expandEl);
+                ((expandEl, liParent) => {
+                    expandEl.onclick = (e) => {
+                        for (hideable of [...liParent.getElementsByClassName('tocHideable')]){
+                            let hideableParent = hideable.parentNode;
+                            while (hideableParent.tagName !== 'LI'){
+                                hideableParent = hideableParent.parentNode
+                            }
+                            if (hideableParent !== liParent) {
+                                continue
+                            }
+                            if ([...hideable.classList].includes('tocHidden')) {
+                                hideable.classList.remove('tocHidden');
+                                expandEl.innerHTML = '&nbsp;-&nbsp;';
+                            } else {
+                                hideable.classList.add('tocHidden');
+                                expandEl.innerHTML = '&nbsp;+&nbsp;';
+                            }
+                        };
+                        e.preventDefault();
+                    }
+                })(expandEl, liParent)
+            }
             el.appendChild(newEl);
         }
     }
@@ -222,7 +269,6 @@
             textContent = el.textContent;
             el.getElementsByTagName('a')[0].textContent = textContent;
             for (childEl of el.childNodes) {
-                console.log(childEl.tagName)
                 if (!!!childEl.tagName) {
                     childEl.textContent = '';
                 }

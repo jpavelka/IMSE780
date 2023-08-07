@@ -1,12 +1,24 @@
 tasks:
-  - name: Setup Pandoc
+  - name: Setup
     init: |
       wget https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb -O pandoc.deb
       sudo dpkg -i pandoc.deb
       rm pandoc.deb
       mkdir /workspace/bin
       cp /usr/bin/pandoc /workspace/bin/pandoc
+      cp /home/gitpod/.pyenv/shims/pandoc-xnos /workspace/bin/pandoc-xnos
+      echo 'export PATH=/workspace/bin:${PATH}' >> ~/.bashrc
       python -m pip install pandoc-fignos pandoc-eqnos pandoc-tablenos pandoc-secnos
+      rm package.json package-lock.json
+      gp sync-done setup
     command: |
       export PATH=/workspace/bin:${PATH}
-      echo 'export PATH=/workspace/bin:${PATH}' >> ~/.bashrc
+      python convert.py
+      npm install -g live-server
+      live-server converted --watch=converted/index.html
+  - name: Terminal init
+    init: |
+      gp sync-await setup
+    command: |
+      export PATH=/workspace/bin:${PATH}
+      python convert.py

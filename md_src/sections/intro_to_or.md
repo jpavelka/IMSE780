@@ -1,4 +1,4 @@
-# Introduction
+# Introduction to OR
 
 In this section we'll cover the big picture questions: What is Operations Research? Where did it come from? What can I do with it?
 
