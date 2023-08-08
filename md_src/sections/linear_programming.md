@@ -127,7 +127,6 @@ Let see some examples of the other scenarios we defined above. In each case, we'
 
 In this plot, we've added the constraint $x_1 + 3x_2 \geq 30$. All the points satisfying this inequality are well above the previous feasible region, so no solutions are feasible.
 
-
 #### Unbounded problem
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"removeConstraints": [0, 1], "altFeasRegionTextPlace": [4.5, 3.5], "chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg>
@@ -142,8 +141,10 @@ Here we've removed two constraints, with the only one remaining being $2x_2 <= 1
 
 In this example, we've altered the objective function to $6x_1 + 4x_2$ so that it has the same slope as one of our constraints. We can see by moving the objective up and down that the optimal solution comes at $Z=36$, where the intersects an entire face (bounding line) of the feasible region. Since any point on that bounding line attains the optimal objective value, they are all optimal solutions.
 
-## LP forms
-
 ## Solving LPs with software
+
+{colabGist:1_mwxc4xRRVjaMDZL0ObAc0ROqqw5UrJ3,9c7e1b589a3efb40590606ba6eed102f}
+
+## LP forms
 
 <!-- book section 4.5 -->

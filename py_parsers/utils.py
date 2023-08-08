@@ -124,16 +124,16 @@ def add_citations_header(text_lines):
 
 
 def colab_gist(text, update_gists):
-    matches = re.findall('{colabGist:[^,]*,[^,]*,[^\}]*}', text)
+    matches = re.findall('{colabGist:[^,]*,[^\}]*}', text)
     for match in matches:
-        colab_id, gist_id, fname = match.split(':')[-1].split(',')
-        fname = fname[:-1]
+        print(match)
+        colab_id, gist_id = match.split(':')[-1].split(',')
+        gist_id = gist_id[:-1]
         new = (
             f'<iframe src="https://gist.github.com/{gist_id}.pibb" '
-            'style="width: 100%; height: 500px; border: 0;"></iframe>'
+            'style="width: 100%; height: 550px; border: 0;"></iframe>'
         )
         text = text.replace(match, new)
         if update_gists:
-            update_colab_gist(colab_id=colab_id,
-                              gist_id=gist_id, gist_fname=fname)
+            update_colab_gist(colab_id=colab_id, gist_id=gist_id)
     return text

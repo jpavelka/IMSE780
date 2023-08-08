@@ -8,7 +8,7 @@ tasks:
       cp /usr/bin/pandoc /workspace/bin/pandoc
       cp /home/gitpod/.pyenv/shims/pandoc-xnos /workspace/bin/pandoc-xnos
       echo 'export PATH=/workspace/bin:${PATH}' >> ~/.bashrc
-      python -m pip install pandoc-fignos pandoc-eqnos pandoc-tablenos pandoc-secnos
+      python -m pip install pandoc-fignos pandoc-eqnos pandoc-tablenos pandoc-secnos requests
       rm package.json package-lock.json
       gp sync-done setup
     command: |

@@ -15,7 +15,7 @@ In Colab (and other notebook environments) code is organized into cells where re
 
 Below, you should see a read-only image of a Colab notebook. The notebook gives some exposition and samples of basic Python principles. Click the "Open in Colab" button to open a copy in a new window.
 
-{colabGist:1Pxhkdd8WeC-29uLVDSW2I4v_PliO02Af,dcd6305c13b79bbdba7c49dc5c76d3c7,python-basics.ipynb}
+{colabGist:1Pxhkdd8WeC-29uLVDSW2I4v_PliO02Af,dcd6305c13b79bbdba7c49dc5c76d3c7}
 
 ## Other coding environments
 
