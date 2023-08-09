@@ -1,16 +1,18 @@
 <style>
     .eqnos {
-        display: inline-block;
-        position: relative;
+        display: flex;
+        align-items: center;
         width: 100%;
+        overflow-x: auto;
     }
     .eqnos br {
         display: none;
     }
     .eqnos-number {
-        position: absolute;
-        right: 0em;
-        top: 50%;
-        line-height: 0;
+        margin-left: auto;
+        padding-left: 1rem;
+    }
+    .math.display {
+        flex-grow: 1;
     }
 </style>

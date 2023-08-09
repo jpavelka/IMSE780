@@ -143,8 +143,82 @@ In this example, we've altered the objective function to $6x_1 + 4x_2$ so that i
 
 ## Solving LPs with software
 
+Let's pause briefly now to explain, practically, how LPs can be solved in the real world. By which I mean: if given an LP in practice, what would you do to find the answer? I'm not talking about the theory behind what LP solving software does (we'll get the that later), just how to use the software. This won't be a comprehensive discussion, really just giving you enough to solve our example LP. We'll expand on this discussion some when we get to modeling in the Integer Programming section.
+
+There are two key components to solving mathematical programming problems in practice: the modeling language and the solver.
+
+### Modeling languages
+
+The job of a modeling language is to take a model specification like +@eq:prototypeLp and turn it into something the computer can understand and solve. Some popular modeling languages are their own standalone software, such as [AMPL](https://ampl.com/) and [GAMS](https://www.gams.com/). The modeling languages we'll use are instead shipped as Python[^modelingInOtherLanguages] libraries. Sometimes these languages are built for use with a single solver, while others try to be compatible with several different solvers.
+
+[^modelingInOtherLanguages]: There are similar packages available in other popular programming languages as well.
+
+### Solvers
+
+The solver is the software that takes the modeled problem and applies the necessary algorithms to solve it. There are several options here as well. The best solvers all require paid licenses to use fully for commercial purposes[^academicLicenses]. The two biggest names in this space are [Gurobi](https://www.gurobi.com/) and [CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer), though [Xpress](https://www.fico.com/en/products/fico-xpress-optimization) and [COPT](https://www.shanshu.ai/copt/) are competitive as well. There are also free, open-source options, but these generally perform much worse than the commercial offerings. Some names in this space are [COIN-OR](https://www.coin-or.org/), [GLPK](https://www.gnu.org/software/glpk/), and [SCIP](https://scipopt.org/).
+
+[^academicLicenses]: Most come with limited licenses for noncommercial uses, and also offer free unrestricted licenses for students and academics.
+
+### Solving our LP with Python
+
+In the following notebook, I show how we can model and solve our sample LP in two different ways. The first way uses Gurobi as the solver and its purpose-built Python library `gurobipy` as the modeler. I should mention that since Gurobi is a commercial solver, we need some sort of license for unrestricted use. However, we do get a limited license automatically with the install of `gurobipy` which is good for problems with up to 2000 variables and 2000 linear constraints. This is pretty limiting for practical industry use, but most everything we'll do in this class will fall comfortably within those bounds.
+
+The second option is a fully open-source option using PuLP, a Python modeling language maintained by COIN-OR. By default, this will use COIN-OR's linear programming solver CLP to solve the model. However, a nice feature of PuLP is that it is solver-agnostic. This means that you can use it to model your problem but switch between any of the popular solvers (including the commercial ones). This is nice to avoid being locked-in to a single solver. But it also may be slightly less performant, or may lack some solver-specific features that come with a solver's built-in API.
+
 {colabGist:1_mwxc4xRRVjaMDZL0ObAc0ROqqw5UrJ3,9c7e1b589a3efb40590606ba6eed102f}
 
 ## LP forms
+
+We're _almost_ ready to talk about algorithms for solving LPs, but first we should make a note on some different forms LPs can take. Crucially, it will turn out that all the forms we talk about here are, in a sense, equivalent. Thus no matter the specifics of how an LP is presented, we know we'll be able to solve it using the general methods.
+
+### Standard form
+
+Our formulation of the sample LP in +@eq:prototypeLp is in what is known as **standard form**. Generally, a linear program with $n$ variables and $m$ constraints is in standard form if it is written as:
+
+$$
+\begin{align*}
+\text{max}  && c_1x_1 + c_2x_2 + \cdots + c_nx_n && && \\
+\text{s.t.} && a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n && \leq && b_1 \\
+            && a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n && \leq && b_2 \\
+            &&                                            && \vdots && \\
+            && a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n && \leq && b_m \\
+            && x_1, x_2, \cdots , x_n && \geq && 0
+\end{align*}
+$$
+
+{#eq:standardFormLp}
+
+Where all the $a$, $b$, and $c$ values (known as the **problem data**) are real numbers. Our sample problem, and many other practical LP problems, are naturally formulated like this. But it might at first glance feel a bit limiting. What if you'd rather minimize instead of maximizing? Or let your variables take negative values? We'll see in the following sections that such considerations are indeed possible, and we can consider them in the same framework as standard form problems.
+
+### Minimization problems
+
+What if your optimization problem is a minimization problem and not a maximization problem? For example, instead of maximizing profit, you'd like to minimize cost? No worries, it is actually quite straightforward to convert from minimization to maximization - just turn everything negative! The minimum cost is the same as the maximum $-1\cdot\text{cost}$. So
+
+$$
+\text{min}\ c_1x_1 + c_2x_2 + \cdots + c_nx_n
+$$
+
+is the same as
+
+$$
+\text{max} -c_1x_1 -c_2x_2 - \cdots -c_nx_n.
+$$
+
+Since the problem data can be any real number (so, in particular, negative numbers are fine) this still follows the form of +@eq:standardFormLp.
+
+### Different constraint forms
+
+### Variable bounds
+
+### Matrix notation
+
+That is
+
+## The simplex method
+
+Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear].
+
+[^dantzigStory]: I'm not mentioning a lot of people by name in these notes, but I couldn't skip Dantzig. Mostly I wanted to bring up this famous story: A student comes late to class one day, sees two problems written on the board, and assumes they are the day's assigned homework. The problems are more difficult than usual, but he solves them. When he turns them in, the professor is elated - these weren't homework, but rather famous unsolved problems in the field! You can find several versions of this story out there, citing several different people as the supposed student. Turns out [this actually happened, and the student was Dantzig](https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99).
+[^assumeLinear]: There's a neat story, quoting from @tspPursuit, in [this blog post](https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/) (yes, OR blogs are a thing). It's specifically about Dantzig first introducing the simplex method during a talk in 1948, and more generally about understanding your assumptions 😀.
 
 <!-- book section 4.5 -->

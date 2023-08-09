@@ -24,7 +24,9 @@ The above definitions were great, but maybe it's feeling a little too abstract a
 
 There are many well-known problems in the world of OR, but I reckon the [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) (TSP) is the best-known and most-loved among them. The setup is simple: Some old-timey door-to-door salesman is heading out on the road to sell his product to the masses. He plans to visit a certain group of cities, and thanks to his trusty atlas he knows the way between any pair of cities. Less clear, however, is the shortest path that will lead you through _all_ of the cities, and this is the aim of the TSP: In which order should you visit the cities such that your total distance traveled is minimized?
 
-As I said, this a famous problem in the OR space. I think it's due to the simple, relatable exposition, paired with the fact that it is actually quite computationally challenging. And yet despite the challenges, modern methods are able to solve problem instances where the number of cities is in the 10,000s! The image below shows the optimal tour through selected cities in the continental US[^tspFurtherReading].
+As I said, this a famous problem in the OR space[^tspBook]. I think it's due to the simple, relatable exposition, paired with the fact that it is actually quite computationally challenging. And yet despite the challenges, modern methods are able to solve problem instances where the number of cities is in the 10,000s! The image below shows the optimal tour through selected cities in the continental US[^tspFurtherReading].
+
+[^tspBook]: There's a neat book all about the TSP, @tspPursuit, written by a great professor that I took a course from in graduate school. It's more popularly focused than technical, so it's a surprisingly smooth read. Highly recommended!
 
 [^tspFurtherReading]: You can tell from the image that this map is pretty old. [The site from which it came](https://www.math.uwaterloo.ca/tsp/usa50/) tells a neat story about how this instance was solved, by hand, way back in 1954! There are some other interesting bits there too, well worth a read in my opinion.
 

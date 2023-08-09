@@ -236,10 +236,10 @@
                 if (!!!backEl) {
                     backEl = document.createElement('div');
                     backEl.id = backId;
+                    backEl.style.marginTop = 'auto';
                     backArrowEl = document.createElement('a');
                     backArrowEl.id = backId + 'Arrow';
                     backArrowEl.innerHTML = "↩︎";
-                    backArrowEl.style.float = 'right';
                     backArrowEl.style.display = 'none';
                     backEl.onclick = () => backEl.style.display = 'none';
                     backEl.appendChild(backArrowEl);

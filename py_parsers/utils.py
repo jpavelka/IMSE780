@@ -126,7 +126,6 @@ def add_citations_header(text_lines):
 def colab_gist(text, update_gists):
     matches = re.findall('{colabGist:[^,]*,[^\}]*}', text)
     for match in matches:
-        print(match)
         colab_id, gist_id = match.split(':')[-1].split(',')
         gist_id = gist_id[:-1]
         new = (
