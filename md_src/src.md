@@ -9,3 +9,5 @@
 {insertSection:sections/linear_programming.md}
 
 <!-- {insertSection:sections/integer_programming.md} -->
+
+{insertSection:sections/appendix.md}

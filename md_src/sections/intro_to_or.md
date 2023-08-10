@@ -82,11 +82,11 @@ Now, admittedly, some of those case studies are a little stale. But don't fret, 
 
 My main goal for this course is for you to be able to apply the methods we learn. We will apply our knowledge using various packages written for the Python programming language. While this is not a programming course, I realize some of you may have limited (or no) knowledge of the language, thus I've provided a small unit on the basics of the language. But if you are a true beginner this may not suffice, and you may need to spend time on your own to get comfortable with it.
 
-After that, we will jump into the first big success in Operations Research history, Linear Programming. We'll learn about the basics of these models, a little history, and a few ways to solve them (with special emphasis on the simplex method). We'll also touch on the theory of duality and sensitivity analysis.
+After that, we will jump into the first big success in Operations Research history, linear programming. We'll learn about the basics of these models, a little history, and a few ways to solve them (with special emphasis on the simplex method). We'll also touch on the theory of duality and sensitivity analysis.
 
-After Linear Programming comes its cousin, Integer Programming. As far as solving techniques, we'll focus on Branch-and-Bound. Since Integer Programming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
+After linear programming comes its cousin, integer programming. As far as solving techniques, we'll focus on branch-and-bound. Since integer irogramming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
 
-Next will be several topics in Nonlinear Programming where we will talk about convexity, optimality conditions, and selected solution procedures.
+Next will be several topics in nonlinear programming where we will talk about convexity, optimality conditions, and selected solution procedures.
 
 We will also include a section on Stochastic Processes, where we will cover topics in Markov chains, queueing theory, and perhaps Markov Decision Processes.
 

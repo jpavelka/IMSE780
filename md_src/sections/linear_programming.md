@@ -1,6 +1,6 @@
-# Linear Programming
+# Linear programming
 
-In the family of OR techniques, Linear Programming (LP) is certainly the matriarch. It was among the first methods to be seriously studied and find broad applications. To this day, LPs are relevant and used across industry to inform decision-making and help best make use of scarce resources.
+In the family of OR techniques, linear programming (LP) is certainly the matriarch. It was among the first methods to be seriously studied and find broad applications. To this day, LPs are relevant and used across industry to inform decision-making and help best make use of scarce resources.
 
 So, what is an LP? Let's step back a bit - linear programming is a special type of mathematical programming problem. The word _programming_, in the language of the pre-computer-revolution era where these topics were first studied, was more or less a synonym for _planning_. So mathematical programming just means using math to make a plan.
 
@@ -192,7 +192,7 @@ Where all the $a$, $b$, and $c$ values (known as the **problem data**) are real 
 
 ### Minimization problems
 
-What if your optimization problem is a minimization problem and not a maximization problem? For example, instead of maximizing profit, you'd like to minimize cost? No worries, it is actually quite straightforward to convert from minimization to maximization - just turn everything negative! The minimum cost is the same as the maximum $-1\cdot\text{cost}$. So
+What if your optimization problem is a minimization problem and not a maximization problem? For example, instead of maximizing profit, you'd like to minimize cost? No worries, it is actually quite straightforward to convert from minimization to maximization - just turn everything negative! The minimum cost is the same as the maximum "negative cost" $(-1\cdot\text{cost})$. So
 
 $$
 \text{min}\ c_1x_1 + c_2x_2 + \cdots + c_nx_n
@@ -207,6 +207,49 @@ $$
 Since the problem data can be any real number (so, in particular, negative numbers are fine) this still follows the form of +@eq:standardFormLp.
 
 ### Different constraint forms
+
+What is you wanted "greater than or equal" constraints instead of "less than or equal" constraints? This is again another case of a sign switch since if you take any inequality you can:
+
+- multiply both sides by -1, and
+- switch the direction of the inequality
+
+to end up with another valid inequality[^quickInequalityFlipExample]. Thus any inequality of the form:
+
+[^quickInequalityFlipExample]: A quick example: $5 \leq 10$ means the exact same thing as $-5 \geq -10$.
+
+$$
+a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \geq b_i
+$$
+
+can be written as
+
+$$
+-a_{i1}x_1 - a_{i2}x_2 - \cdots - a_{in}x_n \leq -b_i
+$$
+
+which brings us back into line with the standard form inequalities in +@eq:standardFormLp.
+
+What about equality constraints? That is, constraints of the form
+
+$$
+a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n = b_i.
+$$
+
+Can these be converted into standard form? The answer is yes, but it comes at the cost of an extra constraint in the formulation. Because using the above constraint has the same effect as using these two in combination:
+
+$$
+a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \leq b_i \\
+a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \geq b_i
+$$
+
+Now, that second inequality does not fit in standard form since it is a "$\geq$" constraint, but we already know how to convert it. So the final standard-form-conforming formulation is:
+
+$$
+a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \leq b_i \\
+-a_{i1}x_1 - a_{i2}x_2 - \cdots - a_{in}x_n \leq -b_i
+$$
+
+Not symmetric, can we go the other way?
 
 ### Variable bounds
 

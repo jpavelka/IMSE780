@@ -110,13 +110,43 @@
         }
     };
     window.onload = () => {
+        appendixSecNo = renumberAppendix();
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
         citeRefExpandLinksAndAddTooltips();
+        secRefExpandLinksAddBackArrow(appendixSecNo);
         addFootnoteTooltips();
         addCodeCopyButtons();
         tocHelpers();
         drawAllSvgPlots();
+    }
+    renumberAppendix = () => {
+        const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
+        const appendixSecNo = appendixEl.getAttribute('data-number');
+        appendixEl.setAttribute('data-number', 'A');
+        appendixEl.firstChild.remove();
+        const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
+            return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
+        })
+        for (apSec of appendixSections){
+            const numSplit = apSec.getAttribute('data-number').split('.');
+            const secNo = 'A.' + numSplit.slice(1).join('.');
+            apSec.setAttribute('data-number', secNo);
+            apSec.firstChild.textContent = secNo;
+        }
+        const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
+            return (el.textContent).split('.')[0] === appendixSecNo;
+        })
+        for (tocEl of tocEls) {
+            if (tocEl.textContent == appendixSecNo){
+                tocEl.remove();
+            } else {
+                const numSplit = tocEl.textContent.split('.');
+                const secNo = 'A.' + numSplit.slice(1).join('.');
+                tocEl.textContent = secNo;
+            }
+        }
+        return appendixSecNo
     }
     tocHelpers = () => {
         for (el of document.querySelectorAll('#TOC a')){
@@ -248,17 +278,56 @@
             }
         }
     }
-    eqRefExpandLinksAndAddTooltips = () => {
-        els = document.querySelectorAll('[href^="\#eq:"]');
-        addTooltips(els, true)
+    expandLinks = (els, prevWordInclude) => {
         for (const el of els) {
             sib = el.previousSibling;
-            sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '')
+            sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
             prevWord = sibTextSplit[sibTextSplit.length - 1];
-            if (['eq.', 'Equation'].includes(prevWord)){
-                repS = RegExp(`${prevWord}[^a-zA-Z]$`)
+            if (prevWordInclude.includes(prevWord)){
+                repS = RegExp(`${prevWord}[^a-zA-Z]$`);
                 el.innerHTML = prevWord + ' ' + el.innerHTML;
                 sib.textContent = sib.textContent.replace(repS, '');
+            }
+        }
+    }
+    eqRefExpandLinksAndAddTooltips = () => {
+        els = document.querySelectorAll('[href^="\#eq:"]');
+        expandLinks(els, ['eq.', 'Equation']);
+        addTooltips(els, true);
+    }
+    secRefExpandLinksAddBackArrow = (appendixSecNo) => {
+        els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
+            return el.parentNode.tagName !== 'LI'
+        });
+        const appendixStr = 'the appendix';
+        for (el of els) {
+            if (el.textContent == appendixSecNo) {                
+                sib = el.previousSibling;
+                sib.remove();
+                el.textContent = appendixStr;
+            } else {
+                el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
+            }
+        }
+        expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
+        for ([i, el] of els.entries()) {
+            const secId = el.getAttribute('href').slice(1);
+            const elId = 'linkToSec' + secId + i;
+            el.id = elId;
+            const toSec = document.getElementById(secId);
+            el.onclick = () => {
+                backArrowId = secId + 'ReturnLink';
+                let backArrowEl = document.getElementById(backArrowId);
+                if (!!backArrowEl) {
+                    backArrowEl.remove();
+                }
+                backArrowEl = document.createElement('a');
+                backArrowEl.id = backArrowId
+                backArrowEl.setAttribute('href', '#' + elId);
+                backArrowEl.style.float = 'right';
+                backArrowEl.innerHTML = "↩︎";
+                backArrowEl.onclick = () => backArrowEl.remove();
+                toSec.appendChild(backArrowEl);
             }
         }
     }
