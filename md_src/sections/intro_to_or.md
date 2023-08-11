@@ -24,7 +24,9 @@ The above definitions were great, but maybe it's feeling a little too abstract a
 
 There are many well-known problems in the world of OR, but I reckon the [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) (TSP) is the best-known and most-loved among them. The setup is simple: Some old-timey door-to-door salesman is heading out on the road to sell his product to the masses. He plans to visit a certain group of cities, and thanks to his trusty atlas he knows the way between any pair of cities. Less clear, however, is the shortest path that will lead you through _all_ of the cities, and this is the aim of the TSP: In which order should you visit the cities such that your total distance traveled is minimized?
 
-As I said, this a famous problem in the OR space. I think it's due to the simple, relatable exposition, paired with the fact that it is actually quite computationally challenging. And yet despite the challenges, modern methods are able to solve problem instances where the number of cities is in the 10,000s! The image below shows the optimal tour through selected cities in the continental US[^tspFurtherReading].
+As I said, this a famous problem in the OR space[^tspBook]. I think it's due to the simple, relatable exposition, paired with the fact that it is actually quite computationally challenging. And yet despite the challenges, modern methods are able to solve problem instances where the number of cities is in the 10,000s! The image below shows the optimal tour through selected cities in the continental US[^tspFurtherReading].
+
+[^tspBook]: There's a neat book all about the TSP, @tspPursuit, written by a great professor that I took a course from in graduate school. It's more popularly focused than technical, so it's a surprisingly smooth read. Highly recommended!
 
 [^tspFurtherReading]: You can tell from the image that this map is pretty old. [The site from which it came](https://www.math.uwaterloo.ca/tsp/usa50/) tells a neat story about how this instance was solved, by hand, way back in 1954! There are some other interesting bits there too, well worth a read in my opinion.
 
@@ -80,11 +82,11 @@ Now, admittedly, some of those case studies are a little stale. But don't fret, 
 
 My main goal for this course is for you to be able to apply the methods we learn. We will apply our knowledge using various packages written for the Python programming language. While this is not a programming course, I realize some of you may have limited (or no) knowledge of the language, thus I've provided a small unit on the basics of the language. But if you are a true beginner this may not suffice, and you may need to spend time on your own to get comfortable with it.
 
-After that, we will jump into the first big success in Operations Research history, Linear Programming. We'll learn about the basics of these models, a little history, and a few ways to solve them (with special emphasis on the simplex method). We'll also touch on the theory of duality and sensitivity analysis.
+After that, we will jump into the first big success in Operations Research history, linear programming. We'll learn about the basics of these models, a little history, and a few ways to solve them (with special emphasis on the simplex method). We'll also touch on the theory of duality and sensitivity analysis.
 
-After Linear Programming comes its cousin, Integer Programming. As far as solving techniques, we'll focus on Branch-and-Bound. Since Integer Programming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
+After linear programming comes its cousin, integer programming. As far as solving techniques, we'll focus on branch-and-bound. Since integer irogramming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
 
-Next will be several topics in Nonlinear Programming where we will talk about convexity, optimality conditions, and selected solution procedures.
+Next will be several topics in nonlinear programming where we will talk about convexity, optimality conditions, and selected solution procedures.
 
 We will also include a section on Stochastic Processes, where we will cover topics in Markov chains, queueing theory, and perhaps Markov Decision Processes.
 

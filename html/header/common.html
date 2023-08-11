@@ -110,13 +110,52 @@
         }
     };
     window.onload = () => {
+        appendixSecNo = renumberAppendix();
+        addMathContainers();
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
         citeRefExpandLinksAndAddTooltips();
+        secRefExpandLinksAndAddBackArrow(appendixSecNo);
         addFootnoteTooltips();
         addCodeCopyButtons();
         tocHelpers();
         drawAllSvgPlots();
+    }
+    addMathContainers = () => {
+        for (el of document.querySelectorAll('.math.display')){
+            katexContainer = document.createElement('div');
+            katexContainer.classList = ['katexContainer'];
+            el.parentNode.insertBefore(katexContainer, el);
+            katexContainer.appendChild(el);
+        }
+    }
+    renumberAppendix = () => {
+        const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
+        const appendixSecNo = appendixEl.getAttribute('data-number');
+        appendixEl.setAttribute('data-number', 'A');
+        appendixEl.firstChild.remove();
+        const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
+            return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
+        })
+        for (apSec of appendixSections){
+            const numSplit = apSec.getAttribute('data-number').split('.');
+            const secNo = 'A.' + numSplit.slice(1).join('.');
+            apSec.setAttribute('data-number', secNo);
+            apSec.firstChild.textContent = secNo;
+        }
+        const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
+            return (el.textContent).split('.')[0] === appendixSecNo;
+        })
+        for (tocEl of tocEls) {
+            if (tocEl.textContent == appendixSecNo){
+                tocEl.remove();
+            } else {
+                const numSplit = tocEl.textContent.split('.');
+                const secNo = 'A.' + numSplit.slice(1).join('.');
+                tocEl.textContent = secNo;
+            }
+        }
+        return appendixSecNo
     }
     tocHelpers = () => {
         for (el of document.querySelectorAll('#TOC a')){
@@ -214,51 +253,92 @@
         ulEl.appendChild(liEl);
     }
     addTooltips = (els, includeLinkBacks) => {
-        for (el of els) {
-            refId = el.getAttribute('href');
-            refEl = document.getElementById(refId.slice(1));
-            el.setAttribute('href', '#');
-            el.classList = ['eqnRef'];
-            nextEl = document.createElement('span');
-            el.parentNode.insertBefore(nextEl, el.nextSibling);
-            popupId = refId + 'popup' + el.getBoundingClientRect().left + el.getBoundingClientRect().right;
-            elId = popupId + 'Ref';
-            nextEl.id = elId;
-            ((a, b, c, d, e) => {
-                a.onclick = () => {
-                    footnoteOnTooltipClick(b, c, d, e);
-                    return false
-                };                
-            })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
-            if (includeLinkBacks) {
-                backId = 'back' + refId;
-                backEl = document.getElementById(backId);
-                if (!!!backEl) {
-                    backEl = document.createElement('div');
-                    backEl.id = backId;
-                    backArrowEl = document.createElement('a');
-                    backArrowEl.id = backId + 'Arrow';
-                    backArrowEl.innerHTML = "↩︎";
-                    backArrowEl.style.float = 'right';
-                    backArrowEl.style.display = 'none';
-                    backEl.onclick = () => backEl.style.display = 'none';
-                    backEl.appendChild(backArrowEl);
-                    refEl.appendChild(backEl);
+        for ([i, el] of els.entries()) {
+            ((el, i) => {
+                refId = el.getAttribute('href');
+                refEl = document.getElementById(refId.slice(1));
+                el.setAttribute('href', '#');
+                el.classList = ['eqnRef'];
+                nextEl = document.createElement('span');
+                el.parentNode.insertBefore(nextEl, el.nextSibling);
+                popupId = refId + 'popup' + i;
+                elId = popupId + 'Ref';
+                nextEl.id = elId;
+                ((a, b, c, d, e) => {
+                    a.onclick = () => {
+                        footnoteOnTooltipClick(b, c, d, e);
+                        return false
+                    };                
+                })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+                if (includeLinkBacks) {
+                    backId = 'back' + refId;
+                    backEl = document.getElementById(backId);
+                    if (!!!backEl) {
+                        backEl = document.createElement('div');
+                        backEl.id = backId;
+                        backEl.style.marginTop = 'auto';
+                        backArrowEl = document.createElement('a');
+                        backArrowEl.id = backId + 'Arrow';
+                        backArrowEl.innerHTML = "↩︎";
+                        backArrowEl.style.display = 'none';
+                        backEl.onclick = () => backEl.style.display = 'none';
+                        backEl.appendChild(backArrowEl);
+                        refEl.appendChild(backEl);
+                    }
                 }
+            })(el, i)
+        }
+    }
+    expandLinks = (els, prevWordInclude) => {
+        for (const el of els) {
+            sib = el.previousSibling;
+            sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
+            prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
+            if (prevWordInclude.includes(prevWord)){
+                repS = RegExp(`${prevWord}[^a-zA-Z]$`);
+                el.innerHTML = prevWord + ' ' + el.innerHTML;
+                sib.textContent = sib.textContent.replace(repS, '');
             }
         }
     }
     eqRefExpandLinksAndAddTooltips = () => {
         els = document.querySelectorAll('[href^="\#eq:"]');
-        addTooltips(els, true)
-        for (const el of els) {
-            sib = el.previousSibling;
-            sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '')
-            prevWord = sibTextSplit[sibTextSplit.length - 1];
-            if (['eq.', 'Equation'].includes(prevWord)){
-                repS = RegExp(`${prevWord}[^a-zA-Z]$`)
-                el.innerHTML = prevWord + ' ' + el.innerHTML;
-                sib.textContent = sib.textContent.replace(repS, '');
+        expandLinks(els, ['eq.', 'Equation']);
+        addTooltips(els, true);
+    }
+    secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
+        els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
+            return el.parentNode.tagName !== 'LI'
+        });
+        const appendixStr = 'the appendix';
+        for (el of els) {
+            if (el.textContent == appendixSecNo) {                
+                sib = el.previousSibling;
+                sib.remove();
+                el.textContent = appendixStr;
+            } else {
+                el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
+            }
+        }
+        expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
+        for ([i, el] of els.entries()) {
+            const secId = el.getAttribute('href').slice(1);
+            const elId = 'linkToSec' + secId + i;
+            el.id = elId;
+            const toSec = document.getElementById(secId);
+            el.onclick = () => {
+                backArrowId = secId + 'ReturnLink';
+                let backArrowEl = document.getElementById(backArrowId);
+                if (!!backArrowEl) {
+                    backArrowEl.remove();
+                }
+                backArrowEl = document.createElement('a');
+                backArrowEl.id = backArrowId
+                backArrowEl.setAttribute('href', '#' + elId);
+                backArrowEl.style.float = 'right';
+                backArrowEl.innerHTML = "↩︎";
+                backArrowEl.onclick = () => backArrowEl.remove();
+                toSec.appendChild(backArrowEl);
             }
         }
     }

@@ -83,7 +83,7 @@
         }
         const allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
         const altFeasRegionTextPlace = args['altFeasRegionTextPlace']
-        const showVertices = ['yes', 'y', 'true', 't'].includes((args['showVertices'] || 'n').toLowerCase());
+        const showVertices = args['showVertices'] || false;
         const choosePoints = args['choosePoints'] || false;
         const chooseObjVals = args['chooseObjVals'] || false;
         const extraEqns = args['extraEqns'] || [];

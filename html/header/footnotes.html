@@ -1,11 +1,11 @@
 <style>
     .footnoteTooltipClose {
         color: #222;
-        float: right;
         font-size: 30pt;
         font-weight: bold;
-        margin-top: -1.5rem;
-        margin-right: -0.5rem;
+        margin-left: auto;
+        margin-top: -1rem;
+        margin-bottom: -1rem;
     }
     .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
         color: black;
@@ -27,9 +27,16 @@
         transform: translateX(-50%);
         margin-top: 2rem;
         font-size: max(15pt, min(1.3rem, 4vw));
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
     }
     .eqnRef .footnoteTooltip {
         color: black;
+    }
+    .seeOriginalEq {
+        font-size: 1rem;
+        margin-left: auto;
     }
 </style>
 <script>
@@ -59,8 +66,7 @@
                 seeOrigEl = document.createElement('a');
                 seeOrigEl.setAttribute('href', '#' + origId);
                 seeOrigEl.innerHTML = 'jump to';
-                seeOrigEl.style.fontSize = '1rem';
-                seeOrigEl.style.float = 'right';
+                seeOrigEl.classList = ['seeOriginalEq']
                 seeOrigEl.onclick = () => {
                     backEl = document.getElementById('back#' + origId + 'Arrow');
                     backEl.style.display = 'inline';
