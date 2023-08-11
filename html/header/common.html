@@ -111,6 +111,7 @@
     };
     window.onload = () => {
         appendixSecNo = renumberAppendix();
+        addMathContainers();
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
         citeRefExpandLinksAndAddTooltips();
@@ -119,6 +120,14 @@
         addCodeCopyButtons();
         tocHelpers();
         drawAllSvgPlots();
+    }
+    addMathContainers = () => {
+        for (el of document.querySelectorAll('.math.display')){
+            katexContainer = document.createElement('div');
+            katexContainer.classList = ['katexContainer'];
+            el.parentNode.insertBefore(katexContainer, el);
+            katexContainer.appendChild(el);
+        }
     }
     renumberAppendix = () => {
         const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
