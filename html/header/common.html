@@ -114,7 +114,7 @@
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
         citeRefExpandLinksAndAddTooltips();
-        secRefExpandLinksAddBackArrow(appendixSecNo);
+        secRefExpandLinksAndAddBackArrow(appendixSecNo);
         addFootnoteTooltips();
         addCodeCopyButtons();
         tocHelpers();
@@ -244,45 +244,47 @@
         ulEl.appendChild(liEl);
     }
     addTooltips = (els, includeLinkBacks) => {
-        for (el of els) {
-            refId = el.getAttribute('href');
-            refEl = document.getElementById(refId.slice(1));
-            el.setAttribute('href', '#');
-            el.classList = ['eqnRef'];
-            nextEl = document.createElement('span');
-            el.parentNode.insertBefore(nextEl, el.nextSibling);
-            popupId = refId + 'popup' + el.getBoundingClientRect().left + el.getBoundingClientRect().right;
-            elId = popupId + 'Ref';
-            nextEl.id = elId;
-            ((a, b, c, d, e) => {
-                a.onclick = () => {
-                    footnoteOnTooltipClick(b, c, d, e);
-                    return false
-                };                
-            })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
-            if (includeLinkBacks) {
-                backId = 'back' + refId;
-                backEl = document.getElementById(backId);
-                if (!!!backEl) {
-                    backEl = document.createElement('div');
-                    backEl.id = backId;
-                    backEl.style.marginTop = 'auto';
-                    backArrowEl = document.createElement('a');
-                    backArrowEl.id = backId + 'Arrow';
-                    backArrowEl.innerHTML = "↩︎";
-                    backArrowEl.style.display = 'none';
-                    backEl.onclick = () => backEl.style.display = 'none';
-                    backEl.appendChild(backArrowEl);
-                    refEl.appendChild(backEl);
+        for ([i, el] of els.entries()) {
+            ((el, i) => {
+                refId = el.getAttribute('href');
+                refEl = document.getElementById(refId.slice(1));
+                el.setAttribute('href', '#');
+                el.classList = ['eqnRef'];
+                nextEl = document.createElement('span');
+                el.parentNode.insertBefore(nextEl, el.nextSibling);
+                popupId = refId + 'popup' + i;
+                elId = popupId + 'Ref';
+                nextEl.id = elId;
+                ((a, b, c, d, e) => {
+                    a.onclick = () => {
+                        footnoteOnTooltipClick(b, c, d, e);
+                        return false
+                    };                
+                })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+                if (includeLinkBacks) {
+                    backId = 'back' + refId;
+                    backEl = document.getElementById(backId);
+                    if (!!!backEl) {
+                        backEl = document.createElement('div');
+                        backEl.id = backId;
+                        backEl.style.marginTop = 'auto';
+                        backArrowEl = document.createElement('a');
+                        backArrowEl.id = backId + 'Arrow';
+                        backArrowEl.innerHTML = "↩︎";
+                        backArrowEl.style.display = 'none';
+                        backEl.onclick = () => backEl.style.display = 'none';
+                        backEl.appendChild(backArrowEl);
+                        refEl.appendChild(backEl);
+                    }
                 }
-            }
+            })(el, i)
         }
     }
     expandLinks = (els, prevWordInclude) => {
         for (const el of els) {
             sib = el.previousSibling;
             sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
-            prevWord = sibTextSplit[sibTextSplit.length - 1];
+            prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
             if (prevWordInclude.includes(prevWord)){
                 repS = RegExp(`${prevWord}[^a-zA-Z]$`);
                 el.innerHTML = prevWord + ' ' + el.innerHTML;
@@ -295,7 +297,7 @@
         expandLinks(els, ['eq.', 'Equation']);
         addTooltips(els, true);
     }
-    secRefExpandLinksAddBackArrow = (appendixSecNo) => {
+    secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
         els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
             return el.parentNode.tagName !== 'LI'
         });

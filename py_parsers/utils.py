@@ -129,8 +129,7 @@ def colab_gist(text, update_gists):
         colab_id, gist_id = match.split(':')[-1].split(',')
         gist_id = gist_id[:-1]
         new = (
-            f'<iframe src="https://gist.github.com/{gist_id}.pibb" '
-            'style="width: 100%; height: 550px; border: 0;"></iframe>'
+            f'<script src="https://gist.github.com/{gist_id}.js"></script>'
         )
         text = text.replace(match, new)
         if update_gists:

@@ -1,6 +1,6 @@
-# Appendix {#sec:appendix}
+# Appendix
 
-## Special symbols
+## Special symbols {#sec:symbols}
 
 - $\R$: The set of real numbers, i.e. anything on the number line between (though not including!) $-\infty$ and $\infty$.
 - $\R_+$: The set of nonnegative real numbers, i.e. anything in $\R$ that is greater than or equal to 0.
@@ -8,7 +8,7 @@
 - $\I_+$: The set of nonnegative integer numbers, i.e. anything in $\I$ that is greater than or equal to 0.
 - $\{\cdots\}$: Set notation. Items inside the curly brackets are the elements of the set, so $\{0,1\}$ is the 2-element set consisting of just the numbers 0 and 1.
 - $\in$: Set inclusion. When we write $x\in S$, we mean that $x$ is an element of the set $S$. For example, we could write $\pi\in\R$, meaning the number $\pi$ is a real number.
-- $\forall$: For all. We use this symbol when we want to specify that something should be done for all elements in some set. So if we're writing out the constraints for some model and we say $x_i\geq 0\ \forall\ i\in\{1, 2, \cdots, n\}$ we're just saying that each of $x_1, x_2, \cdots, x_n$ should be nonnegative.
+- $\forall$: For all. We use this symbol when we want to specify that something should be done for all elements in some set. So if we're writing out the constraints for some model and we say $x_j\geq 0\ \forall\ j\in\{1, 2, \cdots, n\}$ we're just saying that each of $x_1, x_2, \cdots, x_n$ should be nonnegative.
 - $S^m$: The set of vectors with $m$ elements, all of which are from some set $S$. For example, $\R^3$ is the set of 3-element, real number vectors. So we could say
 $$
     \begin{bmatrix}1 \\ 2.64 \\ -3\end{bmatrix}\in\R^3.
@@ -17,31 +17,167 @@ $$
 $$
 \begin{bmatrix}4 & 3 & 9 & 6\\ 0 & 4 & 8 & 5\\ 7 & 7 & 2 & 1\end{bmatrix} \in \I^{3\times 4}.
 $$
+- $\zeros$: A matrix (or vector) with all entries equal to 0 (the size of the matrix is usually clear by context).
+- $\identity$: A square matrix with all entries equal to 0, except the diagonal where all entries equal 1 (the size of the matrix is usually clear by context). This looks like:
+\begin{bmatrix}
+1 & 0 & \cdots & 0 \\
+0 & 1 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & 1 \\
+\end{bmatrix}
 
-## Linear algebra review
+## Linear algebra review {#sec:linearAlgebra}
 
 Linear algebra is the study of math involving matrices, vectors, and linear transformations. A __matrix__ (the basic object of linear algebra) is a rectangular array of numbers. For example, 
 $$
 \mat{A}=\begin{bmatrix} 2 & 4 \\ 7 & 0 \\ 6 & 3 \end{bmatrix}
 $$
-is a $3\times 2$ matrix. A __vector__ is a special type of matrix with either a single column or a single row, e.g.
-$$
-\mat{v}=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
-$$
-is a __column vector__ and $$\mat{v}=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a __row vector__.
+is a $3\times 2$ matrix. A matrix is said to be __square__ if it has the same number of rows and columns.
 
-In these notes, we will usually denote matrices with boldface, uppercase letters and vectors with boldface, lowercase letters. Additionally, vectors are usually assumed to be column vectors. If we need a vector $\mat{v}$ to be a row vector instead, we will usually explicitly transpose it as $\mat{v}^\T$ (see +@sec:matrixMath).
+In these notes, we will usually denote matrices with boldface, uppercase letters.
 
 ### Matrix math {#sec:matrixMath}
 
-equality
+We say Matrices $\mat{A}$, $\mat{B}$ are __equal__ if _all_ of their elements are equal. First off, that means $\mat{A}$ and $\mat{B}$ must have the same number of rows $m$ and columns $n$. Additionally, if we write notate the entries of the matrices like:
+$$
+\mat{A} = \begin{bmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn} \\
+\end{bmatrix}
+$${#eq:matrixDef}
 
-transpose
+and
 
-addition
+$$
+\mat{B} = \begin{bmatrix}
+b_{11} & b_{12} & \cdots & b_{1n} \\
+b_{21} & b_{22} & \cdots & b_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+b_{m1} & b_{m2} & \cdots & b_{mn} \\
+\end{bmatrix}.
+$$
 
-multiplication
+Then we say $\mat{A}=\mat{B}\ $ if and only if $\ a_{11}=b_{11}$, $a_{12}=b_{12}$, ... and so on.
 
-inverse
+For a matrix $\mat{A}$, the __transpose__ of $\mat{A}$, denoted $\mat{A}\T$, is essentially the matrix "turned on its side" so that the first row of $\mat{A}$ equals the first column of $\mat{A}\T$, the second row of $\mat{A}$ equals the second column of $\mat{A}\T$, and so on. More concretely, if we define $\mat{A}$ as in +@eq:matrixDef, then
+$$
+\mat{A}\T = \begin{bmatrix}
+a_{11} & a_{21} & \cdots & a_{m1} \\
+a_{12} & a_{22} & \cdots & a_{m2} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{1n} & a_{2n} & \cdots & a_{mn} \\
+\end{bmatrix}.
+$$
+It follows from this that if $\mat{A}\in\R^{m\times n}$ then $\mat{A}\T\in\R^{n\times m}$. A common case worth mentioning is for vectors. If vector $\x$ is a column vector then $\x\T$ is a row vector, and vice-versa.
 
-$\mat{A}\mat{x} = \mat{b}$
+__Addition__ is only defined for two matrices of the same size. For two $m\times n$ matrices $\mat{A}$ and $\mat{B}$, we have
+$$
+\mat{A} + \mat{B} = \begin{bmatrix}
+a_{11} + b_{11} & a_{12} + b_{12} & \cdots & a_{1n} + b_{1n} \\
+a_{21} + a_{21} & a_{22} + a_{22} & \cdots & a_{2n} + a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} + a_{m1} & a_{m2} + a_{m2} & \cdots & a_{mn} + a_{mn} \\
+\end{bmatrix}
+$$
+
+For matrices, __multiplication__ $\A\B$ is only defined when the the second dimension of $\A$ equals the first dimension of $\B$. So, if $\A$ is an $m\times n$ matrix (for some $m, n$), we need $B$ to be an $n\times s$ matrix (for some $s$). In this case, we define their product as the matrix $\mat{C}$ having entries
+
+$$
+c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}.
+$$
+
+Here is a small example to see it in action:
+
+$$
+\begin{align*}
+\begin{bmatrix}0&1\\2&3\\4&5\end{bmatrix}
+\begin{bmatrix}6&7\\8&9\end{bmatrix}
+&=
+\begin{bmatrix}
+    0\cdot6 + 1\cdot8 & 0\cdot7 + 1\cdot9 \\
+    2\cdot6 + 3\cdot8 & 2\cdot7 + 3\cdot9 \\
+    4\cdot6 + 5\cdot8 & 4\cdot7 + 5\cdot9 \\
+\end{bmatrix}\\
+&=
+\begin{bmatrix}8&9\\36&41\\64&73\end{bmatrix}
+\end{align*}
+$$
+
+There is a simpler form of multiplication available between a matrix $\A$ and a scalar (a single number) $s$, where each element of the product is simply the corresponding element of $\A$ multiplied by $s$, i.e.
+$$
+s\A = \begin{bmatrix}
+sa_{11} & sa_{12} & \cdots & sa_{1n} \\
+sa_{21} & sa_{22} & \cdots & sa_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+sa_{m1} & sa_{m2} & \cdots & sa_{mn} \\
+\end{bmatrix}
+$$
+
+### Properties of matrix operations
+
+The above matrix operations satisfy the following properties:
+
+- Associativity of addition:$$(\A + \mat{B}) + \mat{C} = \A + (\mat{B} + \mat{C})$$
+- Associativity of multiplication:$$\A(\mat{B}\mat{C}) = (\A\mat{B})\mat{C}$$
+- Commutativity of addition:$$\A + \mat{B} = \mat{B} + \A$$
+- Distributivity:$$\A(\mat{B} + \mat{C}) = \A\mat{B} + \A\mat{C}$$
+
+You may notice that multiplication does not commute, i.e. $\A\mat{B} \neq \mat{B}\A$. Indeed, in the general case where $\A$ is an $m\times n$ matrix and $\B$ is an $n\times s$ matrix, the product $\B\A$ is not even defined if $m\neq s$. Even if $m=s$ and the product is defined, the result needs not be the same.
+
+### Special matrices
+
+A __vector__ is a special type of matrix with either a single column or a single row, e.g.
+$$
+\x=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
+$$
+is a __column vector__ and $$\x=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a __row vector__. In these notes, vectorw will usually be denoted with with boldface, lowercase letters. Additionally, vectors are usually assumed to be column vectors. If we need a vector $\x$ to be a row vector instead, we will usually explicitly transpose it as $\x\T$.
+
+An __identity matrix__, denoted by $\identity$, is a square vector whose elements are all 0s expect for 1s along the diagonal, i.e. 
+$$\identity = \begin{bmatrix}
+1 & 0 & \cdots & 0 \\
+0 & 1 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & 1 \\
+\end{bmatrix}$$
+
+The main property of identity matrices is that multiplying another (properly sizes) matrix does not alter it, i.e. we have
+$$
+\identity\A = \A,\quad \A\identity= \A.
+$$
+Note that we usually don't explicitly specify the size of $\identity$, since it is usually clear from the context.
+
+The __null matrix__ or __zero matrix__, denoted by $\zeros$ is a matrix (or vector) with all entries equal to 0. Again, we will usually not explicitly specify its size since it will be clear from context. The zero matrix satisfies:
+$$
+\A + \zeros = \A,\quad \zeros\A = \zeros,\quad \A\zeros = \A.
+$$
+
+Note that $\identity$ and $\zeros$ play roles in matrix operations similar to the roles of 1 and 0 (respectively) in arithmetic.
+
+### Rank and inverse
+
+A set of vectors $\x_1, \x_2, \dots, \x_m$ is said to be __linearly dependent__ if there exists $m$ numbers $c_1, c_2, \dots, c_m$, some of which are not zeros, such that
+$$
+c_1\x_1 + c_2\x_2 + \cdots + c_m\x_m = \zeros.
+$$
+Otherwise, the vectors are said to be __linearly independent__. For example, the vectors
+$$
+\x_1 = [1, 1, 1],\quad \x_2 = [0, 1, 1],\quad \x_3 = [2, 5, 5],
+$$
+if we take $c_1 = 2$, $c_2 = 3$, and $c_3 = -1$ then we have
+$$\begin{align*}
+2\x_1 + 3\x_2 - x_3 & = [2, 2, 2] + [0, 3, 3] - [2, 5, 5]\\
+                    & = [0, 0, 0]
+\end{align*}$$
+so the vectors are linearly dependent.
+
+The __rank__ of a set of vectors is the largest number of linearly independent vectors that can be chosen from the space. So e.g. the rank of $\{\x_1, \x_2, \x_3\}$ from above is 2.
+
+Matrices also have a notion of rank. The __row rank__ of a matrix is the rank of its set of row vectors, while the __column rank__ of the matrix is the rank of its set of column vectors. An important result in linear algebra is that, for any matrix, the row rank and column rank are the same. Thus we can talk about the __rank__ of a matrix, being equal to either the row rank or the column rank.
+
+Suppose $\A$ is an $n\times n$ (square) matrix. We say $\A$ is __nonsingular__ if it has rank $n$. Otherwise, if the rank is less than $n$, we way it is __singular__. Importantly, if $\A$ is nonsingular, there is a unique nonsingular matrix $\A\inv$ such that
+$$
+\A\A\inv = \identity = \A\inv\A.
+$$
+We call the matrix $\A\inv$ the __inverse__ of $\A$. Furthermore, singular matrices do not have inverses.
