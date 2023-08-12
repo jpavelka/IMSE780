@@ -73,7 +73,7 @@ $$
 
 ## LP terminology
 
-With this example in hand, let's get back to some definitions. The **decision variables** are the quantities we're deciding how to set. In our example these are $x_1$ and $x_2$, the number of batches run per week for the two products. The **objective** is the value we'd like to optimize, which in the example is the profit equation $3x_1 + 5x_2$. In this case we'd like to maximize the objective, but minimization is possible as well. The **constraints** are the limitations on how we set the decision variables, which in this case is everything after the "s.t."[^subjectTo]. Notice that the final constraint, $x_1,x_2\geq0$, is really two constraints so this is a abusing notation a bit. But these types of constraints (called __variable bound__ constraints, or in this case _nonnegativity_ constraints since they restrict variables to $\geq0$) are often treated separately in solution techniques, so it is common to see them grouped or written slightly differently like this. We call the rest of the constraints the __functional constraints__.
+With this example in hand, let's get back to some definitions. The **decision variables** are the quantities we're deciding how to set. In our example these are $x_1$ and $x_2$, the number of batches run per week for the two products. The **objective** is the value we'd like to optimize, which in the example is the profit equation $3x_1 + 5x_2$. In this case we'd like to maximize the objective, but minimization is possible as well. The **constraints** are the limitations on how we set the decision variables, which in this case is everything after the "s.t."[^subjectTo]. Notice that the final constraint, $x_1,x_2\geq0$, is really two constraints so this is a abusing notation a bit. But these types of constraints (called **variable bound** constraints, or in this case _nonnegativity_ constraints since they restrict variables to $\geq0$) are often treated separately in solution techniques, so it is common to see them grouped or written slightly differently like this. We call the rest of the constraints the **functional constraints**.
 
 [^subjectTo]: The "s.t." is an abbreviation for "subject to" and is used in formulations leading into the constraints section.
 
@@ -82,7 +82,8 @@ A **solution** to an LP is any specification of values for the decision variable
 - $x_1=0, x_2=0$
 - $x_1=-20, x_2=6$
 - $x_1=2, x_2=3$
-  are all solutions to our sample problem, even though the second one violates nonnegativity.
+
+are all solutions to our sample problem, even though the second one violates nonnegativity.
 
 [^anySolution]: So long as we're talking about real numbers, of course. Something like $x_1=\text{blue}$, $x_2=\text{elephant}$ is just nonsense and isn't a solution to our problem.
 
@@ -255,7 +256,7 @@ $$
 a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \leq b_i
 $$
 
-to equality form, we'll add a so-called __slack variable__ $s_i$. We'll enforce $s_i\geq0$ and rewrite the constraint as
+to equality form, we'll add a so-called **slack variable** $s_i$. We'll enforce $s_i\geq0$ and rewrite the constraint as
 
 $$
 a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n + s_i = b_i.
@@ -271,18 +272,22 @@ and $s_i$ is nonnegative.
 
 ### Variable bounds
 
-In the standard form problem, we enforce that all of our variables are nonnegative. But what if we don't want any explicit bounds on the variables? Is this a different class of problems? As it turns out, we can freely switch back and forth between nonnegative variables and these so-called __unrestricted__ or __free variables__.
+In the standard form problem, we enforce that all of our variables are nonnegative. But what if we don't want any explicit bounds on the variables? Is this a different class of problems? As it turns out, we can freely switch back and forth between nonnegative variables and these so-called **unrestricted** or **free variables**.
 
 How do we do the transformations? The first direction is straightforward; say you have a formulation with nonnegative variables and you'd like to remove the variable bounds. Well, we still have the functional constraints, where we are allowed to use inequalities. So we'll "remove" the variable bound constraint $x_j\geq0$ by creating a new functional constraint
+
 $$
 a_1x_1 + \cdots + a_jx_j + \cdots + a_nx_n \leq b
 $$
+
 where $b=0$, $a_i=-1$, and all other coefficients equal $0$.
 
 Now the less obvious transformation. Say we have a formulation where the variable $x_j$ is unrestricted. How do we convert to nonnegative variables? One way is to define two more variables, call them $y_j$ and $z_j$, which will be our new nonnegative variables. What we'll do is simply replace $x_j$ with $y_j-z_j$, so that the constraints become
+
 $$
 a_{i1}x_1 + \cdots + a_{ij}y_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
 $$
+
 for each $i$[^positiveAndNegativeParts].
 
 [^positiveAndNegativeParts]: You can think of $y_j$ as the "positive part" and $z_j$ as the "negative part" of $x_j$. Note that we haven't done anything to enforce that only one of $y_j$ and $z_j$ are nonzero at a time. So for example if some solution to the original fomulation had $x_j=2$ then in the new formulation we could have $y_j=2$ and $z_j=0$, or we could just as easily have something like $y_j=12, z_j=10$ or $y_j=106.7, z_j=104.7$.
@@ -302,6 +307,7 @@ Crucially, any of these forms can be transformed into any of the others, so no m
 Last up for this section, let's discuss notation. I don't know about you, but I get a little overwhelmed when I look at formulations like +@eq:standardFormLp. There's a lot to look at there, and while I think it's good initially to see things written in full detail with simple notation like this, returns begin diminishing quickly. Especially in a case like this where there's a lot of repetition with minimal changes from line to line.
 
 So, from here on out and where appropriate, I'll start using more concise notation. For example, +@eq:standardFormLp can be written more concisely like so:
+
 $$
 \begin{align*}
 \max && \sum_{j=1}^n c_jx_j    & \\
@@ -314,7 +320,8 @@ This looks much cleaner to my eyes, and each line communicates different importa
 
 We'll see more notation like the above as we formulate more specific problems, but for much of the theory sections to come I actually much prefer matrix notation. You should already be familiar with linear algebra (+@sec:linearAlgebra in the appendix gives a brief review), so you should be able to notice how matrix algebra fits nicely with the formulations we've already given. For some $m\times n$ matrix $\A$ and $n$ vector $\x$, if we multiply them we have:
 
-$$\begin{align*}
+$$
+\begin{align*}
 \A\x&=\begin{bmatrix}
     a_{11} & a_{12} & \cdots & a_{1n} \\
     a_{21} & a_{22} & \cdots & a_{2n} \\
@@ -329,19 +336,24 @@ $$\begin{align*}
     \vdots \\
     a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n \\
 \end{bmatrix}
-\end{align*}$$
+\end{align*}
+$$
 
 which looks just like the constraint section of the standard form LP +@eq:standardFormLp. Due to the conciseness, my favorite notation for the standard form LP is
-$$\begin{align*}
+
+$$
+\begin{align*}
 \max && \c\T\x \\
 \st  && \A\x&\leq\b \\
      && \x&\geq\zeros
-\end{align*}$$
+\end{align*}
+$$
+
 {#eq:standardFormLpMatrix}
 
 Much nicer on the eyes, right!
 
-Further, you may have noticed that though we've devoted significant time to it already, we haven't formally defined linear programming yet! I was waiting for this moment to do so. A __linear program__ is an optimization problem in the form of +@eq:standardFormLpMatrix.
+Further, you may have noticed that though we've devoted significant time to it already, we haven't formally defined linear programming yet! I was waiting for this moment to do so. A **linear program** is an optimization problem in the form of +@eq:standardFormLpMatrix.
 
 ## The simplex method
 
@@ -349,7 +361,6 @@ We're just about ready to talk about LP solving algorithms, and we're of course 
 
 [^dantzigStory]: I'm not mentioning a lot of people by name in these notes, but I couldn't skip Dantzig. Mostly I wanted to bring up this famous story: A student comes late to class one day, sees two problems written on the board, and assumes they are the day's assigned homework. The problems are more difficult than usual, but he solves them. When he turns them in, the professor is elated - these weren't homework, but rather famous unsolved problems in the field! You can find several versions of this story out there, citing several different people as the supposed student. Turns out [this actually happened, and the student was Dantzig](https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99).
 [^assumeLinear]: There's a neat story, quoting from @tspPursuit, in [this blog post](https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/) (yes, OR blogs are a thing). It's specifically about Dantzig first introducing the simplex method during a talk in 1948, and more generally about understanding your assumptions 😀.
-
 [^simplexNotKnownPoly]: Interestingly, several other linear programming algorithms have been devised whose theoretical properties seem to suggest they would be more efficient. But in practice that hasn't been the case. Simplex continues to be the best algorithm in practice for the widest array of problems.
 
 ### Simplex visualized
