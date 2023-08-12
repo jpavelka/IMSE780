@@ -205,7 +205,7 @@
           left: 50%;
           transform: translateX(-50%);
           margin-top: 2rem;
-          font-size: max(15pt, min(1.3rem, 4vw));
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
           overflow-x: auto;
           display: flex;
           flex-direction: column;
@@ -311,7 +311,7 @@
       nav#TOC > ul {
           margin-bottom: 1.5rem;
           margin-top: 2rem;
-          line-height: 1.7rem;
+          line-height: 1.9rem;
       }
       #TOC ul {
           padding-left: 0;
@@ -331,7 +331,7 @@
       }
       nav#TOC a {
           text-decoration: none;
-          font-size: max(15pt, min(1.3rem, 4vw));
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
           color: #000;
           display: block;
           transition: 0.3s;
@@ -359,7 +359,7 @@
           border-bottom: 1pt solid gray;
       }
       .tocHeader {
-          font-size: max(15pt, min(1.3rem, 4vw));
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
           padding-left: 0.5rem;
       }
       .tocHidden {
@@ -386,7 +386,7 @@
           top: 0;
           left: 0;
           right: 0;
-          font-size: max(15pt, min(1.3rem, 4vw));
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
           background-color: #ebebeb;
           width: 100%;
           border-bottom: 1pt solid gray;
@@ -458,7 +458,7 @@
       }
       .pointChooseText {
           text-align: center;
-          font-size: max(12pt, min(1.0rem, 5.2vw));
+          font-size: max(12pt, 1rem);
       }
       .underPlot {
           margin-top: -10pt;
@@ -1022,8 +1022,8 @@
   </script>
   <style>
       #main {
-          font-size: max(15pt, min(1.4rem, 4vw));
-          width: min(max(min(90%, 20rem), calc(100% - min(60%, 350px) - 1rem)), 850px);
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
@@ -1064,7 +1064,7 @@
           max-width: 100%;
       }
       figure figcaption {
-          font-size: max(12pt, min(1.1rem, 5.5vw));
+          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
           text-align: center;
       }
       a {
@@ -1093,7 +1093,7 @@
           background-color: #dfdfdf;
           padding: 0.5rem;
           border: 1pt solid black;
-          font-size: max(12pt, min(1.1rem, 5.5vw));
+          font-size: max(12pt, 1.1rem);
       }
       .copyButton {
           float: right;
@@ -1111,7 +1111,7 @@
           position: absolute;
           transform: translate(-2rem, -2.8rem);
           width: 4rem;
-          font-size: max(10pt, min(0.7rem, 4vw));
+          font-size: max(10pt, 0.7rem);
           text-align: center;
           background-color: #eee;
           border: 1pt solid black;
@@ -1411,7 +1411,7 @@
 <body>
 <div class="navbar">
     <div onclick="openNav()" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
-    <div style="text-align: center">Methods of OR</div>
+    <div style="text-align: center">IMSE 780</div>
     <div style="text-align: right; padding-right: 1rem">Fall 2023</div>
 </div>
 <div id="loader" class="loadingMessage">Loading...</div>
@@ -2016,10 +2016,10 @@ each of:</p>
 <ul>
 <li><span class="math inline">x_1=0, x_2=0</span></li>
 <li><span class="math inline">x_1=-20, x_2=6</span></li>
-<li><span class="math inline">x_1=2, x_2=3</span> are all solutions to
-our sample problem, even though the second one violates
-nonnegativity.</li>
+<li><span class="math inline">x_1=2, x_2=3</span></li>
 </ul>
+<p>are all solutions to our sample problem, even though the second one
+violates nonnegativity.</p>
 <p>A <strong>feasible solution</strong> is a solution that satisfies all
 of the problem constraints. In contrast, an <strong>infeasible
 solution</strong> is one that violates <em>at least one</em> constraint.
@@ -2344,9 +2344,11 @@ and you’d like to remove the variable bounds. Well, we still have the
 functional constraints, where we are allowed to use inequalities. So
 we’ll “remove” the variable bound constraint <span
 class="math inline">x_j\geq0</span> by creating a new functional
-constraint <span class="math display">
+constraint</p>
+<p><span class="math display">
 a_1x_1 + \cdots + a_jx_j + \cdots + a_nx_n \leq b
-</span> where <span class="math inline">b=0</span>, <span
+</span></p>
+<p>where <span class="math inline">b=0</span>, <span
 class="math inline">a_i=-1</span>, and all other coefficients equal
 <span class="math inline">0</span>.</p>
 <p>Now the less obvious transformation. Say we have a formulation where
@@ -2356,10 +2358,11 @@ variables, call them <span class="math inline">y_j</span> and <span
 class="math inline">z_j</span>, which will be our new nonnegative
 variables. What we’ll do is simply replace <span
 class="math inline">x_j</span> with <span
-class="math inline">y_j-z_j</span>, so that the constraints become <span
-class="math display">
+class="math inline">y_j-z_j</span>, so that the constraints become</p>
+<p><span class="math display">
 a_{i1}x_1 + \cdots + a_{ij}y_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
-</span> for each <span class="math inline">i</span><a href="#fn21"
+</span></p>
+<p>for each <span class="math inline">i</span><a href="#fn21"
 class="footnote-ref" id="fnref21"
 role="doc-noteref"><sup>21</sup></a>.</p>
 <h3 data-number="4.5.5" id="recap-of-allowed-forms"><span
@@ -2390,7 +2393,8 @@ quickly. Especially in a case like this where there’s a lot of
 repetition with minimal changes from line to line.</p>
 <p>So, from here on out and where appropriate, I’ll start using more
 concise notation. For example, eq. <a href="#eq:standardFormLp">2</a>
-can be written more concisely like so: <span class="math display">
+can be written more concisely like so:</p>
+<p><span class="math display">
 \begin{align*}
 \text{max}&amp;&amp; \sum_{j=1}^n c_jx_j    &amp; \\
 \text{s.t.}&amp;&amp; \sum_{j=1}^n a_{ij}x_j &amp; \leq b_i\quad \forall
@@ -2421,7 +2425,8 @@ algebra fits nicely with the formulations we’ve already given. For some
 class="math inline">\mathbf{A}</span> and <span
 class="math inline">n</span> vector <span
 class="math inline">\mathbf{x}</span>, if we multiply them we have:</p>
-<p><span class="math display">\begin{align*}
+<p><span class="math display">
+\begin{align*}
 \mathbf{A}\mathbf{x}&amp;=\begin{bmatrix}
     a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
     a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
@@ -2436,16 +2441,19 @@ class="math inline">\mathbf{x}</span>, if we multiply them we have:</p>
     \vdots \\
     a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n \\
 \end{bmatrix}
-\end{align*}</span></p>
+\end{align*}
+</span></p>
 <p>which looks just like the constraint section of the standard form LP
 eq. <a href="#eq:standardFormLp">2</a>. Due to the conciseness, my
-favorite notation for the standard form LP is
-<span id="eq:standardFormLpMatrix" class="eqnos"><span
-class="math display">\begin{align*}
+favorite notation for the standard form LP is</p>
+<p><span id="eq:standardFormLpMatrix" class="eqnos"><span
+class="math display">
+\begin{align*}
 \text{max}&amp;&amp; \mathbf{c}^\intercal\mathbf{x}\\
 \text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
      &amp;&amp; \mathbf{x}&amp;\geq\mathbf{0}
-\end{align*}</span><span class="eqnos-number">(3)</span></span></p>
+\end{align*}
+</span><span class="eqnos-number">(3)</span></span></p>
 <p>Much nicer on the eyes, right!</p>
 <p>Further, you may have noticed that though we’ve devoted significant
 time to it already, we haven’t formally defined linear programming yet!
