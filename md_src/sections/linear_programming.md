@@ -99,7 +99,9 @@ Let's get hands-on again to see our new definitions in action. Since our sample 
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"choosePoints": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-Here we have a plot with $x_1$ on the horizontal axis, $x_2$ on the vertical axis, and a line drawn for each of the constraints in +@eq:prototypeLp. Moreover, if you hover over a constraint line, the side of the line satisfied by the inequality is shaded light gray[^mobileHover]. The feasible region (where all three constraints are satisfied) is plainly visible as the gray-shaded region in the bottom-left. If you click on the plot (or enter values in the text boxes) a point will be drawn on the plot. If the point is a feasible solution, it will be colored black and the objective value at the solution is show below the plot. Otherwise, if the solution is infeasible the point will be colored red and the violated inequalities will flash.
+Here we have a plot with $x_1$ on the horizontal axis, $x_2$ on the vertical axis, and a line drawn for each of the constraints in +@eq:prototypeLp. Moreover, if you hover over a constraint line, the side of the line satisfied by the inequality is shaded light gray[^mobileHover]. The feasible region is the portion of the plot where all the constraints are satisfied, and it is plainly visible as the gray-shaded region in the bottom-left. Such an intersection of linear inequalities is called a __polyhedron__, and in cases such as this where the polyhedron is bounded (i.e. doesn't go off to infinity in some direction) we also call it a __polytope__.
+
+If you click on the plot (or enter values in the text boxes) a point will be drawn on the plot. If the point is a feasible solution, it will be colored black and the objective value at the solution is show below the plot. Otherwise, if the solution is infeasible the point will be colored red and the violated inequalities will flash.
 
 [^mobileHover]: I couldn't think of a good way to do this with touch events, so this part doesn't work as well on a mobile device. Sorry.
 
@@ -357,7 +359,7 @@ Further, you may have noticed that though we've devoted significant time to it a
 
 ## The simplex method
 
-We're just about ready to talk about LP solving algorithms, and we're of course starting with the simplex algorithm. Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear]. It was perhaps the first practical algorithm developed for linear programming, and it continues to be the workhorse in linear and integer programming solvers today[^simplexNotKnownPoly].
+We're just about ready to talk about LP solving algorithms, and we're of course starting with the __simplex algorithm__ (also sometimes called the __simplex method__). Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear]. It was perhaps the first practical algorithm developed for linear programming, and it continues to be the workhorse in linear and integer programming solvers today[^simplexNotKnownPoly].
 
 [^dantzigStory]: I'm not mentioning a lot of people by name in these notes, but I couldn't skip Dantzig. Mostly I wanted to bring up this famous story: A student comes late to class one day, sees two problems written on the board, and assumes they are the day's assigned homework. The problems are more difficult than usual, but he solves them. When he turns them in, the professor is elated - these weren't homework, but rather famous unsolved problems in the field! You can find several versions of this story out there, citing several different people as the supposed student. Turns out [this actually happened, and the student was Dantzig](https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99).
 [^assumeLinear]: There's a neat story, quoting from @tspPursuit, in [this blog post](https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/) (yes, OR blogs are a thing). It's specifically about Dantzig first introducing the simplex method during a talk in 1948, and more generally about understanding your assumptions 😀.
@@ -369,6 +371,10 @@ Before we get to the algorithm itself, let's take a moment to dwell on some geom
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"showVertices": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-This time we've also plotted the solutions in the corners of the feasible region, because they are important to the simplex algorithm.
+This time we've also plotted the solutions in the corners of the feasible region, because they are important to the simplex algorithm. In fact, the algorithm makes use of the follow key fact of linear programs:
+
+
+
+<svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"simplexStart": [0, 0]}'> Sorry, your browser does not support inline SVG.</svg>
 
 <!-- book section 4.5 -->

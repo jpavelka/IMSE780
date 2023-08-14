@@ -1,45 +1,3 @@
-<style>
-    .lpDraw {
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    .pointChooseDiv {
-        text-align: center;
-    }
-    .pointChooseInput {
-        border: solid 1pt black;
-        border-radius: 2pt;
-        width: 2rem;
-        height: 1.1rem;
-    }
-    .pointChooseLabel {
-        font-size: 14pt;
-        padding-left: 5pt;
-        padding-right: 5pt;
-    }
-    .pointChooseText {
-        text-align: center;
-        font-size: max(12pt, 1rem);
-    }
-    .underPlot {
-        margin-top: -10pt;
-    }
-    @keyframes append-animate {
-        0% {
-            stroke-width: 0;
-        }
-        50% {
-            stroke-width: 4;
-        }
-        100% {
-            stroke-width: 0;
-        }
-    }
-    .violatedIneq {
-        animation: append-animate 0.8s linear;
-    }
-</style>
 <script>
     let baseLps = {
         prototypeLp: {
@@ -57,6 +15,26 @@
         const parentDiv = document.createElement('div');
         svg.parentNode.insertBefore(parentDiv, svg);
         parentDiv.appendChild(svg);
+        svgDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        svg.appendChild(svgDefs);
+        goodDirColor = 'blue';
+        badDirColor = 'red';
+        goodArrowheadMarker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        goodArrowheadMarker.id = goodDirColor + 'ArrowMarker';
+        goodArrowheadMarker.setAttribute('markerWidth', 5);
+        goodArrowheadMarker.setAttribute('markerHeight', 3);
+        goodArrowheadMarker.setAttribute('refX', 0);
+        goodArrowheadMarker.setAttribute('refY', 1.5);
+        goodArrowheadMarker.setAttribute('orient', 'auto');
+        arrowPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        arrowPoly.setAttribute('points', "0 0, 5 1.5, 0 3");
+        arrowPoly.setAttribute('fill', goodDirColor);
+        goodArrowheadMarker.appendChild(arrowPoly);
+        badArrowheadMarker = goodArrowheadMarker.cloneNode(true);
+        badArrowheadMarker.id = badDirColor + 'ArrowMarker'
+        badArrowheadMarker.firstChild.setAttribute('fill', badDirColor);
+        svgDefs.appendChild(goodArrowheadMarker);
+        svgDefs.appendChild(badArrowheadMarker);
         const args = { ...JSON.parse(JSON.stringify(baseLps))[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))};
         const xMin = args['xMin'];
         const xMax = args['xMax'];
@@ -86,6 +64,7 @@
         const showVertices = args['showVertices'] || false;
         const choosePoints = args['choosePoints'] || false;
         const chooseObjVals = args['chooseObjVals'] || false;
+        const simplexStart = args['simplexStart'];
         const extraEqns = args['extraEqns'] || [];
         const x1ObjStr = obj[0] == 0 ? '' : `${obj[0]}x_1`;
         const x2ObjStr = obj[1] == 0 ? '' : `${obj[1]}x_2`;
@@ -572,6 +551,172 @@
             for (el of [label, input]) {
                 pointChooseDiv.appendChild(el);
             }
+        }
+        const gcd = (a, b) => {
+            if (!b) {
+                return Math.abs(a);
+            }
+            return Math.abs(gcd(b, a % b));
+        }
+        if (simplexStart) {
+            let nextPoint = simplexStart;
+            let pointHistory = [];
+            const underDiv = document.createElement('div');
+            underDiv.classList = ['underPlot']
+            parentDiv.appendChild(underDiv);
+            const objDiv = document.createElement('div');
+            objDiv.classList = ['pointChooseText'];
+            underDiv.appendChild(objDiv);
+            katex.render(`\\text{Objective: }${objStr}`, objDiv, {throwOnError: false});
+            const currentPlaceText = document.createElement('div');
+            currentPlaceText.classList = ['pointChooseText'];
+            const possibleDirections = document.createElement('div');
+            possibleDirections.classList = ['pointChooseText'];
+            const status = document.createElement('div');
+            status.classList = ['pointChooseText'];
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.classList = ['pointChooseText'];
+            const backButton = document.createElement('button');
+            backButton.textContent = '<<'
+            const resetButton = document.createElement('button');
+            resetButton.textContent = 'Reset'
+            const forwardButton = document.createElement('button');
+            forwardButton.textContent = '>>'
+            buttonsDiv.appendChild(backButton);
+            buttonsDiv.appendChild(resetButton);
+            buttonsDiv.appendChild(forwardButton);
+            underDiv.appendChild(currentPlaceText);
+            underDiv.appendChild(possibleDirections);
+            underDiv.appendChild(buttonsDiv);
+            underDiv.appendChild(status);
+            const simplexPointId = svgId + 'SimplexPoint';
+            const getArrowClass = () => svgId + 'SimplexArrowDir';
+            const getArrowIdFromCheckId = (checkId) => checkId + 'TargetArrow';
+            const changePoint = () => {
+                currentPoint = pointHistory.length === 0 ? simplexStart : pointHistory[pointHistory.length - 1];
+                simplexPointEl = document.getElementById(simplexPointId);
+                if (!!simplexPointEl) {
+                    simplexPointEl.remove();
+                    for (arrowEl of [...document.getElementsByClassName(getArrowClass())]){
+                        arrowEl.remove();
+                    }
+                }
+                katex.render(
+                    `\\text{Current solution: }(${currentPoint[0]}, ${currentPoint[1]}),\\text{ objective }${getObjVal(...currentPoint)}`,
+                    currentPlaceText
+                );
+                const vertInd = vertices.map((x, i) => i).filter(i => {
+                    return vertices[i][0] === currentPoint[0] && vertices[i][1] === currentPoint[1]
+                })[0];
+                adjacents = [vertInd - 1, vertInd + 1].map(i => {
+                    return vertices[(i + vertices.length) % vertices.length]    
+                });
+                adjDir = adjacents.map(adj => {
+                    dir = [adj[0] - currentPoint[0], adj[1] - currentPoint[1]];
+                    dirGcd = gcd(...dir);
+                    return [dir[0] / dirGcd, dir[1] / dirGcd];
+                });
+                possibleDirections.innerHTML = '';
+                possibleDirections.textContent = 'Adjacent solution directions:'
+                const tab = document.createElement('table');
+                tab.classList = ['simplexDirectionTable'];
+                const dirHead = document.createElement('th');
+                dirHead.textContent = 'Direction';
+                const objHead = document.createElement('th');
+                objHead.innerHTML = '&Delta; Obj / Unit';
+                const useDir = document.createElement('th');
+                useDir.innerHTML = 'Use?';
+                tab.appendChild(dirHead);
+                tab.appendChild(objHead);
+                tab.appendChild(useDir);
+                possibleDirections.appendChild(tab);
+                dirGains = [];
+                const getCheckId = i => simplexPointId + 'DirCheck' + i
+                for ([i, adj] of adjDir.entries()) {
+                    const tr = document.createElement('tr');
+                    tab.appendChild(tr);
+                    const dirTd = document.createElement('td');
+                    dirTd.textContent = `(${adj[0]}, ${adj[1]})`;
+                    adjDirNorm = Math.sqrt(adj[0] ** 2 + adj[1] ** 2);
+                    unitObjGain = getObjVal(...adj) / adjDirNorm;
+                    const arrowHeadCoord = adj.map((ad, iAd) => currentPoint[iAd] + 45 * unitPixToCoordX * ad / adjDirNorm);
+                    const plotColor = unitObjGain > 0 ? goodDirColor : badDirColor;
+                    attrs = {
+                        'style': 'stroke-width:2pt;stroke:' + plotColor,
+                        'marker-end': `url(#${plotColor}ArrowMarker)`,
+                        'class': getArrowClass(),
+                        'id': getArrowIdFromCheckId(getCheckId(i))
+                    }
+                    lineBetweenCoords(...currentPoint, ...arrowHeadCoord, attrs);
+                    dirGains.push(unitObjGain);
+                    const objTd = document.createElement('td');
+                    objTd.textContent = Math.round(100 * unitObjGain) / 100;
+                    const useTd = document.createElement('td');
+                    const useInput = document.createElement('input');
+                    useInput.id = getCheckId(i);
+                    useInput.setAttribute('type', 'checkbox');
+                    useInput.onchange = (e) => {
+                        for (inputInd = 0; inputInd < adjacents.length; inputInd++){
+                            inEl = document.getElementById(getCheckId(inputInd));
+                            if (inEl !== e.target){
+                                inEl.checked = false;
+                                document.getElementById(getArrowIdFromCheckId(inEl.id)).classList.remove('simplexArrowChosen');
+                            } else {
+                                if (e.target.checked) {
+                                    nextPoint = adjacents[inputInd];
+                                    document.getElementById(getArrowIdFromCheckId(e.target.id)).classList.add('simplexArrowChosen');
+                                } else {
+                                    nextPoint = undefined;
+                                    document.getElementById(getArrowIdFromCheckId(e.target.id)).classList.remove('simplexArrowChosen');
+                                }   
+                            }                            
+                            buttonStatusChange();
+                        }
+                    }
+                    if (unitObjGain <= 0){
+                        useInput.disabled = true;
+                        tr.style.color = 'red';
+                    }
+                    useTd.appendChild(useInput);
+                    tr.appendChild(dirTd);
+                    tr.appendChild(objTd);
+                    tr.appendChild(useTd);
+                }                
+                placePoint(...currentPoint, {'id': simplexPointId, 'r': '4.5'});
+                const maxDirGain = Math.max(...dirGains);
+                const numImprovingDirections = dirGains.filter(g => g > 0).length;
+                if (maxDirGain < 0) {
+                    status.innerHTML = 'No improving directions, <b>optimal solution found!</b>';
+                    nextPoint = undefined;
+                } else {
+                    const bestInd = adjacents.map((adj, i) => i).filter(i => dirGains[i] === maxDirGain)[0];
+                    const bestDir = adjDir[bestInd];
+                    status.textContent = `${numImprovingDirections} improving direction${numImprovingDirections === 1 ? '.' : 's to choose from.'}`;
+                    const bestCheck = document.getElementById(getCheckId(bestInd));
+                    bestCheck.checked = true;
+                    bestCheck.onchange({target: bestCheck});
+                    nextPoint = adjacents[bestInd];
+                }
+                buttonStatusChange();
+            }
+            const buttonStatusChange = () => {                
+                backButton.disabled = pointHistory.length === 0;
+                forwardButton.disabled = !nextPoint;
+            }
+            forwardButton.onclick = () => {
+                pointHistory.push(nextPoint);
+                changePoint();
+            }
+            resetButton.onclick = () => {
+                nextPoint = undefined;
+                pointHistory = [];
+                changePoint();
+            }          
+            backButton.onclick = () => {
+                pointHistory.pop(pointHistory.length - 1);
+                changePoint();
+            }
+            changePoint();
         }
     }
     const drawAllSvgPlots = () => {

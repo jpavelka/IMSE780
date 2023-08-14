@@ -1,0 +1,70 @@
+<style>
+    .lpDraw {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .pointChooseDiv {
+        text-align: center;
+    }
+    .pointChooseInput {
+        border: solid 1pt black;
+        border-radius: 2pt;
+        width: 2rem;
+        height: 1.1rem;
+    }
+    .pointChooseLabel {
+        font-size: 14pt;
+        padding-left: 5pt;
+        padding-right: 5pt;
+    }
+    .pointChooseText {
+        text-align: center;
+        font-size: max(12pt, 1rem);
+    }
+    .underPlot {
+        margin-top: -10pt;
+    }
+    @keyframes append-animate {
+        0% {
+            stroke-width: 0;
+        }
+        50% {
+            stroke-width: 4;
+        }
+        100% {
+            stroke-width: 0;
+        }
+    }
+    .violatedIneq {
+        animation: append-animate 0.8s linear;
+    }
+    @keyframes simplex-arrow-flash {
+        0% {
+            stroke-width: 3;
+        }
+        5% {
+            stroke-width: 4;
+        }
+        10% {
+            stroke-width: 3;
+        }
+        100% {
+            stroke-width: 3;
+        }
+    }
+    .simplexArrowChosen {
+        animation: simplex-arrow-flash 12s infinite;
+    }
+    .simplexDirectionTable {
+        margin: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 350px;
+    }
+    .pointChooseText button {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        margin: 0 0.1rem;
+    }
+</style>
