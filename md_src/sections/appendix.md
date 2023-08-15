@@ -25,6 +25,7 @@
   \vdots & \vdots & \ddots & \vdots \\
   0 & 0 & \cdots & 1 \\
   \end{bmatrix}
+- $\Leftrigtharrow$: If and only if. It indicates the the statement to the left is logically equivalent to the statement on the right, e.g. $a > b \Leftrightarrow -a < -b$.
 
 ## Linear algebra review {#sec:linearAlgebra}
 
@@ -207,3 +208,115 @@ $$
 $$
 
 We call the matrix $\A\inv$ the **inverse** of $\A$. Furthermore, singular matrices do not have inverses.
+
+### Systems of equations
+
+Matrices are great for concisely stating systems of linear equations, linear equations in some set of variables you'd like to hold true simultaneously. For example, the set of equations
+
+$$
+2x_1 + 3x_2 = 7\\
+5x_1 - 4x_2 = 6
+$$
+
+can alternatively be stated as:
+
+$$
+\begin{bmatrix}
+2 & 3 \\
+5 & -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+$$
+
+### Elementary operations
+
+There are certain elementary operations one can perform on a system of linear equations that don't have an effect on the solution of the system. I'll state these operations in terms of rows, but similar operations exist for columns as well:
+ 
+ - Interchange two rows:
+ $$
+\begin{bmatrix}
+2 & 3 \\
+5 & -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+\Leftrightarrow
+\begin{bmatrix}
+5 & -4 \\
+2 & 3
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+6 \\ 7
+\end{bmatrix}
+ $$
+ - Multiply a row by a non-zero number, e.g. multiplying the top row by two:
+ $$
+\begin{bmatrix}
+2 & 3 \\
+5 & -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+\Leftrightarrow
+\begin{bmatrix}
+4 & 6 \\
+5 & -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+14 \\ 6
+\end{bmatrix}
+ $$
+ - Adding a multiple of one row to another row, e.g. multiplying the first row by 2 and adding it to the second:
+ $$
+\begin{bmatrix}
+2 & 3 \\
+5 & -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+\Leftrightarrow
+\begin{bmatrix}
+2 & 3 \\
+9 & 2
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 20
+\end{bmatrix}
+ $$
+
+## Selected proofs {#sec:appendixSelectedProofs}
+
+Proofs to selected statements in the main text.

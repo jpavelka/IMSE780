@@ -29,6 +29,10 @@
         color: #444;
         background-color: #ebebeb;
     }
+    blockquote p {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
     details {
         cursor: pointer;
     }
@@ -96,6 +100,9 @@
         border-radius: 0.25rem;
         animation: fade 2s linear;
     }
+    .backRefElement {
+        margin-top: auto;
+    }
 </style>
 <script>
     document.onreadystatechange = () => {
@@ -120,6 +127,7 @@
         addCodeCopyButtons();
         tocHelpers();
         drawAllSvgPlots();
+        theoremHelpers();
     }
     addMathContainers = () => {
         for (el of document.querySelectorAll('.math.display')){
@@ -252,7 +260,7 @@
         liEl.appendChild(aEl);
         ulEl.appendChild(liEl);
     }
-    addTooltips = (els, includeLinkBacks) => {
+    addTooltips = (els, includeLinkBacks, arrowFloat=false) => {
         for ([i, el] of els.entries()) {
             ((el, i) => {
                 refId = el.getAttribute('href');
@@ -276,7 +284,7 @@
                     if (!!!backEl) {
                         backEl = document.createElement('div');
                         backEl.id = backId;
-                        backEl.style.marginTop = 'auto';
+                        backEl.classList = ['backRefElement'];
                         backArrowEl = document.createElement('a');
                         backArrowEl.id = backId + 'Arrow';
                         backArrowEl.innerHTML = "↩︎";

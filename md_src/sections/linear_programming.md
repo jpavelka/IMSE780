@@ -99,7 +99,7 @@ Let's get hands-on again to see our new definitions in action. Since our sample 
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"choosePoints": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-Here we have a plot with $x_1$ on the horizontal axis, $x_2$ on the vertical axis, and a line drawn for each of the constraints in +@eq:prototypeLp. Moreover, if you hover over a constraint line, the side of the line satisfied by the inequality is shaded light gray[^mobileHover]. The feasible region is the portion of the plot where all the constraints are satisfied, and it is plainly visible as the gray-shaded region in the bottom-left. Such an intersection of linear inequalities is called a __polyhedron__, and in cases such as this where the polyhedron is bounded (i.e. doesn't go off to infinity in some direction) we also call it a __polytope__.
+Here we have a plot with $x_1$ on the horizontal axis, $x_2$ on the vertical axis, and a line drawn for each **constraint boundary** (the line that forms the boundary of what is permitted by the corresponding constraint) for the constraints +@eq:prototypeLp. Moreover, if you hover over a constraint boundary, the side of the line satisfied by the inequality is shaded light gray[^mobileHover]. The feasible region is the portion of the plot where all the constraints are satisfied, and it is plainly visible as the gray-shaded region in the bottom-left. Such an intersection of linear inequalities is called a **polyhedron**, and in cases such as this where the polyhedron is bounded (i.e. doesn't go off to infinity in some direction) we also call it a **polytope**.
 
 If you click on the plot (or enter values in the text boxes) a point will be drawn on the plot. If the point is a feasible solution, it will be colored black and the objective value at the solution is show below the plot. Otherwise, if the solution is infeasible the point will be colored red and the violated inequalities will flash.
 
@@ -304,7 +304,7 @@ As a recap: we defined the standard form LP where the objective is maximized, th
 
 Crucially, any of these forms can be transformed into any of the others, so no matter how we specify a particular LP, any of the results and techniques we discuss here apply!
 
-### A word on notation
+### Different notation
 
 Last up for this section, let's discuss notation. I don't know about you, but I get a little overwhelmed when I look at formulations like +@eq:standardFormLp. There's a lot to look at there, and while I think it's good initially to see things written in full detail with simple notation like this, returns begin diminishing quickly. Especially in a case like this where there's a lot of repetition with minimal changes from line to line.
 
@@ -359,22 +359,73 @@ Further, you may have noticed that though we've devoted significant time to it a
 
 ## The simplex method
 
-We're just about ready to talk about LP solving algorithms, and we're of course starting with the __simplex algorithm__ (also sometimes called the __simplex method__). Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear]. It was perhaps the first practical algorithm developed for linear programming, and it continues to be the workhorse in linear and integer programming solvers today[^simplexNotKnownPoly].
+We're just about ready to talk about LP solving algorithms, and we're of course starting with the **simplex algorithm** (also sometimes called the **simplex method**). Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear]. It was perhaps the first practical algorithm developed for linear programming, and it continues to be the workhorse in linear and integer programming solvers today[^simplexNotKnownPoly].
 
 [^dantzigStory]: I'm not mentioning a lot of people by name in these notes, but I couldn't skip Dantzig. Mostly I wanted to bring up this famous story: A student comes late to class one day, sees two problems written on the board, and assumes they are the day's assigned homework. The problems are more difficult than usual, but he solves them. When he turns them in, the professor is elated - these weren't homework, but rather famous unsolved problems in the field! You can find several versions of this story out there, citing several different people as the supposed student. Turns out [this actually happened, and the student was Dantzig](https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99).
 [^assumeLinear]: There's a neat story, quoting from @tspPursuit, in [this blog post](https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/) (yes, OR blogs are a thing). It's specifically about Dantzig first introducing the simplex method during a talk in 1948, and more generally about understanding your assumptions 😀.
 [^simplexNotKnownPoly]: Interestingly, several other linear programming algorithms have been devised whose theoretical properties seem to suggest they would be more efficient. But in practice that hasn't been the case. Simplex continues to be the best algorithm in practice for the widest array of problems.
 
-### Simplex visualized
+### Corner-point solutions
 
 Before we get to the algorithm itself, let's take a moment to dwell on some geometric insights the method relies on. We'll return to our sample problem +@eq:prototypeLp and once again we'll graph it below.
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"showVertices": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-This time we've also plotted the solutions in the corners of the feasible region, because they are important to the simplex algorithm. In fact, the algorithm makes use of the follow key fact of linear programs:
+This time we've also plotted the solutions in the corners of the feasible region, because they are important to the simplex algorithm. We call these solutions **corner-point solutions** or **vertices**[^cornerPointsVertices], and they come at the intersection of two constraint boundaries (in the general case, for LPs with $n$ decision variables, the corner-point solutions come at the intersection of $n$ constraints boundaries).
 
+[^cornerPointsVertices]: I'm used to calling them vertices, but the textbook tends to call them corner-point solutions, which I like as a more helpful, descriptive term. I'll try to stick to corner-point solution for the notes, but I expect to slip up a few times, especially during lectures.
 
+The simplex algorithm makes use of the following key fact of linear programs:
+
+<div class='theorem' id='thm:cornerPointOpt'>
+If a linear program has an optimal solution (i.e. not unbounded or infeasible), then it has an optimal solution that is a corner-point solution.
+</div>
+<div class='proof' for='thm:cornerPointOpt' placement='appendix'>
+We won't actually give a full proof of this theorem, instead we'll only consider the case of a standard form LP (+@eq:standardFormLpMatrix) with only two decision variables. Those of you that are familiar with [proofs by induction](https://en.wikipedia.org/wiki/Mathematical_induction) may be able to see how to generalize this to any number of variables.
+
+In two dimensions we can visualize this, so let's continue to use the sample LP of +@eq:prototypeLp as our example. Any feasible solution to a two-dimensional LP must fall under exactly one of these categories:
+
+1.  An interior solution (not on any constraint boundaries).
+2.  On a single constraint boundary.
+3.  A corner-point solution (i.e. at the intersection of two constraint boundaries).
+
+What we can show is that for any solution of type 1 or 2, we can find a corner-point solution with equal or greater objective value, and we will illustrate this in the plot below. To that end, suppose we have some solutions $\mat{z}$ on the interior of the feasible region, and $\mat{y}$ that lies on a single constraint boundary.
+
+<svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"extraPoints": [[2, 1], [3, 4.5]], "extraLines": [[2, 1, 3, 1.5, {"style": "stroke-width:2pt;stroke:black", "marker-end": "url(#blackArrowMarker)"}], [3, 4.5, 2.5, 5.25, {"style": "stroke-width:2pt;stroke:black", "marker-end": "url(#blackArrowMarker)"}]], "extraMathText": [["y", 3.25, 5, {"coordToPix": true}], ["z", 1.75, 1.75, {"coordToPix": true}], ["v", 2, 5.75, {"coordToPix": true}], ["u", 3.25, 1.75, {"coordToPix": true}]]}'> Sorry, your browser does not support inline SVG.</svg>
+
+Let $\mat{v}$ be a (unit) vector that points in the same direction as the constraint boundary that $\mat{y}$ is on. Let $\mat{c}$ be the vector of objective function coefficients (so in our sample LP we would have $\mat{c}=\begin{bmatrix}3\\5\end{bmatrix}$). The objective value at solution $\mat{y}$ is $\mat{y}\T\c$. In contrast, if we move some amount $\delta$ from $\mat{y}$ along direction $\mat{v}$, the objective value is (due to distributivity of matrix operations) $(\mat{y} + \delta\mat{v})\T\c = \mat{y}\T\c + \delta\mat{v}\T\mat{c}$.
+
+If $\mat{v}\T\mat{c}\geq0$, then moving from $\mat{y}$ along the constraint boundary in the direction of $\mat{v}$ improves the objective value. So we can continue in that direction until we meet another constraint, yielding a corner-point solution with greater-or-equal objective value than $y$. If, on the other hand, $\mat{v}\T\mat{c}<0$, then we can move in the direction of $-\mat{v}$ to a corner-point solution with greater objective value than $\mat{y}$. So either way, there is some corner-point solution with objective value at least as good as $\mat{y}$.
+
+The proof for the interior point $\mat{z}$ is very similar. Select some direction $\mat{u}$, and then travel from $\mat{z}$ along directions $\mat{u}$ or $\mat{u}$ until you hit a constraint boundary. One of these points will yield an objective value at least as good as $\mat{z}$, and it will be on either:
+
+- The intersection of two constraints, in which case we've found the corner-point solution with at least as good a value as $\mat{z}$.
+- A single constraint, in which case we can repeat the procedure shown above for $\mat{y}$ to find the corner-point solution.
+
+In either case, we've found our required corner-point solution, thus the proof is complete.
+
+</div>
+
+Thanks to this theorem[^theoremDefinition] we know that we only need to check corner-point solutions when solving an LP! In particular, the simplex algorithm will take us from one corner-point solution to another, adjacent corner-point solution that gives an improved objective value, repeating this successively until there are no such improved solutions available.
+
+[^theoremDefinition]: For those that are not aware, a **theorem** is a mathematical statement that has been proven to be true, based on some set of standard axioms. Anything I cite as a theorem in these notes, you can be confident it holds true, even if we don't work through a rigorous proof.
+
+Two corner-point solutions $\x$ and $\mat{y}$ are said to be **adjacent** if
+
+### Simplex visualized
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"simplexStart": [0, 0]}'> Sorry, your browser does not support inline SVG.</svg>
+
+### Solving the sample LP with simplex
+
+Walk through with motivations. <span class='thmRef' for='thm:cornerPointOpt'>
+
+### Simplex algorithm basics
+
+Write the steps in matrix form
+
+### Other considerations
+
+Gotchas and edge cases
 
 <!-- book section 4.5 -->

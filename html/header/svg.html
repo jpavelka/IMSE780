@@ -33,8 +33,12 @@
         badArrowheadMarker = goodArrowheadMarker.cloneNode(true);
         badArrowheadMarker.id = badDirColor + 'ArrowMarker'
         badArrowheadMarker.firstChild.setAttribute('fill', badDirColor);
+        arrowheadMarker = goodArrowheadMarker.cloneNode(true);
+        arrowheadMarker.id = 'blackArrowMarker'
+        arrowheadMarker.firstChild.setAttribute('fill', 'black');
         svgDefs.appendChild(goodArrowheadMarker);
         svgDefs.appendChild(badArrowheadMarker);
+        svgDefs.appendChild(arrowheadMarker);
         const args = { ...JSON.parse(JSON.stringify(baseLps))[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))};
         const xMin = args['xMin'];
         const xMax = args['xMax'];
@@ -65,6 +69,10 @@
         const choosePoints = args['choosePoints'] || false;
         const chooseObjVals = args['chooseObjVals'] || false;
         const simplexStart = args['simplexStart'];
+        const extraPoints = args['extraPoints'] || [];
+        const extraText = args['extraText'] || [];
+        const extraMathText = args['extraMathText'] || [];
+        const extraLines = args['extraLines'] || [];
         const extraEqns = args['extraEqns'] || [];
         const x1ObjStr = obj[0] == 0 ? '' : `${obj[0]}x_1`;
         const x2ObjStr = obj[1] == 0 ? '' : `${obj[1]}x_2`;
@@ -114,15 +122,21 @@
             svg.appendChild(txt);
         }
         const addMathText = (math, x, y, attrs) => {
+            attrs = attrs || {};
             forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
             mathEl = document.createElement('span');
             katex.render(math, mathEl, {
                 throwOnError: false
             });
+            if (attrs['coordToPix'] || false) {
+                [x, y] = coordToPix(x, y)
+            }
             forObj.setAttribute('x', x);
             forObj.setAttribute('y', y);
-            attrs['height'] = attrs['height'] || '1rem'
-            attrs['width'] = attrs['width'] || '15rem'
+            attrs['height'] = attrs['height'] || '1.2rem';
+            attrs['width'] = attrs['width'] || '15rem';
+            attrs['font-size'] = attrs['font-size'] || '12pt';
+            attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
             for (const [k, v] of Object.entries(attrs || {})){
                 forObj.setAttribute(k, v);
             }
@@ -410,6 +424,24 @@
             plotVertices(vertices);
         }
         drawAxes();
+        for (pt of extraPoints) {
+            placePoint(...pt);
+        }
+        for (ln of extraLines) {
+            lineBetweenCoords(...ln);
+        }
+        for (tx of extraText) {
+            addText(...tx);
+        }
+        for (tx of extraMathText) {
+            addMathText(...tx);
+        }
+        const gcd = (a, b) => {
+            if (!b) {
+                return Math.abs(a);
+            }
+            return Math.abs(gcd(b, a % b));
+        }
         if (choosePoints) {
             const underDiv = document.createElement('div');
             underDiv.classList = ['underPlot']
@@ -551,12 +583,6 @@
             for (el of [label, input]) {
                 pointChooseDiv.appendChild(el);
             }
-        }
-        const gcd = (a, b) => {
-            if (!b) {
-                return Math.abs(a);
-            }
-            return Math.abs(gcd(b, a % b));
         }
         if (simplexStart) {
             let nextPoint = simplexStart;
