@@ -1302,7 +1302,7 @@
       }
       const closeClassMode = () => {
           const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.origin + '/?classmode=false';
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
           const minutesBetweenReminders = 15;
           if (classMode.style.visibility === "visible") {
               classMode.style.visibility = "hidden";
