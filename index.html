@@ -178,6 +178,76 @@
     }
   </style>
   <style>
+      .lpDraw {
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      .pointChooseDiv {
+          text-align: center;
+      }
+      .pointChooseInput {
+          border: solid 1pt black;
+          border-radius: 2pt;
+          width: 2rem;
+          height: 1.1rem;
+      }
+      .pointChooseLabel {
+          font-size: 14pt;
+          padding-left: 5pt;
+          padding-right: 5pt;
+      }
+      .pointChooseText {
+          text-align: center;
+          font-size: max(12pt, 1rem);
+      }
+      .underPlot {
+          margin-top: -10pt;
+      }
+      @keyframes append-animate {
+          0% {
+              stroke-width: 0;
+          }
+          50% {
+              stroke-width: 4;
+          }
+          100% {
+              stroke-width: 0;
+          }
+      }
+      .violatedIneq {
+          animation: append-animate 0.8s linear;
+      }
+      @keyframes simplex-arrow-flash {
+          0% {
+              stroke-width: 3;
+          }
+          5% {
+              stroke-width: 4;
+          }
+          10% {
+              stroke-width: 3;
+          }
+          100% {
+              stroke-width: 3;
+          }
+      }
+      .simplexArrowChosen {
+          animation: simplex-arrow-flash 12s infinite;
+      }
+      .simplexDirectionTable {
+          margin: 0;
+          margin-left: auto;
+          margin-right: auto;
+          width: 350px;
+      }
+      .pointChooseText button {
+          font-size: 0.8rem;
+          padding: 0.5rem;
+          margin: 0 0.1rem;
+      }
+  </style>
+  <style>
       .footnoteTooltipClose {
           color: #222;
           font-size: 30pt;
@@ -350,17 +420,13 @@
           display: flex;
           justify-content: space-between;
           padding-top: 0.5rem;
-          padding-bottom: 0.95rem;
+          padding-bottom: 0.65rem;
           position: fixed;
           top: 0;
           visibility: hidden;
           background-color: #ebebeb;
           z-index: 1;
           border-bottom: 1pt solid gray;
-      }
-      .tocHeader {
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-          padding-left: 0.5rem;
       }
       .tocHidden {
           display: none     
@@ -370,23 +436,12 @@
           font-size: 30pt !important;
           font-family: 'Courier New', Courier, monospace;
       }
-      .closeBtn {
-          font-size: 30pt;
-          font-family: 'Courier New', Courier, monospace;
-          cursor: pointer;
-          margin-left: auto;
-          line-height: 1;
-      }
-      #main {
-          transition: margin-left .5s;
-          padding: 20px;
-      }
       .navbar {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+          font-size: 1.1rem;
           background-color: #ebebeb;
           width: 100%;
           border-bottom: 1pt solid gray;
@@ -394,7 +449,7 @@
           padding-bottom: 0.5rem;
           display: flex;
           justify-content: space-between;
-          z-index: 1;
+          z-index: 2;
       }
       @media screen and (max-height: 450px) {
           .sidenav {
@@ -407,75 +462,54 @@
       }
   </style>
   <script>
-      function openNav() {
-          document.getElementById("TOC").style.width = "min(60%, 350px)";
-          if (window.innerWidth >= 700){
-              document.getElementById("main").style.marginLeft = "calc(min(50%, 350px) / 2)";
+      function openCloseNav() {
+          const tocTop = document.getElementById("tocTop")
+          if (tocTop.style.visibility == "visible") {
+              closeNav();
+              return
           }
-          document.getElementById("tocTop").style.width = "min(60%, 350px)";
-          document.getElementById("tocTop").style.visibility = "visible";
-          setTimeout(() => {
-              if (isTight()){
-                  document.getElementById("main").style.marginLeft = 0;
-              }
-          }, 300)
+          const screenWidth = window.innerWidth;
+          const tocWidth = Math.min(0.75 * screenWidth, 350);
+          const leftoverWidth = screenWidth - tocWidth;
+          const main = document.getElementById("main");
+          const mainWidth = main.offsetWidth;
+          document.getElementById("TOC").style.width = tocWidth + 'px';
+          tocTop.style.width = tocWidth + 'px';
+          tocTop.style.visibility = "visible";
+          if (leftoverWidth >= mainWidth) {
+              main.style.marginLeft = tocWidth / 2 + 'px';
+          }
       }
       function closeNav() {
           document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = "0";
+          document.getElementById("main").style.marginLeft = null;
           document.getElementById("tocTop").style.visibility = "hidden";
       }
-      function isTight() {
-          const mainLeft = document.getElementById('main').getBoundingClientRect().left
-          const tocRight = document.getElementById('TOC').getBoundingClientRect().right
-          return tocRight - mainLeft > 40
-      }
       function closeNavIfSmall() {
-          if (isTight()){
+          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
               closeNav()
           }
       }
   </script>
   <style>
-      .lpDraw {
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
+      .theorem p {
+          font-style: italic;
+          margin: 0;
+          display: inline;
       }
-      .pointChooseDiv {
-          text-align: center;
+      .theorem {
+          border: 1pt solid gray;
+          padding: 1rem;
+          background-color: #eee;
       }
-      .pointChooseInput {
-          border: solid 1pt black;
-          border-radius: 2pt;
-          width: 2rem;
-          height: 1.1rem;
+      .theoremLabel {
+          font-weight: bold;
       }
-      .pointChooseLabel {
-          font-size: 14pt;
-          padding-left: 5pt;
-          padding-right: 5pt;
+      .proof::after {
+          content: '\00220E';
       }
-      .pointChooseText {
-          text-align: center;
-          font-size: max(12pt, 1rem);
-      }
-      .underPlot {
-          margin-top: -10pt;
-      }
-      @keyframes append-animate {
-          0% {
-              stroke-width: 0;
-          }
-          50% {
-              stroke-width: 4;
-          }
-          100% {
-              stroke-width: 0;
-          }
-      }
-      .violatedIneq {
-          animation: append-animate 0.8s linear;
+      .theorem .backRefElement {
+          float: right;
       }
   </style>
   <script>
@@ -495,6 +529,30 @@
           const parentDiv = document.createElement('div');
           svg.parentNode.insertBefore(parentDiv, svg);
           parentDiv.appendChild(svg);
+          svgDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+          svg.appendChild(svgDefs);
+          goodDirColor = 'blue';
+          badDirColor = 'red';
+          goodArrowheadMarker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+          goodArrowheadMarker.id = goodDirColor + 'ArrowMarker';
+          goodArrowheadMarker.setAttribute('markerWidth', 5);
+          goodArrowheadMarker.setAttribute('markerHeight', 3);
+          goodArrowheadMarker.setAttribute('refX', 0);
+          goodArrowheadMarker.setAttribute('refY', 1.5);
+          goodArrowheadMarker.setAttribute('orient', 'auto');
+          arrowPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          arrowPoly.setAttribute('points', "0 0, 5 1.5, 0 3");
+          arrowPoly.setAttribute('fill', goodDirColor);
+          goodArrowheadMarker.appendChild(arrowPoly);
+          badArrowheadMarker = goodArrowheadMarker.cloneNode(true);
+          badArrowheadMarker.id = badDirColor + 'ArrowMarker'
+          badArrowheadMarker.firstChild.setAttribute('fill', badDirColor);
+          arrowheadMarker = goodArrowheadMarker.cloneNode(true);
+          arrowheadMarker.id = 'blackArrowMarker'
+          arrowheadMarker.firstChild.setAttribute('fill', 'black');
+          svgDefs.appendChild(goodArrowheadMarker);
+          svgDefs.appendChild(badArrowheadMarker);
+          svgDefs.appendChild(arrowheadMarker);
           const args = { ...JSON.parse(JSON.stringify(baseLps))[svg.getAttribute('base')], ...JSON.parse(svg.getAttribute('altargs'))};
           const xMin = args['xMin'];
           const xMax = args['xMax'];
@@ -524,6 +582,11 @@
           const showVertices = args['showVertices'] || false;
           const choosePoints = args['choosePoints'] || false;
           const chooseObjVals = args['chooseObjVals'] || false;
+          const simplexStart = args['simplexStart'];
+          const extraPoints = args['extraPoints'] || [];
+          const extraText = args['extraText'] || [];
+          const extraMathText = args['extraMathText'] || [];
+          const extraLines = args['extraLines'] || [];
           const extraEqns = args['extraEqns'] || [];
           const x1ObjStr = obj[0] == 0 ? '' : `${obj[0]}x_1`;
           const x2ObjStr = obj[1] == 0 ? '' : `${obj[1]}x_2`;
@@ -573,15 +636,21 @@
               svg.appendChild(txt);
           }
           const addMathText = (math, x, y, attrs) => {
+              attrs = attrs || {};
               forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
               mathEl = document.createElement('span');
               katex.render(math, mathEl, {
                   throwOnError: false
               });
+              if (attrs['coordToPix'] || false) {
+                  [x, y] = coordToPix(x, y)
+              }
               forObj.setAttribute('x', x);
               forObj.setAttribute('y', y);
-              attrs['height'] = attrs['height'] || '1rem'
-              attrs['width'] = attrs['width'] || '15rem'
+              attrs['height'] = attrs['height'] || '1.2rem';
+              attrs['width'] = attrs['width'] || '15rem';
+              attrs['font-size'] = attrs['font-size'] || '12pt';
+              attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
               for (const [k, v] of Object.entries(attrs || {})){
                   forObj.setAttribute(k, v);
               }
@@ -869,6 +938,24 @@
               plotVertices(vertices);
           }
           drawAxes();
+          for (pt of extraPoints) {
+              placePoint(...pt);
+          }
+          for (ln of extraLines) {
+              lineBetweenCoords(...ln);
+          }
+          for (tx of extraText) {
+              addText(...tx);
+          }
+          for (tx of extraMathText) {
+              addMathText(...tx);
+          }
+          const gcd = (a, b) => {
+              if (!b) {
+                  return Math.abs(a);
+              }
+              return Math.abs(gcd(b, a % b));
+          }
           if (choosePoints) {
               const underDiv = document.createElement('div');
               underDiv.classList = ['underPlot']
@@ -1011,6 +1098,166 @@
                   pointChooseDiv.appendChild(el);
               }
           }
+          if (simplexStart) {
+              let nextPoint = simplexStart;
+              let pointHistory = [];
+              const underDiv = document.createElement('div');
+              underDiv.classList = ['underPlot']
+              parentDiv.appendChild(underDiv);
+              const objDiv = document.createElement('div');
+              objDiv.classList = ['pointChooseText'];
+              underDiv.appendChild(objDiv);
+              katex.render(`\\text{Objective: }${objStr}`, objDiv, {throwOnError: false});
+              const currentPlaceText = document.createElement('div');
+              currentPlaceText.classList = ['pointChooseText'];
+              const possibleDirections = document.createElement('div');
+              possibleDirections.classList = ['pointChooseText'];
+              const status = document.createElement('div');
+              status.classList = ['pointChooseText'];
+              const buttonsDiv = document.createElement('div');
+              buttonsDiv.classList = ['pointChooseText'];
+              const backButton = document.createElement('button');
+              backButton.textContent = '<<'
+              const resetButton = document.createElement('button');
+              resetButton.textContent = 'Reset'
+              const forwardButton = document.createElement('button');
+              forwardButton.textContent = '>>'
+              buttonsDiv.appendChild(backButton);
+              buttonsDiv.appendChild(resetButton);
+              buttonsDiv.appendChild(forwardButton);
+              underDiv.appendChild(currentPlaceText);
+              underDiv.appendChild(possibleDirections);
+              underDiv.appendChild(buttonsDiv);
+              underDiv.appendChild(status);
+              const simplexPointId = svgId + 'SimplexPoint';
+              const getArrowClass = () => svgId + 'SimplexArrowDir';
+              const getArrowIdFromCheckId = (checkId) => checkId + 'TargetArrow';
+              const changePoint = () => {
+                  currentPoint = pointHistory.length === 0 ? simplexStart : pointHistory[pointHistory.length - 1];
+                  simplexPointEl = document.getElementById(simplexPointId);
+                  if (!!simplexPointEl) {
+                      simplexPointEl.remove();
+                      for (arrowEl of [...document.getElementsByClassName(getArrowClass())]){
+                          arrowEl.remove();
+                      }
+                  }
+                  katex.render(
+                      `\\text{Current solution: }(${currentPoint[0]}, ${currentPoint[1]}),\\text{ objective }${getObjVal(...currentPoint)}`,
+                      currentPlaceText
+                  );
+                  const vertInd = vertices.map((x, i) => i).filter(i => {
+                      return vertices[i][0] === currentPoint[0] && vertices[i][1] === currentPoint[1]
+                  })[0];
+                  adjacents = [vertInd - 1, vertInd + 1].map(i => {
+                      return vertices[(i + vertices.length) % vertices.length]    
+                  });
+                  adjDir = adjacents.map(adj => {
+                      dir = [adj[0] - currentPoint[0], adj[1] - currentPoint[1]];
+                      dirGcd = gcd(...dir);
+                      return [dir[0] / dirGcd, dir[1] / dirGcd];
+                  });
+                  possibleDirections.innerHTML = '';
+                  possibleDirections.textContent = 'Adjacent solution directions:'
+                  const tab = document.createElement('table');
+                  tab.classList = ['simplexDirectionTable'];
+                  const dirHead = document.createElement('th');
+                  dirHead.textContent = 'Direction';
+                  const objHead = document.createElement('th');
+                  objHead.innerHTML = '&Delta; Obj / Unit';
+                  const useDir = document.createElement('th');
+                  useDir.innerHTML = 'Use?';
+                  tab.appendChild(dirHead);
+                  tab.appendChild(objHead);
+                  tab.appendChild(useDir);
+                  possibleDirections.appendChild(tab);
+                  dirGains = [];
+                  const getCheckId = i => simplexPointId + 'DirCheck' + i
+                  for ([i, adj] of adjDir.entries()) {
+                      const tr = document.createElement('tr');
+                      tab.appendChild(tr);
+                      const dirTd = document.createElement('td');
+                      dirTd.textContent = `(${adj[0]}, ${adj[1]})`;
+                      adjDirNorm = Math.sqrt(adj[0] ** 2 + adj[1] ** 2);
+                      unitObjGain = getObjVal(...adj) / adjDirNorm;
+                      const arrowHeadCoord = adj.map((ad, iAd) => currentPoint[iAd] + 45 * unitPixToCoordX * ad / adjDirNorm);
+                      const plotColor = unitObjGain > 0 ? goodDirColor : badDirColor;
+                      attrs = {
+                          'style': 'stroke-width:2pt;stroke:' + plotColor,
+                          'marker-end': `url(#${plotColor}ArrowMarker)`,
+                          'class': getArrowClass(),
+                          'id': getArrowIdFromCheckId(getCheckId(i))
+                      }
+                      lineBetweenCoords(...currentPoint, ...arrowHeadCoord, attrs);
+                      dirGains.push(unitObjGain);
+                      const objTd = document.createElement('td');
+                      objTd.textContent = Math.round(100 * unitObjGain) / 100;
+                      const useTd = document.createElement('td');
+                      const useInput = document.createElement('input');
+                      useInput.id = getCheckId(i);
+                      useInput.setAttribute('type', 'checkbox');
+                      useInput.onchange = (e) => {
+                          for (inputInd = 0; inputInd < adjacents.length; inputInd++){
+                              inEl = document.getElementById(getCheckId(inputInd));
+                              if (inEl !== e.target){
+                                  inEl.checked = false;
+                                  document.getElementById(getArrowIdFromCheckId(inEl.id)).classList.remove('simplexArrowChosen');
+                              } else {
+                                  if (e.target.checked) {
+                                      nextPoint = adjacents[inputInd];
+                                      document.getElementById(getArrowIdFromCheckId(e.target.id)).classList.add('simplexArrowChosen');
+                                  } else {
+                                      nextPoint = undefined;
+                                      document.getElementById(getArrowIdFromCheckId(e.target.id)).classList.remove('simplexArrowChosen');
+                                  }   
+                              }                            
+                              buttonStatusChange();
+                          }
+                      }
+                      if (unitObjGain <= 0){
+                          useInput.disabled = true;
+                          tr.style.color = 'red';
+                      }
+                      useTd.appendChild(useInput);
+                      tr.appendChild(dirTd);
+                      tr.appendChild(objTd);
+                      tr.appendChild(useTd);
+                  }                
+                  placePoint(...currentPoint, {'id': simplexPointId, 'r': '4.5'});
+                  const maxDirGain = Math.max(...dirGains);
+                  const numImprovingDirections = dirGains.filter(g => g > 0).length;
+                  if (maxDirGain < 0) {
+                      status.innerHTML = 'No improving directions, <b>optimal solution found!</b>';
+                      nextPoint = undefined;
+                  } else {
+                      const bestInd = adjacents.map((adj, i) => i).filter(i => dirGains[i] === maxDirGain)[0];
+                      const bestDir = adjDir[bestInd];
+                      status.textContent = `${numImprovingDirections} improving direction${numImprovingDirections === 1 ? '.' : 's to choose from.'}`;
+                      const bestCheck = document.getElementById(getCheckId(bestInd));
+                      bestCheck.checked = true;
+                      bestCheck.onchange({target: bestCheck});
+                      nextPoint = adjacents[bestInd];
+                  }
+                  buttonStatusChange();
+              }
+              const buttonStatusChange = () => {                
+                  backButton.disabled = pointHistory.length === 0;
+                  forwardButton.disabled = !nextPoint;
+              }
+              forwardButton.onclick = () => {
+                  pointHistory.push(nextPoint);
+                  changePoint();
+              }
+              resetButton.onclick = () => {
+                  nextPoint = undefined;
+                  pointHistory = [];
+                  changePoint();
+              }          
+              backButton.onclick = () => {
+                  pointHistory.pop(pointHistory.length - 1);
+                  changePoint();
+              }
+              changePoint();
+          }
       }
       const drawAllSvgPlots = () => {
           for ([i, svgEl] of document.querySelectorAll('svg.lpDraw').entries()){
@@ -1020,115 +1267,71 @@
           }
       }
   </script>
-  <style>
-      #main {
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
-          position: absolute;
+  <style>   
+      #classModeDiv {
+          position: fixed;
+          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+          padding: 30pt;
+          top: 200px;
           left: 50%;
           transform: translateX(-50%);
-      }
-      html {
-          scroll-padding-top: 2.5rem;
-          overflow-y: auto;
-      }
-      body {
-          scroll-padding-top: 2.5rem;
-          overflow-y: hidden;
-          max-width: none !important;
-      }
-      .loadingMessage {
-          text-align: center;
-          margin-top: 40vh;
-          font-size: 1.2rem;
-      }
-      blockquote {
-          margin: 1rem 0.5rem;
-          padding-left: 0.5em;
-          padding-right: 0.5em;
-          border-left: 2px solid #e6e6e6;
-          border-right: 2px solid #e6e6e6;
-          color: #444;
-          background-color: #ebebeb;
-      }
-      details {
-          cursor: pointer;
-      }
-      figure {
-          margin-inline: 0.5rem;
-      }
-      figure img {
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 100%;
-      }
-      figure figcaption {
-          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
-          text-align: center;
-      }
-      a {
-          color: blue;
-      }
-      a:visited {
-          color: purple;
-      }
-      h1 {
-          position: relative;
-          margin-top: 5rem;
-      }
-      h1:before {
-          content: '';
-          position: absolute;
-          width: 100%;
-          height: 1px;
-          background: black;
-          bottom: 150%;
-          left: 0;
-      }
-      *[role="doc-biblioref"] {
-          color: green !important;
-      }
-      div.sourceCode {
-          background-color: #dfdfdf;
-          padding: 0.5rem;
-          border: 1pt solid black;
-          font-size: max(12pt, 1.1rem);
-      }
-      .copyButton {
-          float: right;
-          cursor: pointer;
-      }
-      .header-section-number::after {
-          content: ':'
-      }
-      @keyframes fade {
-          0%,100% { opacity: 0 }
-          15% { opacity: 1 }
-          85% { opacity: 1 }
-      }
-      .copyMessage {
-          position: absolute;
-          transform: translate(-2rem, -2.8rem);
-          width: 4rem;
-          font-size: max(10pt, 0.7rem);
-          text-align: center;
-          background-color: #eee;
-          border: 1pt solid black;
-          border-radius: 0.25rem;
-          animation: fade 2s linear;
+          background-color: white;
+          border: 2pt solid;
+          border-radius: 10pt;
+          padding: 10px;
+          box-shadow: 5px 5px rgb(200, 200, 200);
       }
   </style>
+  <script>
+      const classModeSetup = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.origin + '/?classmode=false';
+          classMode.onclick = closeClassMode;
+          classMode.innerHTML = `
+              <div>
+                  Welcome to class mode! This is your friendly reminder to check that:
+                  <ul>
+                      <li>The mics are on.</li>
+                      <li>The camera is pointed at the whiteboard.</li>
+                      <li>PIP is off.</li>
+                  </ul>
+                  Click anywhere to close this window.
+                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+              </div>
+          `
+      }
+      const closeClassMode = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.origin + '/?classmode=false';
+          const minutesBetweenReminders = 15;
+          if (classMode.style.visibility === "visible") {
+              classMode.style.visibility = "hidden";
+              classMode.innerHTML = `
+                  <div>
+                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                  </div>
+              `
+              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+          }
+      }
+  </script>
   <script>
       document.onreadystatechange = () => {
           if (document.readyState !== "complete") {
               document.querySelector("#main").style.display = "none";
               document.querySelector(".navbar").style.display = "none";
               document.querySelector("#loader").style.visibility = "visible";
+              document.querySelector("#classModeDiv").style.visibility = "hidden";
           } else {
               document.querySelector("#loader").style.display = "none";
               document.querySelector(".navbar").style.display = "flex";
               document.querySelector("#main").style.display = "block";
+              if (getUrlParameter('classmode') !== 'false') {
+                  document.querySelector("#classModeDiv").style.visibility = "visible";
+              }
           }
       };
       window.onload = () => {
@@ -1142,7 +1345,19 @@
           addCodeCopyButtons();
           tocHelpers();
           drawAllSvgPlots();
+          theoremHelpers();
+          classModeSetup();
+          document.onclick = () => {
+              closeNavIfSmall();
+              closeClassMode();
+          }
       }
+      getUrlParameter = (name) => {
+          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+          var results = regex.exec(location.search);
+          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      };
       addMathContainers = () => {
           for (el of document.querySelectorAll('.math.display')){
               katexContainer = document.createElement('div');
@@ -1274,7 +1489,7 @@
           liEl.appendChild(aEl);
           ulEl.appendChild(liEl);
       }
-      addTooltips = (els, includeLinkBacks) => {
+      addTooltips = (els, includeLinkBacks, arrowFloat=false) => {
           for ([i, el] of els.entries()) {
               ((el, i) => {
                   refId = el.getAttribute('href');
@@ -1298,7 +1513,7 @@
                       if (!!!backEl) {
                           backEl = document.createElement('div');
                           backEl.id = backId;
-                          backEl.style.marginTop = 'auto';
+                          backEl.classList = ['backRefElement'];
                           backArrowEl = document.createElement('a');
                           backArrowEl.id = backId + 'Arrow';
                           backArrowEl.innerHTML = "↩︎";
@@ -1384,6 +1599,188 @@
           els = document.getElementById('main').getElementsByClassName('footnote-ref');
           addTooltips([...els], false);
           document.getElementById('footnotes').remove();
+          for (el of document.getElementsByClassName('eqnRef')) {
+              const childEl = el.firstChild;
+              if (childEl.tagName === 'SUP') {
+                  childEl.textContent = 'note';
+                  childEl.style.fontSize = '0.5rem';
+              }
+          }
+      }
+  </script>
+  <style>
+      #main {
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: margin-left .5s;
+          padding: 20px;
+          padding-bottom: 30px;
+      }
+      html {
+          scroll-padding-top: 2.5rem;
+          overflow-y: auto;
+      }
+      body {
+          scroll-padding-top: 2.5rem;
+          overflow-y: hidden;
+          max-width: none !important;
+      }
+      .loadingMessage {
+          text-align: center;
+          margin-top: 40vh;
+          font-size: 1.2rem;
+      }
+      blockquote {
+          margin: 1rem 0.5rem;
+          padding-left: 0.5em;
+          padding-right: 0.5em;
+          border-left: 2px solid #e6e6e6;
+          border-right: 2px solid #e6e6e6;
+          color: #444;
+          background-color: #ebebeb;
+      }
+      blockquote p {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+      }
+      details {
+          cursor: pointer;
+      }
+      figure {
+          margin-inline: 0.5rem;
+      }
+      figure img {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          max-width: 100%;
+      }
+      figure figcaption {
+          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
+          text-align: center;
+      }
+      a {
+          color: blue;
+      }
+      a:visited {
+          color: purple;
+      }
+      h1 {
+          position: relative;
+          margin-top: 5rem;
+      }
+      h1:before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          background: black;
+          bottom: 150%;
+          left: 0;
+      }
+      *[role="doc-biblioref"] {
+          color: green !important;
+      }
+      div.sourceCode {
+          background-color: #dfdfdf;
+          padding: 0.5rem;
+          border: 1pt solid black;
+          font-size: max(12pt, 1.1rem);
+      }
+      .copyButton {
+          float: right;
+          cursor: pointer;
+      }
+      .header-section-number::after {
+          content: ':'
+      }
+      @keyframes fade {
+          0%,100% { opacity: 0 }
+          15% { opacity: 1 }
+          85% { opacity: 1 }
+      }
+      .copyMessage {
+          position: absolute;
+          transform: translate(-2rem, -2.8rem);
+          width: 4rem;
+          font-size: max(10pt, 0.7rem);
+          text-align: center;
+          background-color: #eee;
+          border: 1pt solid black;
+          border-radius: 0.25rem;
+          animation: fade 2s linear;
+      }
+      .backRefElement {
+          margin-top: auto;
+      }
+      footer {
+          position: fixed;
+          bottom: 0;
+          text-align: center;
+          width: 100%;
+          background: white;
+          left: 50%;
+          transform: translateX(-50%);
+          border-top: 1pt solid lightgray;
+          font-size: 0.7rem;
+      }
+  </style>
+  <script>
+      const theoremHelpers = () => {
+          let theoremObj = {};
+          for (thm of document.getElementsByClassName('theorem')) {
+              let h1El = thm.previousSibling;
+              while (h1El.tagName !== 'H1') {
+                  h1El = h1El.previousSibling;
+              }
+              theoremObj[thm.id] = {
+                  'theorem': thm,
+                  'proof': undefined,
+                  'section': h1El.getAttribute('data-number')
+              };
+          }
+          for (prf of document.getElementsByClassName('proof')) {
+              theoremObj[prf.getAttribute('for')].proof = prf;
+          }
+          secNumThms = {};
+          for ([thmId, thmObj] of Object.entries(theoremObj)) {
+              sec = thmObj.section;
+              el = thmObj.theorem;
+              proof = thmObj.proof;
+              if (!Object.keys(secNumThms).includes(sec)) {
+                  secNumThms[sec] = 0;
+              }
+              secNumThms[sec] += 1;
+              el.setAttribute('refStr', `Theorem ${sec}.${secNumThms[sec]}`)
+              labelSpan = document.createElement('span');
+              labelSpan.classList = ['theoremLabel'];
+              labelSpan.textContent = `Theorem ${sec}.${secNumThms[sec]}: `;
+              el.insertBefore(labelSpan, el.firstChild);
+              const main = document.getElementById('main');
+              if (!!proof) {
+                  if (proof.getAttribute('data-placement') === 'appendix') {
+                      const appLink = document.createElement('p');
+                      const thmClone = thm.cloneNode(true);
+                      thmClone.id = thm.id + 'AppendixVersionWithProof';
+                      thmCloneLabel = thmClone.firstChild;
+                      thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                      appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                      main.insertBefore(appLink, thm.nextSibling);
+                      const refs = document.getElementById('References');
+                      main.insertBefore(thmClone, refs);
+                      main.insertBefore(proof, refs);
+                  }
+              }
+          }
+          const refEls = document.getElementsByClassName('thmRef');
+          for (ref of refEls) {
+              thm = document.getElementById(ref.getAttribute('for'));
+              ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+          }
+          addTooltips([...refEls].map(el => el.firstChild), true);
       }
   </script>
   <script defer=""
@@ -1410,19 +1807,21 @@
 </head>
 <body>
 <div class="navbar">
-    <div onclick="openNav()" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
+    <div onclick="openCloseNav()" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
     <div style="text-align: center">IMSE 780</div>
     <div style="text-align: right; padding-right: 1rem">Fall 2023</div>
 </div>
 <div id="loader" class="loadingMessage">Loading...</div>
 <nav id="TOC" role="doc-toc">
-<div id="tocTop"><div class="tocHeader">Contents</div><div class="closeBtn" onclick="closeNav()">&nbsp;&times;&nbsp;</div></div>
+<div id="tocTop"></div>
 <ul>
 <li><a href="#welcome" id="toc-welcome"><span
 class="toc-section-number">1</span> Welcome!</a>
 <ul>
 <li><a href="#course-materials" id="toc-course-materials"><span
 class="toc-section-number">1.1</span> Course materials</a></li>
+<li><a href="#use" id="toc-use"><span
+class="toc-section-number">1.2</span> Use</a></li>
 </ul></li>
 <li><a href="#introduction-to-or" id="toc-introduction-to-or"><span
 class="toc-section-number">2</span> Introduction to OR</a>
@@ -1530,14 +1929,27 @@ class="toc-section-number">4.5.4</span> Variable bounds</a></li>
 <li><a href="#recap-of-allowed-forms"
 id="toc-recap-of-allowed-forms"><span
 class="toc-section-number">4.5.5</span> Recap of allowed forms</a></li>
-<li><a href="#a-word-on-notation" id="toc-a-word-on-notation"><span
-class="toc-section-number">4.5.6</span> A word on notation</a></li>
+<li><a href="#different-notation" id="toc-different-notation"><span
+class="toc-section-number">4.5.6</span> Different notation</a></li>
 </ul></li>
 <li><a href="#the-simplex-method" id="toc-the-simplex-method"><span
 class="toc-section-number">4.6</span> The simplex method</a>
 <ul>
+<li><a href="#corner-point-solutions"
+id="toc-corner-point-solutions"><span
+class="toc-section-number">4.6.1</span> Corner-point solutions</a></li>
 <li><a href="#simplex-visualized" id="toc-simplex-visualized"><span
-class="toc-section-number">4.6.1</span> Simplex visualized</a></li>
+class="toc-section-number">4.6.2</span> Simplex visualized</a></li>
+<li><a href="#solving-the-sample-lp-with-simplex"
+id="toc-solving-the-sample-lp-with-simplex"><span
+class="toc-section-number">4.6.3</span> Solving the sample LP with
+simplex</a></li>
+<li><a href="#simplex-algorithm-basics"
+id="toc-simplex-algorithm-basics"><span
+class="toc-section-number">4.6.4</span> Simplex algorithm
+basics</a></li>
+<li><a href="#other-considerations" id="toc-other-considerations"><span
+class="toc-section-number">4.6.5</span> Other considerations</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -1558,11 +1970,19 @@ operations</a></li>
 class="toc-section-number">5.2.3</span> Special matrices</a></li>
 <li><a href="#rank-and-inverse" id="toc-rank-and-inverse"><span
 class="toc-section-number">5.2.4</span> Rank and inverse</a></li>
+<li><a href="#systems-of-equations" id="toc-systems-of-equations"><span
+class="toc-section-number">5.2.5</span> Systems of equations</a></li>
+<li><a href="#elementary-operations"
+id="toc-elementary-operations"><span
+class="toc-section-number">5.2.6</span> Elementary operations</a></li>
 </ul></li>
+<li><a href="#sec:appendixSelectedProofs"
+id="toc-sec:appendixSelectedProofs"><span
+class="toc-section-number">5.3</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
-<div id="main" onclick="closeNavIfSmall()">
+<div id="main">
 <h1 data-number="1" id="welcome"><span
 class="header-section-number">1</span> Welcome!</h1>
 <p>You’re reading the class notes for <em>IMSE 780: Methods of
@@ -1584,6 +2004,12 @@ reference<a href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a>. The syllabus, assignments, and
 other course materials may be found via the <a
 href="https://k-state.instructure.com/">class Canvas site</a>.</p>
+<h2 data-number="1.2" id="use"><span
+class="header-section-number">1.2</span> Use</h2>
+<p>These notes were created for educational use. With proper
+attribution, readers may freely copy, distribute, or produce derivative
+work from this content, in whole or in part, for any non-commercial
+use.</p>
 <h1 data-number="2" id="introduction-to-or"><span
 class="header-section-number">2</span> Introduction to OR</h1>
 <p>In this section we’ll cover the big picture questions: What is
@@ -1784,9 +2210,9 @@ href="https://jupyter.org/">Jupyter</a>-like<a href="#fn6"
 class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>
 notebook environment that is free to use and requires only a web
 browser. I’ll be using this in class to go through coding examples. Note
-that you’ll do need a Google account in order to use Colab<a href="#fn7"
-class="footnote-ref" id="fnref7"
-role="doc-noteref"><sup>7</sup></a>.</p>
+that you do need a Google account in order to create and save your own
+Colab<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a> notebooks.</p>
 <p>In Colab (and other notebook environments) code is organized into
 cells where related blocks of code are written. You can execute code one
 cell at a time to work through the notebook and check outputs as you go.
@@ -1796,7 +2222,7 @@ basics of Python.</p>
 class="header-section-number">3.2</span> Some Python basics</h2>
 <p>Below, you should see a read-only image of a Colab notebook. The
 notebook gives some exposition and samples of basic Python principles.
-Click the “Open in Colab” button to open a copy in a new window.</p>
+Click the “Open in Colab” button to open a copy in your browser.</p>
 <script src="https://gist.github.com/dcd6305c13b79bbdba7c49dc5c76d3c7.js"></script>
 <h2 data-number="3.3" id="other-coding-environments"><span
 class="header-section-number">3.3</span> Other coding environments</h2>
@@ -1868,7 +2294,10 @@ class="header-section-number">4</span> Linear programming</h1>
 the matriarch. It was among the first methods to be seriously studied
 and find broad applications. To this day, LPs are relevant and used
 across industry to inform decision-making and help best make use of
-scarce resources.</p>
+scarce resources. This section will cover selected material from <span
+class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span>, chapters
+4-8.</p>
 <p>So, what is an LP? Let’s step back a bit - linear programming is a
 special type of mathematical programming problem. The word
 <em>programming</em>, in the language of the pre-computer-revolution era
@@ -2047,18 +2476,24 @@ Sorry, your browser does not support inline SVG.
 </svg>
 <p>Here we have a plot with <span class="math inline">x_1</span> on the
 horizontal axis, <span class="math inline">x_2</span> on the vertical
-axis, and a line drawn for each of the constraints in eq. <a
+axis, and a line drawn for each <strong>constraint boundary</strong>
+(the line that forms the boundary of what is permitted by the
+corresponding constraint) for the constraints eq. <a
 href="#eq:prototypeLp">1</a>. Moreover, if you hover over a constraint
-line, the side of the line satisfied by the inequality is shaded light
-gray<a href="#fn14" class="footnote-ref" id="fnref14"
-role="doc-noteref"><sup>14</sup></a>. The feasible region (where all
-three constraints are satisfied) is plainly visible as the gray-shaded
-region in the bottom-left. If you click on the plot (or enter values in
-the text boxes) a point will be drawn on the plot. If the point is a
-feasible solution, it will be colored black and the objective value at
-the solution is show below the plot. Otherwise, if the solution is
-infeasible the point will be colored red and the violated inequalities
-will flash.</p>
+boundary, the side of the line satisfied by the inequality is shaded
+light gray<a href="#fn14" class="footnote-ref" id="fnref14"
+role="doc-noteref"><sup>14</sup></a>. The feasible region is the portion
+of the plot where all the constraints are satisfied, and it is plainly
+visible as the gray-shaded region in the bottom-left. Such an
+intersection of linear inequalities is called a
+<strong>polyhedron</strong>, and in cases such as this where the
+polyhedron is bounded (i.e. doesn’t go off to infinity in some
+direction) we also call it a <strong>polytope</strong>.</p>
+<p>If you click on the plot (or enter values in the text boxes) a point
+will be drawn on the plot. If the point is a feasible solution, it will
+be colored black and the objective value at the solution is show below
+the plot. Otherwise, if the solution is infeasible the point will be
+colored red and the violated inequalities will flash.</p>
 <p>How can we visualize the objective? Since the objective is given by
 <span class="math inline">3x_1 + 5x_2</span>, any line we draw of the
 form <span class="math inline">3x_1 + 5x_2 = Z</span> (for some number
@@ -2382,8 +2817,8 @@ form.</li>
 <p>Crucially, any of these forms can be transformed into any of the
 others, so no matter how we specify a particular LP, any of the results
 and techniques we discuss here apply!</p>
-<h3 data-number="4.5.6" id="a-word-on-notation"><span
-class="header-section-number">4.5.6</span> A word on notation</h3>
+<h3 data-number="4.5.6" id="different-notation"><span
+class="header-section-number">4.5.6</span> Different notation</h3>
 <p>Last up for this section, let’s discuss notation. I don’t know about
 you, but I get a little overwhelmed when I look at formulations like
 eq. <a href="#eq:standardFormLp">2</a>. There’s a lot to look at there,
@@ -2449,7 +2884,7 @@ favorite notation for the standard form LP is</p>
 <p><span id="eq:standardFormLpMatrix" class="eqnos"><span
 class="math display">
 \begin{align*}
-\text{max}&amp;&amp; \mathbf{c}^\intercal\mathbf{x}\\
+\text{max}&amp;&amp; \mathbf{c}\mathbf{x}\\
 \text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
      &amp;&amp; \mathbf{x}&amp;\geq\mathbf{0}
 \end{align*}
@@ -2463,7 +2898,8 @@ href="#eq:standardFormLpMatrix">3</a>.</p>
 <h2 data-number="4.6" id="the-simplex-method"><span
 class="header-section-number">4.6</span> The simplex method</h2>
 <p>We’re just about ready to talk about LP solving algorithms, and we’re
-of course starting with the simplex algorithm. Arguably the most
+of course starting with the <strong>simplex algorithm</strong> (also
+sometimes called the <strong>simplex method</strong>). Arguably the most
 important breakthrough in the history of OR was the development of the
 simplex method by George Dantzig<a href="#fn22" class="footnote-ref"
 id="fnref22" role="doc-noteref"><sup>22</sup></a> during the late
@@ -2473,8 +2909,8 @@ algorithm developed for linear programming, and it continues to be the
 workhorse in linear and integer programming solvers today<a href="#fn24"
 class="footnote-ref" id="fnref24"
 role="doc-noteref"><sup>24</sup></a>.</p>
-<h3 data-number="4.6.1" id="simplex-visualized"><span
-class="header-section-number">4.6.1</span> Simplex visualized</h3>
+<h3 data-number="4.6.1" id="corner-point-solutions"><span
+class="header-section-number">4.6.1</span> Corner-point solutions</h3>
 <p>Before we get to the algorithm itself, let’s take a moment to dwell
 on some geometric insights the method relies on. We’ll return to our
 sample problem eq. <a href="#eq:prototypeLp">1</a> and once again we’ll
@@ -2483,8 +2919,232 @@ graph it below.</p>
 Sorry, your browser does not support inline SVG.
 </svg>
 <p>This time we’ve also plotted the solutions in the corners of the
-feasible region, because they are important to the simplex
-algorithm.</p>
+feasible region, because they are important to the simplex algorithm. We
+call these solutions <strong>corner-point solutions</strong> or
+<strong>vertices</strong><a href="#fn25" class="footnote-ref"
+id="fnref25" role="doc-noteref"><sup>25</sup></a>, and they come at the
+intersection of two constraint boundaries (in the general case, for LPs
+with <span class="math inline">n</span> decision variables, the
+corner-point solutions come at the intersection of <span
+class="math inline">n</span> constraints boundaries).</p>
+<p>The simplex algorithm makes use of the following key fact of linear
+programs:</p>
+<div id="thm:cornerPointOpt" class="theorem">
+<p>If a linear program has an optimal solution (i.e. not unbounded or
+infeasible), then it has an optimal solution that is a corner-point
+solution.</p>
+</div>
+<div class="proof" for="thm:cornerPointOpt" data-placement="appendix">
+<p>We won’t actually give a full proof of this theorem, instead we’ll
+only consider the case of a standard form LP (eq. <a
+href="#eq:standardFormLpMatrix">3</a>) with only two decision variables.
+Those of you that are familiar with <a
+href="https://en.wikipedia.org/wiki/Mathematical_induction">proofs by
+induction</a> may be able to see how to generalize this to any number of
+variables.</p>
+<p>In two dimensions we can visualize this, so let’s continue to use the
+sample LP of eq. <a href="#eq:prototypeLp">1</a> as our example. Any
+feasible solution to a two-dimensional LP must fall under exactly one of
+these categories:</p>
+<ol type="1">
+<li>An interior solution (not on any constraint boundaries).</li>
+<li>On a single constraint boundary.</li>
+<li>A corner-point solution (i.e. at the intersection of two constraint
+boundaries).</li>
+</ol>
+<p>What we can show is that for any solution of type 1 or 2, we can find
+a corner-point solution with equal or greater objective value, and we
+will illustrate this in the plot below. To that end, suppose we have
+some solutions <span class="math inline">\mathbf{z}</span> on the
+interior of the feasible region, and <span
+class="math inline">\mathbf{y}</span> that lies on a single constraint
+boundary.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;extraPoints&quot;: [[2, 1], [3, 4.5]], &quot;extraLines&quot;: [[2, 1, 3, 1.5, {&quot;style&quot;: &quot;stroke-width:2pt;stroke:black&quot;, &quot;marker-end&quot;: &quot;url(#blackArrowMarker)&quot;}], [3, 4.5, 2.5, 5.25, {&quot;style&quot;: &quot;stroke-width:2pt;stroke:black&quot;, &quot;marker-end&quot;: &quot;url(#blackArrowMarker)&quot;}]], &quot;extraMathText&quot;: [[&quot;y&quot;, 3.25, 5, {&quot;coordToPix&quot;: true}], [&quot;z&quot;, 1.75, 1.75, {&quot;coordToPix&quot;: true}], [&quot;v&quot;, 2, 5.75, {&quot;coordToPix&quot;: true}], [&quot;u&quot;, 3.25, 1.75, {&quot;coordToPix&quot;: true}]]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Let <span class="math inline">\mathbf{v}</span> be a (unit) vector
+that points in the same direction as the constraint boundary that <span
+class="math inline">\mathbf{y}</span> is on. Let <span
+class="math inline">\mathbf{c}</span> be the vector of objective
+function coefficients (so in our sample LP we would have <span
+class="math inline">\mathbf{c}=\begin{bmatrix}3\\5\end{bmatrix}</span>).
+The objective value at solution <span
+class="math inline">\mathbf{y}</span> is <span
+class="math inline">\mathbf{y}\mathbf{c}</span>. In contrast, if we move
+some amount <span class="math inline">\delta</span> from <span
+class="math inline">\mathbf{y}</span> along direction <span
+class="math inline">\mathbf{v}</span>, the objective value is (due to
+distributivity of matrix operations) <span
+class="math inline">(\mathbf{y} + \delta\mathbf{v})\mathbf{c}=
+\mathbf{y}\mathbf{c}+ \delta\mathbf{v}\mathbf{c}</span>.</p>
+<p>If <span class="math inline">\mathbf{v}\mathbf{c}\geq0</span>, then
+moving from <span class="math inline">\mathbf{y}</span> along the
+constraint boundary in the direction of <span
+class="math inline">\mathbf{v}</span> improves the objective value. So
+we can continue in that direction until we meet another constraint,
+yielding a corner-point solution with greater-or-equal objective value
+than <span class="math inline">y</span>. If, on the other hand, <span
+class="math inline">\mathbf{v}\mathbf{c}&lt;0</span>, then we can move
+in the direction of <span class="math inline">-\mathbf{v}</span> to a
+corner-point solution with greater objective value than <span
+class="math inline">\mathbf{y}</span>. So either way, there is some
+corner-point solution with objective value at least as good as <span
+class="math inline">\mathbf{y}</span>.</p>
+<p>The proof for the interior point <span
+class="math inline">\mathbf{z}</span> is very similar. Select some
+direction <span class="math inline">\mathbf{u}</span>, and then travel
+from <span class="math inline">\mathbf{z}</span> along directions <span
+class="math inline">\mathbf{u}</span> or <span
+class="math inline">\mathbf{u}</span> until you hit a constraint
+boundary. One of these points will yield an objective value at least as
+good as <span class="math inline">\mathbf{z}</span>, and it will be on
+either:</p>
+<ul>
+<li>The intersection of two constraints, in which case we’ve found the
+corner-point solution with at least as good a value as <span
+class="math inline">\mathbf{z}</span>.</li>
+<li>A single constraint, in which case we can repeat the procedure shown
+above for <span class="math inline">\mathbf{y}</span> to find the
+corner-point solution.</li>
+</ul>
+<p>In either case, we’ve found our required corner-point solution, thus
+the proof is complete.</p>
+</div>
+<p>Thanks to this theorem<a href="#fn26" class="footnote-ref"
+id="fnref26" role="doc-noteref"><sup>26</sup></a> we know that we only
+need to check corner-point solutions when solving an LP! We make use of
+this fact during the simplex method, which only checks corner-point
+solutions. We won’t check <em>every</em><a href="#fn27"
+class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>
+corner-point solution, though. The key to simplex is that we jump from
+one corner-point solution to the next while taking care that each move
+improves the objective value.</p>
+<p>In fact, the set of solutions we can move to in any iteration is
+limited to only the solutions that are adjacent to the current solution.
+In an LP with <span class="math inline">n</span> decision variables, two
+corner-point solutions are <strong>adjacent</strong> if they share <span
+class="math inline">n-1</span> constraint boundaries. Recall that
+corner-point solutions lie at the intersection of <span
+class="math inline">n</span> constraint boundaries, so we can also say
+that two adjacent corner-point solutions share all but one boundary in
+common.</p>
+<p>We have all the definitions now to describe simplex in a nutshell:
+The simplex method solves a linear programming problem by successively
+moving from one corner-point solution to another, adjacent corner-point
+solution, making sure each such move improves the objective function,
+until no such improvement exists<a href="#fn28" class="footnote-ref"
+id="fnref28" role="doc-noteref"><sup>28</sup></a>.</p>
+<h3 data-number="4.6.2" id="simplex-visualized"><span
+class="header-section-number">4.6.2</span> Simplex visualized</h3>
+<p>Now that we have the basic idea, let’s go ahead and walk through the
+steps of the simplex algorithm. We won’t go fully general on our first
+time through, though. Let’s again consider our sample problem of eq. <a
+href="#eq:prototypeLp">1</a>, which we’ve plotted again below. This
+time, though, the plot contains some controls that let us step through
+the simplex method one iteration at a time. I should stress that the
+simplex method does not work <em>exactly</em> like what we’ll talk
+through below, but all the intuitions are the same and the exercise is,
+I think, a useful one.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;simplexStart&quot;: [0, 0]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>The first step is to find an initial feasible corner-point solution.
+In our case (and lots of practical instances too) the solution <span
+class="math inline">(0, 0)</span> is a feasible solution, and a corner
+point as well. It’s not a particularly desirable solution in the context
+of our problem since it brings us no profit, but we don’t care about
+desirability yet.</p>
+<p>After initialization, we begin the algorithm’s main loop. First we
+have to determine if there are any adjacent corner-point solutions with
+improving objective value. Recall that an adjacent solution will share
+<span class="math inline">n-1</span> constraint boundaries with the
+current solution. Since we’re in two dimensions, the adjacent solutions
+share one constraint boundary with the current solution. To find the
+adjacent solutions, we travel out from <span
+class="math inline">(0,0)</span> along the two boundary lines it sits
+on, which in this case are the two axes. Thus the two directions we can
+move in are <span class="math inline">(1,0)</span> and <span
+class="math inline">(0,1)</span>.</p>
+<p>How do we know if a solution in any particular direction is improving
+the objective value? Let’s consider the direction <span
+class="math inline">(1,0)</span>. Since we’re moving from <span
+class="math inline">(0,0)</span> to some point in the direction of <span
+class="math inline">(1,0)</span>, the resulting solution will look like
+<span class="math inline">(0,0) + \alpha(1,0)</span> for some number
+<span class="math inline">\alpha</span>. The objective value of any
+point <span class="math inline">\mathbf{x}</span> is <span
+class="math inline">\mathbf{c}\mathbf{x}</span> where <span
+class="math inline">\mathbf{c}</span> is the vector of objective
+coefficients (which is <span class="math inline">(3,5)</span> in our
+sample problem). So the objective value of <span
+class="math inline">(0,0) + \alpha(1,0)</span> is</p>
+<p><span class="math display">
+([0\ 0] + \alpha[1\ 0])\begin{bmatrix}3\\5\end{bmatrix}
+</span></p>
+<p>and since matrix multiplication distributes through addition, this is
+the same as</p>
+<p><span class="math display">
+[0\ 0]\begin{bmatrix}3\\5\end{bmatrix} + \alpha[1\
+0]\begin{bmatrix}3\\5\end{bmatrix}.
+</span></p>
+<p>That first term, <span class="math inline">[0\
+0]\begin{bmatrix}3\\5\end{bmatrix}</span>, is just the objective value
+associated with the current solution <span
+class="math inline">(0,0)</span>. So the second term <span
+class="math inline">\alpha[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}</span>,
+is the <em>improvement</em> associated with the move.</p>
+<p>We have two directions in which we can move, <span
+class="math inline">(1,0)</span> and <span
+class="math inline">(0,1)</span>. To keep things standardized we’ll want
+to re-scale our directions to be unit vectors (i.e. vectors with length
+one), but in this case they’re already unit vectors. The improvements
+associated with unit moves in these directions are <span
+class="math inline">[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}=3</span> and
+<span class="math inline">[0\
+1]\begin{bmatrix}3\\5\end{bmatrix}=5</span>. These are both positive
+numbers, and since we’re trying to maximize the objective value, that
+means that solutions in either direction are improvements to the
+objective value.</p>
+<p>All that information is summarized in the table below the plot. The
+two directions are listed, as well as the per-unit change in objective
+function (under the heading <span class="math inline">\Delta</span> Obj
+/ Unit<a href="#fn29" class="footnote-ref" id="fnref29"
+role="doc-noteref"><sup>29</sup></a>). Since both directions improve the
+objective, you have the option to choose either one using the checkboxes
+in the final column.</p>
+<p>Let’s go ahead and choose the <span class="math inline">(0,1)</span>
+direction, since it gives the highest per-unit objective change<a
+href="#fn30" class="footnote-ref" id="fnref30"
+role="doc-noteref"><sup>30</sup></a>. Press the forward button on the
+plot, and you’ll see it finds the adjacent solution in that direction,
+<span class="math inline">(0,6)</span>, and the directions to its
+adjacent solutions. But only one of the directions is improving, so we
+choose to move in that direction <span class="math inline">(1,0)</span>
+to the adjacent corner-point solution <span
+class="math inline">(2,6)</span>. At this point none of the adjacent
+directions are improvements, so the current point is optimal and the
+algorithm is finished.</p>
+<p>One thing to note before we move on: All the information we gather
+during an iteration is in some sense “local” to the current corner-point
+solution. We compute only the <em>directions</em> to the neighboring
+solutions, not the actual solutions themselves. Only once we decide on a
+direction do we find the actual corner-point solution. This is because
+finding the solutions is much more expensive computationally speaking,
+and we’d like to defer that step and only compute solutions when
+necessary. This isn’t such a big deal on a small, two-dimensional
+example like this, but in larger scale instances this saves a good
+amount of time.</p>
+<h3 data-number="4.6.3" id="solving-the-sample-lp-with-simplex"><span
+class="header-section-number">4.6.3</span> Solving the sample LP with
+simplex</h3>
+<p>Walk through with motivations.
+<span class='thmRef' for='thm:cornerPointOpt'></p>
+<h3 data-number="4.6.4" id="simplex-algorithm-basics"><span
+class="header-section-number">4.6.4</span> Simplex algorithm basics</h3>
+<p>Write the steps in matrix form</p>
+<h3 data-number="4.6.5" id="other-considerations"><span
+class="header-section-number">4.6.5</span> Other considerations</h3>
+<p>Gotchas and edge cases</p>
 <!-- book section 4.5 -->
 <!-- {insertSection:sections/integer_programming.md} -->
 <h1 data-number="5" id="appendix"><span
@@ -2529,7 +3189,7 @@ class="math inline">m</span> elements, all of which are from some set
 <span class="math inline">S</span>. For example, <span
 class="math inline">\mathbb{R}^3</span> is the set of 3-element, real
 number vectors. So we could say <span class="math display">
-  \begin{bmatrix}1 \\ 2.64 \\ -3\end{bmatrix}\in\mathbb{R}^3.
+    \begin{bmatrix}1 \\ 2.64 \\ -3\end{bmatrix}\in\mathbb{R}^3.
 </span></li>
 <li><span class="math inline">S^{m\times n}</span>: The set of matrices
 with <span class="math inline">m</span> rows and <span
@@ -2553,18 +3213,23 @@ all entries equal to 0, except the diagonal where all entries equal 1
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 0 &amp; 0 &amp; \cdots &amp; 1 \\
 \end{bmatrix}</span></li>
+<li><span class="math inline">\Leftrightarrow</span>: If and only if. It
+indicates the the statement to the left is logically equivalent to the
+statement on the right, e.g. <span class="math inline">a &gt; b
+\Leftrightarrow -a &lt; -b</span>.</li>
 </ul>
 <h2 data-number="5.2" id="sec:linearAlgebra"><span
 class="header-section-number">5.2</span> Linear algebra review</h2>
 <p>Linear algebra is the study of math involving matrices, vectors, and
 linear transformations. A <strong>matrix</strong> (the basic object of
-linear algebra) is a rectangular array of numbers. For example, <span
-class="math display">
+linear algebra) is a rectangular array of numbers. For example,</p>
+<p><span class="math display">
 \mathbf{A}=\begin{bmatrix} 2 &amp; 4 \\ 7 &amp; 0 \\ 6 &amp; 3
 \end{bmatrix}
-</span> is a <span class="math inline">3\times 2</span> matrix. A matrix
-is said to be <strong>square</strong> if it has the same number of rows
-and columns.</p>
+</span></p>
+<p>is a <span class="math inline">3\times 2</span> matrix. A matrix is
+said to be <strong>square</strong> if it has the same number of rows and
+columns.</p>
 <p>In these notes, we will usually denote matrices with boldface,
 uppercase letters.</p>
 <h3 data-number="5.2.1" id="sec:matrixMath"><span
@@ -2576,8 +3241,8 @@ class="math inline">\mathbf{A}</span> and <span
 class="math inline">\mathbf{B}</span> must have the same number of rows
 <span class="math inline">m</span> and columns <span
 class="math inline">n</span>. Additionally, if we write notate the
-entries of the matrices like:
-<span id="eq:matrixDef" class="eqnos"><span class="math display">
+entries of the matrices like:</p>
+<p><span id="eq:matrixDef" class="eqnos"><span class="math display">
 \mathbf{A} = \begin{bmatrix}
 a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
 a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
@@ -2597,35 +3262,11 @@ b_{m1} &amp; b_{m2} &amp; \cdots &amp; b_{mn} \\
 <p>Then we say <span class="math inline">\mathbf{A}=\mathbf{B}\ </span>
 if and only if <span class="math inline">\ a_{11}=b_{11}</span>, <span
 class="math inline">a_{12}=b_{12}</span>, … and so on.</p>
-<p>For a matrix <span class="math inline">\mathbf{A}</span>, the
-<strong>transpose</strong> of <span
-class="math inline">\mathbf{A}</span>, denoted <span
-class="math inline">\mathbf{A}^\intercal</span>, is essentially the
-matrix “turned on its side” so that the first row of <span
-class="math inline">\mathbf{A}</span> equals the first column of <span
-class="math inline">\mathbf{A}^\intercal</span>, the second row of <span
-class="math inline">\mathbf{A}</span> equals the second column of <span
-class="math inline">\mathbf{A}^\intercal</span>, and so on. More
-concretely, if we define <span class="math inline">\mathbf{A}</span> as
-in eq. <a href="#eq:matrixDef">4</a>, then <span class="math display">
-\mathbf{A}^\intercal= \begin{bmatrix}
-a_{11} &amp; a_{21} &amp; \cdots &amp; a_{m1} \\
-a_{12} &amp; a_{22} &amp; \cdots &amp; a_{m2} \\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-a_{1n} &amp; a_{2n} &amp; \cdots &amp; a_{mn} \\
-\end{bmatrix}.
-</span> It follows from this that if <span
-class="math inline">\mathbf{A}\in\mathbb{R}^{m\times n}</span> then
-<span class="math inline">\mathbf{A}^\intercal\in\mathbb{R}^{n\times
-m}</span>. A common case worth mentioning is for vectors. If vector
-<span class="math inline">\mathbf{x}</span> is a column vector then
-<span class="math inline">\mathbf{x}^\intercal</span> is a row vector,
-and vice-versa.</p>
 <p><strong>Addition</strong> is only defined for two matrices of the
 same size. For two <span class="math inline">m\times n</span> matrices
 <span class="math inline">\mathbf{A}</span> and <span
-class="math inline">\mathbf{B}</span>, we have <span
-class="math display">
+class="math inline">\mathbf{B}</span>, we have</p>
+<p><span class="math display">
 \mathbf{A} + \mathbf{B} = \begin{bmatrix}
 a_{11} + b_{11} &amp; a_{12} + b_{12} &amp; \cdots &amp; a_{1n} + b_{1n}
 \\
@@ -2658,9 +3299,9 @@ c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}.
 \begin{bmatrix}6&amp;7\\8&amp;9\end{bmatrix}
 &amp;=
 \begin{bmatrix}
-    0\cdot6 + 1\cdot8 &amp; 0\cdot7 + 1\cdot9 \\
-    2\cdot6 + 3\cdot8 &amp; 2\cdot7 + 3\cdot9 \\
-    4\cdot6 + 5\cdot8 &amp; 4\cdot7 + 5\cdot9 \\
+0\cdot6 + 1\cdot8 &amp; 0\cdot7 + 1\cdot9 \\
+2\cdot6 + 3\cdot8 &amp; 2\cdot7 + 3\cdot9 \\
+4\cdot6 + 5\cdot8 &amp; 4\cdot7 + 5\cdot9 \\
 \end{bmatrix}\\
 &amp;=
 \begin{bmatrix}8&amp;9\\36&amp;41\\64&amp;73\end{bmatrix}
@@ -2671,7 +3312,8 @@ c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}.
 number) <span class="math inline">s</span>, where each element of the
 product is simply the corresponding element of <span
 class="math inline">\mathbf{A}</span> multiplied by <span
-class="math inline">s</span>, i.e. <span class="math display">
+class="math inline">s</span>, i.e.</p>
+<p><span class="math display">
 s\mathbf{A}= \begin{bmatrix}
 sa_{11} &amp; sa_{12} &amp; \cdots &amp; sa_{1n} \\
 sa_{21} &amp; sa_{22} &amp; \cdots &amp; sa_{2n} \\
@@ -2709,37 +3351,42 @@ needs not be the same.</p>
 <h3 data-number="5.2.3" id="special-matrices"><span
 class="header-section-number">5.2.3</span> Special matrices</h3>
 <p>A <strong>vector</strong> is a special type of matrix with either a
-single column or a single row, e.g. <span class="math display">
+single column or a single row, e.g.</p>
+<p><span class="math display">
 \mathbf{x}=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
-</span> is a <strong>column vector</strong> and <span
+</span></p>
+<p>is a <strong>column vector</strong> and <span
 class="math display">\mathbf{x}=\begin{bmatrix} 1 &amp; 9 &amp; 3
 \end{bmatrix}</span> is a <strong>row vector</strong>. In these notes,
-vectorw will usually be denoted with with boldface, lowercase letters.
-Additionally, vectors are usually assumed to be column vectors. If we
-need a vector <span class="math inline">\mathbf{x}</span> to be a row
-vector instead, we will usually explicitly transpose it as <span
-class="math inline">\mathbf{x}^\intercal</span>.</p>
+vectors will usually be denoted with with boldface, lowercase letters. A
+convention in some texts, which we will not follow here, is for vectors
+to be assumed as column vectors unless explicitly transposed. For these
+notes, we will let context dictate whether a vector is a row vector or a
+column vector (it is usually clear).</p>
 <p>An <strong>identity matrix</strong>, denoted by <span
 class="math inline">\mathbf{I}</span>, is a square vector whose elements
-are all 0s expect for 1s along the diagonal, i.e.  <span
+are all 0s expect for 1s along the diagonal, i.e. <span
 class="math display">\mathbf{I}= \begin{bmatrix}
 1 &amp; 0 &amp; \cdots &amp; 0 \\
 0 &amp; 1 &amp; \cdots &amp; 0 \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 0 &amp; 0 &amp; \cdots &amp; 1 \\
-\end{bmatrix}</span></p>
+\end{bmatrix}
+</span></p>
 <p>The main property of identity matrices is that multiplying another
-(properly sizes) matrix does not alter it, i.e. we have <span
-class="math display">
+(properly sizes) matrix does not alter it, i.e. we have</p>
+<p><span class="math display">
 \mathbf{I}\mathbf{A}= \mathbf{A},\quad \mathbf{A}\mathbf{I}= \mathbf{A}.
-</span> Note that we usually don’t explicitly specify the size of <span
+</span></p>
+<p>Note that we usually don’t explicitly specify the size of <span
 class="math inline">\mathbf{I}</span>, since it is usually clear from
 the context.</p>
 <p>The <strong>null matrix</strong> or <strong>zero matrix</strong>,
 denoted by <span class="math inline">\mathbf{0}</span> is a matrix (or
 vector) with all entries equal to 0. Again, we will usually not
 explicitly specify its size since it will be clear from context. The
-zero matrix satisfies: <span class="math display">
+zero matrix satisfies:</p>
+<p><span class="math display">
 \mathbf{A}+ \mathbf{0}= \mathbf{A},\quad \mathbf{0}\mathbf{A}=
 \mathbf{0},\quad \mathbf{A}\mathbf{0}= \mathbf{A}.
 </span></p>
@@ -2752,21 +3399,28 @@ class="header-section-number">5.2.4</span> Rank and inverse</h3>
 \mathbf{x}_2, \dots, \mathbf{x}_m</span> is said to be <strong>linearly
 dependent</strong> if there exists <span class="math inline">m</span>
 numbers <span class="math inline">c_1, c_2, \dots, c_m</span>, some of
-which are not zeros, such that <span class="math display">
+which are not zeros, such that</p>
+<p><span class="math display">
 c_1\mathbf{x}_1 + c_2\mathbf{x}_2 + \cdots + c_m\mathbf{x}_m =
 \mathbf{0}.
-</span> Otherwise, the vectors are said to be <strong>linearly
-independent</strong>. For example, the vectors <span
-class="math display">
+</span></p>
+<p>Otherwise, the vectors are said to be <strong>linearly
+independent</strong>. For example, the vectors</p>
+<p><span class="math display">
 \mathbf{x}_1 = [1, 1, 1],\quad \mathbf{x}_2 = [0, 1, 1],\quad
 \mathbf{x}_3 = [2, 5, 5],
-</span> if we take <span class="math inline">c_1 = 2</span>, <span
+</span></p>
+<p>if we take <span class="math inline">c_1 = 2</span>, <span
 class="math inline">c_2 = 3</span>, and <span class="math inline">c_3 =
--1</span> then we have <span class="math display">\begin{align*}
+-1</span> then we have</p>
+<p><span class="math display">
+\begin{align*}
 2\mathbf{x}_1 + 3\mathbf{x}_2 - x_3 &amp; = [2, 2, 2] + [0, 3, 3] - [2,
 5, 5]\\
                     &amp; = [0, 0, 0]
-\end{align*}</span> so the vectors are linearly dependent.</p>
+\end{align*}
+</span></p>
+<p>so the vectors are linearly dependent.</p>
 <p>The <strong>rank</strong> of a set of vectors is the largest number
 of linearly independent vectors that can be chosen from the space. So
 e.g. the rank of <span class="math inline">\{\mathbf{x}_1, \mathbf{x}_2,
@@ -2786,12 +3440,125 @@ is less than <span class="math inline">n</span>, we way it is
 <strong>singular</strong>. Importantly, if <span
 class="math inline">\mathbf{A}</span> is nonsingular, there is a unique
 nonsingular matrix <span class="math inline">\mathbf{A}^{-1}</span> such
-that <span class="math display">
+that</p>
+<p><span class="math display">
 \mathbf{A}\mathbf{A}^{-1}= \mathbf{I}= \mathbf{A}^{-1}\mathbf{A}.
-</span> We call the matrix <span
-class="math inline">\mathbf{A}^{-1}</span> the <strong>inverse</strong>
-of <span class="math inline">\mathbf{A}</span>. Furthermore, singular
-matrices do not have inverses.</p>
+</span></p>
+<p>We call the matrix <span class="math inline">\mathbf{A}^{-1}</span>
+the <strong>inverse</strong> of <span
+class="math inline">\mathbf{A}</span>. Furthermore, singular matrices do
+not have inverses.</p>
+<h3 data-number="5.2.5" id="systems-of-equations"><span
+class="header-section-number">5.2.5</span> Systems of equations</h3>
+<p>Matrices are great for concisely stating systems of linear equations,
+linear equations in some set of variables you’d like to hold true
+simultaneously. For example, the set of equations</p>
+<p><span class="math display">
+2x_1 + 3x_2 = 7\\
+5x_1 - 4x_2 = 6
+</span></p>
+<p>can alternatively be stated as:</p>
+<p><span class="math display">
+\begin{bmatrix}
+2 &amp; 3 \\
+5 &amp; -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+</span></p>
+<h3 data-number="5.2.6" id="elementary-operations"><span
+class="header-section-number">5.2.6</span> Elementary operations</h3>
+<p>There are certain elementary operations one can perform on a system
+of linear equations that don’t have an effect on the solution of the
+system. I’ll state these operations in terms of rows, but similar
+operations exist for columns as well:</p>
+<ul>
+<li>Interchange two rows: <span class="math display">
+\begin{bmatrix}
+2 &amp; 3 \\
+5 &amp; -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+\Leftrightarrow
+\begin{bmatrix}
+5 &amp; -4 \\
+2 &amp; 3
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+6 \\ 7
+\end{bmatrix}
+</span></li>
+<li>Multiply a row by a non-zero number, e.g. multiplying the top row by
+two: <span class="math display">
+\begin{bmatrix}
+2 &amp; 3 \\
+5 &amp; -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+\Leftrightarrow
+\begin{bmatrix}
+4 &amp; 6 \\
+5 &amp; -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+14 \\ 6
+\end{bmatrix}
+</span></li>
+<li>Adding a multiple of one row to another row, e.g. multiplying the
+first row by 2 and adding it to the second: <span class="math display">
+\begin{bmatrix}
+2 &amp; 3 \\
+5 &amp; -4
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 6
+\end{bmatrix}
+\Leftrightarrow
+\begin{bmatrix}
+2 &amp; 3 \\
+9 &amp; 2
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+7 \\ 20
+\end{bmatrix}
+</span></li>
+</ul>
+<h2 data-number="5.3" id="sec:appendixSelectedProofs"><span
+class="header-section-number">5.3</span> Selected proofs</h2>
+<p>Proofs to selected statements in the main text.</p>
 <h1 id="References">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="doc-bibliography">
@@ -2806,6 +3573,11 @@ Hillier, F. S., and G. J. Lieberman. 2021. <em>Introduction to
 Operations Research</em>. McGraw-Hill Education. <a
 href="https://books.google.com/books?id=gnhSzQEACAAJ">https://books.google.com/books?id=gnhSzQEACAAJ</a>.
 </div>
+<div id="ref-kleeMinty" class="csl-entry" role="doc-biblioentry">
+Klee, Victor, and George J. Minty. 1970. <span>“HOW GOOD IS THE SIMPLEX
+ALGORITHM.”</span> In. <a
+href="https://api.semanticscholar.org/CorpusID:117965841">https://api.semanticscholar.org/CorpusID:117965841</a>.
+</div>
 <div id="ref-tspPic" class="csl-entry" role="doc-biblioentry">
 <span>“Waterloo TSP.”</span> n.d. <a
 href="https://www.math.uwaterloo.ca/tsp/"
@@ -2817,10 +3589,10 @@ role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>The most recent version of this textbook is the 11th
-edition, which came out in 2021. I’m actually working from a 10th
-edition copy from 2015. Nothing about the course will require you to
-have a certain edition, or any book at all. But I think it’s a very
-useful reference.<a href="#fnref1" class="footnote-back"
+edition, which came out in 2021. But much of the content quoted here
+comes from the 10th edition from 2015. Nothing about the course will
+require you to have a certain edition, or any book at all. But I think
+it’s a very useful reference.<a href="#fnref1" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>The pedant in me wants to point out that this word
 “optimal” is horribly misused in conversation fairly regularly, in the
@@ -2950,8 +3722,46 @@ suggest they would be more efficient. But in practice that hasn’t been
 the case. Simplex continues to be the best algorithm in practice for the
 widest array of problems.<a href="#fnref24" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>I’m used to calling them vertices, but the textbook
+tends to call them corner-point solutions, which I like as a more
+helpful, descriptive term. I’ll try to stick to corner-point solution
+for the notes, but I expect to slip up a few times, especially during
+lectures.<a href="#fnref25" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn26"><p>For those that are not aware, a
+<strong>theorem</strong> is a mathematical statement that has been
+proven to be true, based on some set of standard axioms. Anything I cite
+as a theorem in these notes, you can be confident it holds true, even if
+we don’t work through a rigorous proof.<a href="#fnref26"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn27"><p>At least not generally - for common variants of the
+simplex method, there exist examples where every corner-point solution
+is visited during execution (<span class="citation"
+data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span> is the
+first, most famous example). But this isn’t usually an issue in
+practice.<a href="#fnref27" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn28"><p>This is really the key takeaway from our whole
+discussion in this section, and if this is the only thing you remember
+about the simplex method 10 years from now I’ll still be satisfied. This
+is the key insight, you can always re-learn the details later.<a
+href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn29"><p>The greek capital letter <span
+class="math inline">\Delta</span> is commonly used to denote an amount
+of change, and in these context is often read as “change in.”<a
+href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn30"><p>Note that having the highest per-unit change doesn’t
+necessarily make it the “best” choice in any particular way. It may be
+that choosing a different (but still improving) direction will mean that
+we finish the algorithm faster. But in general we can’t tell beforehand,
+so we often just choose the direction with the highest change as
+convenient rule-of-thumb.<a href="#fnref30" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 </div>
+<div id="classModeDiv"></div>
+<footer> <small>&copy; Copyright 2023, Jeffrey Pavelka</small> </footer>
 </body>
 </html>
