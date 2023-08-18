@@ -1285,7 +1285,7 @@
   <script>
       const classModeSetup = () => {
           const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.origin + '/?classmode=false';
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
           classMode.onclick = closeClassMode;
           classMode.innerHTML = `
               <div>
