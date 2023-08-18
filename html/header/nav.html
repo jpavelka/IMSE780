@@ -49,17 +49,13 @@
         display: flex;
         justify-content: space-between;
         padding-top: 0.5rem;
-        padding-bottom: 0.95rem;
+        padding-bottom: 0.65rem;
         position: fixed;
         top: 0;
         visibility: hidden;
         background-color: #ebebeb;
         z-index: 1;
         border-bottom: 1pt solid gray;
-    }
-    .tocHeader {
-        font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-        padding-left: 0.5rem;
     }
     .tocHidden {
         display: none     
@@ -69,23 +65,12 @@
         font-size: 30pt !important;
         font-family: 'Courier New', Courier, monospace;
     }
-    .closeBtn {
-        font-size: 30pt;
-        font-family: 'Courier New', Courier, monospace;
-        cursor: pointer;
-        margin-left: auto;
-        line-height: 1;
-    }
-    #main {
-        transition: margin-left .5s;
-        padding: 20px;
-    }
     .navbar {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+        font-size: 1.1rem;
         background-color: #ebebeb;
         width: 100%;
         border-bottom: 1pt solid gray;
@@ -93,7 +78,7 @@
         padding-bottom: 0.5rem;
         display: flex;
         justify-content: space-between;
-        z-index: 1;
+        z-index: 2;
     }
     @media screen and (max-height: 450px) {
         .sidenav {
@@ -106,31 +91,31 @@
     }
 </style>
 <script>
-    function openNav() {
-        document.getElementById("TOC").style.width = "min(60%, 350px)";
-        if (window.innerWidth >= 700){
-            document.getElementById("main").style.marginLeft = "calc(min(50%, 350px) / 2)";
+    function openCloseNav() {
+        const tocTop = document.getElementById("tocTop")
+        if (tocTop.style.visibility == "visible") {
+            closeNav();
+            return
         }
-        document.getElementById("tocTop").style.width = "min(60%, 350px)";
-        document.getElementById("tocTop").style.visibility = "visible";
-        setTimeout(() => {
-            if (isTight()){
-                document.getElementById("main").style.marginLeft = 0;
-            }
-        }, 300)
+        const screenWidth = window.innerWidth;
+        const tocWidth = Math.min(0.75 * screenWidth, 350);
+        const leftoverWidth = screenWidth - tocWidth;
+        const main = document.getElementById("main");
+        const mainWidth = main.offsetWidth;
+        document.getElementById("TOC").style.width = tocWidth + 'px';
+        tocTop.style.width = tocWidth + 'px';
+        tocTop.style.visibility = "visible";
+        if (leftoverWidth >= mainWidth) {
+            main.style.marginLeft = tocWidth / 2 + 'px';
+        }
     }
     function closeNav() {
         document.getElementById("TOC").style.width = "0";
-        document.getElementById("main").style.marginLeft = "0";
+        document.getElementById("main").style.marginLeft = null;
         document.getElementById("tocTop").style.visibility = "hidden";
     }
-    function isTight() {
-        const mainLeft = document.getElementById('main').getBoundingClientRect().left
-        const tocRight = document.getElementById('TOC').getBoundingClientRect().right
-        return tocRight - mainLeft > 40
-    }
     function closeNavIfSmall() {
-        if (isTight()){
+        if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
             closeNav()
         }
     }

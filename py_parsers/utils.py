@@ -108,9 +108,9 @@ def html_post_process(text):
     for i, s in enumerate(text):
         if re.search('^<nav id="TOC"', s):
             text[
-                i] += '\n<div id="tocTop"><div class="tocHeader">Contents</div><div class="closeBtn" onclick="closeNav()">&nbsp;&times;&nbsp;</div></div>'
+                i] += '\n<div id="tocTop"></div>'
         if re.search('^</nav>$', s):
-            text[i] += '\n<div id="main" onclick="closeNavIfSmall()">'
+            text[i] += '\n<div id="main">'
     text = add_citations_header(text)
     return '\n'.join(text)
 
