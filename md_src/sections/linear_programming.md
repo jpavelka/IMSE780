@@ -1,6 +1,6 @@
 # Linear programming
 
-In the family of OR techniques, linear programming (LP) is certainly the matriarch. It was among the first methods to be seriously studied and find broad applications. To this day, LPs are relevant and used across industry to inform decision-making and help best make use of scarce resources.
+In the family of OR techniques, linear programming (LP) is certainly the matriarch. It was among the first methods to be seriously studied and find broad applications. To this day, LPs are relevant and used across industry to inform decision-making and help best make use of scarce resources. This section will cover selected material from @classText, chapters 4-8.
 
 So, what is an LP? Let's step back a bit - linear programming is a special type of mathematical programming problem. The word _programming_, in the language of the pre-computer-revolution era where these topics were first studied, was more or less a synonym for _planning_. So mathematical programming just means using math to make a plan.
 
@@ -345,7 +345,7 @@ which looks just like the constraint section of the standard form LP +@eq:standa
 
 $$
 \begin{align*}
-\max && \c\T\x \\
+\max && \c\x \\
 \st  && \A\x&\leq\b \\
      && \x&\geq\zeros
 \end{align*}
@@ -393,9 +393,9 @@ What we can show is that for any solution of type 1 or 2, we can find a corner-p
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"extraPoints": [[2, 1], [3, 4.5]], "extraLines": [[2, 1, 3, 1.5, {"style": "stroke-width:2pt;stroke:black", "marker-end": "url(#blackArrowMarker)"}], [3, 4.5, 2.5, 5.25, {"style": "stroke-width:2pt;stroke:black", "marker-end": "url(#blackArrowMarker)"}]], "extraMathText": [["y", 3.25, 5, {"coordToPix": true}], ["z", 1.75, 1.75, {"coordToPix": true}], ["v", 2, 5.75, {"coordToPix": true}], ["u", 3.25, 1.75, {"coordToPix": true}]]}'> Sorry, your browser does not support inline SVG.</svg>
 
-Let $\mat{v}$ be a (unit) vector that points in the same direction as the constraint boundary that $\mat{y}$ is on. Let $\mat{c}$ be the vector of objective function coefficients (so in our sample LP we would have $\mat{c}=\begin{bmatrix}3\\5\end{bmatrix}$). The objective value at solution $\mat{y}$ is $\mat{y}\T\c$. In contrast, if we move some amount $\delta$ from $\mat{y}$ along direction $\mat{v}$, the objective value is (due to distributivity of matrix operations) $(\mat{y} + \delta\mat{v})\T\c = \mat{y}\T\c + \delta\mat{v}\T\mat{c}$.
+Let $\mat{v}$ be a (unit) vector that points in the same direction as the constraint boundary that $\mat{y}$ is on. Let $\mat{c}$ be the vector of objective function coefficients (so in our sample LP we would have $\mat{c}=\begin{bmatrix}3\\5\end{bmatrix}$). The objective value at solution $\mat{y}$ is $\mat{y}\c$. In contrast, if we move some amount $\delta$ from $\mat{y}$ along direction $\mat{v}$, the objective value is (due to distributivity of matrix operations) $(\mat{y} + \delta\mat{v})\c = \mat{y}\c + \delta\mat{v}\mat{c}$.
 
-If $\mat{v}\T\mat{c}\geq0$, then moving from $\mat{y}$ along the constraint boundary in the direction of $\mat{v}$ improves the objective value. So we can continue in that direction until we meet another constraint, yielding a corner-point solution with greater-or-equal objective value than $y$. If, on the other hand, $\mat{v}\T\mat{c}<0$, then we can move in the direction of $-\mat{v}$ to a corner-point solution with greater objective value than $\mat{y}$. So either way, there is some corner-point solution with objective value at least as good as $\mat{y}$.
+If $\mat{v}\mat{c}\geq0$, then moving from $\mat{y}$ along the constraint boundary in the direction of $\mat{v}$ improves the objective value. So we can continue in that direction until we meet another constraint, yielding a corner-point solution with greater-or-equal objective value than $y$. If, on the other hand, $\mat{v}\mat{c}<0$, then we can move in the direction of $-\mat{v}$ to a corner-point solution with greater objective value than $\mat{y}$. So either way, there is some corner-point solution with objective value at least as good as $\mat{y}$.
 
 The proof for the interior point $\mat{z}$ is very similar. Select some direction $\mat{u}$, and then travel from $\mat{z}$ along directions $\mat{u}$ or $\mat{u}$ until you hit a constraint boundary. One of these points will yield an objective value at least as good as $\mat{z}$, and it will be on either:
 
@@ -406,15 +406,52 @@ In either case, we've found our required corner-point solution, thus the proof i
 
 </div>
 
-Thanks to this theorem[^theoremDefinition] we know that we only need to check corner-point solutions when solving an LP! In particular, the simplex algorithm will take us from one corner-point solution to another, adjacent corner-point solution that gives an improved objective value, repeating this successively until there are no such improved solutions available.
+Thanks to this theorem[^theoremDefinition] we know that we only need to check corner-point solutions when solving an LP! We make use of this fact during the simplex method, which only checks corner-point solutions. We won't check _every_[^simplexEveryVertex] corner-point solution, though. The key to simplex is that we jump from one corner-point solution to the next while taking care that each move improves the objective value.
 
 [^theoremDefinition]: For those that are not aware, a **theorem** is a mathematical statement that has been proven to be true, based on some set of standard axioms. Anything I cite as a theorem in these notes, you can be confident it holds true, even if we don't work through a rigorous proof.
+[^simplexEveryVertex]: At least not generally - for common variants of the simplex method, there exist examples where every corner-point solution is visited during execution ([@classText] is the first, most famous example). But this isn't usually an issue in practice.
 
-Two corner-point solutions $\x$ and $\mat{y}$ are said to be **adjacent** if
+In fact, the set of solutions we can move to in any iteration is limited to only the solutions that are adjacent to the current solution. In an LP with $n$ decision variables, two corner-point solutions are **adjacent** if they share $n-1$ constraint boundaries. Recall that corner-point solutions lie at the intersection of $n$ constraint boundaries, so we can also say that two adjacent corner-point solutions share all but one boundary in common.
+
+We have all the definitions now to describe simplex in a nutshell: The simplex method solves a linear programming problem by successively moving from one corner-point solution to another, adjacent corner-point solution, making sure each such move improves the objective function, until no such improvement exists[^oneThingToKnowAboutSimplex].
+
+[^oneThingToKnowAboutSimplex]: This is really the key takeaway from our whole discussion in this section, and if this is the only thing you remember about the simplex method 10 years from now I'll still be satisfied. This is the key insight, you can always re-learn the details later.
 
 ### Simplex visualized
 
+Now that we have the basic idea, let's go ahead and walk through the steps of the simplex algorithm. We won't go fully general on our first time through, though. Let's again consider our sample problem of +@eq:prototypeLp, which we've plotted again below. This time, though, the plot contains some controls that let us step through the simplex method one iteration at a time. I should stress that the simplex method does not work _exactly_ like what we'll talk through below, but all the intuitions are the same and the exercise is, I think, a useful one.
+
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"simplexStart": [0, 0]}'> Sorry, your browser does not support inline SVG.</svg>
+
+The first step is to find an initial feasible corner-point solution. In our case (and lots of practical instances too) the solution $(0, 0)$ is a feasible solution, and a corner point as well. It's not a particularly desirable solution in the context of our problem since it brings us no profit, but we don't care about desirability yet.
+
+After initialization, we begin the algorithm's main loop. First we have to determine if there are any adjacent corner-point solutions with improving objective value. Recall that an adjacent solution will share $n-1$ constraint boundaries with the current solution. Since we're in two dimensions, the adjacent solutions share one constraint boundary with the current solution. To find the adjacent solutions, we travel out from $(0,0)$ along the two boundary lines it sits on, which in this case are the two axes. Thus the two directions we can move in are $(1,0)$ and $(0,1)$.
+
+How do we know if a solution in any particular direction is improving the objective value? Let's consider the direction $(1,0)$. Since we're moving from $(0,0)$ to some point in the direction of $(1,0)$, the resulting solution will look like $(0,0) + \alpha(1,0)$ for some number $\alpha$. The objective value of any point $\x$ is $\c\x$ where $\c$ is the vector of objective coefficients (which is $(3,5)$ in our sample problem). So the objective value of $(0,0) + \alpha(1,0)$ is
+
+$$
+([0\ 0] + \alpha[1\ 0])\begin{bmatrix}3\\5\end{bmatrix}
+$$
+
+and since matrix multiplication distributes through addition, this is the same as
+
+$$
+[0\ 0]\begin{bmatrix}3\\5\end{bmatrix} + \alpha[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}.
+$$
+
+That first term, $[0\ 0]\begin{bmatrix}3\\5\end{bmatrix}$, is just the objective value associated with the current solution $(0,0)$. So the second term $\alpha[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}$, is the _improvement_ associated with the move.
+
+We have two directions in which we can move, $(1,0)$ and $(0,1)$. To keep things standardized we'll want to re-scale our directions to be unit vectors (i.e. vectors with length one), but in this case they're already unit vectors. The improvements associated with unit moves in these directions are $[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}=3$ and $[0\ 1]\begin{bmatrix}3\\5\end{bmatrix}=5$. These are both positive numbers, and since we're trying to maximize the objective value, that means that solutions in either direction are improvements to the objective value.
+
+All that information is summarized in the table below the plot. The two directions are listed, as well as the per-unit change in objective function (under the heading $\Delta$ Obj / Unit[^deltaChange]). Since both directions improve the objective, you have the option to choose either one using the checkboxes in the final column.
+
+[^deltaChange]: The greek capital letter $\Delta$ is commonly used to denote an amount of change, and in these context is often read as "change in."
+
+Let's go ahead and choose the $(0,1)$ direction, since it gives the highest per-unit objective change[^highestPerUnitChange]. Press the forward button on the plot, and you'll see it finds the adjacent solution in that direction, $(0,6)$, and the directions to its adjacent solutions. But only one of the directions is improving, so we choose to move in that direction $(1,0)$ to the adjacent corner-point solution $(2,6)$. At this point none of the adjacent directions are improvements, so the current point is optimal and the algorithm is finished.
+
+[^highestPerUnitChange]: Note that having the highest per-unit change doesn't necessarily make it the "best" choice in any particular way. It may be that choosing a different (but still improving) direction will mean that we finish the algorithm faster. But in general we can't tell beforehand, so we often just choose the direction with the highest change as convenient rule-of-thumb.
+
+One thing to note before we move on: All the information we gather during an iteration is in some sense "local" to the current corner-point solution. We compute only the _directions_ to the neighboring solutions, not the actual solutions themselves. Only once we decide on a direction do we find the actual corner-point solution. This is because finding the solutions is much more expensive computationally speaking, and we'd like to defer that step and only compute solutions when necessary. This isn't such a big deal on a small, two-dimensional example like this, but in larger scale instances this saves a good amount of time.
 
 ### Solving the sample LP with simplex
 

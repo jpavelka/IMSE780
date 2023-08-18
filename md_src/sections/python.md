@@ -4,7 +4,7 @@ A main focus of the course is to show you how to model and solve real-world prob
 
 ## Google Colab notebooks
 
-You can code Python in many different environments, but I think the easiest way to get started is with [Google Colab](https://colab.google/). This is a [Jupyter](https://jupyter.org/)-like[^jupyter] notebook environment that is free to use and requires only a web browser. I'll be using this in class to go through coding examples. Note that you'll do need a Google account in order to use Colab[^googleAccount].
+You can code Python in many different environments, but I think the easiest way to get started is with [Google Colab](https://colab.google/). This is a [Jupyter](https://jupyter.org/)-like[^jupyter] notebook environment that is free to use and requires only a web browser. I'll be using this in class to go through coding examples. Note that you do need a Google account in order to create and save your own Colab[^googleAccount] notebooks.
 
 [^jupyter]: It's not exactly like Jupyter, but the same in spirit. Also, don't worry if you don't know about Jupyter or coding notebooks yet.
 [^googleAccount]: This shouldn't be a huge hurdle. If you don't have one already you can always create a burner account for the sake of the class.
@@ -13,7 +13,7 @@ In Colab (and other notebook environments) code is organized into cells where re
 
 ## Some Python basics
 
-Below, you should see a read-only image of a Colab notebook. The notebook gives some exposition and samples of basic Python principles. Click the "Open in Colab" button to open a copy in a new window.
+Below, you should see a read-only image of a Colab notebook. The notebook gives some exposition and samples of basic Python principles. Click the "Open in Colab" button to open a copy in your browser.
 
 {colabGist:1Pxhkdd8WeC-29uLVDSW2I4v_PliO02Af,dcd6305c13b79bbdba7c49dc5c76d3c7}
 

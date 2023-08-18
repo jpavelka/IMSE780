@@ -1,0 +1,51 @@
+<style>   
+    #classModeDiv {
+        position: fixed;
+        width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+        padding: 30pt;
+        top: 200px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        border: 2pt solid;
+        border-radius: 10pt;
+        padding: 10px;
+        box-shadow: 5px 5px rgb(200, 200, 200);
+    }
+</style>
+<script>
+    const classModeSetup = () => {
+        const classMode = document.getElementById('classModeDiv');
+        const noClassModeHref = window.location.origin + '/?classmode=false';
+        classMode.onclick = closeClassMode;
+        classMode.innerHTML = `
+            <div>
+                Welcome to class mode! This is your friendly reminder to check that:
+                <ul>
+                    <li>The mics are on.</li>
+                    <li>The camera is pointed at the whiteboard.</li>
+                    <li>PIP is off.</li>
+                </ul>
+                Click anywhere to close this window.
+                <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+            </div>
+        `
+    }
+    const closeClassMode = () => {
+        const classMode = document.getElementById('classModeDiv');
+        const noClassModeHref = window.location.origin + '/?classmode=false';
+        const minutesBetweenReminders = 15;
+        if (classMode.style.visibility === "visible") {
+            classMode.style.visibility = "hidden";
+            classMode.innerHTML = `
+                <div>
+                    <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                    <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                    <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                    <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                </div>
+            `
+            setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+        }
+    }
+</script>

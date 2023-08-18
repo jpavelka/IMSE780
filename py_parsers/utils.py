@@ -110,7 +110,7 @@ def html_post_process(text):
             text[
                 i] += '\n<div id="tocTop"></div>'
         if re.search('^</nav>$', s):
-            text[i] += '\n<div id="main" onclick="closeNavIfSmall()">'
+            text[i] += '\n<div id="main">'
     text = add_citations_header(text)
     return '\n'.join(text)
 

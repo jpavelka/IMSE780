@@ -25,7 +25,7 @@
   \vdots & \vdots & \ddots & \vdots \\
   0 & 0 & \cdots & 1 \\
   \end{bmatrix}
-- $\Leftrigtharrow$: If and only if. It indicates the the statement to the left is logically equivalent to the statement on the right, e.g. $a > b \Leftrightarrow -a < -b$.
+- $\Leftrightarrow$: If and only if. It indicates the the statement to the left is logically equivalent to the statement on the right, e.g. $a > b \Leftrightarrow -a < -b$.
 
 ## Linear algebra review {#sec:linearAlgebra}
 
@@ -65,19 +65,6 @@ b_{m1} & b_{m2} & \cdots & b_{mn} \\
 $$
 
 Then we say $\mat{A}=\mat{B}\ $ if and only if $\ a_{11}=b_{11}$, $a_{12}=b_{12}$, ... and so on.
-
-For a matrix $\mat{A}$, the __transpose__ of $\mat{A}$, denoted $\mat{A}\T$, is essentially the matrix "turned on its side" so that the first row of $\mat{A}$ equals the first column of $\mat{A}\T$, the second row of $\mat{A}$ equals the second column of $\mat{A}\T$, and so on. More concretely, if we define $\mat{A}$ as in +@eq:matrixDef, then
-
-$$
-\mat{A}\T = \begin{bmatrix}
-a_{11} & a_{21} & \cdots & a_{m1} \\
-a_{12} & a_{22} & \cdots & a_{m2} \\
-\vdots & \vdots & \ddots & \vdots \\
-a_{1n} & a_{2n} & \cdots & a_{mn} \\
-\end{bmatrix}.
-$$
-
-It follows from this that if $\mat{A}\in\R^{m\times n}$ then $\mat{A}\T\in\R^{n\times m}$. A common case worth mentioning is for vectors. If vector $\x$ is a column vector then $\x\T$ is a row vector, and vice-versa.
 
 __Addition__ is only defined for two matrices of the same size. For two $m\times n$ matrices $\mat{A}$ and $\mat{B}$, we have
 
@@ -145,7 +132,7 @@ $$
 \x=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
 $$
 
-is a __column vector__ and $$\x=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a __row vector__. In these notes, vectors will usually be denoted with with boldface, lowercase letters. Additionally, vectors are usually assumed to be column vectors. If we need a vector $\x$ to be a row vector instead, we will usually explicitly transpose it as $\x\T$.
+is a __column vector__ and $$\x=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a __row vector__. In these notes, vectors will usually be denoted with with boldface, lowercase letters. A convention in some texts, which we will not follow here, is for vectors to be assumed as column vectors unless explicitly transposed. For these notes, we will let context dictate whether a vector is a row vector or a column vector (it is usually clear).
 
 An __identity matrix__, denoted by $\identity$, is a square vector whose elements are all 0s expect for 1s along the diagonal, i.e.
 $$\identity = \begin{bmatrix}

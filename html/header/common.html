@@ -1,119 +1,17 @@
-<style>
-    #main {
-        font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-        width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    html {
-        scroll-padding-top: 2.5rem;
-        overflow-y: auto;
-    }
-    body {
-        scroll-padding-top: 2.5rem;
-        overflow-y: hidden;
-        max-width: none !important;
-    }
-    .loadingMessage {
-        text-align: center;
-        margin-top: 40vh;
-        font-size: 1.2rem;
-    }
-    blockquote {
-        margin: 1rem 0.5rem;
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-        border-left: 2px solid #e6e6e6;
-        border-right: 2px solid #e6e6e6;
-        color: #444;
-        background-color: #ebebeb;
-    }
-    blockquote p {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-    details {
-        cursor: pointer;
-    }
-    figure {
-        margin-inline: 0.5rem;
-    }
-    figure img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 100%;
-    }
-    figure figcaption {
-        font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
-        text-align: center;
-    }
-    a {
-        color: blue;
-    }
-    a:visited {
-        color: purple;
-    }
-    h1 {
-        position: relative;
-        margin-top: 5rem;
-    }
-    h1:before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 1px;
-        background: black;
-        bottom: 150%;
-        left: 0;
-    }
-    *[role="doc-biblioref"] {
-        color: green !important;
-    }
-    div.sourceCode {
-        background-color: #dfdfdf;
-        padding: 0.5rem;
-        border: 1pt solid black;
-        font-size: max(12pt, 1.1rem);
-    }
-    .copyButton {
-        float: right;
-        cursor: pointer;
-    }
-    .header-section-number::after {
-        content: ':'
-    }
-    @keyframes fade {
-        0%,100% { opacity: 0 }
-        15% { opacity: 1 }
-        85% { opacity: 1 }
-    }
-    .copyMessage {
-        position: absolute;
-        transform: translate(-2rem, -2.8rem);
-        width: 4rem;
-        font-size: max(10pt, 0.7rem);
-        text-align: center;
-        background-color: #eee;
-        border: 1pt solid black;
-        border-radius: 0.25rem;
-        animation: fade 2s linear;
-    }
-    .backRefElement {
-        margin-top: auto;
-    }
-</style>
 <script>
     document.onreadystatechange = () => {
         if (document.readyState !== "complete") {
             document.querySelector("#main").style.display = "none";
             document.querySelector(".navbar").style.display = "none";
             document.querySelector("#loader").style.visibility = "visible";
+            document.querySelector("#classModeDiv").style.visibility = "hidden";
         } else {
             document.querySelector("#loader").style.display = "none";
             document.querySelector(".navbar").style.display = "flex";
             document.querySelector("#main").style.display = "block";
+            if (getUrlParameter('classmode') !== 'false') {
+                document.querySelector("#classModeDiv").style.visibility = "visible";
+            }
         }
     };
     window.onload = () => {
@@ -128,7 +26,18 @@
         tocHelpers();
         drawAllSvgPlots();
         theoremHelpers();
+        classModeSetup();
+        document.onclick = () => {
+            closeNavIfSmall();
+            closeClassMode();
+        }
     }
+    getUrlParameter = (name) => {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
     addMathContainers = () => {
         for (el of document.querySelectorAll('.math.display')){
             katexContainer = document.createElement('div');
@@ -370,5 +279,12 @@
         els = document.getElementById('main').getElementsByClassName('footnote-ref');
         addTooltips([...els], false);
         document.getElementById('footnotes').remove();
+        for (el of document.getElementsByClassName('eqnRef')) {
+            const childEl = el.firstChild;
+            if (childEl.tagName === 'SUP') {
+                childEl.textContent = 'note';
+                childEl.style.fontSize = '0.5rem';
+            }
+        }
     }
 </script>
