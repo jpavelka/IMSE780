@@ -177,341 +177,6 @@
       margin-left: 2em;
     }
   </style>
-  <style>
-      .lpDraw {
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
-      }
-      .pointChooseDiv {
-          text-align: center;
-      }
-      .pointChooseInput {
-          border: solid 1pt black;
-          border-radius: 2pt;
-          width: 2rem;
-          height: 1.1rem;
-      }
-      .pointChooseLabel {
-          font-size: 14pt;
-          padding-left: 5pt;
-          padding-right: 5pt;
-      }
-      .pointChooseText {
-          text-align: center;
-          font-size: max(12pt, 1rem);
-      }
-      .underPlot {
-          margin-top: -10pt;
-      }
-      @keyframes append-animate {
-          0% {
-              stroke-width: 0;
-          }
-          50% {
-              stroke-width: 4;
-          }
-          100% {
-              stroke-width: 0;
-          }
-      }
-      .violatedIneq {
-          animation: append-animate 0.8s linear;
-      }
-      @keyframes simplex-arrow-flash {
-          0% {
-              stroke-width: 3;
-          }
-          5% {
-              stroke-width: 4;
-          }
-          10% {
-              stroke-width: 3;
-          }
-          100% {
-              stroke-width: 3;
-          }
-      }
-      .simplexArrowChosen {
-          animation: simplex-arrow-flash 12s infinite;
-      }
-      .simplexDirectionTable {
-          margin: 0;
-          margin-left: auto;
-          margin-right: auto;
-          width: 350px;
-      }
-      .pointChooseText button {
-          font-size: 0.8rem;
-          padding: 0.5rem;
-          margin: 0 0.1rem;
-      }
-  </style>
-  <style>
-      .footnoteTooltipClose {
-          color: #222;
-          font-size: 30pt;
-          font-weight: bold;
-          margin-left: auto;
-          margin-top: -1rem;
-          margin-bottom: -1rem;
-      }
-      .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
-          color: black;
-          text-decoration: none;
-          cursor: pointer;
-      }
-      .footnote-ref sup, .eqnRef {
-          cursor: pointer;
-          color: green !important;
-      }
-      .footnoteTooltip {
-          background-color: #ebebeb;
-          padding: 1rem;
-          border: 1px solid #888;
-          position: absolute;
-          z-index: 1;
-          width: 75%;
-          left: 50%;
-          transform: translateX(-50%);
-          margin-top: 2rem;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-          overflow-x: auto;
-          display: flex;
-          flex-direction: column;
-      }
-      .eqnRef .footnoteTooltip {
-          color: black;
-      }
-      .seeOriginalEq {
-          font-size: 1rem;
-          margin-left: auto;
-      }
-  </style>
-  <script>
-      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
-          innerHTML = innerHTML.replaceAll('@@@', '"');
-          const tooltipEl = document.getElementById(id);
-          if (tooltipEl == null) {
-              const newEl = document.createElement("span");
-              closeEl = document.createElement("div");
-              closeEl.classList = ['footnoteTooltipClose'];
-              closeEl.innerHTML = '&times;';
-              newEl.appendChild(closeEl);
-              if (typeof(refElOrId) === 'string'){
-                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
-                  document.getElementById(refElOrId).appendChild(newEl);
-              } else {
-                  closeEl.onclick = () => removeElById(id);
-                  refElOrId.append(newEl);
-              }
-              newEl.id = id;
-              newEl.innerHTML += innerHTML;
-              newEl.classList = ['footnoteTooltip'];
-              for (numEl of newEl.getElementsByClassName('eqnos-number')){
-                  numEl.remove();
-              }
-              if (!!origId) {
-                  seeOrigEl = document.createElement('a');
-                  seeOrigEl.setAttribute('href', '#' + origId);
-                  seeOrigEl.innerHTML = 'jump to';
-                  seeOrigEl.classList = ['seeOriginalEq']
-                  seeOrigEl.onclick = () => {
-                      backEl = document.getElementById('back#' + origId + 'Arrow');
-                      backEl.style.display = 'inline';
-                      backEl.setAttribute('href', '#' + id)
-                  }
-                  newEl.appendChild(seeOrigEl);
-              }
-          } else {
-              tooltipEl.remove();
-          }
-          
-      }
-      function removeElById(id) {
-          document.getElementById(id).remove();
-      }
-  </script>
-  <style>
-      .eqnos {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          overflow-x: auto;
-      }
-      .eqnos br {
-          display: none;
-      }
-      .eqnos-number {
-          margin-left: auto;
-          padding-left: 1rem;
-      }
-      .katexContainer {
-          flex-grow: 1;
-          overflow-x: auto;
-      }
-  </style>
-  <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-      }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
-  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-  <style>
-      nav#TOC:nth-child(2) {
-          margin-top: 0.6rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
-      }
-      nav#TOC li {
-          list-style-type: none;
-      }
-      nav#TOC > ul {
-          margin-bottom: 1.5rem;
-          margin-top: 2rem;
-          line-height: 1.9rem;
-      }
-      #TOC ul {
-          padding-left: 0;
-      }
-      nav#TOC {
-          height: 100%;
-          width: 0;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #ebebeb;
-          overflow-x: hidden;
-          padding-top: 1rem;
-          transition: 0.5s;
-          overflow-y: scroll;
-      }
-      nav#TOC a {
-          text-decoration: none;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-          color: #000;
-          display: block;
-          transition: 0.3s;
-          padding-top: 0.2rem;
-          padding-bottom: 0.3rem;
-          border-bottom: 1pt solid lightgray;
-      }
-      nav#TOC a:hover {
-          color: #888;
-      }
-      #TOC .toc-section-number::after {
-          content: ':\00a0'
-      }
-      #tocTop {
-          height: 1.5em;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 0.5rem;
-          padding-bottom: 0.65rem;
-          position: fixed;
-          top: 0;
-          visibility: hidden;
-          background-color: #ebebeb;
-          z-index: 1;
-          border-bottom: 1pt solid gray;
-      }
-      .tocHidden {
-          display: none     
-      }
-      .tocExpand {
-          margin-left: auto;
-          font-size: 30pt !important;
-          font-family: 'Courier New', Courier, monospace;
-      }
-      .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          font-size: 1.1rem;
-          background-color: #ebebeb;
-          width: 100%;
-          border-bottom: 1pt solid gray;
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          display: flex;
-          justify-content: space-between;
-          z-index: 2;
-      }
-      @media screen and (max-height: 450px) {
-          .sidenav {
-              padding-top: 15px;
-          }
-
-          .sidenav a {
-              font-size: 18px;
-          }
-      }
-  </style>
-  <script>
-      function openCloseNav() {
-          const tocTop = document.getElementById("tocTop")
-          if (tocTop.style.visibility == "visible") {
-              closeNav();
-              return
-          }
-          const screenWidth = window.innerWidth;
-          const tocWidth = Math.min(0.75 * screenWidth, 350);
-          const leftoverWidth = screenWidth - tocWidth;
-          const main = document.getElementById("main");
-          const mainWidth = main.offsetWidth;
-          document.getElementById("TOC").style.width = tocWidth + 'px';
-          tocTop.style.width = tocWidth + 'px';
-          tocTop.style.visibility = "visible";
-          if (leftoverWidth >= mainWidth) {
-              main.style.marginLeft = tocWidth / 2 + 'px';
-          }
-      }
-      function closeNav() {
-          document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = null;
-          document.getElementById("tocTop").style.visibility = "hidden";
-      }
-      function closeNavIfSmall() {
-          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
-              closeNav()
-          }
-      }
-  </script>
-  <style>
-      .theorem p {
-          font-style: italic;
-          margin: 0;
-          display: inline;
-      }
-      .theorem {
-          border: 1pt solid gray;
-          padding: 1rem;
-          background-color: #eee;
-      }
-      .theoremLabel {
-          font-weight: bold;
-      }
-      .proof::after {
-          content: '\00220E';
-      }
-      .theorem .backRefElement {
-          float: right;
-      }
-  </style>
   <script>
       let baseLps = {
           prototypeLp: {
@@ -1267,57 +932,6 @@
           }
       }
   </script>
-  <style>   
-      #classModeDiv {
-          position: fixed;
-          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
-          padding: 30pt;
-          top: 200px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 2pt solid;
-          border-radius: 10pt;
-          padding: 10px;
-          box-shadow: 5px 5px rgb(200, 200, 200);
-      }
-  </style>
-  <script>
-      const classModeSetup = () => {
-          const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
-          classMode.onclick = closeClassMode;
-          classMode.innerHTML = `
-              <div>
-                  Welcome to class mode! This is your friendly reminder to check that:
-                  <ul>
-                      <li>The mics are on.</li>
-                      <li>The camera is pointed at the whiteboard.</li>
-                      <li>PIP is off.</li>
-                  </ul>
-                  Click anywhere to close this window.
-                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-              </div>
-          `
-      }
-      const closeClassMode = () => {
-          const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
-          const minutesBetweenReminders = 15;
-          if (classMode.style.visibility === "visible") {
-              classMode.style.visibility = "hidden";
-              classMode.innerHTML = `
-                  <div>
-                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
-                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
-                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
-                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-                  </div>
-              `
-              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
-          }
-      }
-  </script>
   <script>
       document.onreadystatechange = () => {
           if (document.readyState !== "complete") {
@@ -1608,6 +1222,322 @@
           }
       }
   </script>
+  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+  <style>
+      nav#TOC:nth-child(2) {
+          margin-top: 0.6rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+      }
+      nav#TOC li {
+          list-style-type: none;
+      }
+      nav#TOC > ul {
+          margin-bottom: 1.5rem;
+          margin-top: 2rem;
+          line-height: 1.9rem;
+      }
+      #TOC ul {
+          padding-left: 0;
+      }
+      nav#TOC {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #ebebeb;
+          overflow-x: hidden;
+          padding-top: 1rem;
+          transition: 0.5s;
+          overflow-y: scroll;
+      }
+      nav#TOC a {
+          text-decoration: none;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+          color: #000;
+          display: block;
+          transition: 0.3s;
+          padding-top: 0.2rem;
+          padding-bottom: 0.3rem;
+          border-bottom: 1pt solid lightgray;
+      }
+      nav#TOC a:hover {
+          color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
+      }
+      #tocTop {
+          height: 1.5em;
+          display: flex;
+          justify-content: space-between;
+          padding-top: 0.5rem;
+          padding-bottom: 0.65rem;
+          position: fixed;
+          top: 0;
+          visibility: hidden;
+          background-color: #ebebeb;
+          z-index: 1;
+          border-bottom: 1pt solid gray;
+      }
+      .tocHidden {
+          display: none     
+      }
+      .tocExpand {
+          margin-left: auto;
+          font-size: 30pt !important;
+          font-family: 'Courier New', Courier, monospace;
+      }
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-size: 1.1rem;
+          background-color: #ebebeb;
+          width: 100%;
+          border-bottom: 1pt solid gray;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          z-index: 2;
+      }
+      @media screen and (max-height: 450px) {
+          .sidenav {
+              padding-top: 15px;
+          }
+
+          .sidenav a {
+              font-size: 18px;
+          }
+      }
+  </style>
+  <script>
+      function openCloseNav(e) {
+          console.log(e);
+          const tocTop = document.getElementById("tocTop")
+          if (tocTop.style.visibility == "visible") {
+              closeNav();
+              return
+          }
+          const screenWidth = window.innerWidth;
+          const tocWidth = Math.min(0.75 * screenWidth, 350);
+          const leftoverWidth = screenWidth - tocWidth;
+          const main = document.getElementById("main");
+          const mainWidth = main.offsetWidth;
+          document.getElementById("TOC").style.width = tocWidth + 'px';
+          tocTop.style.width = tocWidth + 'px';
+          tocTop.style.visibility = "visible";
+          if (leftoverWidth >= mainWidth) {
+              main.style.marginLeft = tocWidth / 2 + 'px';
+          }
+          e.stopPropagation();
+      }
+      function closeNav() {
+          document.getElementById("TOC").style.width = "0";
+          document.getElementById("main").style.marginLeft = null;
+          document.getElementById("tocTop").style.visibility = "hidden";
+      }
+      function closeNavIfSmall() {
+          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
+              closeNav()
+          }
+      }
+  </script>
+  <style>
+      .footnoteTooltipClose {
+          color: #222;
+          font-size: 30pt;
+          font-weight: bold;
+          margin-left: auto;
+          margin-top: -1rem;
+          margin-bottom: -1rem;
+      }
+      .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+      }
+      .footnote-ref sup, .eqnRef {
+          cursor: pointer;
+          color: green !important;
+      }
+      .footnoteTooltip {
+          background-color: #ebebeb;
+          padding: 1rem;
+          border: 1px solid #888;
+          position: absolute;
+          z-index: 1;
+          width: 75%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 2rem;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          overflow-x: auto;
+          display: flex;
+          flex-direction: column;
+      }
+      .eqnRef .footnoteTooltip {
+          color: black;
+      }
+      .seeOriginalEq {
+          font-size: 1rem;
+          margin-left: auto;
+      }
+  </style>
+  <script>
+      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
+          innerHTML = innerHTML.replaceAll('@@@', '"');
+          const tooltipEl = document.getElementById(id);
+          if (tooltipEl == null) {
+              const newEl = document.createElement("span");
+              closeEl = document.createElement("div");
+              closeEl.classList = ['footnoteTooltipClose'];
+              closeEl.innerHTML = '&times;';
+              newEl.appendChild(closeEl);
+              if (typeof(refElOrId) === 'string'){
+                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
+                  document.getElementById(refElOrId).appendChild(newEl);
+              } else {
+                  closeEl.onclick = () => removeElById(id);
+                  refElOrId.append(newEl);
+              }
+              newEl.id = id;
+              newEl.innerHTML += innerHTML;
+              newEl.classList = ['footnoteTooltip'];
+              for (numEl of newEl.getElementsByClassName('eqnos-number')){
+                  numEl.remove();
+              }
+              if (!!origId) {
+                  seeOrigEl = document.createElement('a');
+                  seeOrigEl.setAttribute('href', '#' + origId);
+                  seeOrigEl.innerHTML = 'jump to';
+                  seeOrigEl.classList = ['seeOriginalEq']
+                  seeOrigEl.onclick = () => {
+                      backEl = document.getElementById('back#' + origId + 'Arrow');
+                      backEl.style.display = 'inline';
+                      backEl.setAttribute('href', '#' + id)
+                  }
+                  newEl.appendChild(seeOrigEl);
+              }
+          } else {
+              tooltipEl.remove();
+          }
+          
+      }
+      function removeElById(id) {
+          document.getElementById(id).remove();
+      }
+  </script>
+  <style>
+      .eqnos {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          overflow-x: auto;
+      }
+      .eqnos br {
+          display: none;
+      }
+      .eqnos-number {
+          margin-left: auto;
+          padding-left: 1rem;
+      }
+      .katexContainer {
+          flex-grow: 1;
+          overflow-x: auto;
+      }
+  </style>
+  <style>
+      .lpDraw {
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      .pointChooseDiv {
+          text-align: center;
+      }
+      .pointChooseInput {
+          border: solid 1pt black;
+          border-radius: 2pt;
+          width: 2rem;
+          height: 1.1rem;
+      }
+      .pointChooseLabel {
+          font-size: 14pt;
+          padding-left: 5pt;
+          padding-right: 5pt;
+      }
+      .pointChooseText {
+          text-align: center;
+          font-size: max(12pt, 1rem);
+      }
+      .underPlot {
+          margin-top: -10pt;
+      }
+      @keyframes append-animate {
+          0% {
+              stroke-width: 0;
+          }
+          50% {
+              stroke-width: 4;
+          }
+          100% {
+              stroke-width: 0;
+          }
+      }
+      .violatedIneq {
+          animation: append-animate 0.8s linear;
+      }
+      @keyframes simplex-arrow-flash {
+          0% {
+              stroke-width: 3;
+          }
+          5% {
+              stroke-width: 4;
+          }
+          10% {
+              stroke-width: 3;
+          }
+          100% {
+              stroke-width: 3;
+          }
+      }
+      .simplexArrowChosen {
+          animation: simplex-arrow-flash 12s infinite;
+      }
+      .simplexDirectionTable {
+          margin: 0;
+          margin-left: auto;
+          margin-right: auto;
+          width: 350px;
+      }
+      .pointChooseText button {
+          font-size: 0.8rem;
+          padding: 0.5rem;
+          margin: 0 0.1rem;
+      }
+  </style>
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
+      }
+  </style>
   <style>
       #main {
           font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
@@ -1728,6 +1658,58 @@
           font-size: 0.7rem;
       }
   </style>
+  <style>   
+      #classModeDiv {
+          position: fixed;
+          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+          padding: 30pt;
+          top: 200px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          border: 2pt solid;
+          border-radius: 10pt;
+          padding: 10px;
+          box-shadow: 5px 5px rgb(200, 200, 200);
+          visibility: hidden;
+      }
+  </style>
+  <script>
+      const classModeSetup = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+          classMode.onclick = closeClassMode;
+          classMode.innerHTML = `
+              <div>
+                  Welcome to class mode! This is your friendly reminder to check that:
+                  <ul>
+                      <li>The mics are on.</li>
+                      <li>The camera is pointed at the whiteboard.</li>
+                      <li>PIP is off.</li>
+                  </ul>
+                  Click anywhere to close this window.
+                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+              </div>
+          `
+      }
+      const closeClassMode = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+          const minutesBetweenReminders = 15;
+          if (classMode.style.visibility === "visible") {
+              classMode.style.visibility = "hidden";
+              classMode.innerHTML = `
+                  <div>
+                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                  </div>
+              `
+              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+          }
+      }
+  </script>
   <script>
       const theoremHelpers = () => {
           let theoremObj = {};
@@ -1783,6 +1765,27 @@
           addTooltips([...refEls].map(el => el.firstChild), true);
       }
   </script>
+  <style>
+      .theorem p {
+          font-style: italic;
+          margin: 0;
+          display: inline;
+      }
+      .theorem {
+          border: 1pt solid gray;
+          padding: 1rem;
+          background-color: #eee;
+      }
+      .theoremLabel {
+          font-weight: bold;
+      }
+      .proof::after {
+          content: '\00220E';
+      }
+      .theorem .backRefElement {
+          float: right;
+      }
+  </style>
   <script defer=""
   src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
@@ -1807,7 +1810,7 @@
 </head>
 <body>
 <div class="navbar">
-    <div onclick="openCloseNav()" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
+    <div onclick="openCloseNav(event)" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
     <div style="text-align: center">IMSE 780</div>
     <div style="text-align: right; padding-right: 1rem">Fall 2023</div>
 </div>
@@ -1820,8 +1823,8 @@ class="toc-section-number">1</span> Welcome!</a>
 <ul>
 <li><a href="#course-materials" id="toc-course-materials"><span
 class="toc-section-number">1.1</span> Course materials</a></li>
-<li><a href="#use" id="toc-use"><span
-class="toc-section-number">1.2</span> Use</a></li>
+<li><a href="#notes-on-these-notes" id="toc-notes-on-these-notes"><span
+class="toc-section-number">1.2</span> Notes on these notes</a></li>
 </ul></li>
 <li><a href="#introduction-to-or" id="toc-introduction-to-or"><span
 class="toc-section-number">2</span> Introduction to OR</a>
@@ -1853,8 +1856,7 @@ class="toc-section-number">2.3.2</span> Case studies</a></li>
 <li><a href="#edelman-prize" id="toc-edelman-prize"><span
 class="toc-section-number">2.3.3</span> Edelman Prize</a></li>
 </ul></li>
-<li><a href="#topics-well-coverthismaychange"
-id="toc-topics-well-coverthismaychange"><span
+<li><a href="#topics-well-cover" id="toc-topics-well-cover"><span
 class="toc-section-number">2.4</span> Topics we’ll cover</a></li>
 </ul></li>
 <li><a href="#python-crash-course" id="toc-python-crash-course"><span
@@ -1875,110 +1877,33 @@ class="toc-section-number">3.3.1</span> Local development</a></li>
 class="toc-section-number">3.3.2</span> Cloud hosted</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#linear-programming" id="toc-linear-programming"><span
-class="toc-section-number">4</span> Linear programming</a>
-<ul>
-<li><a href="#an-example-lp" id="toc-an-example-lp"><span
-class="toc-section-number">4.1</span> An example LP</a>
-<ul>
-<li><a href="#formulating-our-first-lp"
-id="toc-formulating-our-first-lp"><span
-class="toc-section-number">4.1.1</span> Formulating our first
-LP</a></li>
-</ul></li>
-<li><a href="#lp-terminology" id="toc-lp-terminology"><span
-class="toc-section-number">4.2</span> LP terminology</a></li>
-<li><a href="#lp-visualized" id="toc-lp-visualized"><span
-class="toc-section-number">4.3</span> LP visualized</a>
-<ul>
-<li><a href="#solving-an-lp-visually"
-id="toc-solving-an-lp-visually"><span
-class="toc-section-number">4.3.1</span> Solving an LP visually</a></li>
-<li><a href="#visualizing-other-scenarios"
-id="toc-visualizing-other-scenarios"><span
-class="toc-section-number">4.3.2</span> Visualizing other
-scenarios</a></li>
-</ul></li>
-<li><a href="#solving-lps-with-software"
-id="toc-solving-lps-with-software"><span
-class="toc-section-number">4.4</span> Solving LPs with software</a>
-<ul>
-<li><a href="#modeling-languages" id="toc-modeling-languages"><span
-class="toc-section-number">4.4.1</span> Modeling languages</a></li>
-<li><a href="#solvers" id="toc-solvers"><span
-class="toc-section-number">4.4.2</span> Solvers</a></li>
-<li><a href="#solving-our-lp-with-python"
-id="toc-solving-our-lp-with-python"><span
-class="toc-section-number">4.4.3</span> Solving our LP with
-Python</a></li>
-</ul></li>
-<li><a href="#lp-forms" id="toc-lp-forms"><span
-class="toc-section-number">4.5</span> LP forms</a>
-<ul>
-<li><a href="#standard-form" id="toc-standard-form"><span
-class="toc-section-number">4.5.1</span> Standard form</a></li>
-<li><a href="#minimization-problems"
-id="toc-minimization-problems"><span
-class="toc-section-number">4.5.2</span> Minimization problems</a></li>
-<li><a href="#different-constraint-forms"
-id="toc-different-constraint-forms"><span
-class="toc-section-number">4.5.3</span> Different constraint
-forms</a></li>
-<li><a href="#variable-bounds" id="toc-variable-bounds"><span
-class="toc-section-number">4.5.4</span> Variable bounds</a></li>
-<li><a href="#recap-of-allowed-forms"
-id="toc-recap-of-allowed-forms"><span
-class="toc-section-number">4.5.5</span> Recap of allowed forms</a></li>
-<li><a href="#different-notation" id="toc-different-notation"><span
-class="toc-section-number">4.5.6</span> Different notation</a></li>
-</ul></li>
-<li><a href="#the-simplex-method" id="toc-the-simplex-method"><span
-class="toc-section-number">4.6</span> The simplex method</a>
-<ul>
-<li><a href="#corner-point-solutions"
-id="toc-corner-point-solutions"><span
-class="toc-section-number">4.6.1</span> Corner-point solutions</a></li>
-<li><a href="#simplex-visualized" id="toc-simplex-visualized"><span
-class="toc-section-number">4.6.2</span> Simplex visualized</a></li>
-<li><a href="#solving-the-sample-lp-with-simplex"
-id="toc-solving-the-sample-lp-with-simplex"><span
-class="toc-section-number">4.6.3</span> Solving the sample LP with
-simplex</a></li>
-<li><a href="#simplex-algorithm-basics"
-id="toc-simplex-algorithm-basics"><span
-class="toc-section-number">4.6.4</span> Simplex algorithm
-basics</a></li>
-<li><a href="#other-considerations" id="toc-other-considerations"><span
-class="toc-section-number">4.6.5</span> Other considerations</a></li>
-</ul></li>
-</ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
-class="toc-section-number">5</span> Appendix</a>
+class="toc-section-number">4</span> Appendix</a>
 <ul>
 <li><a href="#sec:symbols" id="toc-sec:symbols"><span
-class="toc-section-number">5.1</span> Special symbols</a></li>
+class="toc-section-number">4.1</span> Special symbols</a></li>
 <li><a href="#sec:linearAlgebra" id="toc-sec:linearAlgebra"><span
-class="toc-section-number">5.2</span> Linear algebra review</a>
+class="toc-section-number">4.2</span> Linear algebra review</a>
 <ul>
 <li><a href="#sec:matrixMath" id="toc-sec:matrixMath"><span
-class="toc-section-number">5.2.1</span> Matrix math</a></li>
+class="toc-section-number">4.2.1</span> Matrix math</a></li>
 <li><a href="#properties-of-matrix-operations"
 id="toc-properties-of-matrix-operations"><span
-class="toc-section-number">5.2.2</span> Properties of matrix
+class="toc-section-number">4.2.2</span> Properties of matrix
 operations</a></li>
 <li><a href="#special-matrices" id="toc-special-matrices"><span
-class="toc-section-number">5.2.3</span> Special matrices</a></li>
+class="toc-section-number">4.2.3</span> Special matrices</a></li>
 <li><a href="#rank-and-inverse" id="toc-rank-and-inverse"><span
-class="toc-section-number">5.2.4</span> Rank and inverse</a></li>
+class="toc-section-number">4.2.4</span> Rank and inverse</a></li>
 <li><a href="#systems-of-equations" id="toc-systems-of-equations"><span
-class="toc-section-number">5.2.5</span> Systems of equations</a></li>
-<li><a href="#elementary-operations"
-id="toc-elementary-operations"><span
-class="toc-section-number">5.2.6</span> Elementary operations</a></li>
+class="toc-section-number">4.2.5</span> Systems of equations</a></li>
+<li><a href="#sec:elementaryRowOperations"
+id="toc-sec:elementaryRowOperations"><span
+class="toc-section-number">4.2.6</span> Elementary operations</a></li>
 </ul></li>
 <li><a href="#sec:appendixSelectedProofs"
 id="toc-sec:appendixSelectedProofs"><span
-class="toc-section-number">5.3</span> Selected proofs</a></li>
+class="toc-section-number">4.3</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -2004,8 +1929,36 @@ reference<a href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a>. The syllabus, assignments, and
 other course materials may be found via the <a
 href="https://k-state.instructure.com/">class Canvas site</a>.</p>
-<h2 data-number="1.2" id="use"><span
-class="header-section-number">1.2</span> Use</h2>
+<h2 data-number="1.2" id="notes-on-these-notes"><span
+class="header-section-number">1.2</span> Notes on these notes</h2>
+<p>I wrote the notes in this format in an attempt to alleviate all my
+past frustrations from reading academic material in all formats. Things
+like unlinked references, or links requiring context switches and
+without back navigation. Or static elements that could be more effective
+if animated or interactive. So I tried to fix some of those issues with
+this format.</p>
+<p>That means these notes were necessarily made with my desires in mind,
+and not yours, the reader trying to learn from them. So I’d love any
+feedback you have on how the notes are presented, or anything you think
+I could add to help your learning. I can’t guarantee I’ll be able to
+change much substantial at this point, but at the very least future
+iterations of these notes could incorporate your changes and help future
+learners.</p>
+<p>Also, errors. I’m trying my best to keep these notes free of typos
+and factual errors, but inevitably several will slip through. I’d be
+grateful if you can point these out as you see them. I’ll even keep a
+leaderboard of who has pointed out the most errors, and will have a
+prize at the end of the semester for the largest contributors.</p>
+<p>I made these notes mostly for consumption on your web browser on a
+laptop/desktop computer, or a tablet in landscape orientation. You can
+still access them on your phone, of course, and I’ve tried to style
+things such that the content is as usable as possible on a narrow
+screen, but your best experience will be on a larger screen. If you’d
+like hard copies of these notes, your only option for now is to print
+from your browser. With some extra work, I could make pdf versions
+available as well, although you will necessarily lose some functionality
+in that format. If this is something you’d be interested in, please let
+me know.</p>
 <p>These notes were created for educational use. With proper
 attribution, readers may freely copy, distribute, or produce derivative
 work from this content, in whole or in part, for any non-commercial
@@ -2013,7 +1966,9 @@ use.</p>
 <h1 data-number="2" id="introduction-to-or"><span
 class="header-section-number">2</span> Introduction to OR</h1>
 <p>In this section we’ll cover the big picture questions: What is
-Operations Research? Where did it come from? What can I do with it?</p>
+Operations Research? Where did it come from? What can I do with it? I
+hope to impress upon you that OR is a seriously set of tools, and that
+it has a huge impact on the world today.</p>
 <h2 data-number="2.1" id="what-is-operations-research"><span
 class="header-section-number">2.1</span> What is Operations
 Research?</h2>
@@ -2076,14 +2031,21 @@ n.d.</a>)</span></figcaption>
 <h3 data-number="2.2.2" id="job-shop-scheduling"><span
 class="header-section-number">2.2.2</span> Job-shop scheduling</h3>
 <p>You run a machine shop, and have a certain number of jobs to complete
-in a day. Each job requires a certain number of tasks to be done by one
-of your many machines, and the tasks are at least partially ordered,
-such that you must complete the tasks in a certain order (e.g. you have
-to cut a piece of wood before you sand the edges). Each machine can only
-work on one task at a time. You get to decide the work schedule,
-assigning machines to tasks at certain times in the day. What is the
-schedule that lets you complete all the jobs in the least amount of
-time?</p>
+in a day. Maybe you’re making Each job requires a certain number of
+tasks to be done by one of your many machines, and the tasks are at
+least partially ordered, such that you must complete some of the tasks
+in a certain order. Each machine can only work on one task at a time.
+You get to decide the work schedule, assigning machines to tasks at
+certain times in the day. What is the schedule that lets you complete
+all the jobs in the least amount of time?</p>
+<p>An example: You have a woodworking shop, and today you’re making 20
+table, 30 chairs, 15 doors, and 20 bookcases. Each of these jobs
+requires some time on your table saw, your mill, and your belt sander.
+And the order of operations matters, e.g. you have to cut a piece of
+wood before you sand the edges. When you begin the day, what job will
+you have each of your machines work on? And as they complete those jobs,
+which ones should they take up next? How much time can you save with the
+right schedule of work?</p>
 <h3 data-number="2.2.3" id="portfolio-optimization"><span
 class="header-section-number">2.2.3</span> Portfolio optimization</h3>
 <p>You have some money to invest, and a list of potential project/assets
@@ -2095,17 +2057,18 @@ can you deploy your capital in a way that minimizes downside risk while
 still likely generating a good profit?</p>
 <h2 data-number="2.3" id="or-in-practice"><span
 class="header-section-number">2.3</span> OR in practice</h2>
-<p>So we’ve given a few broad classes of OR problems, but maybe this is
-still too abstract. You’d probably like some concrete examples,
-instances where OR is used in the real world.</p>
+<p>So we’ve given a few broad classes of OR problems, but these are
+still just hypotheticals. You’d probably like some concrete examples,
+instances where OR has been used in the real world, and what the results
+were.</p>
 <h3 data-number="2.3.1" id="origins-of-or"><span
 class="header-section-number">2.3.1</span> Origins of OR</h3>
 <p>We’ll come to the present day soon, but let’s start with a (brief)
 history lesson. Most sources trace the beginning of OR back to early
 1900s and the two World Wars. This <em>research</em> on military
-<em>operations</em> is where the discipline’s name is derived. Here’s
-how <span class="citation" data-cites="classText">Hillier and Lieberman
-(<a href="#ref-classText" role="doc-biblioref">2021</a>)</span> explains
+<em>operations</em> is where the discipline’s name derives. Here’s how
+<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span> explains
 it:</p>
 <blockquote>
 <p>The roots of OR can be traced back many decades, when early attempts
@@ -2128,13 +2091,13 @@ assisted the Island Campaign in the Pacific.</p>
 </blockquote>
 <p>After the war, these techniques were adopted by industry as well. As
 the sheer scale of organizations began to grow, so did the potential
-benefit of the optimized systems brought by OR methodologies. And
+benefit of the optimized systems brought by OR methodologies. As
 techniques and (especially) computing power improved, the types and
 scale of problems that were tackled continued to grow. Today almost all
 major corporations benefit from OR.</p>
 <h3 data-number="2.3.2" id="case-studies"><span
 class="header-section-number">2.3.2</span> Case studies</h3>
-<p>Your textbook handily comes chock full of case studies explaining how
+<p>Your textbook handily comes full of case studies explaining how
 companies have used OR to inform their decision-making. Below I’ve
 copied part of the summary table. Check out the book to get more
 background on anything that piques your interest.</p>
@@ -2151,36 +2114,42 @@ valuable tool.</p>
 <h3 data-number="2.3.3" id="edelman-prize"><span
 class="header-section-number">2.3.3</span> Edelman Prize</h3>
 <p>Now, admittedly, some of those case studies are a little stale. But
-don’t fret, OR is still relevant in industry today. The <a
-href="https://www.informs.org/">Institute for Operations Research and
-Management Science (INFORMS)</a> annually gives an award called the
-Edelman Prize for the best application of OR methodologies in industry.
-You can take a look at the <a
+don’t fret, OR is still relevant in industry today. A great showcase for
+the most recent impactful OR work is the annual Edelman Prize, awarded
+by the <a href="https://www.informs.org/">Institute for Operations
+Research and Management Science (INFORMS)</a>. The winners of this award
+were judged to have demonstrated the best application of OR
+methodologies in industry. You can take a look at the <a
 href="https://3449182.fs1.hubspotusercontent-na1.net/hubfs/3449182/2023_Edelman_Gala_Book.pdf">program
 for the 2023 edition of the award</a> and find cases submitted by names
 like DHL, Huawei, Lyft, and the winner Walmart.</p>
-<h2 data-number="2.4" id="topics-well-coverthismaychange"><span
-class="header-section-number">2.4</span> Topics we’ll cover<a
-href="#fn5" class="footnote-ref" id="fnref5"
-role="doc-noteref"><sup>5</sup></a></h2>
+<h2 data-number="2.4" id="topics-well-cover"><span
+class="header-section-number">2.4</span> Topics we’ll cover</h2>
+<p>OR is a wide-ranging topic, and as such we can’t cover everything.
+Since the class is meant to be an overview, we won’t get overly deep
+into any one topic either<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a>. But we should be able to cover the
+basics in a handful of important topics, as well as getting you some
+hand-on experience using these methods to solve problems. I’ve outlined
+the planned programming below, but note that we are still early in the
+semester, so some of this may be subject to change.</p>
 <p>My main goal for this course is for you to be able to apply the
-methods we learn. We will apply our knowledge using various packages
-written for the Python programming language. While this is not a
-programming course, I realize some of you may have limited (or no)
-knowledge of the language, thus I’ve provided a small unit on the basics
-of the language. But if you are a true beginner this may not suffice,
-and you may need to spend time on your own to get comfortable with
-it.</p>
+methods we learn. We will accomplish this using various packages written
+for the Python programming language. While this is not a programming
+course, I realize some of you may have limited (or no) knowledge of the
+language, thus I’ve provided a small unit on the basics. But if you are
+a true beginner this may not suffice, and you may need to spend time on
+your own to get comfortable with it.</p>
 <p>After that, we will jump into the first big success in Operations
 Research history, linear programming. We’ll learn about the basics of
 these models, a little history, and a few ways to solve them (with
 special emphasis on the simplex method). We’ll also touch on the theory
 of duality and sensitivity analysis.</p>
 <p>After linear programming comes its cousin, integer programming. As
-far as solving techniques, we’ll focus on branch-and-bound. Since
-integer irogramming is so powerful, we will spend significant time
-talking about how to model these problems, and how to set them up and
-solve them with Python.</p>
+far as solving techniques, we’ll focus on branch-and-bound and
+branch-and-cut. Since integer programming is so powerful, we will spend
+significant time talking about how to model these problems, and how to
+set them up and solve them with Python.</p>
 <p>Next will be several topics in nonlinear programming where we will
 talk about convexity, optimality conditions, and selected solution
 procedures.</p>
@@ -2228,13 +2197,14 @@ Click the “Open in Colab” button to open a copy in your browser.</p>
 class="header-section-number">3.3</span> Other coding environments</h2>
 <p>I suggest Colab because it is free and easy to set up, and it should
 work well for what you’ll need during the course. But it is far from the
-only option for Python. Here are a few other options to explore on your
-own:</p>
+only option for Python, and often not the best option depending on your
+needs. Here are a few other options to explore on your own:</p>
 <h3 data-number="3.3.1" id="local-development"><span
 class="header-section-number">3.3.1</span> Local development</h3>
-<p>Unlike Colab, which is run through your web browser, these next few
-options run completely on your local machine. They’ll all require
-installing Python<a href="#fn8" class="footnote-ref" id="fnref8"
+<p>Unlike Colab, where the computing is done on a cloud-based virtual
+machine accessed through your web browser, these next few options run
+completely on your local machine. They’ll all require installing
+Python<a href="#fn8" class="footnote-ref" id="fnref8"
 role="doc-noteref"><sup>8</sup></a> along with other software, but you
 won’t need an internet connection to use them. This is not an exhaustive
 list, just tools that I’ve used and liked.</p>
@@ -2285,872 +2255,15 @@ customizable. This one is a little more advanced, and all machine
 instances need to be backed by some <a
 href="https://git-scm.com/">git</a> repository (e.g. on <a
 href="https://github.com/">GitHub</a>). So I wouldn’t start here, but
-for the right use-case it is a nice service. They’re free plan includes
-50 hours per month.</li>
+for the right use-case it is a nice service. Their free plan gets you up
+to 50 hours per month.</li>
 </ul>
-<h1 data-number="4" id="linear-programming"><span
-class="header-section-number">4</span> Linear programming</h1>
-<p>In the family of OR techniques, linear programming (LP) is certainly
-the matriarch. It was among the first methods to be seriously studied
-and find broad applications. To this day, LPs are relevant and used
-across industry to inform decision-making and help best make use of
-scarce resources. This section will cover selected material from <span
-class="citation" data-cites="classText">Hillier and Lieberman (<a
-href="#ref-classText" role="doc-biblioref">2021</a>)</span>, chapters
-4-8.</p>
-<p>So, what is an LP? Let’s step back a bit - linear programming is a
-special type of mathematical programming problem. The word
-<em>programming</em>, in the language of the pre-computer-revolution era
-where these topics were first studied, was more or less a synonym for
-<em>planning</em>. So mathematical programming just means using math to
-make a plan.</p>
-<p>And the linear part? This refers to the form of the mathematical
-objects used. All mathematical programs have <em>variables</em>
-(quantities you get to set in order to get a desirable result),
-<em>constraints</em> (limitations on how you can set your variables),
-and an <em>objective</em> (the quantity you want to maximize/minimize).
-In linear programming, all constraints and objectives must be
-<em>linear</em> functions of your variables.</p>
-<h2 data-number="4.1" id="an-example-lp"><span
-class="header-section-number">4.1</span> An example LP</h2>
-<p>Ok, before we get too far down this path of inscrutable definitions,
-maybe we should see an example problem where we can get more hands-on.
-The following comes from <span class="citation"
-data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
-role="doc-biblioref">2021</a>)</span>, section 3.1.</p>
-<blockquote>
-<p>The Wyndor Glass Co. produces high-quality glass products, including
-windows and glass doors. It has three plants. Aluminum frames and
-hardware are made in Plant 1, wood frames are made in Plant 2, and Plant
-3 produces the glass and assembles the products. Because of declining
-earnings, top management has decided to revamp the company’s product
-line. Unprofitable products are being discontinued, releasing production
-capacity to launch two new products having large sales potential:</p>
-<ul>
-<li>Product 1: An 8-foot glass door with aluminum framing</li>
-<li>Product 2: A 4 x 6 foot double-hung wood-framed window</li>
-</ul>
-<p>Product 1 requires some of the production capacity in Plants 1 and 3,
-but none in Plant 2. Product 2 needs only Plants 2 and 3. The marketing
-division has concluded that the company could sell as much of either
-product as could be produced by these plants. However, because both
-products would be competing for the same production capacity in Plant 3,
-it is not clear which mix of the two products would be most
-profitable.</p>
-</blockquote>
-<p>Together with management, the company’s OR team defines the problem
-as follows:</p>
-<blockquote>
-<p>Determine what the production rates should be for the two products in
-order to maximize their total profit, subject to the restrictions
-imposed by the limited production capacities available in the three
-plants. (Each product will be produced in batches of 20, so the
-production rate is defined as the number of batches produced per week.)
-Any combination of production rates that satisfies these restrictions is
-permitted, including producing none of one product and as much as
-possible of the other.</p>
-</blockquote>
-<p>The team’s next task is to gather data on production runs and
-potential profits. The findings are summarized in the table below:</p>
-<figure>
-<img src="images/lp-example-data.png"
-alt="Data for the Wyndor Glass Co. problem (Hillier and Lieberman 2021)" />
-<figcaption aria-hidden="true">Data for the Wyndor Glass Co. problem
-<span class="citation" data-cites="classText">(<a href="#ref-classText"
-role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
-</figure>
-<h3 data-number="4.1.1" id="formulating-our-first-lp"><span
-class="header-section-number">4.1.1</span> Formulating our first LP</h3>
-<p>How do we go about formulating this problem mathematically? We must
-first decide on the <em>decision variables</em>, the quantities we get
-to choose in order to affect profit. In this case, the variables are the
-quantities of Product 1 and Product 2 that we choose to produce. We will
-denote these quantities by <span class="math inline">x_1</span> and
-<span class="math inline">x_2</span> respectively. That is, <span
-class="math inline">x_1</span> is the number of batches of Product 1 we
-will produce in a week, and <span class="math inline">x_2</span> is the
-number of batches of Product 2 we produce in a week.</p>
-<p>Next let’s talk about the problem’s <em>objective function</em>, the
-quantity that we are trying to optimize. Naturally, we’d like to
-optimize profit. From the table, we know that we get $3,000 in profit
-per batch of Product 1 and $5,000 per batch of Product 2. Thus the
-formula</p>
-<p><span class="math display">
-3x_1 + 5x_2
-</span></p>
-<p>tells us (in thousands of dollars) how much profit we expect for a
-given selection of <span class="math inline">x_1</span> and <span
-class="math inline">x_2</span>.</p>
-<p>Now, we can’t select <span class="math inline">x_1</span> and <span
-class="math inline">x_2</span> to be arbitrarily high. We are restricted
-by the available production time at each plant. So we will add
-<em>constraints</em> relating to these availabilities. We know that each
-batch of Product 1 requires 1 hour of time in Plant 1, while Product 2
-does not require any time at Plant 1. So, adding that 4 hours of
-production time is available per week the constraint associated with
-production at Plant 1 is simply <span class="math inline">x_1 \leq
-4</span>. Similarly, at Plant 2, Product 2 is the only one that requires
-processing, at 2 hours per batch. With 12 hours per week available, the
-constraint for Plant 2 becomes <span class="math inline">2x_2 \leq
-12</span>.<a href="#fn10" class="footnote-ref" id="fnref10"
-role="doc-noteref"><sup>10</sup></a></p>
-<p>What about Plant 3? Both products require time at this facility, so
-they could both contribute to the depletion of its 18 hours per week.
-Every batch of Product 1 requires 3 hours, while every batch of Product
-2 requires 2 hours. So the constraint imposed by Plant 3 is simply <span
-class="math inline">3x_1 + 2x_2 &lt;= 18</span>.</p>
-<p>Lastly, we know that <span class="math inline">x_1</span> and <span
-class="math inline">x_2</span> cannot be negative (there is no way to
-produce a negative number of products), so <span class="math inline">x_1
-\geq 0</span> and <span class="math inline">x_2 \geq 0</span> must be
-part of our formulation as well. Bringing it all together, we can write
-the problem formulation as:</p>
-<p><span id="eq:prototypeLp" class="eqnos"><span class="math display">
-\begin{align*}
-\text{max}&amp;&amp; 3x_1 + 5x_2 &amp; \\
-\text{s.t.}&amp;&amp; x_1 &amp; \leq \ \ 4  \\
-     &amp;&amp; 2x_2 &amp; \leq 12 \\
-     &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 \\
-     &amp;&amp; x_1,x_2 &amp; \geq \ \ 0
-\end{align*}
-</span><span class="eqnos-number">(1)</span></span></p>
-<h2 data-number="4.2" id="lp-terminology"><span
-class="header-section-number">4.2</span> LP terminology</h2>
-<p>With this example in hand, let’s get back to some definitions. The
-<strong>decision variables</strong> are the quantities we’re deciding
-how to set. In our example these are <span
-class="math inline">x_1</span> and <span class="math inline">x_2</span>,
-the number of batches run per week for the two products. The
-<strong>objective</strong> is the value we’d like to optimize, which in
-the example is the profit equation <span class="math inline">3x_1 +
-5x_2</span>. In this case we’d like to maximize the objective, but
-minimization is possible as well. The <strong>constraints</strong> are
-the limitations on how we set the decision variables, which in this case
-is everything after the “s.t.”<a href="#fn11" class="footnote-ref"
-id="fnref11" role="doc-noteref"><sup>11</sup></a>. Notice that the final
-constraint, <span class="math inline">x_1,x_2\geq0</span>, is really two
-constraints so this is a abusing notation a bit. But these types of
-constraints (called <strong>variable bound</strong> constraints, or in
-this case <em>nonnegativity</em> constraints since they restrict
-variables to <span class="math inline">\geq0</span>) are often treated
-separately in solution techniques, so it is common to see them grouped
-or written slightly differently like this. We call the rest of the
-constraints the <strong>functional constraints</strong>.</p>
-<p>A <strong>solution</strong> to an LP is any specification of values
-for the decision variables. And I do mean <em>any</em><a href="#fn12"
-class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>,
-it doesn’t matter if the values imply a good objective value or even if
-they satisfy the constraints. They are still called a solution. Hence
-each of:</p>
-<ul>
-<li><span class="math inline">x_1=0, x_2=0</span></li>
-<li><span class="math inline">x_1=-20, x_2=6</span></li>
-<li><span class="math inline">x_1=2, x_2=3</span></li>
-</ul>
-<p>are all solutions to our sample problem, even though the second one
-violates nonnegativity.</p>
-<p>A <strong>feasible solution</strong> is a solution that satisfies all
-of the problem constraints. In contrast, an <strong>infeasible
-solution</strong> is one that violates <em>at least one</em> constraint.
-The <strong>feasible region</strong> is the set of all feasible
-solutions. It is possible for a problem to have no feasible solutions,
-in which case the problem itself is said to be
-<strong>infeasible</strong>.</p>
-<p>When solving an LP, the goal is to find an <strong>optimal
-solution</strong>, a feasible solution that gives the most favorable
-value<a href="#fn13" class="footnote-ref" id="fnref13"
-role="doc-noteref"><sup>13</sup></a> of the objective function. Notice
-we said <em>an</em> optimal solution, not <em>the</em> optimal solution,
-as it is entirely possible for a problem to have more than one solution
-attain the optimal value. It is also possible to have no optimal
-solutions at all, as in the case of an infeasible problem. Another
-situation with no optimal solution is an <strong>unbounded</strong>
-problem, where there are no constraints to</p>
-<h2 data-number="4.3" id="lp-visualized"><span
-class="header-section-number">4.3</span> LP visualized</h2>
-<p>Let’s get hands-on again to see our new definitions in action. Since
-our sample problem includes only two decision variables, we can
-visualize what’s going on in a plot:</p>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;choosePoints&quot;: true}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>Here we have a plot with <span class="math inline">x_1</span> on the
-horizontal axis, <span class="math inline">x_2</span> on the vertical
-axis, and a line drawn for each <strong>constraint boundary</strong>
-(the line that forms the boundary of what is permitted by the
-corresponding constraint) for the constraints eq. <a
-href="#eq:prototypeLp">1</a>. Moreover, if you hover over a constraint
-boundary, the side of the line satisfied by the inequality is shaded
-light gray<a href="#fn14" class="footnote-ref" id="fnref14"
-role="doc-noteref"><sup>14</sup></a>. The feasible region is the portion
-of the plot where all the constraints are satisfied, and it is plainly
-visible as the gray-shaded region in the bottom-left. Such an
-intersection of linear inequalities is called a
-<strong>polyhedron</strong>, and in cases such as this where the
-polyhedron is bounded (i.e. doesn’t go off to infinity in some
-direction) we also call it a <strong>polytope</strong>.</p>
-<p>If you click on the plot (or enter values in the text boxes) a point
-will be drawn on the plot. If the point is a feasible solution, it will
-be colored black and the objective value at the solution is show below
-the plot. Otherwise, if the solution is infeasible the point will be
-colored red and the violated inequalities will flash.</p>
-<p>How can we visualize the objective? Since the objective is given by
-<span class="math inline">3x_1 + 5x_2</span>, any line we draw of the
-form <span class="math inline">3x_1 + 5x_2 = Z</span> (for some number
-<span class="math inline">Z</span>) will show the solutions that give
-objective value <span class="math inline">Z</span>. You can try this
-with the plot below: put your chosen <span class="math inline">Z</span>
-value in the input box (or click on the plot to get a line going through
-that point). The line will show up on the plot, and the intersection
-with the feasible region (if any exists) will be highlighted. These
-highlighted solutions each give objective value <span
-class="math inline">Z</span>.</p>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;chooseObjVals&quot;: true}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<h3 data-number="4.3.1" id="solving-an-lp-visually"><span
-class="header-section-number">4.3.1</span> Solving an LP visually</h3>
-<p>We actually have tools to solve this problem now. For problems in two
-dimensions, it is fairly straightforward to draw a graph and see where
-the best solution is. This is not a good (or usually even feasible)
-method in practice, but for a toy problem it can really help build some
-intuition.</p>
-<p>Let’s look back at the above plot. Since we’re maximizing, we’d like
-to choose the largest <span class="math inline">Z</span> that intersects
-the feasible region. Let’s start with something too big, say <span
-class="math inline">Z=50</span>. When we plot that, we see it is way too
-high above the feasible region. So we can start moving it lower. Maybe
-go to <span class="math inline">Z=40</span>. It’s still totally above
-the feasible region, so that’s not it either. Now jump to <span
-class="math inline">Z=30</span>. This intersects the plot, but there is
-a section of the feasible region above the line, and hence feasible
-solutions with a better objective value.</p>
-<p>So keep searching. When you come to <span
-class="math inline">Z=36</span> the situation looks different. The line
-intersects the plot at a single point, <span class="math inline">x_1=2,
-x_2=6</span>. If you move the objective up just a little bit, say to
-36.1, you get no intersection with the feasible region<a href="#fn15"
-class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>.
-Thus we know we’ve found the optimal solution<a href="#fn16"
-class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>,
-and in this case it is unique.</p>
-<h3 data-number="4.3.2" id="visualizing-other-scenarios"><span
-class="header-section-number">4.3.2</span> Visualizing other
-scenarios</h3>
-<p>Let see some examples of the other scenarios we defined above. In
-each case, we’ll take our initial model eq. <a
-href="#eq:prototypeLp">1</a> and modify it to show the desired
-property.</p>
-<h4 data-number="4.3.2.1" id="infeasible-problem"><span
-class="header-section-number">4.3.2.1</span> Infeasible problem</h4>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;addConstraints&quot;: [[[1, 3, 30, &quot;g&quot;], [5, 9.25]]], &quot;choosePoints&quot;: true}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>In this plot, we’ve added the constraint <span
-class="math inline">x_1 + 3x_2 \geq 30</span>. All the points satisfying
-this inequality are well above the previous feasible region, so no
-solutions are feasible.</p>
-<h4 data-number="4.3.2.2" id="unbounded-problem"><span
-class="header-section-number">4.3.2.2</span> Unbounded problem</h4>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;removeConstraints&quot;: [0, 1], &quot;altFeasRegionTextPlace&quot;: [4.5, 3.5], &quot;chooseObjVals&quot;: true}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>Here we’ve removed two constraints, with the only one remaining being
-<span class="math inline">2x_2 &lt;= 12</span>. We can see there is no
-constraint on <span class="math inline">x_1</span> at all now, so we can
-choose it arbitrarily large and still be in the feasible region<a
-href="#fn17" class="footnote-ref" id="fnref17"
-role="doc-noteref"><sup>17</sup></a>.</p>
-<h4 data-number="4.3.2.3" id="multiple-optima"><span
-class="header-section-number">4.3.2.3</span> Multiple optima</h4>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;altObj&quot;: [6, 4], &quot;chooseObjVals&quot;: true}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>In this example, we’ve altered the objective function to <span
-class="math inline">6x_1 + 4x_2</span> so that it has the same slope as
-one of our constraints. We can see by moving the objective up and down
-that the optimal solution comes at <span
-class="math inline">Z=36</span>, where the intersects an entire face
-(bounding line) of the feasible region. Since any point on that bounding
-line attains the optimal objective value, they are all optimal
-solutions.</p>
-<h2 data-number="4.4" id="solving-lps-with-software"><span
-class="header-section-number">4.4</span> Solving LPs with software</h2>
-<p>Let’s pause briefly now to explain, practically, how LPs can be
-solved in the real world. By which I mean: if given an LP in practice,
-what would you do to find the answer? I’m not talking about the theory
-behind what LP solving software does (we’ll get the that later), just
-how to use the software. This won’t be a comprehensive discussion,
-really just giving you enough to solve our example LP. We’ll expand on
-this discussion some when we get to modeling in the Integer Programming
-section.</p>
-<p>There are two key components to solving mathematical programming
-problems in practice: the modeling language and the solver.</p>
-<h3 data-number="4.4.1" id="modeling-languages"><span
-class="header-section-number">4.4.1</span> Modeling languages</h3>
-<p>The job of a modeling language is to take a model specification like
-eq. <a href="#eq:prototypeLp">1</a> and turn it into something the
-computer can understand and solve. Some popular modeling languages are
-their own standalone software, such as <a
-href="https://ampl.com/">AMPL</a> and <a
-href="https://www.gams.com/">GAMS</a>. The modeling languages we’ll use
-are instead shipped as Python<a href="#fn18" class="footnote-ref"
-id="fnref18" role="doc-noteref"><sup>18</sup></a> libraries. Sometimes
-these languages are built for use with a single solver, while others try
-to be compatible with several different solvers.</p>
-<h3 data-number="4.4.2" id="solvers"><span
-class="header-section-number">4.4.2</span> Solvers</h3>
-<p>The solver is the software that takes the modeled problem and applies
-the necessary algorithms to solve it. There are several options here as
-well. The best solvers all require paid licenses to use fully for
-commercial purposes<a href="#fn19" class="footnote-ref" id="fnref19"
-role="doc-noteref"><sup>19</sup></a>. The two biggest names in this
-space are <a href="https://www.gurobi.com/">Gurobi</a> and <a
-href="https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer">CPLEX</a>,
-though <a
-href="https://www.fico.com/en/products/fico-xpress-optimization">Xpress</a>
-and <a href="https://www.shanshu.ai/copt/">COPT</a> are competitive as
-well. There are also free, open-source options, but these generally
-perform much worse than the commercial offerings. Some names in this
-space are <a href="https://www.coin-or.org/">COIN-OR</a>, <a
-href="https://www.gnu.org/software/glpk/">GLPK</a>, and <a
-href="https://scipopt.org/">SCIP</a>.</p>
-<h3 data-number="4.4.3" id="solving-our-lp-with-python"><span
-class="header-section-number">4.4.3</span> Solving our LP with
-Python</h3>
-<p>In the following notebook, I show how we can model and solve our
-sample LP in two different ways. The first way uses Gurobi as the solver
-and its purpose-built Python library <code>gurobipy</code> as the
-modeler. I should mention that since Gurobi is a commercial solver, we
-need some sort of license for unrestricted use. However, we do get a
-limited license automatically with the install of <code>gurobipy</code>
-which is good for problems with up to 2000 variables and 2000 linear
-constraints. This is pretty limiting for practical industry use, but
-most everything we’ll do in this class will fall comfortably within
-those bounds.</p>
-<p>The second option is a fully open-source option using PuLP, a Python
-modeling language maintained by COIN-OR. By default, this will use
-COIN-OR’s linear programming solver CLP to solve the model. However, a
-nice feature of PuLP is that it is solver-agnostic. This means that you
-can use it to model your problem but switch between any of the popular
-solvers (including the commercial ones). This is nice to avoid being
-locked-in to a single solver. But it also may be slightly less
-performant, or may lack some solver-specific features that come with a
-solver’s built-in API.</p>
-<script src="https://gist.github.com/9c7e1b589a3efb40590606ba6eed102f.js"></script>
-<h2 data-number="4.5" id="lp-forms"><span
-class="header-section-number">4.5</span> LP forms</h2>
-<p>We’re <em>almost</em> ready to talk about algorithms for solving LPs,
-but first we should make a note on some different forms LPs can take.
-Crucially, it will turn out that all the forms we talk about here are,
-in a sense, equivalent. Thus no matter the specifics of how an LP is
-presented, we know we’ll be able to solve it using the general
-methods.</p>
-<h3 data-number="4.5.1" id="standard-form"><span
-class="header-section-number">4.5.1</span> Standard form</h3>
-<p>Our formulation of the sample LP in eq. <a
-href="#eq:prototypeLp">1</a> is in what is known as <strong>standard
-form</strong>. Generally, a linear program with <span
-class="math inline">n</span> variables and <span
-class="math inline">m</span> constraints is in standard form if it is
-written as:</p>
-<p><span id="eq:standardFormLp" class="eqnos"><span
-class="math display">
-\begin{align*}
-\text{max}&amp;&amp; c_1x_1 + c_2x_2 + \cdots + c_nx_n &amp;&amp;
-&amp;&amp; \\
-\text{s.t.}&amp;&amp; a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n
-&amp;&amp; \leq &amp;&amp; b_1 \\
-     &amp;&amp; a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &amp;&amp;
-\leq &amp;&amp; b_2 \\
-     &amp;&amp;                                            &amp;&amp;
-\vdots &amp;&amp; \\
-     &amp;&amp; a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &amp;&amp;
-\leq &amp;&amp; b_m \\
-     &amp;&amp; x_1, x_2, \cdots , x_n &amp;&amp; \geq &amp;&amp; 0
-\end{align*}
-</span><span class="eqnos-number">(2)</span></span></p>
-<p>Where all the <span class="math inline">a</span>, <span
-class="math inline">b</span>, and <span class="math inline">c</span>
-values (known as the <strong>problem data</strong>) are real numbers.
-Our sample problem, and many other practical LP problems, are naturally
-formulated like this. But it might at first glance feel a bit limiting.
-What if you’d rather minimize instead of maximizing? Or let your
-variables take negative values? We’ll see in the following sections that
-such considerations are indeed possible, and we can consider them in the
-same framework as standard form problems.</p>
-<h3 data-number="4.5.2" id="minimization-problems"><span
-class="header-section-number">4.5.2</span> Minimization problems</h3>
-<p>What if your optimization problem is a minimization problem and not a
-maximization problem? For example, instead of maximizing profit, you’d
-like to minimize cost? No worries, it is actually quite straightforward
-to convert from minimization to maximization - just turn everything
-negative! The minimum cost is the same as the maximum “negative cost”
-<span class="math inline">(-1\cdot\text{cost})</span>. So</p>
-<p><span class="math display">
-\text{min}\ c_1x_1 + c_2x_2 + \cdots + c_nx_n
-</span></p>
-<p>is the same as</p>
-<p><span class="math display">
-\text{max}-c_1x_1 -c_2x_2 - \cdots -c_nx_n.
-</span></p>
-<p>Since the problem data can be any real number (so, in particular,
-negative numbers are fine) this still follows the form of eq. <a
-href="#eq:standardFormLp">2</a>.</p>
-<h3 data-number="4.5.3" id="different-constraint-forms"><span
-class="header-section-number">4.5.3</span> Different constraint
-forms</h3>
-<p>What is you wanted “greater than or equal” constraints instead of
-“less than or equal” constraints? This is again another case of a sign
-switch since if you take any inequality you can:</p>
-<ul>
-<li>multiply both sides by -1, and</li>
-<li>switch the direction of the inequality</li>
-</ul>
-<p>to end up with another valid inequality<a href="#fn20"
-class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>.
-Thus any inequality of the form:</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \geq b_i
-</span></p>
-<p>can be written as</p>
-<p><span class="math display">
--a_{i1}x_1 - a_{i2}x_2 - \cdots - a_{in}x_n \leq -b_i
-</span></p>
-<p>which brings us back into line with the standard form inequalities in
-eq. <a href="#eq:standardFormLp">2</a>.</p>
-<p>What about equality constraints? That is, constraints of the form</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n = b_i.
-</span></p>
-<p>Can these be converted into standard form? The answer is yes, but it
-comes at the cost of an extra constraint in the formulation. Because
-using the above constraint has the same effect as using these two in
-combination:</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \leq b_i \\
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \geq b_i
-</span></p>
-<p>Now, that second inequality does not fit in standard form since it is
-a “<span class="math inline">\geq</span>” constraint, but we already
-know how to convert it. So the final standard-form-conforming
-formulation is:</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \leq b_i \\
--a_{i1}x_1 - a_{i2}x_2 - \cdots - a_{in}x_n \leq -b_i
-</span></p>
-<p>Great, so we can go from equality constraints to inequality
-constraints, but what about the other way? That is possible too, but
-this time we’ll need to add a variable to the formulation. In
-particular, to convert the inquality</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n \leq b_i
-</span></p>
-<p>to equality form, we’ll add a so-called <strong>slack
-variable</strong> <span class="math inline">s_i</span>. We’ll enforce
-<span class="math inline">s_i\geq0</span> and rewrite the constraint
-as</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n + s_i = b_i.
-</span></p>
-<p>This works since, for any selection of the <span
-class="math inline">x</span> values that satisfies the inequality, we
-can simply select the value of <span class="math inline">s_i</span> as
-the difference between <span class="math inline">b_i</span> and the
-<span class="math inline">a_{i1}x_1 + a_{i2}x_2 + \cdots +
-a_{in}x_n</span>, i.e. the <em>slack</em> in the constraint. Going the
-other way, any variable selections that satisfy the equality will also
-satisfy the inequality since, by rearraning the equality, we get</p>
-<p><span class="math display">
-a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n = b_i - s_i
-</span></p>
-<p>and <span class="math inline">s_i</span> is nonnegative.</p>
-<h3 data-number="4.5.4" id="variable-bounds"><span
-class="header-section-number">4.5.4</span> Variable bounds</h3>
-<p>In the standard form problem, we enforce that all of our variables
-are nonnegative. But what if we don’t want any explicit bounds on the
-variables? Is this a different class of problems? As it turns out, we
-can freely switch back and forth between nonnegative variables and these
-so-called <strong>unrestricted</strong> or <strong>free
-variables</strong>.</p>
-<p>How do we do the transformations? The first direction is
-straightforward; say you have a formulation with nonnegative variables
-and you’d like to remove the variable bounds. Well, we still have the
-functional constraints, where we are allowed to use inequalities. So
-we’ll “remove” the variable bound constraint <span
-class="math inline">x_j\geq0</span> by creating a new functional
-constraint</p>
-<p><span class="math display">
-a_1x_1 + \cdots + a_jx_j + \cdots + a_nx_n \leq b
-</span></p>
-<p>where <span class="math inline">b=0</span>, <span
-class="math inline">a_i=-1</span>, and all other coefficients equal
-<span class="math inline">0</span>.</p>
-<p>Now the less obvious transformation. Say we have a formulation where
-the variable <span class="math inline">x_j</span> is unrestricted. How
-do we convert to nonnegative variables? One way is to define two more
-variables, call them <span class="math inline">y_j</span> and <span
-class="math inline">z_j</span>, which will be our new nonnegative
-variables. What we’ll do is simply replace <span
-class="math inline">x_j</span> with <span
-class="math inline">y_j-z_j</span>, so that the constraints become</p>
-<p><span class="math display">
-a_{i1}x_1 + \cdots + a_{ij}y_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
-</span></p>
-<p>for each <span class="math inline">i</span><a href="#fn21"
-class="footnote-ref" id="fnref21"
-role="doc-noteref"><sup>21</sup></a>.</p>
-<h3 data-number="4.5.5" id="recap-of-allowed-forms"><span
-class="header-section-number">4.5.5</span> Recap of allowed forms</h3>
-<p>As a recap: we defined the standard form LP where the objective is
-maximized, the functional constraints are <span
-class="math inline">\leq</span> inequalities, and variables are
-nonnegative. But it turns out there are several equivalent ways to
-formulate LPs, namely:</p>
-<ul>
-<li>Objectives can be either minimized or maximized.</li>
-<li>Constraints can be in <span class="math inline">\leq</span>, <span
-class="math inline">\geq</span>, or <span class="math inline">=</span>
-form.</li>
-<li>Variables may be bounded or not.</li>
-</ul>
-<p>Crucially, any of these forms can be transformed into any of the
-others, so no matter how we specify a particular LP, any of the results
-and techniques we discuss here apply!</p>
-<h3 data-number="4.5.6" id="different-notation"><span
-class="header-section-number">4.5.6</span> Different notation</h3>
-<p>Last up for this section, let’s discuss notation. I don’t know about
-you, but I get a little overwhelmed when I look at formulations like
-eq. <a href="#eq:standardFormLp">2</a>. There’s a lot to look at there,
-and while I think it’s good initially to see things written in full
-detail with simple notation like this, returns begin diminishing
-quickly. Especially in a case like this where there’s a lot of
-repetition with minimal changes from line to line.</p>
-<p>So, from here on out and where appropriate, I’ll start using more
-concise notation. For example, eq. <a href="#eq:standardFormLp">2</a>
-can be written more concisely like so:</p>
-<p><span class="math display">
-\begin{align*}
-\text{max}&amp;&amp; \sum_{j=1}^n c_jx_j    &amp; \\
-\text{s.t.}&amp;&amp; \sum_{j=1}^n a_{ij}x_j &amp; \leq b_i\quad \forall
-i\in\{1,...,m\} \\
-     &amp;&amp; x_j                    &amp; \geq 0_i\quad \forall
-j\in\{1,...,n\}
-\end{align*}
-</span></p>
-<p>This looks much cleaner to my eyes, and each line communicates
-different important information about the formulation. But to benefit
-from the compactness, one needs to be familiar with the notation used. I
-assume everyone reading this has seen the summation notation <span
-class="math inline">\sum</span> before, but some other notation (set
-inclusion <span class="math inline">\in</span> and “for all” <span
-class="math inline">\forall</span> in particular) may be new. And
-sometimes new is intimidating. But fear not! These things get clearer
-and clearer the more you see them, and I think the benefit is worth it.
-There is a section in the appendix (section <a
-href="#sec:symbols">5.1</a>) dedicated to special symbols. Beyond that,
-if you’re ever confused about something, you can always ask me!</p>
-<p>We’ll see more notation like the above as we formulate more specific
-problems, but for much of the theory sections to come I actually much
-prefer matrix notation. You should already be familiar with linear
-algebra (section <a href="#sec:linearAlgebra">5.2</a> in the appendix
-gives a brief review), so you should be able to notice how matrix
-algebra fits nicely with the formulations we’ve already given. For some
-<span class="math inline">m\times n</span> matrix <span
-class="math inline">\mathbf{A}</span> and <span
-class="math inline">n</span> vector <span
-class="math inline">\mathbf{x}</span>, if we multiply them we have:</p>
-<p><span class="math display">
-\begin{align*}
-\mathbf{A}\mathbf{x}&amp;=\begin{bmatrix}
-    a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
-    a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
-    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-    a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
-\end{bmatrix}\begin{bmatrix}
-    x_1 \\ x_2 \\ \vdots \\ x_n
-\end{bmatrix}\\
-&amp;=\begin{bmatrix}
-    a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n \\
-    a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n \\
-    \vdots \\
-    a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n \\
-\end{bmatrix}
-\end{align*}
-</span></p>
-<p>which looks just like the constraint section of the standard form LP
-eq. <a href="#eq:standardFormLp">2</a>. Due to the conciseness, my
-favorite notation for the standard form LP is</p>
-<p><span id="eq:standardFormLpMatrix" class="eqnos"><span
-class="math display">
-\begin{align*}
-\text{max}&amp;&amp; \mathbf{c}\mathbf{x}\\
-\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
-     &amp;&amp; \mathbf{x}&amp;\geq\mathbf{0}
-\end{align*}
-</span><span class="eqnos-number">(3)</span></span></p>
-<p>Much nicer on the eyes, right!</p>
-<p>Further, you may have noticed that though we’ve devoted significant
-time to it already, we haven’t formally defined linear programming yet!
-I was waiting for this moment to do so. A <strong>linear
-program</strong> is an optimization problem in the form of eq. <a
-href="#eq:standardFormLpMatrix">3</a>.</p>
-<h2 data-number="4.6" id="the-simplex-method"><span
-class="header-section-number">4.6</span> The simplex method</h2>
-<p>We’re just about ready to talk about LP solving algorithms, and we’re
-of course starting with the <strong>simplex algorithm</strong> (also
-sometimes called the <strong>simplex method</strong>). Arguably the most
-important breakthrough in the history of OR was the development of the
-simplex method by George Dantzig<a href="#fn22" class="footnote-ref"
-id="fnref22" role="doc-noteref"><sup>22</sup></a> during the late
-1940s<a href="#fn23" class="footnote-ref" id="fnref23"
-role="doc-noteref"><sup>23</sup></a>. It was perhaps the first practical
-algorithm developed for linear programming, and it continues to be the
-workhorse in linear and integer programming solvers today<a href="#fn24"
-class="footnote-ref" id="fnref24"
-role="doc-noteref"><sup>24</sup></a>.</p>
-<h3 data-number="4.6.1" id="corner-point-solutions"><span
-class="header-section-number">4.6.1</span> Corner-point solutions</h3>
-<p>Before we get to the algorithm itself, let’s take a moment to dwell
-on some geometric insights the method relies on. We’ll return to our
-sample problem eq. <a href="#eq:prototypeLp">1</a> and once again we’ll
-graph it below.</p>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;showVertices&quot;: true}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>This time we’ve also plotted the solutions in the corners of the
-feasible region, because they are important to the simplex algorithm. We
-call these solutions <strong>corner-point solutions</strong> or
-<strong>vertices</strong><a href="#fn25" class="footnote-ref"
-id="fnref25" role="doc-noteref"><sup>25</sup></a>, and they come at the
-intersection of two constraint boundaries (in the general case, for LPs
-with <span class="math inline">n</span> decision variables, the
-corner-point solutions come at the intersection of <span
-class="math inline">n</span> constraints boundaries).</p>
-<p>The simplex algorithm makes use of the following key fact of linear
-programs:</p>
-<div id="thm:cornerPointOpt" class="theorem">
-<p>If a linear program has an optimal solution (i.e. not unbounded or
-infeasible), then it has an optimal solution that is a corner-point
-solution.</p>
-</div>
-<div class="proof" for="thm:cornerPointOpt" data-placement="appendix">
-<p>We won’t actually give a full proof of this theorem, instead we’ll
-only consider the case of a standard form LP (eq. <a
-href="#eq:standardFormLpMatrix">3</a>) with only two decision variables.
-Those of you that are familiar with <a
-href="https://en.wikipedia.org/wiki/Mathematical_induction">proofs by
-induction</a> may be able to see how to generalize this to any number of
-variables.</p>
-<p>In two dimensions we can visualize this, so let’s continue to use the
-sample LP of eq. <a href="#eq:prototypeLp">1</a> as our example. Any
-feasible solution to a two-dimensional LP must fall under exactly one of
-these categories:</p>
-<ol type="1">
-<li>An interior solution (not on any constraint boundaries).</li>
-<li>On a single constraint boundary.</li>
-<li>A corner-point solution (i.e. at the intersection of two constraint
-boundaries).</li>
-</ol>
-<p>What we can show is that for any solution of type 1 or 2, we can find
-a corner-point solution with equal or greater objective value, and we
-will illustrate this in the plot below. To that end, suppose we have
-some solutions <span class="math inline">\mathbf{z}</span> on the
-interior of the feasible region, and <span
-class="math inline">\mathbf{y}</span> that lies on a single constraint
-boundary.</p>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;extraPoints&quot;: [[2, 1], [3, 4.5]], &quot;extraLines&quot;: [[2, 1, 3, 1.5, {&quot;style&quot;: &quot;stroke-width:2pt;stroke:black&quot;, &quot;marker-end&quot;: &quot;url(#blackArrowMarker)&quot;}], [3, 4.5, 2.5, 5.25, {&quot;style&quot;: &quot;stroke-width:2pt;stroke:black&quot;, &quot;marker-end&quot;: &quot;url(#blackArrowMarker)&quot;}]], &quot;extraMathText&quot;: [[&quot;y&quot;, 3.25, 5, {&quot;coordToPix&quot;: true}], [&quot;z&quot;, 1.75, 1.75, {&quot;coordToPix&quot;: true}], [&quot;v&quot;, 2, 5.75, {&quot;coordToPix&quot;: true}], [&quot;u&quot;, 3.25, 1.75, {&quot;coordToPix&quot;: true}]]}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>Let <span class="math inline">\mathbf{v}</span> be a (unit) vector
-that points in the same direction as the constraint boundary that <span
-class="math inline">\mathbf{y}</span> is on. Let <span
-class="math inline">\mathbf{c}</span> be the vector of objective
-function coefficients (so in our sample LP we would have <span
-class="math inline">\mathbf{c}=\begin{bmatrix}3\\5\end{bmatrix}</span>).
-The objective value at solution <span
-class="math inline">\mathbf{y}</span> is <span
-class="math inline">\mathbf{y}\mathbf{c}</span>. In contrast, if we move
-some amount <span class="math inline">\delta</span> from <span
-class="math inline">\mathbf{y}</span> along direction <span
-class="math inline">\mathbf{v}</span>, the objective value is (due to
-distributivity of matrix operations) <span
-class="math inline">(\mathbf{y} + \delta\mathbf{v})\mathbf{c}=
-\mathbf{y}\mathbf{c}+ \delta\mathbf{v}\mathbf{c}</span>.</p>
-<p>If <span class="math inline">\mathbf{v}\mathbf{c}\geq0</span>, then
-moving from <span class="math inline">\mathbf{y}</span> along the
-constraint boundary in the direction of <span
-class="math inline">\mathbf{v}</span> improves the objective value. So
-we can continue in that direction until we meet another constraint,
-yielding a corner-point solution with greater-or-equal objective value
-than <span class="math inline">y</span>. If, on the other hand, <span
-class="math inline">\mathbf{v}\mathbf{c}&lt;0</span>, then we can move
-in the direction of <span class="math inline">-\mathbf{v}</span> to a
-corner-point solution with greater objective value than <span
-class="math inline">\mathbf{y}</span>. So either way, there is some
-corner-point solution with objective value at least as good as <span
-class="math inline">\mathbf{y}</span>.</p>
-<p>The proof for the interior point <span
-class="math inline">\mathbf{z}</span> is very similar. Select some
-direction <span class="math inline">\mathbf{u}</span>, and then travel
-from <span class="math inline">\mathbf{z}</span> along directions <span
-class="math inline">\mathbf{u}</span> or <span
-class="math inline">\mathbf{u}</span> until you hit a constraint
-boundary. One of these points will yield an objective value at least as
-good as <span class="math inline">\mathbf{z}</span>, and it will be on
-either:</p>
-<ul>
-<li>The intersection of two constraints, in which case we’ve found the
-corner-point solution with at least as good a value as <span
-class="math inline">\mathbf{z}</span>.</li>
-<li>A single constraint, in which case we can repeat the procedure shown
-above for <span class="math inline">\mathbf{y}</span> to find the
-corner-point solution.</li>
-</ul>
-<p>In either case, we’ve found our required corner-point solution, thus
-the proof is complete.</p>
-</div>
-<p>Thanks to this theorem<a href="#fn26" class="footnote-ref"
-id="fnref26" role="doc-noteref"><sup>26</sup></a> we know that we only
-need to check corner-point solutions when solving an LP! We make use of
-this fact during the simplex method, which only checks corner-point
-solutions. We won’t check <em>every</em><a href="#fn27"
-class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>
-corner-point solution, though. The key to simplex is that we jump from
-one corner-point solution to the next while taking care that each move
-improves the objective value.</p>
-<p>In fact, the set of solutions we can move to in any iteration is
-limited to only the solutions that are adjacent to the current solution.
-In an LP with <span class="math inline">n</span> decision variables, two
-corner-point solutions are <strong>adjacent</strong> if they share <span
-class="math inline">n-1</span> constraint boundaries. Recall that
-corner-point solutions lie at the intersection of <span
-class="math inline">n</span> constraint boundaries, so we can also say
-that two adjacent corner-point solutions share all but one boundary in
-common.</p>
-<p>We have all the definitions now to describe simplex in a nutshell:
-The simplex method solves a linear programming problem by successively
-moving from one corner-point solution to another, adjacent corner-point
-solution, making sure each such move improves the objective function,
-until no such improvement exists<a href="#fn28" class="footnote-ref"
-id="fnref28" role="doc-noteref"><sup>28</sup></a>.</p>
-<h3 data-number="4.6.2" id="simplex-visualized"><span
-class="header-section-number">4.6.2</span> Simplex visualized</h3>
-<p>Now that we have the basic idea, let’s go ahead and walk through the
-steps of the simplex algorithm. We won’t go fully general on our first
-time through, though. Let’s again consider our sample problem of eq. <a
-href="#eq:prototypeLp">1</a>, which we’ve plotted again below. This
-time, though, the plot contains some controls that let us step through
-the simplex method one iteration at a time. I should stress that the
-simplex method does not work <em>exactly</em> like what we’ll talk
-through below, but all the intuitions are the same and the exercise is,
-I think, a useful one.</p>
-<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;simplexStart&quot;: [0, 0]}">
-Sorry, your browser does not support inline SVG.
-</svg>
-<p>The first step is to find an initial feasible corner-point solution.
-In our case (and lots of practical instances too) the solution <span
-class="math inline">(0, 0)</span> is a feasible solution, and a corner
-point as well. It’s not a particularly desirable solution in the context
-of our problem since it brings us no profit, but we don’t care about
-desirability yet.</p>
-<p>After initialization, we begin the algorithm’s main loop. First we
-have to determine if there are any adjacent corner-point solutions with
-improving objective value. Recall that an adjacent solution will share
-<span class="math inline">n-1</span> constraint boundaries with the
-current solution. Since we’re in two dimensions, the adjacent solutions
-share one constraint boundary with the current solution. To find the
-adjacent solutions, we travel out from <span
-class="math inline">(0,0)</span> along the two boundary lines it sits
-on, which in this case are the two axes. Thus the two directions we can
-move in are <span class="math inline">(1,0)</span> and <span
-class="math inline">(0,1)</span>.</p>
-<p>How do we know if a solution in any particular direction is improving
-the objective value? Let’s consider the direction <span
-class="math inline">(1,0)</span>. Since we’re moving from <span
-class="math inline">(0,0)</span> to some point in the direction of <span
-class="math inline">(1,0)</span>, the resulting solution will look like
-<span class="math inline">(0,0) + \alpha(1,0)</span> for some number
-<span class="math inline">\alpha</span>. The objective value of any
-point <span class="math inline">\mathbf{x}</span> is <span
-class="math inline">\mathbf{c}\mathbf{x}</span> where <span
-class="math inline">\mathbf{c}</span> is the vector of objective
-coefficients (which is <span class="math inline">(3,5)</span> in our
-sample problem). So the objective value of <span
-class="math inline">(0,0) + \alpha(1,0)</span> is</p>
-<p><span class="math display">
-([0\ 0] + \alpha[1\ 0])\begin{bmatrix}3\\5\end{bmatrix}
-</span></p>
-<p>and since matrix multiplication distributes through addition, this is
-the same as</p>
-<p><span class="math display">
-[0\ 0]\begin{bmatrix}3\\5\end{bmatrix} + \alpha[1\
-0]\begin{bmatrix}3\\5\end{bmatrix}.
-</span></p>
-<p>That first term, <span class="math inline">[0\
-0]\begin{bmatrix}3\\5\end{bmatrix}</span>, is just the objective value
-associated with the current solution <span
-class="math inline">(0,0)</span>. So the second term <span
-class="math inline">\alpha[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}</span>,
-is the <em>improvement</em> associated with the move.</p>
-<p>We have two directions in which we can move, <span
-class="math inline">(1,0)</span> and <span
-class="math inline">(0,1)</span>. To keep things standardized we’ll want
-to re-scale our directions to be unit vectors (i.e. vectors with length
-one), but in this case they’re already unit vectors. The improvements
-associated with unit moves in these directions are <span
-class="math inline">[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}=3</span> and
-<span class="math inline">[0\
-1]\begin{bmatrix}3\\5\end{bmatrix}=5</span>. These are both positive
-numbers, and since we’re trying to maximize the objective value, that
-means that solutions in either direction are improvements to the
-objective value.</p>
-<p>All that information is summarized in the table below the plot. The
-two directions are listed, as well as the per-unit change in objective
-function (under the heading <span class="math inline">\Delta</span> Obj
-/ Unit<a href="#fn29" class="footnote-ref" id="fnref29"
-role="doc-noteref"><sup>29</sup></a>). Since both directions improve the
-objective, you have the option to choose either one using the checkboxes
-in the final column.</p>
-<p>Let’s go ahead and choose the <span class="math inline">(0,1)</span>
-direction, since it gives the highest per-unit objective change<a
-href="#fn30" class="footnote-ref" id="fnref30"
-role="doc-noteref"><sup>30</sup></a>. Press the forward button on the
-plot, and you’ll see it finds the adjacent solution in that direction,
-<span class="math inline">(0,6)</span>, and the directions to its
-adjacent solutions. But only one of the directions is improving, so we
-choose to move in that direction <span class="math inline">(1,0)</span>
-to the adjacent corner-point solution <span
-class="math inline">(2,6)</span>. At this point none of the adjacent
-directions are improvements, so the current point is optimal and the
-algorithm is finished.</p>
-<p>One thing to note before we move on: All the information we gather
-during an iteration is in some sense “local” to the current corner-point
-solution. We compute only the <em>directions</em> to the neighboring
-solutions, not the actual solutions themselves. Only once we decide on a
-direction do we find the actual corner-point solution. This is because
-finding the solutions is much more expensive computationally speaking,
-and we’d like to defer that step and only compute solutions when
-necessary. This isn’t such a big deal on a small, two-dimensional
-example like this, but in larger scale instances this saves a good
-amount of time.</p>
-<h3 data-number="4.6.3" id="solving-the-sample-lp-with-simplex"><span
-class="header-section-number">4.6.3</span> Solving the sample LP with
-simplex</h3>
-<p>Walk through with motivations.
-<span class='thmRef' for='thm:cornerPointOpt'></p>
-<h3 data-number="4.6.4" id="simplex-algorithm-basics"><span
-class="header-section-number">4.6.4</span> Simplex algorithm basics</h3>
-<p>Write the steps in matrix form</p>
-<h3 data-number="4.6.5" id="other-considerations"><span
-class="header-section-number">4.6.5</span> Other considerations</h3>
-<p>Gotchas and edge cases</p>
-<!-- book section 4.5 -->
+<!-- {insertSection:sections/linear_programming.md} -->
 <!-- {insertSection:sections/integer_programming.md} -->
-<h1 data-number="5" id="appendix"><span
-class="header-section-number">5</span> Appendix</h1>
-<h2 data-number="5.1" id="sec:symbols"><span
-class="header-section-number">5.1</span> Special symbols</h2>
+<h1 data-number="4" id="appendix"><span
+class="header-section-number">4</span> Appendix</h1>
+<h2 data-number="4.1" id="sec:symbols"><span
+class="header-section-number">4.1</span> Special symbols</h2>
 <ul>
 <li><span class="math inline">\mathbb{R}</span>: The set of real
 numbers, i.e. anything on the number line between (though not
@@ -3218,8 +2331,8 @@ indicates the the statement to the left is logically equivalent to the
 statement on the right, e.g. <span class="math inline">a &gt; b
 \Leftrightarrow -a &lt; -b</span>.</li>
 </ul>
-<h2 data-number="5.2" id="sec:linearAlgebra"><span
-class="header-section-number">5.2</span> Linear algebra review</h2>
+<h2 data-number="4.2" id="sec:linearAlgebra"><span
+class="header-section-number">4.2</span> Linear algebra review</h2>
 <p>Linear algebra is the study of math involving matrices, vectors, and
 linear transformations. A <strong>matrix</strong> (the basic object of
 linear algebra) is a rectangular array of numbers. For example,</p>
@@ -3232,8 +2345,8 @@ said to be <strong>square</strong> if it has the same number of rows and
 columns.</p>
 <p>In these notes, we will usually denote matrices with boldface,
 uppercase letters.</p>
-<h3 data-number="5.2.1" id="sec:matrixMath"><span
-class="header-section-number">5.2.1</span> Matrix math</h3>
+<h3 data-number="4.2.1" id="sec:matrixMath"><span
+class="header-section-number">4.2.1</span> Matrix math</h3>
 <p>We say Matrices <span class="math inline">\mathbf{A}</span>, <span
 class="math inline">\mathbf{B}</span> are <strong>equal</strong> if
 <em>all</em> of their elements are equal. First off, that means <span
@@ -3249,7 +2362,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(4)</span></span></p>
+</span><span class="eqnos-number">(1)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -3321,8 +2434,8 @@ sa_{21} &amp; sa_{22} &amp; \cdots &amp; sa_{2n} \\
 sa_{m1} &amp; sa_{m2} &amp; \cdots &amp; sa_{mn} \\
 \end{bmatrix}
 </span></p>
-<h3 data-number="5.2.2" id="properties-of-matrix-operations"><span
-class="header-section-number">5.2.2</span> Properties of matrix
+<h3 data-number="4.2.2" id="properties-of-matrix-operations"><span
+class="header-section-number">4.2.2</span> Properties of matrix
 operations</h3>
 <p>The above matrix operations satisfy the following properties:</p>
 <ul>
@@ -3348,8 +2461,8 @@ class="math inline">\mathbf{B}\mathbf{A}</span> is not even defined if
 <span class="math inline">m\neq s</span>. Even if <span
 class="math inline">m=s</span> and the product is defined, the result
 needs not be the same.</p>
-<h3 data-number="5.2.3" id="special-matrices"><span
-class="header-section-number">5.2.3</span> Special matrices</h3>
+<h3 data-number="4.2.3" id="special-matrices"><span
+class="header-section-number">4.2.3</span> Special matrices</h3>
 <p>A <strong>vector</strong> is a special type of matrix with either a
 single column or a single row, e.g.</p>
 <p><span class="math display">
@@ -3393,8 +2506,8 @@ zero matrix satisfies:</p>
 <p>Note that <span class="math inline">\mathbf{I}</span> and <span
 class="math inline">\mathbf{0}</span> play roles in matrix operations
 similar to the roles of 1 and 0 (respectively) in arithmetic.</p>
-<h3 data-number="5.2.4" id="rank-and-inverse"><span
-class="header-section-number">5.2.4</span> Rank and inverse</h3>
+<h3 data-number="4.2.4" id="rank-and-inverse"><span
+class="header-section-number">4.2.4</span> Rank and inverse</h3>
 <p>A set of vectors <span class="math inline">\mathbf{x}_1,
 \mathbf{x}_2, \dots, \mathbf{x}_m</span> is said to be <strong>linearly
 dependent</strong> if there exists <span class="math inline">m</span>
@@ -3448,8 +2561,8 @@ that</p>
 the <strong>inverse</strong> of <span
 class="math inline">\mathbf{A}</span>. Furthermore, singular matrices do
 not have inverses.</p>
-<h3 data-number="5.2.5" id="systems-of-equations"><span
-class="header-section-number">5.2.5</span> Systems of equations</h3>
+<h3 data-number="4.2.5" id="systems-of-equations"><span
+class="header-section-number">4.2.5</span> Systems of equations</h3>
 <p>Matrices are great for concisely stating systems of linear equations,
 linear equations in some set of variables you’d like to hold true
 simultaneously. For example, the set of equations</p>
@@ -3471,8 +2584,8 @@ x_1 \\ x_2
 7 \\ 6
 \end{bmatrix}
 </span></p>
-<h3 data-number="5.2.6" id="elementary-operations"><span
-class="header-section-number">5.2.6</span> Elementary operations</h3>
+<h3 data-number="4.2.6" id="sec:elementaryRowOperations"><span
+class="header-section-number">4.2.6</span> Elementary operations</h3>
 <p>There are certain elementary operations one can perform on a system
 of linear equations that don’t have an effect on the solution of the
 system. I’ll state these operations in terms of rows, but similar
@@ -3556,9 +2669,10 @@ x_1 \\ x_2
 \end{bmatrix}
 </span></li>
 </ul>
-<h2 data-number="5.3" id="sec:appendixSelectedProofs"><span
-class="header-section-number">5.3</span> Selected proofs</h2>
-<p>Proofs to selected statements in the main text.</p>
+<h2 data-number="4.3" id="sec:appendixSelectedProofs"><span
+class="header-section-number">4.3</span> Selected proofs</h2>
+<p>This section contains proofs to selected statements in the main
+text.</p>
 <h1 id="References">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="doc-bibliography">
@@ -3596,18 +2710,18 @@ it’s a very useful reference.<a href="#fnref1" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>The pedant in me wants to point out that this word
 “optimal” is horribly misused in conversation fairly regularly, in the
-common misguided phrase “more optimal”. As I mentioned, “optimal” really
-just means “best”, and “best” is not on a sliding scale; either you have
-the best answer or you don’t. One choice can’t be “more best” than
-another, just as one solution can’t be “more optimal” than another. I
-think I’m fighting a losing battle on this, but maybe for the sake of
+form of the misguided phrase “more optimal”. As I mentioned, “optimal”
+really just means “best”, and “best” is not on a sliding scale; either
+you have the best answer or you don’t. One choice can’t be “more best”
+than another, just as one solution can’t be “more optimal” than another.
+I think I’m fighting a losing battle on this, but maybe for the sake of
 this course we can all agree to never put the words “more” and “optimal”
 next to each other? Thanks.<a href="#fnref2" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>There’s a neat book all about the TSP, <span
 class="citation" data-cites="tspPursuit">Cook (<a href="#ref-tspPursuit"
 role="doc-biblioref">2012</a>)</span>, written by a great professor that
-I took a course from in graduate school. It’s more popularly focused
+I took a course from while getting my PhD. It’s more popularly focused
 than technical, so it’s a surprisingly smooth read. Highly
 recommended!<a href="#fnref3" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
@@ -3617,8 +2731,9 @@ it came</a> tells a neat story about how this instance was solved, by
 hand, way back in 1954! There are some other interesting bits there too,
 well worth a read in my opinion.<a href="#fnref4" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>Note that we are early in the semester, so some of this
-may be subject to change.<a href="#fnref5" class="footnote-back"
+<li id="fn5"><p>If you <em>are</em> looking for a deep dive, I’d suggest
+checking out the other classes in our Masters of Operations Research
+program.<a href="#fnref5" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>It’s not exactly like Jupyter, but the same in spirit.
 Also, don’t worry if you don’t know about Jupyter or coding notebooks
@@ -3631,132 +2746,11 @@ role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>You can check out <a
 href="https://www.python.org/downloads/">Python’s downloads page</a> or
 go with <a href="https://www.anaconda.com/">Anaconda</a> for an expanded
-toolset.<a href="#fnref8" class="footnote-back"
+built-in toolset.<a href="#fnref8" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn9"><p>I’m listing lots of Google Cloud products because that’s
 the cloud platform I’ve used most, but the other big providers have
 similar offerings.<a href="#fnref9" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn10"><p>You might look at this and think “that just means <span
-class="math inline">x_2 \leq 6</span>.” You would be correct, and it
-would be completely valid to use that constraint instead.<a
-href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11"><p>The “s.t.” is an abbreviation for “subject to” and is
-used in formulations leading into the constraints section.<a
-href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12"><p>So long as we’re talking about real numbers, of course.
-Something like <span class="math inline">x_1=\text{blue}</span>, <span
-class="math inline">x_2=\text{elephant}</span> is just nonsense and
-isn’t a solution to our problem.<a href="#fnref12" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p>The smallest value if we have a minimization problem,
-or the largest value for a maximization problem.<a href="#fnref13"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn14"><p>I couldn’t think of a good way to do this with touch
-events, so this part doesn’t work as well on a mobile device. Sorry.<a
-href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn15"><p>Actually, my little widget here is not perfect.
-Depending how small of a decimal you add, you may get it to tell you
-there are optimal solutions at a slightly higher objective value. This
-is due to choosing a precision that this setup really can’t handle. It
-is worth mentioning that even the most sophisticated solvers can have
-issues with rounding errors and numerical stability, but they’re
-generally very good. As long as you are careful with your formulations
-you usually won’t run into issues.<a href="#fnref15"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn16"><p>Truth be told, this isn’t a rigorous proof of
-optimality, at least in the strict sense of mathematical proofs. But the
-solution methods we’ll study later do give such proofs.<a
-href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn17"><p>In most practical applications, infeasiblity is a good
-indicator that you modeled something incorrectly. Like in the prototype
-example, it doesn’t make sense that we could make arbitrarily many of
-some product. So if you find a problem you’re working on is infeasible,
-it’s a good idea to double-check your formulation.<a href="#fnref17"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn18"><p>There are similar packages available in other popular
-programming languages as well.<a href="#fnref18" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn19"><p>Most come with limited licenses for noncommercial uses,
-and also offer free unrestricted licenses for students and academics.<a
-href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn20"><p>A quick example: <span class="math inline">5 \leq
-10</span> means the exact same thing as <span class="math inline">-5
-\geq -10</span>.<a href="#fnref20" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn21"><p>You can think of <span class="math inline">y_j</span>
-as the “positive part” and <span class="math inline">z_j</span> as the
-“negative part” of <span class="math inline">x_j</span>. Note that we
-haven’t done anything to enforce that only one of <span
-class="math inline">y_j</span> and <span class="math inline">z_j</span>
-are nonzero at a time. So for example if some solution to the original
-fomulation had <span class="math inline">x_j=2</span> then in the new
-formulation we could have <span class="math inline">y_j=2</span> and
-<span class="math inline">z_j=0</span>, or we could just as easily have
-something like <span class="math inline">y_j=12, z_j=10</span> or <span
-class="math inline">y_j=106.7, z_j=104.7</span>.<a href="#fnref21"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn22"><p>I’m not mentioning a lot of people by name in these
-notes, but I couldn’t skip Dantzig. Mostly I wanted to bring up this
-famous story: A student comes late to class one day, sees two problems
-written on the board, and assumes they are the day’s assigned homework.
-The problems are more difficult than usual, but he solves them. When he
-turns them in, the professor is elated - these weren’t homework, but
-rather famous unsolved problems in the field! You can find several
-versions of this story out there, citing several different people as the
-supposed student. Turns out <a
-href="https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99">this
-actually happened, and the student was Dantzig</a>.<a href="#fnref22"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn23"><p>There’s a neat story, quoting from <span
-class="citation" data-cites="tspPursuit">Cook (<a href="#ref-tspPursuit"
-role="doc-biblioref">2012</a>)</span>, in <a
-href="https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/">this
-blog post</a> (yes, OR blogs are a thing). It’s specifically about
-Dantzig first introducing the simplex method during a talk in 1948, and
-more generally about understanding your assumptions 😀.<a
-href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn24"><p>Interestingly, several other linear programming
-algorithms have been devised whose theoretical properties seem to
-suggest they would be more efficient. But in practice that hasn’t been
-the case. Simplex continues to be the best algorithm in practice for the
-widest array of problems.<a href="#fnref24" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn25"><p>I’m used to calling them vertices, but the textbook
-tends to call them corner-point solutions, which I like as a more
-helpful, descriptive term. I’ll try to stick to corner-point solution
-for the notes, but I expect to slip up a few times, especially during
-lectures.<a href="#fnref25" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn26"><p>For those that are not aware, a
-<strong>theorem</strong> is a mathematical statement that has been
-proven to be true, based on some set of standard axioms. Anything I cite
-as a theorem in these notes, you can be confident it holds true, even if
-we don’t work through a rigorous proof.<a href="#fnref26"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn27"><p>At least not generally - for common variants of the
-simplex method, there exist examples where every corner-point solution
-is visited during execution (<span class="citation"
-data-cites="classText">(<a href="#ref-classText"
-role="doc-biblioref">Hillier and Lieberman 2021</a>)</span> is the
-first, most famous example). But this isn’t usually an issue in
-practice.<a href="#fnref27" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn28"><p>This is really the key takeaway from our whole
-discussion in this section, and if this is the only thing you remember
-about the simplex method 10 years from now I’ll still be satisfied. This
-is the key insight, you can always re-learn the details later.<a
-href="#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn29"><p>The greek capital letter <span
-class="math inline">\Delta</span> is commonly used to denote an amount
-of change, and in these context is often read as “change in.”<a
-href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn30"><p>Note that having the highest per-unit change doesn’t
-necessarily make it the “best” choice in any particular way. It may be
-that choosing a different (but still improving) direction will mean that
-we finish the algorithm faster. But in general we can’t tell beforehand,
-so we often just choose the direction with the highest change as
-convenient rule-of-thumb.<a href="#fnref30" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
