@@ -961,10 +961,8 @@
           drawAllSvgPlots();
           theoremHelpers();
           classModeSetup();
-          document.onclick = () => {
-              closeNavIfSmall();
-              closeClassMode();
-          }
+          document.onclick = closeClassMode;
+          document.getElementById('main').onclick = closeNavIfSmall;
       }
       getUrlParameter = (name) => {
           name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -1315,8 +1313,7 @@
       }
   </style>
   <script>
-      function openCloseNav(e) {
-          console.log(e);
+      function openCloseNav() {
           const tocTop = document.getElementById("tocTop")
           if (tocTop.style.visibility == "visible") {
               closeNav();
@@ -1333,7 +1330,6 @@
           if (leftoverWidth >= mainWidth) {
               main.style.marginLeft = tocWidth / 2 + 'px';
           }
-          e.stopPropagation();
       }
       function closeNav() {
           document.getElementById("TOC").style.width = "0";
@@ -1810,7 +1806,7 @@
 </head>
 <body>
 <div class="navbar">
-    <div onclick="openCloseNav(event)" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
+    <div onclick="openCloseNav()" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
     <div style="text-align: center">IMSE 780</div>
     <div style="text-align: right; padding-right: 1rem">Fall 2023</div>
 </div>
