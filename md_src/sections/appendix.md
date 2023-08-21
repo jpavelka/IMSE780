@@ -221,7 +221,7 @@ x_1 \\ x_2
 \end{bmatrix}
 $$
 
-### Elementary operations
+### Elementary operations {#sec:elementaryRowOperations}
 
 There are certain elementary operations one can perform on a system of linear equations that don't have an effect on the solution of the system. I'll state these operations in terms of rows, but similar operations exist for columns as well:
  
@@ -306,4 +306,4 @@ x_1 \\ x_2
 
 ## Selected proofs {#sec:appendixSelectedProofs}
 
-Proofs to selected statements in the main text.
+This section contains proofs to selected statements in the main text.

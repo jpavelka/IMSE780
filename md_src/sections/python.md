@@ -19,13 +19,13 @@ Below, you should see a read-only image of a Colab notebook. The notebook gives 
 
 ## Other coding environments
 
-I suggest Colab because it is free and easy to set up, and it should work well for what you'll need during the course. But it is far from the only option for Python. Here are a few other options to explore on your own:
+I suggest Colab because it is free and easy to set up, and it should work well for what you'll need during the course. But it is far from the only option for Python, and often not the best option depending on your needs. Here are a few other options to explore on your own:
 
 ### Local development
 
-Unlike Colab, which is run through your web browser, these next few options run completely on your local machine. They'll all require installing Python[^pythonInstall] along with other software, but you won't need an internet connection to use them. This is not an exhaustive list, just tools that I've used and liked.
+Unlike Colab, where the computing is done on a cloud-based virtual machine accessed through your web browser, these next few options run completely on your local machine. They'll all require installing Python[^pythonInstall] along with other software, but you won't need an internet connection to use them. This is not an exhaustive list, just tools that I've used and liked.
 
-[^pythonInstall]: You can check out [Python's downloads page](https://www.python.org/downloads/) or go with [Anaconda](https://www.anaconda.com/) for an expanded toolset.
+[^pythonInstall]: You can check out [Python's downloads page](https://www.python.org/downloads/) or go with [Anaconda](https://www.anaconda.com/) for an expanded built-in toolset.
 
 - [Jupyter](https://jupyter.org/): The first popular notebook environment for Python. It functions much like Colab does, though there are minor differences. Several places offer web-hosted versions of Jupyter too.
 - [Pycharm](https://www.jetbrains.com/pycharm/): Pycharm is an [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment) built for Python, and as such comes with support for debugging, refactoring, run configurations, and more. There is a free version and a pro version, but the free version has plenty of functionality and is more than sufficient for the coding in this course.
@@ -39,4 +39,4 @@ There are several cloud-hosted options available for running Python. We've alrea
 
 - [Google Cloud Shell/IDE](https://ide.cloud.google.com): If you have a Google Cloud Platform account, you have access to a cloud-based virtual machine known as the Google Cloud Shell. The shell comes with Python and other common developer tools pre-installed, and you can interact with it using their Cloud IDE, a hosted VS Code-like environment. The shell runs a pretty small machine, but it is free to use and you can use the IDE for up to 50 hours per week.
 - [Vertex AI Notebooks](https://cloud.google.com/vertex-ai/docs/workbench/introduction): Managed Jupyter notebooks on Google Cloud Platform. You do have to pay for the service and the associated compute time and storage. There are similar offerings from [Amazon Web Services](https://aws.amazon.com/sagemaker/notebooks/) and [Microsoft Azure](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-run-jupyter-notebooks?view=azureml-api-2)
-- [Gitpod](https://www.gitpod.io/): Gitpod is a service that offers on-demand cloud development environments that are highly customizable. This one is a little more advanced, and all machine instances need to be backed by some [git](https://git-scm.com/) repository (e.g. on [GitHub](https://github.com/)). So I wouldn't start here, but for the right use-case it is a nice service. They're free plan includes 50 hours per month.
+- [Gitpod](https://www.gitpod.io/): Gitpod is a service that offers on-demand cloud development environments that are highly customizable. This one is a little more advanced, and all machine instances need to be backed by some [git](https://git-scm.com/) repository (e.g. on [GitHub](https://github.com/)). So I wouldn't start here, but for the right use-case it is a nice service. Their free plan gets you up to 50 hours per month.

@@ -1,6 +1,6 @@
 # Introduction to OR
 
-In this section we'll cover the big picture questions: What is Operations Research? Where did it come from? What can I do with it?
+In this section we'll cover the big picture questions: What is Operations Research? Where did it come from? What can I do with it? I hope to impress upon you that OR is a seriously set of tools, and that it has a huge impact on the world today.
 
 ## What is Operations Research?
 
@@ -14,7 +14,7 @@ I think this is a good first definition! Continuing on a bit, the article gets a
 
 Right. So the practice of OR involves using mathematical techniques to find the best decision possible in a given situation ("optimal" is just fancy way of saying "best"[^moreOptimal]).
 
-[^moreOptimal]: The pedant in me wants to point out that this word "optimal" is horribly misused in conversation fairly regularly, in the common misguided phrase "more optimal". As I mentioned, "optimal" really just means "best", and "best" is not on a sliding scale; either you have the best answer or you don't. One choice can't be "more best" than another, just as one solution can't be "more optimal" than another. I think I'm fighting a losing battle on this, but maybe for the sake of this course we can all agree to never put the words "more" and "optimal" next to each other? Thanks.
+[^moreOptimal]: The pedant in me wants to point out that this word "optimal" is horribly misused in conversation fairly regularly, in the form of the misguided phrase "more optimal". As I mentioned, "optimal" really just means "best", and "best" is not on a sliding scale; either you have the best answer or you don't. One choice can't be "more best" than another, just as one solution can't be "more optimal" than another. I think I'm fighting a losing battle on this, but maybe for the sake of this course we can all agree to never put the words "more" and "optimal" next to each other? Thanks.
 
 ## Example OR problems
 
@@ -26,7 +26,7 @@ There are many well-known problems in the world of OR, but I reckon the [Traveli
 
 As I said, this a famous problem in the OR space[^tspBook]. I think it's due to the simple, relatable exposition, paired with the fact that it is actually quite computationally challenging. And yet despite the challenges, modern methods are able to solve problem instances where the number of cities is in the 10,000s! The image below shows the optimal tour through selected cities in the continental US[^tspFurtherReading].
 
-[^tspBook]: There's a neat book all about the TSP, @tspPursuit, written by a great professor that I took a course from in graduate school. It's more popularly focused than technical, so it's a surprisingly smooth read. Highly recommended!
+[^tspBook]: There's a neat book all about the TSP, @tspPursuit, written by a great professor that I took a course from while getting my PhD. It's more popularly focused than technical, so it's a surprisingly smooth read. Highly recommended!
 
 [^tspFurtherReading]: You can tell from the image that this map is pretty old. [The site from which it came](https://www.math.uwaterloo.ca/tsp/usa50/) tells a neat story about how this instance was solved, by hand, way back in 1954! There are some other interesting bits there too, well worth a read in my opinion.
 
@@ -34,7 +34,9 @@ As I said, this a famous problem in the OR space[^tspBook]. I think it's due to 
 
 ### Job-shop scheduling
 
-You run a machine shop, and have a certain number of jobs to complete in a day. Each job requires a certain number of tasks to be done by one of your many machines, and the tasks are at least partially ordered, such that you must complete the tasks in a certain order (e.g. you have to cut a piece of wood before you sand the edges). Each machine can only work on one task at a time. You get to decide the work schedule, assigning machines to tasks at certain times in the day. What is the schedule that lets you complete all the jobs in the least amount of time?
+You run a machine shop, and have a certain number of jobs to complete in a day. Maybe you're making Each job requires a certain number of tasks to be done by one of your many machines, and the tasks are at least partially ordered, such that you must complete some of the tasks in a certain order. Each machine can only work on one task at a time. You get to decide the work schedule, assigning machines to tasks at certain times in the day. What is the schedule that lets you complete all the jobs in the least amount of time?
+
+An example: You have a woodworking shop, and today you're making 20 table, 30 chairs, 15 doors, and 20 bookcases. Each of these jobs requires some time on your table saw, your mill, and your belt sander. And the order of operations matters, e.g. you have to cut a piece of wood before you sand the edges. When you begin the day, what job will you have each of your machines work on? And as they complete those jobs, which ones should they take up next? How much time can you save with the right schedule of work?
 
 ### Portfolio optimization
 
@@ -42,11 +44,11 @@ You have some money to invest, and a list of potential project/assets to invest 
 
 ## OR in practice
 
-So we've given a few broad classes of OR problems, but maybe this is still too abstract. You'd probably like some concrete examples, instances where OR is used in the real world.
+So we've given a few broad classes of OR problems, but these are still just hypotheticals. You'd probably like some concrete examples, instances where OR has been used in the real world, and what the results were.
 
 ### Origins of OR
 
-We'll come to the present day soon, but let's start with a (brief) history lesson. Most sources trace the beginning of OR back to early 1900s and the two World Wars. This _research_ on military _operations_ is where the discipline's name is derived. Here's how @classText explains it:
+We'll come to the present day soon, but let's start with a (brief) history lesson. Most sources trace the beginning of OR back to early 1900s and the two World Wars. This _research_ on military _operations_ is where the discipline's name derives. Here's how @classText explains it:
 
 > The roots of OR can be traced back many decades, when early attempts were made to
 > use a scientific approach in the management of organizations. However, the beginning of
@@ -62,11 +64,11 @@ We'll come to the present day soon, but let's start with a (brief) history lesso
 > operations, they also played a major role in winning the Battle of the North Atlantic. Similar
 > efforts assisted the Island Campaign in the Pacific.
 
-After the war, these techniques were adopted by industry as well. As the sheer scale of organizations began to grow, so did the potential benefit of the optimized systems brought by OR methodologies. And techniques and (especially) computing power improved, the types and scale of problems that were tackled continued to grow. Today almost all major corporations benefit from OR.
+After the war, these techniques were adopted by industry as well. As the sheer scale of organizations began to grow, so did the potential benefit of the optimized systems brought by OR methodologies. As techniques and (especially) computing power improved, the types and scale of problems that were tackled continued to grow. Today almost all major corporations benefit from OR.
 
 ### Case studies
 
-Your textbook handily comes chock full of case studies explaining how companies have used OR to inform their decision-making. Below I've copied part of the summary table. Check out the book to get more background on anything that piques your interest.
+Your textbook handily comes full of case studies explaining how companies have used OR to inform their decision-making. Below I've copied part of the summary table. Check out the book to get more background on anything that piques your interest.
 
 ![Selected OR case studies [@classText]](images/or-case-studies.png)
 
@@ -74,17 +76,19 @@ It's pretty staggering to look at the figures in the "Annual Savings" column, wh
 
 ### Edelman Prize
 
-Now, admittedly, some of those case studies are a little stale. But don't fret, OR is still relevant in industry today. The [Institute for Operations Research and Management Science (INFORMS)](https://www.informs.org/) annually gives an award called the Edelman Prize for the best application of OR methodologies in industry. You can take a look at the [program for the 2023 edition of the award](https://3449182.fs1.hubspotusercontent-na1.net/hubfs/3449182/2023_Edelman_Gala_Book.pdf) and find cases submitted by names like DHL, Huawei, Lyft, and the winner Walmart.
+Now, admittedly, some of those case studies are a little stale. But don't fret, OR is still relevant in industry today. A great showcase for the most recent impactful OR work is the annual Edelman Prize, awarded by the [Institute for Operations Research and Management Science (INFORMS)](https://www.informs.org/). The winners of this award were judged to have demonstrated the best application of OR methodologies in industry. You can take a look at the [program for the 2023 edition of the award](https://3449182.fs1.hubspotusercontent-na1.net/hubfs/3449182/2023_Edelman_Gala_Book.pdf) and find cases submitted by names like DHL, Huawei, Lyft, and the winner Walmart.
 
-## Topics we'll cover[^thisMayChange]
+## Topics we'll cover
 
-[^thisMayChange]: Note that we are early in the semester, so some of this may be subject to change.
+OR is a wide-ranging topic, and as such we can't cover everything. Since the class is meant to be an overview, we won't get overly deep into any one topic either[^deepDive]. But we should be able to cover the basics in a handful of important topics, as well as getting you some hand-on experience using these methods to solve problems. I've outlined the planned programming below, but note that we are still early in the semester, so some of this may be subject to change.
 
-My main goal for this course is for you to be able to apply the methods we learn. We will apply our knowledge using various packages written for the Python programming language. While this is not a programming course, I realize some of you may have limited (or no) knowledge of the language, thus I've provided a small unit on the basics of the language. But if you are a true beginner this may not suffice, and you may need to spend time on your own to get comfortable with it.
+[^deepDive]: If you _are_ looking for a deep dive, I'd suggest checking out the other classes in our Masters of Operations Research program.
+
+My main goal for this course is for you to be able to apply the methods we learn. We will accomplish this using various packages written for the Python programming language. While this is not a programming course, I realize some of you may have limited (or no) knowledge of the language, thus I've provided a small unit on the basics. But if you are a true beginner this may not suffice, and you may need to spend time on your own to get comfortable with it.
 
 After that, we will jump into the first big success in Operations Research history, linear programming. We'll learn about the basics of these models, a little history, and a few ways to solve them (with special emphasis on the simplex method). We'll also touch on the theory of duality and sensitivity analysis.
 
-After linear programming comes its cousin, integer programming. As far as solving techniques, we'll focus on branch-and-bound. Since integer irogramming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
+After linear programming comes its cousin, integer programming. As far as solving techniques, we'll focus on branch-and-bound and branch-and-cut. Since integer programming is so powerful, we will spend significant time talking about how to model these problems, and how to set them up and solve them with Python.
 
 Next will be several topics in nonlinear programming where we will talk about convexity, optimality conditions, and selected solution procedures.
 

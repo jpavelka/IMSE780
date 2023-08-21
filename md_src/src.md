@@ -6,7 +6,7 @@
 
 {insertSection:sections/python.md}
 
-{insertSection:sections/linear_programming.md}
+<!-- {insertSection:sections/linear_programming.md} -->
 
 <!-- {insertSection:sections/integer_programming.md} -->
 
