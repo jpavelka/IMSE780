@@ -27,10 +27,8 @@
         drawAllSvgPlots();
         theoremHelpers();
         classModeSetup();
-        document.onclick = () => {
-            closeNavIfSmall();
-            closeClassMode();
-        }
+        document.onclick = closeClassMode;
+        document.getElementById('main').onclick = closeNavIfSmall;
     }
     getUrlParameter = (name) => {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
