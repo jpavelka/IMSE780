@@ -524,7 +524,7 @@ The key properies of basic solutions are the following (quoting from @classText)
 
 Two BF solutions are said to be **adjacent** if _all but one_ of their non-basic variables are the same. Note that this means also that all but one of their basic variables are the same. Also note that we don't mean that these basic variables take on the same _values_, just that the identity of the variables are the same. So e.g. one basic solution with basic variables $x_1, x_2$ and $x_3$ is adjacent to another solution with basic variables $x_1, x_2, x_4$, no matter the values taken by those variables in the respective solutions.
 
-### Solving the sample LP with simplex
+### Solving the sample LP with simplex {#sec:simplexExample}
 
 To recap with our new terminology, the goal of the simplex method is to take an LP in augmented form, and iteratively move from one BF solution to another, adjacent BF solution while improving the objective value at every step. We've already converted our sample problem to augmented form, summarized by the following matrix:
 
@@ -711,12 +711,146 @@ Thus our new solution is $x_1=2, x_2=6, x_3=2, x_4=0$, and $x_5=0$[^slackInterpr
 
 [^slackInterpretation]: Now might be a good time to check out the simplex visualization in +@sec:simplexVisualized and see if you understand the interpretation of the slack variable values in the solutions we've found.
 
-### Simplex, algebraically
+### Simplex in matrix notation
 
-Write the steps in matrix form
+Now that we have the mechanics down, let's tidy up our presentation of the simplex method by writing out the steps in matrix notation. Recall that for simplex we need equality constraints and non-negative variables, so our problem is formulated as in +@eq:augmentedFormLpMatrix. Additionally, we will assume that the $m\times n$ matrix $A$ is has rank $m$ and is _non-singular_, so in particular $n\geq m$ and there are no _redundant_ constraints (which would be any constraint that is a linear combination of some of the others). The rank assumption can be done without loss of generality, because any redundant system can be reduced to non-redundant by removing constraints[^standardToAugmentedNoProblem].
+
+[^standardToAugmentedNoProblem]: Note also that if you came to the equality-constrained problem ($\A\x=\b$) via a transformation from the inequality form ($\A\x\leq\b$) by adding slack variables, the slack variables themselves guarantee full row rank.
+
+At each step of the simplex method, the matrix calculations required rely on the submatrix of $\A$ corresponding to the basic variables. Let's recall +@eq:simplexExampleMatrix1, the initial set of equations defining our sample LP when we solved it in +@sec:simplexExample. In this case, our matrix $\A$ is given by 
+
+$$
+\A = \begin{bmatrix}
+1  &  0 & 1 & 0 & 0 \\
+0  &  2 & 0 & 1 & 0 \\
+3  &  2 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+The submatrix we're after at any given iteration, which we'll call $\B$ is the subset of columns corresponding to our basic variables. Our initial basis in +@sec:simplexExample was $\{x_3, x_4, x_5\}$, and so the matrix of interest in the first iteration was
+
+$$
+\B = \begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+\end{bmatrix}
+$$.
+
+The vector of variables $\x$ can similarly be segmented into the parts corresponding to basic variables, which we'll call $\x_B$, and non-basic variables $\x_N$. So for our example problem at the first iteration we had:
+
+$$
+\x=\begin{bmatrix}x_1\\x_2\\x_3\\x_4\\x_5\end{bmatrix}\quad\x_B=\begin{bmatrix}x_3\\x_4\\x_5\end{bmatrix}\quad\x_N=\begin{bmatrix}x_1\\x_2\end{bmatrix}
+$$
+
+To solve the system of equations at any iteration, we applied elementary row operations to create an identity matrix in the columns corresponding to our basis. But since $\B$ is non-singular, it has an inverse $\B\inv$ such that $\B\inv\B=\identity$, where $\identity$ is an identity matrix. So really, all of our row operations amounted to pre-multiplying the system of equations by $\B\inv$.
+
+Given this, watch what happens when we pre-multiply both sides of our constraints by $\B\inv$:
+
+$$
+\begin{align*}
+\A\x = \b
+& \Leftrightarrow \B\inv\A\x = \B\inv\b && \quad(\text{pre-mult by }\B\inv) \\
+& \Leftrightarrow \B\inv\A\begin{bmatrix}\x_B\\\x_N\end{bmatrix} = \B\inv\b && \quad(\text{partition }x\text{ into basic/non-basic}) \\
+& \Leftrightarrow \B\inv\A\begin{bmatrix}\x_B\\\zeros\end{bmatrix} = \B\inv\b && \quad(\x_N=\zeros\text{ in basic solutions}) \\
+& \Leftrightarrow \B\inv\B\x_B = \B\inv\b && \quad(\x_N=\zeros\text{ takes out other columns of }\A) \\
+& \Leftrightarrow \identity\x_B = \B\inv\b && \quad(\text{definition of inverse}) \\
+& \Leftrightarrow \x_B = \B\inv\b && \quad(\text{definition of identity})
+\end{align*}
+$$
+
+So getting the variable values at a basic solution is as simple as taking $\x_N=\zeros$ and $\x_B=\B\inv\b$. If we similarly partition the objective vector $\c$ into $\c_B$ (corresponding to the basic variables) and $\c_N$ (non-basic variables) then the objective value at that solution is:
+
+$$
+\begin{align*}
+\c\x & = \c_B\x_B + \c_N\x_N && \\
+& = \c_B\x_B && \quad(\x_N=\zeros) \\
+& = \c_B\B\inv\b && \quad(\text{sub above value for }\x_B) \\
+\end{align*}
+$$
+
+So we know how to find the solution for any given basis, but what about determining entering and exiting variables? In +@sec:simplexExample we used the information from the objective (top) row of our problem matrix, so let's re-introduce that here. We can summarize all of our problem information in the following matrix formulation:
+
+$$
+\begin{bmatrix}
+1 & -\c \\
+\zeros & \A
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ \x
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ \b
+\end{bmatrix}
+$$
+{#eq:simplexMatrixAllInfo}
+
+where once again $Z$ is a "variable" representing the objective value. Note that this matches exactly with +@eq:simplexExampleMatrix1 from +@sec:simplexExample.
+
+<h4>The magic matrix</h4>
+
+We know from linear algebra that any sequence of elementary matrix operations can be performed simultaneously via matrix multiplication. All we did during the iterations +@sec:simplexExample was apply elementary row operations to the original matrix, so if we can find the correct matrix, recovering all the relevant information is as simple as multiplying by that matrix. With that in mind, let me present to you the following matrix[^magicMatrixDerivation].
+
+[^magicMatrixDerivation]: Sorry to just present this to you as if it's a mystical gift from the gods. We could have totally derived it ourselves, but I didn't think it was worth the class time.
+
+$$
+\begin{bmatrix}1 & \c_B\B\inv \\ \zeros & \B\inv\end{bmatrix}
+$$
+{#eq:magicMatrix}
+
+Watch what happens when we pre-multiply this on the right-hand side of +@eq:simplexMatrixAllInfo:
+
+$$
+\begin{bmatrix}1 & \c_B\B\inv \\ \zeros & \B\inv\end{bmatrix}
+\begin{bmatrix}
+0 \\ \b
+\end{bmatrix}
+=
+\begin{bmatrix}
+\c_B\B\inv\b \\ \B\inv\b
+\end{bmatrix}
+$$
+
+The top of the result is the objective value $Z$ at the current basis solution, and the bottom give the values of $\x_B$. So it looks like +@eq:magicMatrix is precisely the matrix we need to encapsulate all the operations we did during a simplex iteration. Of course, any multiplication we apply on one side of an equation must also be applied to the other side to keep the system valid. So let's apply pre-multiply +@eq:magicMatrix on the left-hand side of +@eq:simplexMatrixAllInfo as well:
+
+$$
+\begin{bmatrix}1 & \c_B\B\inv \\ \zeros & \B\inv\end{bmatrix}
+\begin{bmatrix}
+1 & -\c \\
+\zeros & \A
+\end{bmatrix}
+= \begin{bmatrix}1 & \c_B\B\inv\A - \c \\ \zeros & \B\inv\A\end{bmatrix}
+$$
+
+So for any given basis, the information we require for the simplex method is all present in the following system:
+
+$$
+\begin{bmatrix}1 & \c_B\B\inv\A - \c \\ \zeros & \B\inv\A\end{bmatrix}
+\begin{bmatrix}Z \\ \x\end{bmatrix}
+=
+\begin{bmatrix}
+\c_B\B\inv\b \\ \B\inv\b
+\end{bmatrix}
+$$
+{#eq:simplexMatrixGeneralized}
+
+Maybe this looks a little messy when seeing it the first time, but don't let that scare you! Look at all the constituent elements of this system. $\A, \b$, and $\c$ are all just vectors/matrices from the problem definition. The only thing you need to do from iteration to iteration is choose the basis, invert $\B$ (which is just a submatrix of $\A$), then multiply!
+
+To finish off this section, let's use Python to verify that the system we recover from +@eq:simplexMatrixGeneralized matches with what we got during the iterations in +@sec:simplexExample.
+
+{colabGist:1OrINYKwrk7OGhP1PAypxZ2nYpVbS-V4m,e5817bc5b1eb52dce2737969e0ee0c83}
+
+### Presenting (finally) the simplex algorithm (mostly)
 
 ### Other considerations
+
+### Revised simplex
 
 Gotchas and edge cases
 
 <!-- book section 4.5 -->
+
+## Duality
+
+## Sensitivity analysis

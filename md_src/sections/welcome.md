@@ -1,5 +1,7 @@
 # Welcome!
 
+<div class='lectureVideoEmbed' video-id='97611387a9ca4d1bae07842bec132e081d' video-date='2023-08-21'>Going over the syllabus, class/instructor introduction.</div>
+
 You're reading the class notes for _IMSE 780: Methods of Operations Research_ taught at Kansas State University during the Fall 2023 semester. This course is intended to give an overview of Operations Research (OR) at the graduate level. After this course, students will have a basic familiarity with various OR methodologies and be able to recognize when the methods can be applied in real-life scenarios. Students should also be able to apply the chosen methodology via Python code.
 
 ## Course materials
