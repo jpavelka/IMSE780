@@ -961,8 +961,32 @@
           drawAllSvgPlots();
           theoremHelpers();
           classModeSetup();
+          videoEmbeds();
           document.onclick = closeClassMode;
           document.getElementById('main').onclick = closeNavIfSmall;
+      }
+      videoEmbeds = () => {
+          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
+              ((el) => {
+                  const descHTML = el.innerHTML;
+                  const dt = el.getAttribute('data-video-date');
+                  el.innerHTML = '&#127909;<small class="tinyText">Lecture video</small>';
+                  el.style.cursor = 'pointer';
+                  const embedIndentDiv = document.createElement('div');
+                  embedIndentDiv.classList = ['embedIndent'];
+                  el.appendChild(embedIndentDiv);
+                  el.onclick = () => {
+                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
+                  }
+                  const textDiv = document.createElement('div');
+                  textDiv.innerHTML = `<b>Class lecture ${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}: </b>` + descHTML;
+                  embedIndentDiv.appendChild(textDiv);
+                  const vidIframe = document.createElement('iframe');
+                  vidIframe.classList = ['lectureEmbedIframe'];
+                  vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
+                  embedIndentDiv.appendChild(vidIframe);
+              })(el)
+          }
       }
       getUrlParameter = (name) => {
           name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -1653,6 +1677,17 @@
           border-top: 1pt solid lightgray;
           font-size: 0.7rem;
       }
+      .embedIndent {
+          margin: 0 1rem;
+          display: none;
+      }
+      .lectureEmbedIframe {
+          width: min(600px, 80vw);
+          height: calc(9 * min(600px, 80vw) / 16);
+      }
+      .tinyText {
+          font-size: 0.5rem;
+      }
   </style>
   <style>   
       #classModeDiv {
@@ -1906,6 +1941,11 @@ class="toc-section-number">4.3</span> Selected proofs</a></li>
 <div id="main">
 <h1 data-number="1" id="welcome"><span
 class="header-section-number">1</span> Welcome!</h1>
+<div class="lectureVideoEmbed"
+data-video-id="97611387a9ca4d1bae07842bec132e081d"
+data-video-date="2023-08-21">
+Going over the syllabus, class/instructor introduction.
+</div>
 <p>You’re reading the class notes for <em>IMSE 780: Methods of
 Operations Research</em> taught at Kansas State University during the
 Fall 2023 semester. This course is intended to give an overview of
@@ -2543,13 +2583,13 @@ and column rank are the same. Thus we can talk about the
 the column rank.</p>
 <p>Suppose <span class="math inline">\mathbf{A}</span> is an <span
 class="math inline">n\times n</span> (square) matrix. We say <span
-class="math inline">\mathbf{A}</span> is <strong>nonsingular</strong> if
-it has rank <span class="math inline">n</span>. Otherwise, if the rank
-is less than <span class="math inline">n</span>, we way it is
+class="math inline">\mathbf{A}</span> is <strong>non-singular</strong>
+if it has rank <span class="math inline">n</span>. Otherwise, if the
+rank is less than <span class="math inline">n</span>, we way it is
 <strong>singular</strong>. Importantly, if <span
-class="math inline">\mathbf{A}</span> is nonsingular, there is a unique
-nonsingular matrix <span class="math inline">\mathbf{A}^{-1}</span> such
-that</p>
+class="math inline">\mathbf{A}</span> is non-singular, there is a unique
+non-singular matrix <span class="math inline">\mathbf{A}^{-1}</span>
+such that</p>
 <p><span class="math display">
 \mathbf{A}\mathbf{A}^{-1}= \mathbf{I}= \mathbf{A}^{-1}\mathbf{A}.
 </span></p>
