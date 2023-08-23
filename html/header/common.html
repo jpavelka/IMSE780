@@ -27,8 +27,32 @@
         drawAllSvgPlots();
         theoremHelpers();
         classModeSetup();
+        videoEmbeds();
         document.onclick = closeClassMode;
         document.getElementById('main').onclick = closeNavIfSmall;
+    }
+    videoEmbeds = () => {
+        for (el of document.getElementsByClassName('lectureVideoEmbed')) {
+            ((el) => {
+                const descHTML = el.innerHTML;
+                const dt = el.getAttribute('data-video-date');
+                el.innerHTML = '&#127909;<small class="tinyText">Lecture video</small>';
+                el.style.cursor = 'pointer';
+                const embedIndentDiv = document.createElement('div');
+                embedIndentDiv.classList = ['embedIndent'];
+                el.appendChild(embedIndentDiv);
+                el.onclick = () => {
+                    embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
+                }
+                const textDiv = document.createElement('div');
+                textDiv.innerHTML = `<b>Class lecture ${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}: </b>` + descHTML;
+                embedIndentDiv.appendChild(textDiv);
+                const vidIframe = document.createElement('iframe');
+                vidIframe.classList = ['lectureEmbedIframe'];
+                vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
+                embedIndentDiv.appendChild(vidIframe);
+            })(el)
+        }
     }
     getUrlParameter = (name) => {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');

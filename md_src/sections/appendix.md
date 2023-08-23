@@ -188,7 +188,7 @@ The **rank** of a set of vectors is the largest number of linearly independent v
 
 Matrices also have a notion of rank. The **row rank** of a matrix is the rank of its set of row vectors, while the **column rank** of the matrix is the rank of its set of column vectors. An important result in linear algebra is that, for any matrix, the row rank and column rank are the same. Thus we can talk about the **rank** of a matrix, being equal to either the row rank or the column rank.
 
-Suppose $\A$ is an $n\times n$ (square) matrix. We say $\A$ is **nonsingular** if it has rank $n$. Otherwise, if the rank is less than $n$, we way it is **singular**. Importantly, if $\A$ is nonsingular, there is a unique nonsingular matrix $\A\inv$ such that
+Suppose $\A$ is an $n\times n$ (square) matrix. We say $\A$ is **non-singular** if it has rank $n$. Otherwise, if the rank is less than $n$, we way it is **singular**. Importantly, if $\A$ is non-singular, there is a unique non-singular matrix $\A\inv$ such that
 
 $$
 \A\A\inv = \identity = \A\inv\A.
