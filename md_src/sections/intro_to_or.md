@@ -34,7 +34,7 @@ As I said, this a famous problem in the OR space[^tspBook]. I think it's due to 
 
 ### Job-shop scheduling
 
-You run a machine shop, and have a certain number of jobs to complete in a day. Maybe you're making Each job requires a certain number of tasks to be done by one of your many machines, and the tasks are at least partially ordered, such that you must complete some of the tasks in a certain order. Each machine can only work on one task at a time. You get to decide the work schedule, assigning machines to tasks at certain times in the day. What is the schedule that lets you complete all the jobs in the least amount of time?
+You run a machine shop, and have a certain number of jobs to complete in a day. Each job requires a certain number of tasks to be done by one of your many machines, and the tasks are at least partially ordered, such that you must complete some of the tasks in a certain order. Each machine can only work on one task at a time. You get to decide the work schedule, assigning machines to tasks at certain times in the day. What is the schedule that lets you complete all the jobs in the least amount of time?
 
 An example: You have a woodworking shop, and today you're making 20 table, 30 chairs, 15 doors, and 20 bookcases. Each of these jobs requires some time on your table saw, your mill, and your belt sander. And the order of operations matters, e.g. you have to cut a piece of wood before you sand the edges. When you begin the day, what job will you have each of your machines work on? And as they complete those jobs, which ones should they take up next? How much time can you save with the right schedule of work?
 
