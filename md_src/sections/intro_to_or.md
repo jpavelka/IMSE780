@@ -1,5 +1,7 @@
 # Introduction to OR
 
+<div class='lectureVideoEmbed' video-id='36726575b4244fecb73986d444ffae771d' video-date='2023-08-23'>Chapter 2, Edelman prize, a little about Python at the end.</div>
+
 In this section we'll cover the big picture questions: What is Operations Research? Where did it come from? What can I do with it? I hope to impress upon you that OR is a seriously set of tools, and that it has a huge impact on the world today.
 
 ## What is Operations Research?
