@@ -36,7 +36,8 @@
             ((el) => {
                 const descHTML = el.innerHTML;
                 const dt = el.getAttribute('data-video-date');
-                el.innerHTML = '&#127909;<small class="tinyText">Lecture video</small>';
+                const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
+                el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
                 el.style.cursor = 'pointer';
                 const embedIndentDiv = document.createElement('div');
                 embedIndentDiv.classList = ['embedIndent'];
@@ -45,7 +46,7 @@
                     embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
                 }
                 const textDiv = document.createElement('div');
-                textDiv.innerHTML = `<b>Class lecture ${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}: </b>` + descHTML;
+                textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
                 embedIndentDiv.appendChild(textDiv);
                 const vidIframe = document.createElement('iframe');
                 vidIframe.classList = ['lectureEmbedIframe'];
