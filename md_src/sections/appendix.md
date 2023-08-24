@@ -3,12 +3,12 @@
 ## Special symbols {#sec:symbols}
 
 - $\R$: The set of real numbers, i.e. anything on the number line between (though not including!) $-\infty$ and $\infty$.
-- $\R_+$: The set of nonnegative real numbers, i.e. anything in $\R$ that is greater than or equal to 0.
+- $\R_+$: The set of non-negative real numbers, i.e. anything in $\R$ that is greater than or equal to 0.
 - $\I$: The set of integer numbers, i.e. whole numbers from the set $\R$.
-- $\I_+$: The set of nonnegative integer numbers, i.e. anything in $\I$ that is greater than or equal to 0.
+- $\I_+$: The set of non-negative integer numbers, i.e. anything in $\I$ that is greater than or equal to 0.
 - $\{\cdots\}$: Set notation. Items inside the curly brackets are the elements of the set, so $\{0,1\}$ is the 2-element set consisting of just the numbers 0 and 1.
 - $\in$: Set inclusion. When we write $x\in S$, we mean that $x$ is an element of the set $S$. For example, we could write $\pi\in\R$, meaning the number $\pi$ is a real number.
-- $\forall$: For all. We use this symbol when we want to specify that something should be done for all elements in some set. So if we're writing out the constraints for some model and we say $x_j\geq 0\ \forall\ j\in\{1, 2, \cdots, n\}$ we're just saying that each of $x_1, x_2, \cdots, x_n$ should be nonnegative.
+- $\forall$: For all. We use this symbol when we want to specify that something should be done for all elements in some set. So if we're writing out the constraints for some model and we say $x_j\geq 0\ \forall\ j\in\{1, 2, \cdots, n\}$ we're just saying that each of $x_1, x_2, \cdots, x_n$ should be non-negative.
 - $S^m$: The set of vectors with $m$ elements, all of which are from some set $S$. For example, $\R^3$ is the set of 3-element, real number vectors. So we could say
   $$
       \begin{bmatrix}1 \\ 2.64 \\ -3\end{bmatrix}\in\R^3.
@@ -56,38 +56,46 @@ and
 
 
 $$
+
 \mat{B} = \begin{bmatrix}
-b_{11} & b_{12} & \cdots & b_{1n} \\
-b_{21} & b_{22} & \cdots & b_{2n} \\
+b*{11} & b*{12} & \cdots & b*{1n} \\
+b*{21} & b*{22} & \cdots & b*{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-b_{m1} & b_{m2} & \cdots & b_{mn} \\
+b*{m1} & b*{m2} & \cdots & b\_{mn} \\
 \end{bmatrix}.
+
 $$
 
 Then we say $\mat{A}=\mat{B}\ $ if and only if $\ a_{11}=b_{11}$, $a_{12}=b_{12}$, ... and so on.
 
 __Addition__ is only defined for two matrices of the same size. For two $m\times n$ matrices $\mat{A}$ and $\mat{B}$, we have
 
+
 $$
+
 \mat{A} + \mat{B} = \begin{bmatrix}
-a_{11} + b_{11} & a_{12} + b_{12} & \cdots & a_{1n} + b_{1n} \\
-a_{21} + a_{21} & a_{22} + a_{22} & \cdots & a_{2n} + a_{2n} \\
+a*{11} + b*{11} & a*{12} + b*{12} & \cdots & a*{1n} + b*{1n} \\
+a*{21} + a*{21} & a*{22} + a*{22} & \cdots & a*{2n} + a*{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-a_{m1} + a_{m1} & a_{m2} + a_{m2} & \cdots & a_{mn} + a_{mn} \\
+a*{m1} + a*{m1} & a*{m2} + a*{m2} & \cdots & a*{mn} + a*{mn} \\
 \end{bmatrix}
+
 $$
 
 For matrices, __multiplication__ $\A\B$ is only defined when the the second dimension of $\A$ equals the first dimension of $\B$. So, if $\A$ is an $m\times n$ matrix (for some $m, n$), we need $B$ to be an $n\times s$ matrix (for some $s$). In this case, we define their product as the matrix $\mat{C}$ having entries
 
 
 $$
-c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}.
+
+c*{ij} = \sum*{k=1}^n a*{ik}b*{kj}.
+
 $$
 
 Here is a small example to see it in action:
 
 
 $$
+
 \begin{align*}
 \begin{bmatrix}0&1\\2&3\\4&5\end{bmatrix}
 \begin{bmatrix}6&7\\8&9\end{bmatrix}
@@ -100,17 +108,21 @@ $$
 &=
 \begin{bmatrix}8&9\\36&41\\64&73\end{bmatrix}
 \end{align*}
+
 $$
 
 There is a simpler form of multiplication available between a matrix $\A$ and a scalar (a single number) $s$, where each element of the product is simply the corresponding element of $\A$ multiplied by $s$, i.e.
 
+
 $$
+
 s\A = \begin{bmatrix}
-sa_{11} & sa_{12} & \cdots & sa_{1n} \\
-sa_{21} & sa_{22} & \cdots & sa_{2n} \\
+sa*{11} & sa*{12} & \cdots & sa*{1n} \\
+sa*{21} & sa*{22} & \cdots & sa*{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-sa_{m1} & sa_{m2} & \cdots & sa_{mn} \\
+sa*{m1} & sa*{m2} & \cdots & sa\_{mn} \\
 \end{bmatrix}
+
 $$
 
 ### Properties of matrix operations
@@ -128,8 +140,11 @@ You may notice that multiplication does not commute, i.e. $\A\mat{B} \neq \mat{B
 
 A __vector__ is a special type of matrix with either a single column or a single row, e.g.
 
+
 $$
+
 \x=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
+
 $$
 
 is a __column vector__ and $$\x=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a __row vector__. In these notes, vectors will usually be denoted with with boldface, lowercase letters. A convention in some texts, which we will not follow here, is for vectors to be assumed as column vectors unless explicitly transposed. For these notes, we will let context dictate whether a vector is a row vector or a column vector (it is usually clear).
@@ -224,85 +239,85 @@ $$
 ### Elementary operations {#sec:elementaryRowOperations}
 
 There are certain elementary operations one can perform on a system of linear equations that don't have an effect on the solution of the system. I'll state these operations in terms of rows, but similar operations exist for columns as well:
- 
- - Interchange two rows:
- $$
-\begin{bmatrix}
-2 & 3 \\
-5 & -4
-\end{bmatrix}
-\begin{bmatrix}
-x_1 \\ x_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-7 \\ 6
-\end{bmatrix}
-\Leftrightarrow
-\begin{bmatrix}
-5 & -4 \\
-2 & 3
-\end{bmatrix}
-\begin{bmatrix}
-x_1 \\ x_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-6 \\ 7
-\end{bmatrix}
- $$
- - Multiply a row by a non-zero number, e.g. multiplying the top row by two:
- $$
-\begin{bmatrix}
-2 & 3 \\
-5 & -4
-\end{bmatrix}
-\begin{bmatrix}
-x_1 \\ x_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-7 \\ 6
-\end{bmatrix}
-\Leftrightarrow
-\begin{bmatrix}
-4 & 6 \\
-5 & -4
-\end{bmatrix}
-\begin{bmatrix}
-x_1 \\ x_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-14 \\ 6
-\end{bmatrix}
- $$
- - Adding a multiple of one row to another row, e.g. multiplying the first row by 2 and adding it to the second:
- $$
-\begin{bmatrix}
-2 & 3 \\
-5 & -4
-\end{bmatrix}
-\begin{bmatrix}
-x_1 \\ x_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-7 \\ 6
-\end{bmatrix}
-\Leftrightarrow
-\begin{bmatrix}
-2 & 3 \\
-9 & 2
-\end{bmatrix}
-\begin{bmatrix}
-x_1 \\ x_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-7 \\ 20
-\end{bmatrix}
- $$
+
+- Interchange two rows:
+  $$
+  \begin{bmatrix}
+  2 & 3 \\
+  5 & -4
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\ x_2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  7 \\ 6
+  \end{bmatrix}
+  \Leftrightarrow
+  \begin{bmatrix}
+  5 & -4 \\
+  2 & 3
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\ x_2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  6 \\ 7
+  \end{bmatrix}
+  $$
+- Multiply a row by a non-zero number, e.g. multiplying the top row by two:
+  $$
+  \begin{bmatrix}
+  2 & 3 \\
+  5 & -4
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\ x_2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  7 \\ 6
+  \end{bmatrix}
+  \Leftrightarrow
+  \begin{bmatrix}
+  4 & 6 \\
+  5 & -4
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\ x_2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  14 \\ 6
+  \end{bmatrix}
+  $$
+- Adding a multiple of one row to another row, e.g. multiplying the first row by 2 and adding it to the second:
+  $$
+  \begin{bmatrix}
+  2 & 3 \\
+  5 & -4
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\ x_2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  7 \\ 6
+  \end{bmatrix}
+  \Leftrightarrow
+  \begin{bmatrix}
+  2 & 3 \\
+  9 & 2
+  \end{bmatrix}
+  \begin{bmatrix}
+  x_1 \\ x_2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  7 \\ 20
+  \end{bmatrix}
+  $$
 
 ## Selected proofs {#sec:appendixSelectedProofs}
 
