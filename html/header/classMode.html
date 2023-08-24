@@ -17,7 +17,11 @@
 <script>
     const classModeSetup = () => {
         const classMode = document.getElementById('classModeDiv');
-        const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+        let noClassModeHref = window.location.href.split('#')[0];
+        if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
+            noClassModeHref += '/';
+        }
+        noClassModeHref += '?classmode=false';
         classMode.onclick = closeClassMode;
         classMode.innerHTML = `
             <div>

@@ -6,7 +6,11 @@
 
 {insertSection:sections/python.md}
 
-<!-- {insertSection:sections/linear_programming.md} -->
+{insertSection:sections/linear_programming/intro.md}
+
+<!-- {insertSection:sections/linear_programming/simplex.md} -->
+
+<!-- {insertSection:sections/linear_programming/duality.md} -->
 
 <!-- {insertSection:sections/integer_programming.md} -->
 
