@@ -50,52 +50,43 @@ a_{21} & a_{22} & \cdots & a_{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
 a_{m1} & a_{m2} & \cdots & a_{mn} \\
 \end{bmatrix}
-$${#eq:matrixDef}
+$$
+
+{#eq:matrixDef}
 
 and
 
-
 $$
-
 \mat{B} = \begin{bmatrix}
-b*{11} & b*{12} & \cdots & b*{1n} \\
-b*{21} & b*{22} & \cdots & b*{2n} \\
+b_{11} & b_{12} & \cdots & b_{1n} \\
+b_{21} & b_{22} & \cdots & b_{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-b*{m1} & b*{m2} & \cdots & b\_{mn} \\
+b_{m1} & b_{m2} & \cdots & b_{mn} \\
 \end{bmatrix}.
-
 $$
 
 Then we say $\mat{A}=\mat{B}\ $ if and only if $\ a_{11}=b_{11}$, $a_{12}=b_{12}$, ... and so on.
 
-__Addition__ is only defined for two matrices of the same size. For two $m\times n$ matrices $\mat{A}$ and $\mat{B}$, we have
-
+**Addition** is only defined for two matrices of the same size. For two $m\times n$ matrices $\mat{A}$ and $\mat{B}$, we have
 
 $$
-
 \mat{A} + \mat{B} = \begin{bmatrix}
-a*{11} + b*{11} & a*{12} + b*{12} & \cdots & a*{1n} + b*{1n} \\
-a*{21} + a*{21} & a*{22} + a*{22} & \cdots & a*{2n} + a*{2n} \\
+a_{11} + b_{11} & a_{12} + b_{12} & \cdots & a_{1n} + b_{1n} \\
+a_{21} + a_{21} & a_{22} + a_{22} & \cdots & a_{2n} + a_{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-a*{m1} + a*{m1} & a*{m2} + a*{m2} & \cdots & a*{mn} + a*{mn} \\
+a_{m1} + a_{m1} & a_{m2} + a_{m2} & \cdots & a_{mn} + a_{mn} \\
 \end{bmatrix}
-
 $$
 
-For matrices, __multiplication__ $\A\B$ is only defined when the the second dimension of $\A$ equals the first dimension of $\B$. So, if $\A$ is an $m\times n$ matrix (for some $m, n$), we need $B$ to be an $n\times s$ matrix (for some $s$). In this case, we define their product as the matrix $\mat{C}$ having entries
-
+For matrices, **multiplication** $\A\B$ is only defined when the the second dimension of $\A$ equals the first dimension of $\B$. So, if $\A$ is an $m\times n$ matrix (for some $m, n$), we need $B$ to be an $n\times s$ matrix (for some $s$). In this case, we define their product as the matrix $\mat{C}$ having entries
 
 $$
-
-c*{ij} = \sum*{k=1}^n a*{ik}b*{kj}.
-
+c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}.
 $$
 
 Here is a small example to see it in action:
 
-
 $$
-
 \begin{align*}
 \begin{bmatrix}0&1\\2&3\\4&5\end{bmatrix}
 \begin{bmatrix}6&7\\8&9\end{bmatrix}
@@ -108,21 +99,17 @@ $$
 &=
 \begin{bmatrix}8&9\\36&41\\64&73\end{bmatrix}
 \end{align*}
-
 $$
 
 There is a simpler form of multiplication available between a matrix $\A$ and a scalar (a single number) $s$, where each element of the product is simply the corresponding element of $\A$ multiplied by $s$, i.e.
 
-
 $$
-
 s\A = \begin{bmatrix}
-sa*{11} & sa*{12} & \cdots & sa*{1n} \\
-sa*{21} & sa*{22} & \cdots & sa*{2n} \\
+sa_{11} & sa_{12} & \cdots & sa_{1n} \\
+sa_{21} & sa_{22} & \cdots & sa_{2n} \\
 \vdots & \vdots & \ddots & \vdots \\
-sa*{m1} & sa*{m2} & \cdots & sa\_{mn} \\
+sa_{m1} & sa_{m2} & \cdots & sa_{mn} \\
 \end{bmatrix}
-
 $$
 
 ### Properties of matrix operations
@@ -138,19 +125,18 @@ You may notice that multiplication does not commute, i.e. $\A\mat{B} \neq \mat{B
 
 ### Special matrices
 
-A __vector__ is a special type of matrix with either a single column or a single row, e.g.
-
+A **vector** is a special type of matrix with either a single column or a single row, e.g.
 
 $$
-
 \x=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
-
 $$
 
-is a __column vector__ and $$\x=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a __row vector__. In these notes, vectors will usually be denoted with with boldface, lowercase letters. A convention in some texts, which we will not follow here, is for vectors to be assumed as column vectors unless explicitly transposed. For these notes, we will let context dictate whether a vector is a row vector or a column vector (it is usually clear).
+is a **column vector** and $$\x=\begin{bmatrix} 1 & 9 & 3 \end{bmatrix}$$ is a **row vector**. In these notes, vectors will usually be denoted with with boldface, lowercase letters. A convention in some texts, which we will not follow here, is for vectors to be assumed as column vectors unless explicitly transposed. For these notes, we will let context dictate whether a vector is a row vector or a column vector (it is usually clear).
 
-An __identity matrix__, denoted by $\identity$, is a square vector whose elements are all 0s expect for 1s along the diagonal, i.e.
-$$\identity = \begin{bmatrix}
+An **identity matrix**, denoted by $\identity$, is a square vector whose elements are all 0s expect for 1s along the diagonal, i.e.
+
+$$
+\identity = \begin{bmatrix}
 1 & 0 & \cdots & 0 \\
 0 & 1 & \cdots & 0 \\
 \vdots & \vdots & \ddots & \vdots \\
