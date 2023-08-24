@@ -3082,16 +3082,14 @@ a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
 </span><span class="eqnos-number">(4)</span></span></p>
 <p>and</p>
-<p>$$</p>
-=
-<span class="math display">\begin{bmatrix}
-b*{11} &amp; b*{12} &amp; \cdots &amp; b*{1n} \\
-b*{21} &amp; b*{22} &amp; \cdots &amp; b*{2n} \\
+<p><span class="math display">
+\mathbf{B} = \begin{bmatrix}
+b_{11} &amp; b_{12} &amp; \cdots &amp; b_{1n} \\
+b_{21} &amp; b_{22} &amp; \cdots &amp; b_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-b*{m1} &amp; b*{m2} &amp; \cdots &amp; b\_{mn} \\
-\end{bmatrix}</span>
-<p>.</p>
-<p>$$</p>
+b_{m1} &amp; b_{m2} &amp; \cdots &amp; b_{mn} \\
+\end{bmatrix}.
+</span></p>
 <p>Then we say <span class="math inline">\mathbf{A}=\mathbf{B}\ </span>
 if and only if <span class="math inline">\ a_{11}=b_{11}</span>, <span
 class="math inline">a_{12}=b_{12}</span>, … and so on.</p>
@@ -3099,18 +3097,17 @@ class="math inline">a_{12}=b_{12}</span>, … and so on.</p>
 same size. For two <span class="math inline">m\times n</span> matrices
 <span class="math inline">\mathbf{A}</span> and <span
 class="math inline">\mathbf{B}</span>, we have</p>
-<p>$$</p>
-+ =
-<span class="math display">\begin{bmatrix}
-a*{11} + b*{11} &amp; a*{12} + b*{12} &amp; \cdots &amp; a*{1n} + b*{1n}
+<p><span class="math display">
+\mathbf{A} + \mathbf{B} = \begin{bmatrix}
+a_{11} + b_{11} &amp; a_{12} + b_{12} &amp; \cdots &amp; a_{1n} + b_{1n}
 \\
-a*{21} + a*{21} &amp; a*{22} + a*{22} &amp; \cdots &amp; a*{2n} + a*{2n}
+a_{21} + a_{21} &amp; a_{22} + a_{22} &amp; \cdots &amp; a_{2n} + a_{2n}
 \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-a*{m1} + a*{m1} &amp; a*{m2} + a*{m2} &amp; \cdots &amp; a*{mn} + a*{mn}
+a_{m1} + a_{m1} &amp; a_{m2} + a_{m2} &amp; \cdots &amp; a_{mn} + a_{mn}
 \\
-\end{bmatrix}</span>
-<p>$$</p>
+\end{bmatrix}
+</span></p>
 <p>For matrices, <strong>multiplication</strong> <span
 class="math inline">\mathbf{A}\mathbf{B}</span> is only defined when the
 the second dimension of <span class="math inline">\mathbf{A}</span>
@@ -3123,12 +3120,12 @@ class="math inline">B</span> to be an <span class="math inline">n\times
 s</span> matrix (for some <span class="math inline">s</span>). In this
 case, we define their product as the matrix <span
 class="math inline">\mathbf{C}</span> having entries</p>
-<p>$$</p>
-<p>c<em>{ij} = ^n a</em>{ik}b*{kj}.</p>
-<p>$$</p>
+<p><span class="math display">
+c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}.
+</span></p>
 <p>Here is a small example to see it in action:</p>
-<p>$$</p>
-<p><span class="math display">\begin{align*}
+<p><span class="math display">
+\begin{align*}
 \begin{bmatrix}0&amp;1\\2&amp;3\\4&amp;5\end{bmatrix}
 \begin{bmatrix}6&amp;7\\8&amp;9\end{bmatrix}
 &amp;=
@@ -3139,23 +3136,22 @@ class="math inline">\mathbf{C}</span> having entries</p>
 \end{bmatrix}\\
 &amp;=
 \begin{bmatrix}8&amp;9\\36&amp;41\\64&amp;73\end{bmatrix}
-\end{align*}</span></p>
-<p>$$</p>
+\end{align*}
+</span></p>
 <p>There is a simpler form of multiplication available between a matrix
 <span class="math inline">\mathbf{A}</span> and a scalar (a single
 number) <span class="math inline">s</span>, where each element of the
 product is simply the corresponding element of <span
 class="math inline">\mathbf{A}</span> multiplied by <span
 class="math inline">s</span>, i.e.</p>
-<p>$$</p>
-s=
-<span class="math display">\begin{bmatrix}
-sa*{11} &amp; sa*{12} &amp; \cdots &amp; sa*{1n} \\
-sa*{21} &amp; sa*{22} &amp; \cdots &amp; sa*{2n} \\
+<p><span class="math display">
+s\mathbf{A}= \begin{bmatrix}
+sa_{11} &amp; sa_{12} &amp; \cdots &amp; sa_{1n} \\
+sa_{21} &amp; sa_{22} &amp; \cdots &amp; sa_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-sa*{m1} &amp; sa*{m2} &amp; \cdots &amp; sa\_{mn} \\
-\end{bmatrix}</span>
-<p>$$</p>
+sa_{m1} &amp; sa_{m2} &amp; \cdots &amp; sa_{mn} \\
+\end{bmatrix}
+</span></p>
 <h3 data-number="5.2.2" id="properties-of-matrix-operations"><span
 class="header-section-number">5.2.2</span> Properties of matrix
 operations</h3>
@@ -3187,11 +3183,9 @@ needs not be the same.</p>
 class="header-section-number">5.2.3</span> Special matrices</h3>
 <p>A <strong>vector</strong> is a special type of matrix with either a
 single column or a single row, e.g.</p>
-<p>$$</p>
-=
-<span class="math display">\begin{bmatrix} 1 \\ 9 \\ 3
-\end{bmatrix}</span>
-<p>$$</p>
+<p><span class="math display">
+\mathbf{x}=\begin{bmatrix} 1 \\ 9 \\ 3 \end{bmatrix}
+</span></p>
 <p>is a <strong>column vector</strong> and <span
 class="math display">\mathbf{x}=\begin{bmatrix} 1 &amp; 9 &amp; 3
 \end{bmatrix}</span> is a <strong>row vector</strong>. In these notes,
@@ -3202,8 +3196,9 @@ notes, we will let context dictate whether a vector is a row vector or a
 column vector (it is usually clear).</p>
 <p>An <strong>identity matrix</strong>, denoted by <span
 class="math inline">\mathbf{I}</span>, is a square vector whose elements
-are all 0s expect for 1s along the diagonal, i.e. <span
-class="math display">\mathbf{I}= \begin{bmatrix}
+are all 0s expect for 1s along the diagonal, i.e.</p>
+<p><span class="math display">
+\mathbf{I}= \begin{bmatrix}
 1 &amp; 0 &amp; \cdots &amp; 0 \\
 0 &amp; 1 &amp; \cdots &amp; 0 \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
