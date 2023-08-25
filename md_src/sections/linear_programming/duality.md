@@ -72,7 +72,7 @@ In general, the dual for the standard form LP is defined as follows:
 $$
 \begin{align*}
 &\textbf{primal:} &&&&&&\quad\textbf{dual:}&&&\\
-&\max && \c\x &
+&\min && \c\x &
 &&&\quad
 \min && \y\b &
 \\
@@ -88,9 +88,57 @@ $$
 
 {#eq:standardLpDual}
 
-### Important properties of the dual LP
+### Properties of the dual LP
 
-<!-- show dual of dual is primal (walk through transformation on textbook p 214) -->
+<div class='theorem' id='thm:dualOfDual'>
+
+The dual of the dual problem is equivalent to the primal problem.
+
+</div>
+<div class='proof' for='thm:dualOfDual' placement='appendix'>
+
+The steps required for his proof are encapsulated in the following diagram:
+
+<div class='mathSmall'>
+$$
+\begin{align*}
+&\min && \y\b &
+&&&
+\max && -\y\b &
+\\
+&\text{s.t.} && \y\A\leq\c &
+&&\Rightarrow\qquad&
+\text{s.t.} && -\y\A\geq-\c &
+\\
+&&& \y\geq0 &
+&&(\times -1)\quad&
+&& \y\geq0 &
+\\
+\\
+&&&&&&&&&\Downarrow\text{(dual)}&\\
+\\
+&\max && \c\x &
+&&&
+\min && -\c\x &
+\\
+&\text{s.t.} && \A\x\geq\b &
+&&\Leftarrow\qquad&
+\text{s.t.} && -\A\x\leq-\b &
+\\
+&&& \x\geq0 &
+&&(\times -1)\quad&
+&& \x\geq0 &
+\end{align*}
+$$
+</div>
+
+The top-left problem is the dual of the standard form LP. We don't know how to take its dual correctly, so we should put it in the form of +@eq:standardFormLpMatrix since we know what that dual looks like (+@eq:standardLpDual). Using our tricks from +@sec:lpForms, we multiply the objective by -1 to convert from minimization to maximization, and we multiply both sides of the inequalities by $-\identity$ to change from $\geq$ constraints to $\leq$ constraints, obtaining the top-right problem.
+
+We move from the top-right to the bottom-right simply by taking the dual from +@eq:standardLpDual. So we switch objective function coefficient with constraint right-hand side, and multiply the variables on the other side of the constraint matrix.
+
+The move from bottom-right to bottom-left is the same as the move from top-left to top-right, i.e. multiplying the objective by -1 and the constraints by $-\identity$. What we end up with is precisely the original standard-form problem +@eq:standardFormLpMatrix.
+
+</div>
 
 <div class='theorem' id='thm:weakDuality' display-name='weak duality'>
 
