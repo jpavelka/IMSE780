@@ -474,7 +474,11 @@
             input2.setAttribute('max', Math.floor(yMax));  // todo: enforce min/max in onchange function
             const inputChangeFunc = () => {
                 [x1, x2] = [input1.value, input2.value];
+                const lineClass = 'violatedIneq' + svgId;
                 if (x1 == parseFloat(x1) && x2 == parseFloat(x2)){
+                    for (violEl of [...document.getElementsByClassName(lineClass)]){
+                        violEl.remove();
+                    }
                     const pointId = svgId + 'placedPoint';
                     const pointEl = document.getElementById(pointId);
                     if (!!pointEl) {
@@ -488,14 +492,13 @@
                     }
                     else {
                         textDiv.textContent = `(${x1}, ${x2}) is infeasible.`
-                        const lineClass = 'violatedIneq' + Date.now();
                         for (v of violated) {
                             plotEqn(...v, {'style': 'stroke:red;stroke-width:0', 'class': 'violatedIneq ' + lineClass})
-                            setTimeout(() => {
-                                for (violEl of [...document.getElementsByClassName(lineClass)]){
-                                    violEl.remove();
-                                }
-                            }, 800)
+                            // setTimeout(() => {
+                            //     for (violEl of [...document.getElementsByClassName(lineClass)]){
+                            //         violEl.remove();
+                            //     }
+                            // }, 800)
                         }
                     }
                     placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
