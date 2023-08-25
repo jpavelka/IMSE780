@@ -6,7 +6,7 @@ So, what is an LP? Let's step back a bit - linear programming is a special type 
 
 And the linear part? This refers to the form of the mathematical objects used. All mathematical programs have _variables_ (quantities you get to set in order to get a desirable result), _constraints_ (limitations on how you can set your variables), and an _objective_ (the quantity you want to maximize/minimize). In linear programming, all constraints and objectives must be _linear_ functions of your variables. Meaning, you can multiply the variables by constants and add them together. No higher order terms, like squaring a variable or multiplying two variables together. We'll see an example in the next section.
 
-## An example LP
+## An example LP {#sec:exampleLp}
 
 Before we pile up too many definitions, maybe we should see an example problem where we can get more hands-on. The following comes from @classText, section 3.1.
 

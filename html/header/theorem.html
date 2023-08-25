@@ -2,53 +2,68 @@
     const theoremHelpers = () => {
         let theoremObj = {};
         for (thm of document.getElementsByClassName('theorem')) {
-            let h1El = thm.previousSibling;
-            while (h1El.tagName !== 'H1') {
-                h1El = h1El.previousSibling;
-            }
-            theoremObj[thm.id] = {
-                'theorem': thm,
-                'proof': undefined,
-                'section': h1El.getAttribute('data-number')
-            };
+            ((thm) => {
+                let h1El = thm.previousSibling;
+                while (h1El.tagName !== 'H1') {
+                    h1El = h1El.previousSibling;
+                }
+                theoremObj[thm.id] = {
+                    'theorem': thm,
+                    'proof': undefined,
+                    'section': h1El.getAttribute('data-number')
+                };
+            })(thm)
         }
         for (prf of document.getElementsByClassName('proof')) {
-            theoremObj[prf.getAttribute('for')].proof = prf;
+            ((prf) => {
+                theoremObj[prf.getAttribute('for')].proof = prf;
+                firstP = prf.getElementsByTagName('p')[0];
+                firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
+            })(prf)
         }
         secNumThms = {};
         for ([thmId, thmObj] of Object.entries(theoremObj)) {
-            sec = thmObj.section;
-            el = thmObj.theorem;
-            proof = thmObj.proof;
-            if (!Object.keys(secNumThms).includes(sec)) {
-                secNumThms[sec] = 0;
-            }
-            secNumThms[sec] += 1;
-            el.setAttribute('refStr', `Theorem ${sec}.${secNumThms[sec]}`)
-            labelSpan = document.createElement('span');
-            labelSpan.classList = ['theoremLabel'];
-            labelSpan.textContent = `Theorem ${sec}.${secNumThms[sec]}: `;
-            el.insertBefore(labelSpan, el.firstChild);
-            const main = document.getElementById('main');
-            if (!!proof) {
-                if (proof.getAttribute('data-placement') === 'appendix') {
-                    const appLink = document.createElement('p');
-                    const thmClone = thm.cloneNode(true);
-                    thmClone.id = thm.id + 'AppendixVersionWithProof';
-                    thmCloneLabel = thmClone.firstChild;
-                    thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
-                    appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
-                    main.insertBefore(appLink, thm.nextSibling);
-                    const refs = document.getElementById('References');
-                    main.insertBefore(thmClone, refs);
-                    main.insertBefore(proof, refs);
+            ((thmId, thmObj) => {
+                thm = document.getElementById(thmId);
+                sec = thmObj.section;
+                el = thmObj.theorem;
+                proof = thmObj.proof;
+                if (!Object.keys(secNumThms).includes(sec)) {
+                    secNumThms[sec] = 0;
                 }
-            }
+                secNumThms[sec] += 1;
+                el.setAttribute('refStr', `Theorem ${sec}.${secNumThms[sec]}`)
+                labelSpan = document.createElement('span');
+                labelSpan.classList = ['theoremLabel'];
+                let preTheoremStr = `Theorem ${sec}.${secNumThms[sec]}`
+                if (!!thm.getAttribute('data-display-name')) {
+                    preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
+                }
+                labelSpan.textContent = preTheoremStr + ': ';
+                el.insertBefore(labelSpan, el.firstChild);
+                const main = document.getElementById('main');
+                if (!!proof) {
+                    if (proof.getAttribute('data-placement') === 'appendix') {
+                        const appLink = document.createElement('p');
+                        const thmClone = thm.cloneNode(true);
+                        thmClone.id = thm.id + 'AppendixVersionWithProof';
+                        thmCloneLabel = thmClone.firstChild;
+                        thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                        appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                        main.insertBefore(appLink, thm.nextSibling);
+                        const refs = document.getElementById('References');
+                        main.insertBefore(thmClone, refs);
+                        main.insertBefore(proof, refs);
+                    }
+                }
+            })(thmId, thmObj)
         }
         const refEls = document.getElementsByClassName('thmRef');
         for (ref of refEls) {
-            thm = document.getElementById(ref.getAttribute('for'));
-            ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+            ((ref) => {
+                thm = document.getElementById(ref.getAttribute('for'));
+                ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+            })(ref)
         }
         addTooltips([...refEls].map(el => el.firstChild), true);
     }

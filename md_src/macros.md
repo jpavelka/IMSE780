@@ -11,6 +11,7 @@
 \newcommand{\b}{\mat{b}}
 \newcommand{\c}{\mat{c}}
 \newcommand{\x}{\mat{x}}
+\newcommand{\y}{\mat{y}}
 \newcommand{\zeros}{\mat{0}}
 \newcommand{\ones}{\mat{1}}
 \newcommand{\identity}{\mat{I}}
