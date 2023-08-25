@@ -653,7 +653,11 @@
               input2.setAttribute('max', Math.floor(yMax));  // todo: enforce min/max in onchange function
               const inputChangeFunc = () => {
                   [x1, x2] = [input1.value, input2.value];
+                  const lineClass = 'violatedIneq' + svgId;
                   if (x1 == parseFloat(x1) && x2 == parseFloat(x2)){
+                      for (violEl of [...document.getElementsByClassName(lineClass)]){
+                          violEl.remove();
+                      }
                       const pointId = svgId + 'placedPoint';
                       const pointEl = document.getElementById(pointId);
                       if (!!pointEl) {
@@ -667,14 +671,13 @@
                       }
                       else {
                           textDiv.textContent = `(${x1}, ${x2}) is infeasible.`
-                          const lineClass = 'violatedIneq' + Date.now();
                           for (v of violated) {
                               plotEqn(...v, {'style': 'stroke:red;stroke-width:0', 'class': 'violatedIneq ' + lineClass})
-                              setTimeout(() => {
-                                  for (violEl of [...document.getElementsByClassName(lineClass)]){
-                                      violEl.remove();
-                                  }
-                              }, 800)
+                              // setTimeout(() => {
+                              //     for (violEl of [...document.getElementsByClassName(lineClass)]){
+                              //         violEl.remove();
+                              //     }
+                              // }, 800)
                           }
                       }
                       placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
@@ -1502,15 +1505,15 @@
           0% {
               stroke-width: 0;
           }
-          50% {
+          25% {
               stroke-width: 4;
           }
-          100% {
+          50% {
               stroke-width: 0;
           }
       }
       .violatedIneq {
-          animation: append-animate 0.8s linear;
+          animation: append-animate 4s infinite;
       }
       @keyframes simplex-arrow-flash {
           0% {
@@ -1689,6 +1692,9 @@
       .tinyText {
           font-size: 0.5rem;
       }
+      .mathSmall {
+          font-size: 1rem;
+      }
   </style>
   <style>   
       #classModeDiv {
@@ -1750,53 +1756,68 @@
       const theoremHelpers = () => {
           let theoremObj = {};
           for (thm of document.getElementsByClassName('theorem')) {
-              let h1El = thm.previousSibling;
-              while (h1El.tagName !== 'H1') {
-                  h1El = h1El.previousSibling;
-              }
-              theoremObj[thm.id] = {
-                  'theorem': thm,
-                  'proof': undefined,
-                  'section': h1El.getAttribute('data-number')
-              };
+              ((thm) => {
+                  let h1El = thm.previousSibling;
+                  while (h1El.tagName !== 'H1') {
+                      h1El = h1El.previousSibling;
+                  }
+                  theoremObj[thm.id] = {
+                      'theorem': thm,
+                      'proof': undefined,
+                      'section': h1El.getAttribute('data-number')
+                  };
+              })(thm)
           }
           for (prf of document.getElementsByClassName('proof')) {
-              theoremObj[prf.getAttribute('for')].proof = prf;
+              ((prf) => {
+                  theoremObj[prf.getAttribute('for')].proof = prf;
+                  firstP = prf.getElementsByTagName('p')[0];
+                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
+              })(prf)
           }
           secNumThms = {};
           for ([thmId, thmObj] of Object.entries(theoremObj)) {
-              sec = thmObj.section;
-              el = thmObj.theorem;
-              proof = thmObj.proof;
-              if (!Object.keys(secNumThms).includes(sec)) {
-                  secNumThms[sec] = 0;
-              }
-              secNumThms[sec] += 1;
-              el.setAttribute('refStr', `Theorem ${sec}.${secNumThms[sec]}`)
-              labelSpan = document.createElement('span');
-              labelSpan.classList = ['theoremLabel'];
-              labelSpan.textContent = `Theorem ${sec}.${secNumThms[sec]}: `;
-              el.insertBefore(labelSpan, el.firstChild);
-              const main = document.getElementById('main');
-              if (!!proof) {
-                  if (proof.getAttribute('data-placement') === 'appendix') {
-                      const appLink = document.createElement('p');
-                      const thmClone = thm.cloneNode(true);
-                      thmClone.id = thm.id + 'AppendixVersionWithProof';
-                      thmCloneLabel = thmClone.firstChild;
-                      thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
-                      appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
-                      main.insertBefore(appLink, thm.nextSibling);
-                      const refs = document.getElementById('References');
-                      main.insertBefore(thmClone, refs);
-                      main.insertBefore(proof, refs);
+              ((thmId, thmObj) => {
+                  thm = document.getElementById(thmId);
+                  sec = thmObj.section;
+                  el = thmObj.theorem;
+                  proof = thmObj.proof;
+                  if (!Object.keys(secNumThms).includes(sec)) {
+                      secNumThms[sec] = 0;
                   }
-              }
+                  secNumThms[sec] += 1;
+                  el.setAttribute('refStr', `Theorem ${sec}.${secNumThms[sec]}`)
+                  labelSpan = document.createElement('span');
+                  labelSpan.classList = ['theoremLabel'];
+                  let preTheoremStr = `Theorem ${sec}.${secNumThms[sec]}`
+                  if (!!thm.getAttribute('data-display-name')) {
+                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
+                  }
+                  labelSpan.textContent = preTheoremStr + ': ';
+                  el.insertBefore(labelSpan, el.firstChild);
+                  const main = document.getElementById('main');
+                  if (!!proof) {
+                      if (proof.getAttribute('data-placement') === 'appendix') {
+                          const appLink = document.createElement('p');
+                          const thmClone = thm.cloneNode(true);
+                          thmClone.id = thm.id + 'AppendixVersionWithProof';
+                          thmCloneLabel = thmClone.firstChild;
+                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                          main.insertBefore(appLink, thm.nextSibling);
+                          const refs = document.getElementById('References');
+                          main.insertBefore(thmClone, refs);
+                          main.insertBefore(proof, refs);
+                      }
+                  }
+              })(thmId, thmObj)
           }
           const refEls = document.getElementsByClassName('thmRef');
           for (ref of refEls) {
-              thm = document.getElementById(ref.getAttribute('for'));
-              ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+              ((ref) => {
+                  thm = document.getElementById(ref.getAttribute('for'));
+                  ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+              })(ref)
           }
           addTooltips([...refEls].map(el => el.firstChild), true);
       }
@@ -1916,7 +1937,7 @@ class="toc-section-number">3.3.2</span> Cloud hosted</a></li>
 <li><a href="#linear-programming" id="toc-linear-programming"><span
 class="toc-section-number">4</span> Linear programming</a>
 <ul>
-<li><a href="#an-example-lp" id="toc-an-example-lp"><span
+<li><a href="#sec:exampleLp" id="toc-sec:exampleLp"><span
 class="toc-section-number">4.1</span> An example LP</a>
 <ul>
 <li><a href="#formulating-our-first-lp"
@@ -2385,7 +2406,7 @@ In linear programming, all constraints and objectives must be
 the variables by constants and add them together. No higher order terms,
 like squaring a variable or multiplying two variables together. We’ll
 see an example in the next section.</p>
-<h2 data-number="4.1" id="an-example-lp"><span
+<h2 data-number="4.1" id="sec:exampleLp"><span
 class="header-section-number">4.1</span> An example LP</h2>
 <p>Before we pile up too many definitions, maybe we should see an
 example problem where we can get more hands-on. The following comes from
