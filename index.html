@@ -1837,7 +1837,10 @@
           font-weight: bold;
       }
       .proof::after {
+          display: block;
           content: '\00220E';
+          margin-top: -1.25rem;
+          margin-bottom: 1rem;
       }
       .theorem .backRefElement {
           float: right;
@@ -1970,6 +1973,8 @@ class="toc-section-number">4.4.2</span> Solvers</a></li>
 id="toc-solving-our-lp-with-python"><span
 class="toc-section-number">4.4.3</span> Solving our LP with
 Python</a></li>
+<li><a href="#modeldata-separation" id="toc-modeldata-separation"><span
+class="toc-section-number">4.4.4</span> Model/data separation</a></li>
 </ul></li>
 <li><a href="#sec:lpForms" id="toc-sec:lpForms"><span
 class="toc-section-number">4.5</span> LP forms</a>
@@ -2742,6 +2747,20 @@ locked-in to a single solver. But it also may be slightly less
 performant, or may lack some solver-specific features that come with a
 solver’s built-in API.</p>
 <script src="https://gist.github.com/9c7e1b589a3efb40590606ba6eed102f.js"></script>
+<h3 data-number="4.4.4" id="modeldata-separation"><span
+class="header-section-number">4.4.4</span> Model/data separation</h3>
+<p>Our Python models from the last notebook certainly work for the
+sample problem, but that’s about it. The real power of programming comes
+when you can write one bit of code that can be applied in a wide range
+of contexts.</p>
+<p>Our sample LP is in the form of a <em>resource allocation
+problem</em>, where the decision is how much to engage in a certain set
+of possible activities, while staying within the bounds of the available
+resources. We’d be better off to use Python to set the <em>model
+logic</em> for such a problem, leaving placeholders where we can inject
+the particular <em>problem data</em> for any given instance. We’ll do
+that in the next notebook.</p>
+<script src="https://gist.github.com/0a3d429db92daf96fac2eeb23a3197f7.js"></script>
 <h2 data-number="4.5" id="sec:lpForms"><span
 class="header-section-number">4.5</span> LP forms</h2>
 <p>We’re <em>almost</em> ready to talk about algorithms for solving LPs,
