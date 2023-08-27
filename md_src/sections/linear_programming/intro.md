@@ -170,6 +170,14 @@ The second option is a fully open-source option using PuLP, a Python modeling la
 
 {colabGist:1_mwxc4xRRVjaMDZL0ObAc0ROqqw5UrJ3,9c7e1b589a3efb40590606ba6eed102f}
 
+### Model/data separation
+
+Our Python models from the last notebook certainly work for the sample problem, but that's about it. The real power of programming comes when you can write one bit of code that can be applied in a wide range of contexts.
+
+Our sample LP is in the form of a _resource allocation problem_, where the decision is how much to engage in a certain set of possible activities, while staying within the bounds of the available resources. We'd be better off to use Python to set the _model logic_ for such a problem, leaving placeholders where we can inject the particular _problem data_ for any given instance. We'll do that in the next notebook.
+
+{colabGist:1Tml3o4GoJ1QuaZsLAEBQIk38spQygs2t,0a3d429db92daf96fac2eeb23a3197f7}
+
 ## LP forms {#sec:lpForms}
 
 We're _almost_ ready to talk about algorithms for solving LPs, but first we should make a note on some different forms LPs can take. Crucially, it will turn out that all the forms we talk about here are, in a sense, equivalent. Thus no matter the specifics of how an LP is presented, we know we'll be able to solve it using the general methods.
