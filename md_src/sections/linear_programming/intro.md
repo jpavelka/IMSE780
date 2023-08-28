@@ -1,5 +1,7 @@
 # Linear programming
 
+<div class='lectureVideoEmbed' video-id='0b552ccb31c34eab8f6f6d658afd32c61d' video-date='2023-08-28'>Intro to linear programming (sections 4.1-4.3)</div>
+
 In the family of OR techniques, linear programming (LP) is certainly the matriarch. It was among the first methods to be seriously studied and find broad applications. To this day, LPs are relevant and used across industry to inform decision-making and help best make use of scarce resources.
 
 So, what is an LP? Let's step back a bit - linear programming is a special type of mathematical programming problem. The word _programming_, in the language of the pre-computer-revolution era where these topics were first studied, was more or less a synonym for _planning_. So mathematical programming just means using math to make a plan.
