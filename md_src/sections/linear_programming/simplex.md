@@ -2,7 +2,7 @@
 
 We're just about ready to talk about LP solving algorithms, and we're of course starting with the **simplex method** (also sometimes called the **simplex algorithm**). Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear]. It was perhaps the first practical algorithm developed for linear programming, and it continues to be the workhorse in linear and integer programming solvers today[^simplexNotKnownPoly].
 
-[^dantzigStory]: I'm not mentioning a lot of people by name in these notes, but I couldn't skip Dantzig. Mostly I wanted to bring up this famous story: A student comes late to class one day, sees two problems written on the board, and assumes they are the day's assigned homework. The problems are more difficult than usual, but he solves them. When he turns them in, the professor is elated - these weren't homework, but rather famous unsolved problems in the field! You can find several versions of this story out there, citing several different people as the supposed student. Turns out [this actually happened, and the student was Dantzig](https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99).
+[^dantzigStory]: I'm not mentioning a lot of people by name in these notes, but I couldn't skip Dantzig. Mostly I wanted to bring up this famous story: A student comes late to class one day, sees two problems written on the board, and assumes they are the day's assigned homework. The problems are more difficult than usual, but he solves them. When he turns them in, the professor is elated - these weren't homework problems at all, but rather famous unsolved problems in the field! You can find several versions of this story out there, citing several different people as the supposed student. Turns out [this actually happened, and the student was Dantzig](https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99).
 [^assumeLinear]: There's a neat story, quoting from @tspPursuit, in [this blog post](https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/) (yes, OR blogs are a thing). It's specifically about Dantzig first introducing the simplex method during a talk in 1948, and more generally about understanding your assumptions 😀.
 [^simplexNotKnownPoly]: Interestingly, several other linear programming algorithms have been devised whose theoretical properties seem to suggest they would be more efficient. But in practice that hasn't been the case. Simplex continues to be the best algorithm in practice for the widest array of problems.
 
@@ -12,7 +12,7 @@ Before we get to the algorithm itself, let's take a moment to dwell on some geom
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"showVertices": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-This time we've also plotted the solutions in the corners of the feasible region, because they are important to the simplex algorithm. We call these solutions **corner-point feasible (CPF) solutions**[^cornerPointInfeasible] or **vertices**[^cornerPointsVertices], which are feasible solutions that come at the intersection of two constraint boundaries (in the general case, for LPs with $n$ decision variables, the CPF solution come at the intersection of $n$ constraints boundaries).
+This time we've also plotted the solutions in the corners of the feasible region, because they are important to the simplex algorithm. We call these solutions **corner-point feasible (CPF) solutions**[^cornerPointInfeasible] or **vertices**[^cornerPointsVertices], which are feasible solutions that come at the intersection of two constraint boundaries (in the general case, for LPs in standard form +@eq:standardFormLp with $n$ decision variables, the CPF solutions come at the intersection of $n$ constraints boundaries).
 
 [^cornerPointInfeasible]: There are corner-point infeasible solutions as well, which sit at intersections outside the feasible region
 [^cornerPointsVertices]: I'm used to calling them vertices, but the textbook tends to call them corner-point solutions, which I like as a more helpful, descriptive term. I'll try to stick to corner-point solution for the notes, but I expect to slip up a few times, especially during lectures.
@@ -53,7 +53,7 @@ Thanks to this theorem[^theoremDefinition] we know that we only need to check CP
 [^theoremDefinition]: For those that are not aware, a **theorem** is a mathematical statement that has been proven to be true, based on some set of standard axioms. Anything I cite as a theorem in these notes, you can be confident it holds true, even if we don't work through a rigorous proof.
 [^simplexEveryVertex]: At least not generally - for common variants of the simplex method, there exist examples where every CPF solution is visited during execution ([@kleeMinty] is the first, most famous example). But this isn't usually an issue in practice.
 
-In fact, the set of solutions we can move to in any iteration is limited to only the solutions that are adjacent to the current solution. In an LP with $n$ decision variables, two CPF solutions are **adjacent** if they share $n-1$ constraint boundaries. Recall that CPF solutions lie at the intersection of $n$ constraint boundaries, so we can also say that two adjacent CPF solutions share all but one boundary in common.
+In fact, the set of solutions we can move to in any iteration is limited to only the solutions that are adjacent to the current solution. In a standard-form LP with $n$ decision variables, two CPF solutions are **adjacent** if they share $n-1$ constraint boundaries. Recall that CPF solutions lie at the intersection of $n$ constraint boundaries, so we can also say that two adjacent CPF solutions share all but one boundary in common.
 
 We have all the definitions now to describe simplex in a nutshell: The simplex method solves a linear programming problem by successively moving from one CPF solution to another, adjacent CPF solution, making sure each such move improves the objective function, until no such improvement exists[^oneThingToKnowAboutSimplex].
 
@@ -65,7 +65,7 @@ Now that we have the basic idea, let's go ahead and walk through the steps of th
 
 <svg width=350 height=350 class="lpDraw" base="prototypeLp" altArgs='{"simplexStart": [0, 0]}'> Sorry, your browser does not support inline SVG.</svg>
 
-The first step is to find an initial feasible CPF solution. In our case (and lots of practical instances too) the solution $(0, 0)$ is a feasible solution, and a corner point as well. It's not a particularly desirable solution in the context of our problem since it brings us no profit, but we don't care about desirability yet.
+The first step is to find an initial CPF solution. In our case (and lots of practical instances too) the solution $(0, 0)$ is a feasible solution, and a corner point as well. It's not a particularly desirable solution in the context of our problem since it brings us no profit, but we don't care about desirability yet.
 
 After initialization, we begin the algorithm's main loop. First we have to determine if there are any adjacent CPF solutions with improving objective value. Recall that an adjacent solution will share $n-1$ constraint boundaries with the current solution. Since we're in two dimensions, the adjacent solutions share one constraint boundary with the current solution. To find the adjacent solutions, we travel out from $(0,0)$ along the two boundary lines it sits on, which in this case are the two axes. Thus the two directions we can move in are $(1,0)$ and $(0,1)$.
 
@@ -83,7 +83,7 @@ $$
 
 That first term, $[0\ 0]\begin{bmatrix}3\\5\end{bmatrix}$, is just the objective value associated with the current solution $(0,0)$. So the second term $\alpha[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}$, is the _improvement_ associated with the move.
 
-We have two directions in which we can move, $(1,0)$ and $(0,1)$. To keep things standardized we'll want to re-scale our directions to be unit vectors (i.e. vectors with length one), but in this case they're already unit vectors. The improvements associated with unit moves in these directions are $[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}=3$ and $[0\ 1]\begin{bmatrix}3\\5\end{bmatrix}=5$. These are both positive numbers, and since we're trying to maximize the objective value, that means that solutions in either direction are improvements to the objective value.
+We have two directions in which we can move, $(1,0)$ and $(0,1)$. To keep things standardized we'll want to re-scale our directions to be unit vectors (i.e. vectors with length one), but in this case they're already unit vectors. The improvements associated with unit moves in these directions are $[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}=3$ and $[0\ 1]\begin{bmatrix}3\\5\end{bmatrix}=5$. These are both positive numbers, and since we're trying to maximize the objective value, that means that solutions in either direction are improvements.
 
 All that information is summarized in the table below the plot. The two directions are listed, as well as the per-unit change in objective function (under the heading $\Delta$ Obj / Unit[^deltaChange]). Since both directions improve the objective, you have the option to choose either one using the checkboxes in the final column.
 
@@ -154,14 +154,12 @@ That said, basic solutions have their own important properties. Studying the sys
 The key properties of basic solutions are the following (quoting from @classText):
 
 > - Each variable is designated as either a nonbasic variable or a basic variable.
-
-- The number of basic variables equals the number of functional constraints (now equations). Therefore, the number of nonbasic variables equals the total number of variables
-  minus the number of functional constraints.
-- The nonbasic variables are set equal to zero.
-- The values of the basic variables are obtained as the simultaneous solution of the system
-  of equations (functional constraints in augmented form). (The set of basic variables
-  is often referred to as the basis.)
-- If the basic variables satisfy the non-negativity constraints, the basic solution is a BF solution.
+> - The number of basic variables equals the number of functional constraints (now equations). Therefore, the number of nonbasic variables equals the total number of variables
+>   minus the number of functional constraints.
+> - The nonbasic variables are set equal to zero.
+> - The values of the basic variables are obtained as the simultaneous solution of the system
+>   of equations (functional constraints in augmented form).
+> - If the basic variables satisfy the non-negativity constraints, the basic solution is a BF solution.
 
 Two BF solutions are said to be **adjacent** if _all but one_ of their non-basic variables are the same. Note that this means also that all but one of their basic variables are the same. Also note that we don't mean that these basic variables take on the same _values_, just that the identity of the variables are the same. So e.g. one basic solution with basic variables $x_1, x_2$ and $x_3$ is adjacent to another solution with basic variables $x_1, x_2, x_4$, no matter the values taken by those variables in the respective solutions.
 
@@ -189,7 +187,7 @@ $$
 
 <h4>Find an initial BF Solution</h4>
 
-We'd like to start iterating between adjacent BF solutions, but to do that we need a BF solution to start with. We'll go into more details on how to find initial BF solutions later, but for now let's notice that using the slack variables as the initial basis will make this system very easy to solve. Why? Since $x_1$ and $x_2$ are non-basic, we set their values to 0. Thus the system +@eq:simplexExampleMatrix1 reduces to:
+We'd like to start iterating between adjacent BF solutions, but to do that we need a BF solution to start with. We'll go into more details on how to find initial BF solutions later in +@sec:lpOtherConsiderations, but for now let's notice that using the slack variables as the initial basis will make this system very easy to solve. Why? Since $x_1$ and $x_2$ are non-basic, we set their values to 0. Thus the system +@eq:simplexExampleMatrix1 reduces to:
 
 $$
 \begin{bmatrix}
@@ -237,7 +235,7 @@ But we're not there yet. We just have an initial BF solution, and need to figure
 
 <h4>Optimality test</h4>
 
-To decide whether an improving adjacent solution exists, we'll take a look at the top row of our matrix +@eq:simplexExampleMatrix1, which we set up to track the objective value $Z$. When multiplied by the variable vector, that top row current reads as $Z - 3x_1 - 5x_2 = 0$, simply a rearranging of the usual objective $Z = 3x_1 + 5x_2$. Thus a negative value in the top row indicates that including that variable in the basis will improve the objective value. Since we have negative values in the top row, we conclude that the current solution is not optimal.
+To decide whether an improving adjacent solution exists, we'll take a look at the top row of our matrix +@eq:simplexExampleMatrix1, which we set up to track the objective value $Z$. When multiplied by the variable vector, that top row currently reads as $Z - 3x_1 - 5x_2 = 0$, simply a rearranging of the usual objective $Z = 3x_1 + 5x_2$. Thus a negative value in the top row indicates that including that variable in the basis will improve the objective value. Since we have negative values in the top row, we conclude that the current solution is not optimal.
 
 <h4>Determine the incoming variable</h4>
 
@@ -358,7 +356,7 @@ Now that we have the mechanics down, let's tidy up our presentation of the simpl
 
 [^standardToAugmentedNoProblem]: Note also that if you came to the equality-constrained problem ($\A\x=\b$) via a transformation from the inequality form ($\A\x\leq\b$) by adding slack variables, the slack variables themselves guarantee full row rank.
 
-At each step of the simplex method, the matrix calculations required rely on the sub-matrix of $\A$ corresponding to the basic variables. Let's recall +@eq:simplexExampleMatrix1, the initial set of equations defining our sample LP when we solved it in +@sec:simplexExample. In this case, our matrix $\A$ is given by 
+At each step of the simplex method, the matrix calculations required rely on the sub-matrix of $\A$ corresponding to the basic variables. Let's recall +@eq:simplexExampleMatrix1, the initial set of equations defining our sample LP when we solved it in +@sec:simplexExample. In this case, our matrix $\A$ is given by
 
 $$
 \A = \begin{bmatrix}
@@ -388,6 +386,7 @@ To solve the system of equations at any iteration, we applied elementary row ope
 
 Given this, watch what happens when we pre-multiply both sides of our constraints by $\B\inv$:
 
+<div class='mathSmall'>
 $$
 \begin{align*}
 \A\x = \b
@@ -399,6 +398,7 @@ $$
 & \Leftrightarrow \x_B = \B\inv\b && \quad(\text{definition of identity})
 \end{align*}
 $$
+</div>
 
 So getting the variable values at a basic solution is as simple as taking $\x_N=\zeros$ and $\x_B=\B\inv\b$. If we similarly partition the objective vector $\c$ into $\c_B$ (corresponding to the basic variables) and $\c_N$ (non-basic variables) then the objective value at that solution is:
 
@@ -492,6 +492,8 @@ While we still have some edge cases and gotchas to discuss, we have what we need
    - _Determine the entering basic variable_: Select some variable whose coefficient in $\c_B\B\inv\A - \c$ is negative.
    - _Determine the exiting basic variable_: Suppose the entering variable from the last step corresponds to the $j$th column of the original constraint matrix $A$. Perform the _minimum ratio test_ from +@sec:simplexExample, dividing the entries of the vector $\B\inv\b$ (the right-hand side of the constraints portion of +@eq:simplexMatrixGeneralized) by the entries in the $j$th column of $\B\inv\A$. For the exiting variable, select the basic variable corresponding to the row with the smallest positive ratio.
 
+And that's it!
+
 ### Other considerations {#sec:lpOtherConsiderations}
 
 Let's now discuss some implementation details that add slight complications to the simplex algorithm, and would need to be taken care of in any LP solving software.
@@ -503,32 +505,33 @@ In our sample problem, determining an initial BF solution was simple because of 
 $$
 \begin{align*}
 \max && 3x_1 + 5x_2 & \\
-\st  && x_1 + x_3 & = \ \ 4  \\
-     && 2x_2 + x_4 & = 12 \\
-     && 3x_1 + 2x_2 & = 18 \\
-     && x_1,x_2,x_3,x_4 & \geq \ \ 0
+\st && x_1 + x_3 & = \ \ 4 \\
+&& 2x_2 + x_4 & = 12 \\
+&& 3x_1 + 2x_2 & = 18 \\
+&& x_1,x_2,x_3,x_4 & \geq \ \ 0
 \end{align*}
 $$
 
-In this case, a good trick is to add an extra, so-called __artificial variable__ to the formulation. Additionally, we will add this variable to the objective function with a _huge_ negative coefficient denoted by $M$, a trick known as the __Big M method__. For the above problem, the artificial variable formulation will look like:
+There is no longer a nice identity matrix structure on which to base our initial BF solution. In this case, a good trick is to add an extra, so-called __artificial variable__ to the formulation. Additionally, we will add this variable to the objective function with a _huge_ negative coefficient denoted by $M$, a trick known as the __Big M method__. For the above problem, the artificial variable formulation will look like:
 
 $$
 \begin{align*}
-\max && 3x_1 + 5x_2 + M\hat x_5& \\
-\st  && x_1 + x_3 & = \ \ 4  \\
-     && 2x_2 + x_4 & = 12 \\
-     && 3x_1 + 2x_2 + \hat x_5 & = 18 \\
-     && x_1,x_2,x_3,x_4,\hat x_5 & \geq \ \ 0
+\max && 3x_1 + 5x_2 - M\hat x_5& \\
+\st && x_1 + x_3 & = \ \ 4 \\
+&& 2x_2 + x_4 & = 12 \\
+&& 3x_1 + 2x_2 + \hat x_5 & = 18 \\
+&& x_1,x_2,x_3,x_4,\hat x_5 & \geq \ \ 0
 \end{align*}
 $$
 
 Note that we require the artificial variable to be non-negative to conform with +@eq:augmentedFormLpMatrix, the form required for simplex. It is further worth noting that the right-hand side of the constraint needs to be non-negative to keep $\hat x_5\geq0$ in the initial solution. This is no big deal though, since if the right-hand side were negative we could simply multiply both sides of the constraint by $-1$ and use the resultant constraint in the formulation instead.
 
 What good will this do us? We can initialize simplex now with $x_3, x_4$, and $\hat x_5$ as our original basis. Further, due to the massive penalty to the objective for including $\hat x_5$ in a solution, the artificial variable will eventually leave the basis if possible. So we keep running simplex until either:
+
  - $\hat x_5$ drops out of the basis, at which point we can remove it from the problem completely and continue iterating simplex as usual.
  - We find an optimal solution to the artificial problem that includes $\hat x_5>0$, in which case the original problem was infeasible.
 
-Note that in this example we added only one artificial variable, but it is possible that an artificial variables needs to be added for every constraint. Either way the method is the same: make sure the right-hand sides are non-negative, add the artificial variables, and keep iterating through simplex until the artificial variables are gone.
+Note that in this example we added only one artificial variable, but it is possible that an artificial variable needs to be added for every constraint. Either way the method is the same: make sure the right-hand sides are non-negative, add the artificial variables, and keep iterating through simplex until the artificial variables are gone.
 
 <h4>Choosing the entering basic variable</h4>
 
@@ -537,7 +540,7 @@ We may choose the entering basic variable to be any non-basic variable with a ne
 But what if there is a tie for the largest absolute value among negative coefficients? You can just pick arbitrarily. As we mentioned, simplex doesn't really care that the largest absolute value is selected anyway. So no special tie-breaking rule is required here.
 
 <h4>Tie for the exiting basic variable</h4>
-We determine the exiting variable based on _minimum ratio test_. But what if the minimum ratios is shared between multiple basic variables? Unlike in the case of the entering basic variable, there actually _is_ something to worry about in this case.
+We determine the exiting variable based on _minimum ratio test_. But what if the minimum ratio is shared between multiple basic variables? Unlike in the case of the entering basic variable, there actually _is_ something to worry about in this case.
 
 Let's recall what the minimum ratio test was calculating. In each row, we were determining how much we could increase the value of the entering variable before the corresponding basic variable becomes zero. A tie in the minimum ratio test would mean that multiple of the current basic variables would take on a value of 0 when the entering variable joins the basis. Thus in the next basic solution, at least one basic variable will have a value of 0. Such a BF solution is called a __degenerate__ solution, and the 0-valued basic variables are called degenerate variables.
 
