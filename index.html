@@ -1996,6 +1996,38 @@ class="toc-section-number">4.5.5</span> Recap of allowed forms</a></li>
 <li><a href="#different-notation" id="toc-different-notation"><span
 class="toc-section-number">4.5.6</span> Different notation</a></li>
 </ul></li>
+<li><a href="#the-simplex-method" id="toc-the-simplex-method"><span
+class="toc-section-number">4.6</span> The simplex method</a>
+<ul>
+<li><a href="#corner-point-solutions"
+id="toc-corner-point-solutions"><span
+class="toc-section-number">4.6.1</span> Corner-point solutions</a></li>
+<li><a href="#sec:simplexVisualized"
+id="toc-sec:simplexVisualized"><span
+class="toc-section-number">4.6.2</span> Simplex visualized</a></li>
+<li><a href="#augmented-form-and-basic-solutions"
+id="toc-augmented-form-and-basic-solutions"><span
+class="toc-section-number">4.6.3</span> Augmented form and basic
+solutions</a></li>
+<li><a href="#sec:simplexExample" id="toc-sec:simplexExample"><span
+class="toc-section-number">4.6.4</span> Solving the sample LP with
+simplex</a></li>
+<li><a href="#simplex-in-matrix-notation"
+id="toc-simplex-in-matrix-notation"><span
+class="toc-section-number">4.6.5</span> Simplex in matrix
+notation</a></li>
+<li><a href="#presenting-finally-the-simplex-algorithm-mostly"
+id="toc-presenting-finally-the-simplex-algorithm-mostly"><span
+class="toc-section-number">4.6.6</span> Presenting (finally) the simplex
+algorithm (mostly)</a></li>
+<li><a href="#sec:lpOtherConsiderations"
+id="toc-sec:lpOtherConsiderations"><span
+class="toc-section-number">4.6.7</span> Other considerations</a></li>
+<li><a href="#the-revised-simplex-method"
+id="toc-the-revised-simplex-method"><span
+class="toc-section-number">4.6.8</span> The revised simplex
+method</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">5</span> Appendix</a>
@@ -2396,6 +2428,11 @@ to 50 hours per month.</li>
 </ul>
 <h1 data-number="4" id="linear-programming"><span
 class="header-section-number">4</span> Linear programming</h1>
+<div class="lectureVideoEmbed"
+data-video-id="0b552ccb31c34eab8f6f6d658afd32c61d"
+data-video-date="2023-08-28">
+Intro to linear programming (sections 4.1-4.3)
+</div>
 <p>In the family of OR techniques, linear programming (LP) is certainly
 the matriarch. It was among the first methods to be seriously studied
 and find broad applications. To this day, LPs are relevant and used
@@ -3021,7 +3058,1059 @@ time to it already, we haven’t formally defined linear programming yet!
 I was waiting for this moment to do so. A <strong>linear
 program</strong> is an optimization problem in the form of eq. <a
 href="#eq:standardFormLpMatrix">3</a>.</p>
-<!-- {insertSection:sections/linear_programming/simplex.md} -->
+<h2 data-number="4.6" id="the-simplex-method"><span
+class="header-section-number">4.6</span> The simplex method</h2>
+<p>We’re just about ready to talk about LP solving algorithms, and we’re
+of course starting with the <strong>simplex method</strong> (also
+sometimes called the <strong>simplex algorithm</strong>). Arguably the
+most important breakthrough in the history of OR was the development of
+the simplex method by George Dantzig<a href="#fn22" class="footnote-ref"
+id="fnref22" role="doc-noteref"><sup>22</sup></a> during the late
+1940s<a href="#fn23" class="footnote-ref" id="fnref23"
+role="doc-noteref"><sup>23</sup></a>. It was perhaps the first practical
+algorithm developed for linear programming, and it continues to be the
+workhorse in linear and integer programming solvers today<a href="#fn24"
+class="footnote-ref" id="fnref24"
+role="doc-noteref"><sup>24</sup></a>.</p>
+<h3 data-number="4.6.1" id="corner-point-solutions"><span
+class="header-section-number">4.6.1</span> Corner-point solutions</h3>
+<p>Before we get to the algorithm itself, let’s take a moment to dwell
+on some geometric insights the method relies on. We’ll return to our
+sample problem eq. <a href="#eq:prototypeLp">1</a> and once again we’ll
+graph it below.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;showVertices&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>This time we’ve also plotted the solutions in the corners of the
+feasible region, because they are important to the simplex algorithm. We
+call these solutions <strong>corner-point feasible (CPF)
+solutions</strong><a href="#fn25" class="footnote-ref" id="fnref25"
+role="doc-noteref"><sup>25</sup></a> or <strong>vertices</strong><a
+href="#fn26" class="footnote-ref" id="fnref26"
+role="doc-noteref"><sup>26</sup></a>, which are feasible solutions that
+come at the intersection of two constraint boundaries (in the general
+case, for LPs in standard form eq. <a href="#eq:standardFormLp">2</a>
+with <span class="math inline">n</span> decision variables, the CPF
+solutions come at the intersection of <span class="math inline">n</span>
+constraints boundaries).</p>
+<p>The simplex algorithm makes use of the following key fact of linear
+programs:</p>
+<div id="thm:cornerPointOpt" class="theorem">
+<p>If a linear program has an optimal solution (i.e. not unbounded or
+infeasible), then it has an optimal solution that is a corner-point
+solution.</p>
+</div>
+<div class="proof" for="thm:cornerPointOpt" data-placement="appendix">
+<p>We won’t actually give a full proof of this theorem, instead we’ll
+only consider the case of a standard form LP (eq. <a
+href="#eq:standardFormLpMatrix">3</a>) with only two decision variables.
+Those of you that are familiar with <a
+href="https://en.wikipedia.org/wiki/Mathematical_induction">proofs by
+induction</a> may be able to see how to generalize this to any number of
+variables.</p>
+<p>In two dimensions we can visualize this, so let’s continue to use the
+sample LP of eq. <a href="#eq:prototypeLp">1</a> as our example. Any
+feasible solution to a two-dimensional LP must fall under exactly one of
+these categories:</p>
+<ol type="1">
+<li>An interior solution (not on any constraint boundaries).</li>
+<li>On a single constraint boundary.</li>
+<li>A corner-point feasible (CPF) solution (i.e. at the intersection of
+two constraint boundaries).</li>
+</ol>
+<p>What we can show is that for any solution of type 1 or 2, we can find
+a CPF solution with equal or greater objective value, and we will
+illustrate this in the plot below. To that end, suppose we have some
+solutions <span class="math inline">\mathbf{z}</span> on the interior of
+the feasible region, and <span class="math inline">\mathbf{y}</span>
+that lies on a single constraint boundary.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;extraPoints&quot;: [[2, 1], [3, 4.5]], &quot;extraLines&quot;: [[2, 1, 3, 1.5, {&quot;style&quot;: &quot;stroke-width:2pt;stroke:black&quot;, &quot;marker-end&quot;: &quot;url(#blackArrowMarker)&quot;}], [3, 4.5, 2.5, 5.25, {&quot;style&quot;: &quot;stroke-width:2pt;stroke:black&quot;, &quot;marker-end&quot;: &quot;url(#blackArrowMarker)&quot;}]], &quot;extraMathText&quot;: [[&quot;y&quot;, 3.25, 5, {&quot;coordToPix&quot;: true}], [&quot;z&quot;, 1.75, 1.75, {&quot;coordToPix&quot;: true}], [&quot;v&quot;, 2, 5.75, {&quot;coordToPix&quot;: true}], [&quot;u&quot;, 3.25, 1.75, {&quot;coordToPix&quot;: true}]]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Let <span class="math inline">\mathbf{v}</span> be a (unit) vector
+that points in the same direction as the constraint boundary that <span
+class="math inline">\mathbf{y}</span> is on. Let <span
+class="math inline">\mathbf{c}</span> be the vector of objective
+function coefficients (so in our sample LP we would have <span
+class="math inline">\mathbf{c}=\begin{bmatrix}3\\5\end{bmatrix}</span>).
+The objective value at solution <span
+class="math inline">\mathbf{y}</span> is <span
+class="math inline">\mathbf{y}\mathbf{c}</span>. In contrast, if we move
+some amount <span class="math inline">\delta</span> from <span
+class="math inline">\mathbf{y}</span> along direction <span
+class="math inline">\mathbf{v}</span>, the objective value is (due to
+distributivity of matrix operations) <span
+class="math inline">(\mathbf{y} + \delta\mathbf{v})\mathbf{c}=
+\mathbf{y}\mathbf{c}+ \delta\mathbf{v}\mathbf{c}</span>.</p>
+<p>If <span class="math inline">\mathbf{v}\mathbf{c}\geq0</span>, then
+moving from <span class="math inline">\mathbf{y}</span> along the
+constraint boundary in the direction of <span
+class="math inline">\mathbf{v}</span> improves the objective value. So
+we can continue in that direction until we meet another constraint,
+yielding a CPF solution with greater-or-equal objective value than <span
+class="math inline">y</span>. If, on the other hand, <span
+class="math inline">\mathbf{v}\mathbf{c}&lt;0</span>, then we can move
+in the direction of <span class="math inline">-\mathbf{v}</span> to a
+CPF solution with greater objective value than <span
+class="math inline">\mathbf{y}</span>. So either way, there is some CPF
+solution with objective value at least as good as <span
+class="math inline">\mathbf{y}</span>.</p>
+<p>The proof for the interior point <span
+class="math inline">\mathbf{z}</span> is very similar. Select some
+direction <span class="math inline">\mathbf{u}</span>, and then travel
+from <span class="math inline">\mathbf{z}</span> along directions <span
+class="math inline">\mathbf{u}</span> or <span
+class="math inline">\mathbf{u}</span> until you hit a constraint
+boundary. One of these points will yield an objective value at least as
+good as <span class="math inline">\mathbf{z}</span>, and it will be on
+either:</p>
+<ul>
+<li>The intersection of two constraints, in which case we’ve found the
+CPF solution with at least as good a value as <span
+class="math inline">\mathbf{z}</span>.</li>
+<li>A single constraint, in which case we can repeat the procedure shown
+above for <span class="math inline">\mathbf{y}</span> to find the CPF
+solution.</li>
+</ul>
+<p>In either case, we’ve found our required CPF solution, thus the proof
+is complete.</p>
+</div>
+<p>Thanks to this theorem<a href="#fn27" class="footnote-ref"
+id="fnref27" role="doc-noteref"><sup>27</sup></a> we know that we only
+need to check CPF solutions when solving an LP! We make use of this fact
+during the simplex method, which only checks CPF solutions. We won’t
+check <em>every</em><a href="#fn28" class="footnote-ref" id="fnref28"
+role="doc-noteref"><sup>28</sup></a> CPF solution, though. The key to
+simplex is that we jump from one CPF solution to the next while taking
+care that each move improves the objective value.</p>
+<p>In fact, the set of solutions we can move to in any iteration is
+limited to only the solutions that are adjacent to the current solution.
+In a standard-form LP with <span class="math inline">n</span> decision
+variables, two CPF solutions are <strong>adjacent</strong> if they share
+<span class="math inline">n-1</span> constraint boundaries. Recall that
+CPF solutions lie at the intersection of <span
+class="math inline">n</span> constraint boundaries, so we can also say
+that two adjacent CPF solutions share all but one boundary in
+common.</p>
+<p>We have all the definitions now to describe simplex in a nutshell:
+The simplex method solves a linear programming problem by successively
+moving from one CPF solution to another, adjacent CPF solution, making
+sure each such move improves the objective function, until no such
+improvement exists<a href="#fn29" class="footnote-ref" id="fnref29"
+role="doc-noteref"><sup>29</sup></a>.</p>
+<h3 data-number="4.6.2" id="sec:simplexVisualized"><span
+class="header-section-number">4.6.2</span> Simplex visualized</h3>
+<p>Now that we have the basic idea, let’s go ahead and walk through the
+steps of the simplex algorithm. We won’t go fully general on our first
+time through, though. Let’s again consider our sample problem of eq. <a
+href="#eq:prototypeLp">1</a>, which we’ve plotted again below. This
+time, though, the plot contains some controls that let us step through
+the simplex method one iteration at a time. I should stress that the
+simplex method does not work <em>exactly</em> like what we’ll talk
+through below, but all the intuitions are the same and the exercise is,
+I think, a useful one.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;simplexStart&quot;: [0, 0]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>The first step is to find an initial CPF solution. In our case (and
+lots of practical instances too) the solution <span
+class="math inline">(0, 0)</span> is a feasible solution, and a corner
+point as well. It’s not a particularly desirable solution in the context
+of our problem since it brings us no profit, but we don’t care about
+desirability yet.</p>
+<p>After initialization, we begin the algorithm’s main loop. First we
+have to determine if there are any adjacent CPF solutions with improving
+objective value. Recall that an adjacent solution will share <span
+class="math inline">n-1</span> constraint boundaries with the current
+solution. Since we’re in two dimensions, the adjacent solutions share
+one constraint boundary with the current solution. To find the adjacent
+solutions, we travel out from <span class="math inline">(0,0)</span>
+along the two boundary lines it sits on, which in this case are the two
+axes. Thus the two directions we can move in are <span
+class="math inline">(1,0)</span> and <span
+class="math inline">(0,1)</span>.</p>
+<p>How do we know if a solution in any particular direction is improving
+the objective value? Let’s consider the direction <span
+class="math inline">(1,0)</span>. Since we’re moving from <span
+class="math inline">(0,0)</span> to some point in the direction of <span
+class="math inline">(1,0)</span>, the resulting solution will look like
+<span class="math inline">(0,0) + \alpha(1,0)</span> for some number
+<span class="math inline">\alpha</span>. The objective value of any
+point <span class="math inline">\mathbf{x}</span> is <span
+class="math inline">\mathbf{c}\mathbf{x}</span> where <span
+class="math inline">\mathbf{c}</span> is the vector of objective
+coefficients (which is <span class="math inline">(3,5)</span> in our
+sample problem). So the objective value of <span
+class="math inline">(0,0) + \alpha(1,0)</span> is</p>
+<p><span class="math display">
+([0\ 0] + \alpha[1\ 0])\begin{bmatrix}3\\5\end{bmatrix}
+</span></p>
+<p>and since matrix multiplication distributes through addition, this is
+the same as</p>
+<p><span class="math display">
+[0\ 0]\begin{bmatrix}3\\5\end{bmatrix} + \alpha[1\
+0]\begin{bmatrix}3\\5\end{bmatrix}.
+</span></p>
+<p>That first term, <span class="math inline">[0\
+0]\begin{bmatrix}3\\5\end{bmatrix}</span>, is just the objective value
+associated with the current solution <span
+class="math inline">(0,0)</span>. So the second term <span
+class="math inline">\alpha[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}</span>,
+is the <em>improvement</em> associated with the move.</p>
+<p>We have two directions in which we can move, <span
+class="math inline">(1,0)</span> and <span
+class="math inline">(0,1)</span>. To keep things standardized we’ll want
+to re-scale our directions to be unit vectors (i.e. vectors with length
+one), but in this case they’re already unit vectors. The improvements
+associated with unit moves in these directions are <span
+class="math inline">[1\ 0]\begin{bmatrix}3\\5\end{bmatrix}=3</span> and
+<span class="math inline">[0\
+1]\begin{bmatrix}3\\5\end{bmatrix}=5</span>. These are both positive
+numbers, and since we’re trying to maximize the objective value, that
+means that solutions in either direction are improvements.</p>
+<p>All that information is summarized in the table below the plot. The
+two directions are listed, as well as the per-unit change in objective
+function (under the heading <span class="math inline">\Delta</span> Obj
+/ Unit<a href="#fn30" class="footnote-ref" id="fnref30"
+role="doc-noteref"><sup>30</sup></a>). Since both directions improve the
+objective, you have the option to choose either one using the checkboxes
+in the final column.</p>
+<p>Let’s go ahead and choose the <span class="math inline">(0,1)</span>
+direction, since it gives the highest per-unit objective change<a
+href="#fn31" class="footnote-ref" id="fnref31"
+role="doc-noteref"><sup>31</sup></a>. Press the forward button on the
+plot, and you’ll see it finds the adjacent solution in that direction,
+<span class="math inline">(0,6)</span>, and the directions to its
+adjacent solutions. But only one of the directions is improving, so we
+choose to move in that direction <span class="math inline">(1,0)</span>
+to the adjacent CPF solution <span class="math inline">(2,6)</span>. At
+this point none of the adjacent directions are improvements, so the
+current point is optimal and the algorithm is finished.</p>
+<p>One thing to note before we move on: All the information we gather
+during an iteration is in some sense “local” to the current CPF
+solution. We compute only the <em>directions</em> to the neighboring
+solutions, not the actual solutions themselves. Only once we decide on a
+direction do we find the actual CPF solution. This is because finding
+the solutions is much more expensive computationally speaking, and we’d
+like to defer that step and only compute solutions when necessary. This
+isn’t such a big deal on a small, two-dimensional example like this, but
+in larger scale instances this saves a good amount of time.</p>
+<h3 data-number="4.6.3" id="augmented-form-and-basic-solutions"><span
+class="header-section-number">4.6.3</span> Augmented form and basic
+solutions</h3>
+<p>We’ll return again to our sample problem from eq. <a
+href="#eq:prototypeLp">1</a>. The first thing we’ll need to do is change
+the form of the problem. While we modeled the sample problem in standard
+form eq. <a href="#eq:standardFormLpMatrix">3</a>, the simplex method
+requires constraints in equality form (along with the non-negative
+variables and maximizing the objective). We call this the
+<strong>augmented form</strong> linear program, which we write as</p>
+<p><span id="eq:augmentedFormLpMatrix" class="eqnos"><span
+class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \mathbf{c}\mathbf{x}\\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;=\mathbf{b}\\
+     &amp;&amp; \mathbf{x}&amp;\geq\mathbf{0}
+\end{align*}
+</span><span class="eqnos-number">(4)</span></span></p>
+<p>To transform our sample problem into augmented form, we’ll steal a
+trick from section <a href="#sec:lpConstraintTransform">4.5.3</a>. We’ll
+turn the inequality constraints into equations by adding a slack
+variable to each constraint, yielding the following formulation:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 + x_3 &amp; = \ \ 4  \\
+     &amp;&amp; 2x_2 + x_4 &amp; = 12 \\
+     &amp;&amp; 3x_1 + 2x_2 + x_5 &amp; = 18 \\
+     &amp;&amp; x_1,x_2,x_3,x_4,x_5 &amp; \geq \ \ 0
+\end{align*}
+</span></p>
+<p>We call <span class="math inline">x_3</span> the <em>slack
+variable</em> for the first constraint because its value in a feasible
+solution tells you how far away the solution’s values for <span
+class="math inline">x_1</span> and <span class="math inline">x_2</span>
+were from the constraint boundary in eq. <a
+href="#eq:prototypeLp">1</a>.</p>
+<p>Simplex involves lots of matrix manipulations, so let’s rewrite this
+in matrix form. Following usual convention, we’ll also add an extra
+variable <span class="math inline">Z</span> which is equal to the
+problem’s objective value. So in this case, we have</p>
+<p><span class="math display">
+Z = 3x_1 + 5x_2.
+</span></p>
+<p>Additionally, we’ll go rogue a bit and neglect writing the
+non-negativity constraints. They’re still there, but the simplex
+algorithm will take care of them implicitly. So in matrix form, our
+problem looks like:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; -3 &amp; -5 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1  &amp;  0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0  &amp;  2 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 3  &amp;  2 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 4 \\ 12 \\ 18
+\end{bmatrix}
+</span></p>
+<p>Recall in section <a href="#sec:simplexVisualized">4.6.2</a> we made
+use of <span class="thmRef" for="thm:cornerPointOpt"></span> to solve
+the LP, jumping from CPF solution to CPF solution while increasing the
+objective value at every step. We’ll do similar algebraically now, but
+instead of a CPF solution (which made sense in the standard-form world
+of eq. <a href="#eq:standardFormLpMatrix">3</a>) we’ll make use of
+<strong>basic feasible (BF) solutions</strong>, the augmented-form
+analogue. Indeed, the only real difference between corner-point and
+basic solutions is whether or not the slack variables are included.</p>
+<p>That said, basic solutions have their own important properties.
+Studying the system of equations in the above matrix, we see that we
+have 5 variables but only 3 (linearly independent) constraints. As you
+may recall from linear algebra class, this means we have 2 <em>degrees
+of freedom</em>, and thus two of the variables may be set arbitrarily
+while solving the system. In the simplex method, these two variables
+will take the value 0. The variables set to 0 are called the
+<strong>non-basic variables</strong>. We can then solve the system of
+equations to retrieve values for the other 3 variables, which are called
+the <strong>basic variables</strong>, and collectively the
+<strong>basis</strong>. Together, the values of the basic and non-basic
+variables make up a <strong>basic solution</strong>.</p>
+<p>The key properties of basic solutions are the following (quoting from
+<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span>):</p>
+<blockquote>
+<ul>
+<li>Each variable is designated as either a nonbasic variable or a basic
+variable.</li>
+<li>The number of basic variables equals the number of functional
+constraints (now equations). Therefore, the number of nonbasic variables
+equals the total number of variables minus the number of functional
+constraints.</li>
+<li>The nonbasic variables are set equal to zero.</li>
+<li>The values of the basic variables are obtained as the simultaneous
+solution of the system of equations (functional constraints in augmented
+form).</li>
+<li>If the basic variables satisfy the non-negativity constraints, the
+basic solution is a BF solution.</li>
+</ul>
+</blockquote>
+<p>Two BF solutions are said to be <strong>adjacent</strong> if <em>all
+but one</em> of their non-basic variables are the same. Note that this
+means also that all but one of their basic variables are the same. Also
+note that we don’t mean that these basic variables take on the same
+<em>values</em>, just that the identity of the variables are the same.
+So e.g. one basic solution with basic variables <span
+class="math inline">x_1, x_2</span> and <span
+class="math inline">x_3</span> is adjacent to another solution with
+basic variables <span class="math inline">x_1, x_2, x_4</span>, no
+matter the values taken by those variables in the respective
+solutions.</p>
+<h3 data-number="4.6.4" id="sec:simplexExample"><span
+class="header-section-number">4.6.4</span> Solving the sample LP with
+simplex</h3>
+<p>To recap with our new terminology, the goal of the simplex method is
+to take an LP in augmented form, and iteratively move from one BF
+solution to another, adjacent BF solution while improving the objective
+value at every step. We’ve already converted our sample problem to
+augmented form, summarized by the following matrix:</p>
+<p><span id="eq:simplexExampleMatrix1" class="eqnos"><span
+class="math display">
+\begin{bmatrix}
+1 &amp; -3 &amp; -5 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1  &amp;  0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0  &amp;  2 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 3  &amp;  2 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 4 \\ 12 \\ 18
+\end{bmatrix}
+</span><span class="eqnos-number">(5)</span></span></p>
+<h4>
+Find an initial BF Solution
+</h4>
+<p>We’d like to start iterating between adjacent BF solutions, but to do
+that we need a BF solution to start with. We’ll go into more details on
+how to find initial BF solutions later in section <a
+href="#sec:lpOtherConsiderations">4.6.7</a>, but for now let’s notice
+that using the slack variables as the initial basis will make this
+system very easy to solve. Why? Since <span
+class="math inline">x_1</span> and <span class="math inline">x_2</span>
+are non-basic, we set their values to 0. Thus the system eq. <a
+href="#eq:simplexExampleMatrix1">5</a> reduces to:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; -3 &amp; -5 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1  &amp;  0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0  &amp;  2 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 3  &amp;  2 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ 0 \\ 0 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 4 \\ 12 \\ 18
+\end{bmatrix}
+</span></p>
+<p>or, equivalently:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 4 \\ 12 \\ 18
+\end{bmatrix}
+</span></p>
+<p>So the initial BF solution is <span class="math inline">(x_1, x_2,
+x_3, x_4, x_5)</span> = <span class="math inline">(0, 0, 4, 12,
+18)</span>, yielding objective value <span
+class="math inline">Z=0</span>.</p>
+<p>This BF solution was easy to solve for because of how the system was
+set up. The portion of the matrix corresponding to the basic variables
+was essentially an identity matrix, so we just needed to read the values
+off the right-hand side. Indeed, as we move from one BF solution to
+another, we will explicitly manipulate the matrix (using basic row
+operations, as in section <a
+href="#sec:elementaryRowOperations">5.2.6</a>) to yield an identity
+structure in the basic columns.</p>
+<p>But we’re not there yet. We just have an initial BF solution, and
+need to figure out how to move to an adjacent one while improving the
+objective value. Recall that adjacent solutions share all their basic
+variables in common except 1, so the decisions to make are</p>
+<ol type="1">
+<li>Does an improving solution exist?</li>
+<li>If so, which of the current non-basic variables should we move into
+the basis?</li>
+<li>In light of the last decision, which of the current basic variables
+should we remove from the basis?</li>
+</ol>
+<h4>
+Optimality test
+</h4>
+<p>To decide whether an improving adjacent solution exists, we’ll take a
+look at the top row of our matrix eq. <a
+href="#eq:simplexExampleMatrix1">5</a>, which we set up to track the
+objective value <span class="math inline">Z</span>. When multiplied by
+the variable vector, that top row currently reads as <span
+class="math inline">Z - 3x_1 - 5x_2 = 0</span>, simply a rearranging of
+the usual objective <span class="math inline">Z = 3x_1 + 5x_2</span>.
+Thus a negative value in the top row indicates that including that
+variable in the basis will improve the objective value. Since we have
+negative values in the top row, we conclude that the current solution is
+not optimal.</p>
+<h4>
+Determine the incoming variable
+</h4>
+<p>Since both <span class="math inline">x_1</span> and <span
+class="math inline">x_2</span> have negative values in the objective
+row, we now have two choices of incoming basic variables that will
+improve the objective value. As we did in section <a
+href="#sec:simplexVisualized">4.6.2</a>, we will choose the variable
+that gives the highest such improvement per unit change in the variable,
+which in this case is <span class="math inline">x_2</span> (which has a
+coefficient of -5 in the top row, vs. -3 for <span
+class="math inline">x_1</span>).</p>
+<h4>
+Determine the outgoing variable
+</h4>
+<p>We’ve decided that we want <span class="math inline">x_2</span> to
+enter the basis, i.e. we’d like its value to increase from 0 in the
+current solution to some positive value in the next solution. What
+effect does increasing <span class="math inline">x_2</span> have on the
+constraints? All of the equations are currently satisfied, so changing
+the value of <span class="math inline">x_2</span> means that we must
+change the values of other variables to compensate. Luckily, the way the
+matrix is set up, each constraint has only one basic variable with a
+non-zero coefficient. For example, the third row of eq. <a
+href="#eq:simplexExampleMatrix1">5</a>, when multiplied out, reads:</p>
+<p><span class="math display">
+2x_2 + x_4 = 12.
+</span></p>
+<p>Importantly, <span class="math inline">x_4</span> is the only
+non-basic variable in this constraint, and this is the <em>only</em>
+constraint that <span class="math inline">x_4</span> shows up in (due to
+the identity matrix structure in the basic variables). So each unit
+increase in <span class="math inline">x_2</span> will require a 2-unit
+<em>decrease</em> in <span class="math inline">x_4</span> to balance the
+constraint. Since each variable (and so in particular, <span
+class="math inline">x_4</span>) must stay non-negative, we can only
+increase <span class="math inline">x_2</span> from 0 to 6 and still
+remain feasible.</p>
+<p>So we carry out this procedure with each constraint in eq. <a
+href="#eq:simplexExampleMatrix1">5</a> (rows 2-4). <span
+class="math inline">x_2</span> has a coefficient of 0 in the second row,
+so this constraint will not be violated no matter how much we change
+<span class="math inline">x_2</span>. Row four gives the equation <span
+class="math inline">x_1 + 2x_2 + x_5 = 18</span>, so again a unit
+increase in <span class="math inline">x_2</span> requires a 2-unit
+decrease in <span class="math inline">x_5</span>. Since the right-hand
+side is 18, we can only increase <span class="math inline">x_2</span> to
+9 before <span class="math inline">x_5</span> will go negative.</p>
+<p>Let’s summarize what we’ve done now: for each constraint, we’ve
+compared the contribution of <span class="math inline">x_2</span> to the
+contribution of the corresponding basic variable. We saw above that when
+the coefficient on <span class="math inline">x_2</span> is zero for a
+given constraint, then changing the value of <span
+class="math inline">x_2</span> will not affect that constraint at all.
+We didn’t have an example of this, but if the coefficient on <span
+class="math inline">x_2</span> were negative then increasing <span
+class="math inline">x_2</span> is counteracted by an <em>increase</em>
+in the current basic variable. Variables must be non-negative, but there
+is no <em>upper</em> bound, so we are free to increase a variable as
+much as we want. Thus the only constraints that restrict <span
+class="math inline">x_2</span> are the ones where the coefficient on
+<span class="math inline">x_2</span> is strictly positive.</p>
+<p>So the rows where the <span class="math inline">x_2</span>
+coefficient is positive are where we need to worry about the current
+basic variable going negative, and where we need to calculate how much
+<span class="math inline">x_2</span> can increase before that happens.
+You may or may not have noticed, but because of the identity matrix
+structure in the basis, all we need to do for this calculation is divide
+the right-hand side (rhs) value by the coefficient on <span
+class="math inline">x_2</span> in each constraint! Thus our concern is
+the following ratios:</p>
+<p><span class="math display">
+x_2\text{ column: }\begin{bmatrix}0 \\ 2 \\ 2\end{bmatrix}\
+\text{ rhs: }\begin{bmatrix}4 \\ 12 \\ 18\end{bmatrix}\
+\text{ ratio: }\begin{bmatrix}- \\ 12/2 \\ 18/2\end{bmatrix} =
+\begin{bmatrix}- \\ 6 \\ 9\end{bmatrix}
+</span></p>
+<p>Then the variable leaving the basis should be the one in the
+constraint that gives the smallest such ratio (we call this process the
+<strong>minimum ratio test</strong>). Why? As we discussed above, the
+ratio in each column is the bound on how much we can increase the
+entering variable before the basic variable decreases to 0. So we must
+take the minimum such increase in order to keep the entire system
+feasible. In our case, the minimum ratio comes in the second constraint.
+The basic variable included in that constraint is <span
+class="math inline">x_4</span>, so we must choose <span
+class="math inline">x_4</span> to leave the basis<a href="#fn32"
+class="footnote-ref" id="fnref32"
+role="doc-noteref"><sup>32</sup></a>.</p>
+<h4>
+Solve the new system
+</h4>
+<p>Now that we’ve identified the variables entering and exiting the
+basis, what remains is to find the values of the variables at the new
+solution. Since <span class="math inline">x_1</span> and <span
+class="math inline">x_4</span> are non-basic, their values will be 0. To
+find the other values, we’ll essentially do <a
+href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian
+elimination</a> on the matrix system eq. <a
+href="#eq:simplexExampleMatrix1">5</a> to yield an identity matrix
+structure over the columns corresponding to our basis.</p>
+<p>Our basis variable swap came from the model’s second constraint,
+which corresponds to row 3 in the matrix. This will be the “identity”
+row for the entering variable <span class="math inline">x_2</span>, so
+we’ll multiply that row by <span class="math inline">1/2</span> to get a
+new matrix:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; -3 &amp; -5 &amp; 0 &amp; 0   &amp; 0 \\
+0 &amp; 1  &amp;  0 &amp; 1 &amp; 0   &amp; 0 \\
+0 &amp; 0  &amp;  1 &amp; 0 &amp; 1/2 &amp; 0 \\
+0 &amp; 3  &amp;  2 &amp; 0 &amp; 0   &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 4 \\ 6 \\ 18
+\end{bmatrix}
+</span></p>
+<p>To complete the identity matrix structure, we must change all other
+coefficients in the <span class="math inline">x_2</span> column to equal
+zero. So we’ll do the following:</p>
+<ul>
+<li>Multiply the third row by 5 and add it to the first row.</li>
+<li>Multiply the third row by -2 and add it to the fourth row.</li>
+</ul>
+<p>Our new matrix will have the identity structure we’re after:</p>
+<p><span id="eq:simplexExampleMatrix2" class="eqnos"><span
+class="math display">
+\begin{bmatrix}
+1 &amp; -3 &amp; 0 &amp; 0 &amp; 5/2 &amp; 0 \\
+0 &amp; 1  &amp; 0 &amp; 1 &amp; 0   &amp; 0 \\
+0 &amp; 0  &amp; 1 &amp; 0 &amp; 1/2 &amp; 0 \\
+0 &amp; 3  &amp; 0 &amp; 0 &amp; -1  &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+30 \\ 4 \\ 6 \\ 6
+\end{bmatrix}
+</span><span class="eqnos-number">(6)</span></span></p>
+<p>Lastly, as before, we can simply read the values of the objective and
+the basic variables from the rhs of the system: <span
+class="math inline">Z=30, x_3=4, x_2=6, x_5=6</span>.</p>
+<h4>
+Keep iterating
+</h4>
+<p>We’ve now completed initialization and the first iteration of the
+method. So we continue iterating, starting from the optimality testing
+phase. In this case, the non-basic variable <span
+class="math inline">x_1</span> has a negative coefficient in the top row
+of eq. <a href="#eq:simplexExampleMatrix2">6</a>, so we do not have on
+optimal solution.</p>
+<p>The other non-basic variable, <span class="math inline">x_4</span>,
+has a positive coefficient in the top row. So <span
+class="math inline">x_1</span> is our only candidate for entering the
+basis. Now let’s set up our ratio test:</p>
+<p><span class="math display">
+x_1\text{ column: }\begin{bmatrix}1 \\ 0 \\ 3\end{bmatrix}\
+\text{ rhs: }\begin{bmatrix}4 \\ 6 \\ 6\end{bmatrix}\
+\text{ ratio: }\begin{bmatrix}4/1 \\ - \\ 6/3\end{bmatrix} =
+\begin{bmatrix}4 \\ - \\ 2\end{bmatrix}
+</span></p>
+<p>Then at most we can increase <span class="math inline">x_1</span> to
+2, as going any further will make <span class="math inline">x_5</span>
+(the basic variable in the last constraint) negative. So we’ll replace
+<span class="math inline">x_5</span> with <span
+class="math inline">x_1</span> as the basic variable in the last
+constraint. Using elimination to build our identity structure yields the
+following matrix:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 &amp;  3/2 &amp;    1 \\
+0 &amp; 0 &amp; 0 &amp; 1 &amp;  1/3 &amp; -1/3 \\
+0 &amp; 0 &amp; 1 &amp; 0 &amp;  1/2 &amp;    0 \\
+0 &amp; 1 &amp; 0 &amp; 0 &amp; -1/3 &amp;  1/3 \\
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+36 \\ 2 \\ 6 \\ 2
+\end{bmatrix}
+</span></p>
+<p>Thus our new solution is <span class="math inline">x_1=2, x_2=6,
+x_3=2, x_4=0</span>, and <span class="math inline">x_5=0</span><a
+href="#fn33" class="footnote-ref" id="fnref33"
+role="doc-noteref"><sup>33</sup></a>. Since the top row has all positive
+coefficients, increasing these variables would only serve to decrease
+the objective. So we’ve passed the optimality test, and can terminate
+with the optimal solution!</p>
+<h3 data-number="4.6.5" id="simplex-in-matrix-notation"><span
+class="header-section-number">4.6.5</span> Simplex in matrix
+notation</h3>
+<p>Now that we have the mechanics down, let’s tidy up our presentation
+of the simplex method by writing out the steps in matrix notation.
+Recall that for simplex we need equality constraints and non-negative
+variables, so our problem is formulated as in eq. <a
+href="#eq:augmentedFormLpMatrix">4</a>. Additionally, we will assume
+that the <span class="math inline">m\times n</span> matrix <span
+class="math inline">A</span> is has rank <span
+class="math inline">m</span> and is <em>non-singular</em>, so in
+particular <span class="math inline">n\geq m</span> and there are no
+<em>redundant</em> constraints (which would be any constraint that is a
+linear combination of some of the others). The rank assumption can be
+done without loss of generality, because any redundant system can be
+reduced to non-redundant by removing constraints<a href="#fn34"
+class="footnote-ref" id="fnref34"
+role="doc-noteref"><sup>34</sup></a>.</p>
+<p>At each step of the simplex method, the matrix calculations required
+rely on the sub-matrix of <span class="math inline">\mathbf{A}</span>
+corresponding to the basic variables. Let’s recall eq. <a
+href="#eq:simplexExampleMatrix1">5</a>, the initial set of equations
+defining our sample LP when we solved it in section <a
+href="#sec:simplexExample">4.6.4</a>. In this case, our matrix <span
+class="math inline">\mathbf{A}</span> is given by</p>
+<p><span class="math display">
+\mathbf{A}= \begin{bmatrix}
+1  &amp;  0 &amp; 1 &amp; 0 &amp; 0 \\
+0  &amp;  2 &amp; 0 &amp; 1 &amp; 0 \\
+3  &amp;  2 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+</span></p>
+<p>The sub-matrix we’re after at any given iteration, which we’ll call
+<span class="math inline">\mathbf{B}</span> is the subset of columns
+corresponding to our basic variables. Our initial basis in section <a
+href="#sec:simplexExample">4.6.4</a> was <span
+class="math inline">\{x_3, x_4, x_5\}</span>, and so the matrix of
+interest in the first iteration was</p>
+<p><span class="math display">
+\mathbf{B}= \begin{bmatrix}
+1 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+</span>.</p>
+<p>The vector of variables <span class="math inline">\mathbf{x}</span>
+can similarly be segmented into the parts corresponding to basic
+variables, which we’ll call <span
+class="math inline">\mathbf{x}_B</span>, and non-basic variables <span
+class="math inline">\mathbf{x}_N</span>. So for our example problem at
+the first iteration we had:</p>
+<p><span class="math display">
+\mathbf{x}=\begin{bmatrix}x_1\\x_2\\x_3\\x_4\\x_5\end{bmatrix}\quad\mathbf{x}_B=\begin{bmatrix}x_3\\x_4\\x_5\end{bmatrix}\quad\mathbf{x}_N=\begin{bmatrix}x_1\\x_2\end{bmatrix}
+</span></p>
+<p>To solve the system of equations at any iteration, we applied
+elementary row operations to create an identity matrix in the columns
+corresponding to our basis. But since <span
+class="math inline">\mathbf{B}</span> is non-singular, it has an inverse
+<span class="math inline">\mathbf{B}^{-1}</span> such that <span
+class="math inline">\mathbf{B}^{-1}\mathbf{B}=\mathbf{I}</span>, where
+<span class="math inline">\mathbf{I}</span> is an identity matrix. So
+really, all of our row operations amounted to pre-multiplying the system
+of equations by <span class="math inline">\mathbf{B}^{-1}</span>.</p>
+<p>Given this, watch what happens when we pre-multiply both sides of our
+constraints by <span class="math inline">\mathbf{B}^{-1}</span>:</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+\mathbf{A}\mathbf{x}= \mathbf{b}
+&amp; \Leftrightarrow \mathbf{B}^{-1}\mathbf{A}\mathbf{x}=
+\mathbf{B}^{-1}\mathbf{b}&amp;&amp; \quad(\text{pre-mult by
+}\mathbf{B}^{-1}) \\
+&amp; \Leftrightarrow
+\mathbf{B}^{-1}\mathbf{A}\begin{bmatrix}\mathbf{x}_B\\\mathbf{x}_N\end{bmatrix}
+= \mathbf{B}^{-1}\mathbf{b}&amp;&amp; \quad(\text{partition }x\text{
+into basic/non-basic}) \\
+&amp; \Leftrightarrow
+\mathbf{B}^{-1}\mathbf{A}\begin{bmatrix}\mathbf{x}_B\\\mathbf{0}\end{bmatrix}
+= \mathbf{B}^{-1}\mathbf{b}&amp;&amp;
+\quad(\mathbf{x}_N=\mathbf{0}\text{ in basic solutions}) \\
+&amp; \Leftrightarrow \mathbf{B}^{-1}\mathbf{B}\mathbf{x}_B =
+\mathbf{B}^{-1}\mathbf{b}&amp;&amp; \quad(\mathbf{x}_N=\mathbf{0}\text{
+takes out other columns of }\mathbf{A}) \\
+&amp; \Leftrightarrow \mathbf{I}\mathbf{x}_B =
+\mathbf{B}^{-1}\mathbf{b}&amp;&amp; \quad(\text{definition of inverse})
+\\
+&amp; \Leftrightarrow \mathbf{x}_B = \mathbf{B}^{-1}\mathbf{b}&amp;&amp;
+\quad(\text{definition of identity})
+\end{align*}
+</span></p>
+</div>
+<p>So getting the variable values at a basic solution is as simple as
+taking <span class="math inline">\mathbf{x}_N=\mathbf{0}</span> and
+<span class="math inline">\mathbf{x}_B=\mathbf{B}^{-1}\mathbf{b}</span>.
+If we similarly partition the objective vector <span
+class="math inline">\mathbf{c}</span> into <span
+class="math inline">\mathbf{c}_B</span> (corresponding to the basic
+variables) and <span class="math inline">\mathbf{c}_N</span> (non-basic
+variables) then the objective value at that solution is:</p>
+<p><span class="math display">
+\begin{align*}
+\mathbf{c}\mathbf{x}&amp; = \mathbf{c}_B\mathbf{x}_B +
+\mathbf{c}_N\mathbf{x}_N &amp;&amp; \\
+&amp; = \mathbf{c}_B\mathbf{x}_B &amp;&amp;
+\quad(\mathbf{x}_N=\mathbf{0}) \\
+&amp; = \mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}&amp;&amp; \quad(\text{sub
+above value for }\mathbf{x}_B) \\
+\end{align*}
+</span></p>
+<p>So we know how to find the solution for any given basis, but what
+about determining entering and exiting variables? In section <a
+href="#sec:simplexExample">4.6.4</a> we used the information from the
+objective (top) row of our problem matrix, so let’s re-introduce that
+here. We can summarize all of our problem information in the following
+matrix formulation:</p>
+<p><span id="eq:simplexMatrixAllInfo" class="eqnos"><span
+class="math display">
+\begin{bmatrix}
+1 &amp; -\mathbf{c}\\
+\mathbf{0}&amp; \mathbf{A}
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ \mathbf{x}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ \mathbf{b}
+\end{bmatrix}
+</span><span class="eqnos-number">(7)</span></span></p>
+<p>where once again <span class="math inline">Z</span> is a “variable”
+representing the objective value. Note that this matches exactly with
+eq. <a href="#eq:simplexExampleMatrix1">5</a> from section <a
+href="#sec:simplexExample">4.6.4</a>.</p>
+<h4>
+The magic matrix
+</h4>
+<p>We know from linear algebra that any sequence of elementary matrix
+operations can be performed simultaneously via matrix multiplication.
+All we did during the iterations section <a
+href="#sec:simplexExample">4.6.4</a> was apply elementary row operations
+to the original matrix, so if we can find the correct matrix, recovering
+all the relevant information is as simple as multiplying by that matrix.
+With that in mind, let me present to you the following matrix<a
+href="#fn35" class="footnote-ref" id="fnref35"
+role="doc-noteref"><sup>35</sup></a>.</p>
+<p><span id="eq:magicMatrix" class="eqnos"><span class="math display">
+\begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
+\mathbf{B}^{-1}\end{bmatrix}
+</span><span class="eqnos-number">(8)</span></span></p>
+<p>Watch what happens when we pre-multiply this on the right-hand side
+of eq. <a href="#eq:simplexMatrixAllInfo">7</a>:</p>
+<p><span class="math display">
+\begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
+\mathbf{B}^{-1}\end{bmatrix}
+\begin{bmatrix}
+0 \\ \mathbf{b}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}\\ \mathbf{B}^{-1}\mathbf{b}
+\end{bmatrix}
+</span></p>
+<p>The top of the result is the objective value <span
+class="math inline">Z</span> at the current basis solution, and the
+bottom give the values of <span class="math inline">\mathbf{x}_B</span>.
+So it looks like eq. <a href="#eq:magicMatrix">8</a> is precisely the
+matrix we need to encapsulate all the operations we did during a simplex
+iteration. Of course, any multiplication we apply on one side of an
+equation must also be applied to the other side to keep the system
+valid. So let’s apply pre-multiply eq. <a href="#eq:magicMatrix">8</a>
+on the left-hand side of eq. <a href="#eq:simplexMatrixAllInfo">7</a> as
+well:</p>
+<p><span class="math display">
+\begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
+\mathbf{B}^{-1}\end{bmatrix}
+\begin{bmatrix}
+1 &amp; -\mathbf{c}\\
+\mathbf{0}&amp; \mathbf{A}
+\end{bmatrix}
+= \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}\\ \mathbf{0}&amp; \mathbf{B}^{-1}\mathbf{A}\end{bmatrix}
+</span></p>
+<p>So for any given basis, the information we require for the simplex
+method is all present in the following system:</p>
+<p><span id="eq:simplexMatrixGeneralized" class="eqnos"><span
+class="math display">
+\begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}\\ \mathbf{0}&amp; \mathbf{B}^{-1}\mathbf{A}\end{bmatrix}
+\begin{bmatrix}Z \\ \mathbf{x}\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}\\ \mathbf{B}^{-1}\mathbf{b}
+\end{bmatrix}
+</span><span class="eqnos-number">(9)</span></span></p>
+<p>Maybe this looks a little messy when seeing it the first time, but
+don’t let that scare you! Look at all the constituent elements of this
+system. <span class="math inline">\mathbf{A}, \mathbf{b}</span>, and
+<span class="math inline">\mathbf{c}</span> are all just
+vectors/matrices from the problem definition. The only thing you need to
+do from iteration to iteration is choose the basis, invert <span
+class="math inline">\mathbf{B}</span> (which is just a sub-matrix of
+<span class="math inline">\mathbf{A}</span>), then multiply!</p>
+<p>To finish off this section, let’s use Python to verify that the
+system we recover from eq. <a href="#eq:simplexMatrixGeneralized">9</a>
+matches with what we got during the iterations in section <a
+href="#sec:simplexExample">4.6.4</a>.</p>
+<script src="https://gist.github.com/e5817bc5b1eb52dce2737969e0ee0c83.js"></script>
+<h3 data-number="4.6.6"
+id="presenting-finally-the-simplex-algorithm-mostly"><span
+class="header-section-number">4.6.6</span> Presenting (finally) the
+simplex algorithm (mostly)</h3>
+<p>While we still have some edge cases and gotchas to discuss, we have
+what we need to now succinctly specify the core of the simplex
+algorithm. Remember, we assume any LP being solved by the simplex method
+has been converted (by means of the techniques in section <a
+href="#sec:lpForms">4.5</a>) to the equality-constrained form of eq. <a
+href="#eq:augmentedFormLpMatrix">4</a>.</p>
+<ul>
+<li><em>Initialize</em>: Determine an initial BF solution (we’ll discuss
+general methods for this in section <a
+href="#sec:lpOtherConsiderations">4.6.7</a>).</li>
+<li><em>Iterate</em>:
+<ul>
+<li><em>Test for optimality</em>: Examine the values of <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}</span> (i.e., the top row of eq. <a
+href="#eq:simplexMatrixGeneralized">9</a>) corresponding to the
+non-basic variables. If all coefficients are non-negative, terminate
+with the optimal solution. Otherwise, continue with the iteration.</li>
+<li><em>Determine the entering basic variable</em>: Select some variable
+whose coefficient in <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}</span> is negative.</li>
+<li><em>Determine the exiting basic variable</em>: Suppose the entering
+variable from the last step corresponds to the <span
+class="math inline">j</span>th column of the original constraint matrix
+<span class="math inline">A</span>. Perform the <em>minimum ratio
+test</em> from section <a href="#sec:simplexExample">4.6.4</a>, dividing
+the entries of the vector <span
+class="math inline">\mathbf{B}^{-1}\mathbf{b}</span> (the right-hand
+side of the constraints portion of eq. <a
+href="#eq:simplexMatrixGeneralized">9</a>) by the entries in the <span
+class="math inline">j</span>th column of <span
+class="math inline">\mathbf{B}^{-1}\mathbf{A}</span>. For the exiting
+variable, select the basic variable corresponding to the row with the
+smallest positive ratio.</li>
+</ul></li>
+</ul>
+<p>And that’s it!</p>
+<h3 data-number="4.6.7" id="sec:lpOtherConsiderations"><span
+class="header-section-number">4.6.7</span> Other considerations</h3>
+<p>Let’s now discuss some implementation details that add slight
+complications to the simplex algorithm, and would need to be taken care
+of in any LP solving software.</p>
+<h4>
+Determining the initial BF solution
+</h4>
+<p>In our sample problem, determining an initial BF solution was simple
+because of the slack variables we added to convert the problem to
+equality form. But this won’t always be possible. By way of example,
+suppose in our sample LP eq. <a href="#eq:prototypeLp">1</a> the problem
+requires plant 3 to operate at full capacity. Then the third constraint
+becomes an equality constraint, <span class="math inline">3x_1 + 2x_2 =
+18</span>. Once slack variables are added to the other constraints, we
+have the following formulation:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 + x_3 &amp; = \ \ 4 \\
+&amp;&amp; 2x_2 + x_4 &amp; = 12 \\
+&amp;&amp; 3x_1 + 2x_2 &amp; = 18 \\
+&amp;&amp; x_1,x_2,x_3,x_4 &amp; \geq \ \ 0
+\end{align*}
+</span></p>
+<p>There is no longer a nice identity matrix structure on which to base
+our initial BF solution. In this case, a good trick is to add an extra,
+so-called <strong>artificial variable</strong> to the formulation.
+Additionally, we will add this variable to the objective function with a
+<em>huge</em> negative coefficient denoted by <span
+class="math inline">M</span>, a trick known as the <strong>Big M
+method</strong>. For the above problem, the artificial variable
+formulation will look like:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 - M\hat x_5&amp; \\
+\text{s.t.}&amp;&amp; x_1 + x_3 &amp; = \ \ 4 \\
+&amp;&amp; 2x_2 + x_4 &amp; = 12 \\
+&amp;&amp; 3x_1 + 2x_2 + \hat x_5 &amp; = 18 \\
+&amp;&amp; x_1,x_2,x_3,x_4,\hat x_5 &amp; \geq \ \ 0
+\end{align*}
+</span></p>
+<p>Note that we require the artificial variable to be non-negative to
+conform with eq. <a href="#eq:augmentedFormLpMatrix">4</a>, the form
+required for simplex. It is further worth noting that the right-hand
+side of the constraint needs to be non-negative to keep <span
+class="math inline">\hat x_5\geq0</span> in the initial solution. This
+is no big deal though, since if the right-hand side were negative we
+could simply multiply both sides of the constraint by <span
+class="math inline">-1</span> and use the resultant constraint in the
+formulation instead.</p>
+<p>What good will this do us? We can initialize simplex now with <span
+class="math inline">x_3, x_4</span>, and <span class="math inline">\hat
+x_5</span> as our original basis. Further, due to the massive penalty to
+the objective for including <span class="math inline">\hat x_5</span> in
+a solution, the artificial variable will eventually leave the basis if
+possible. So we keep running simplex until either:</p>
+<ul>
+<li><span class="math inline">\hat x_5</span> drops out of the basis, at
+which point we can remove it from the problem completely and continue
+iterating simplex as usual.</li>
+<li>We find an optimal solution to the artificial problem that includes
+<span class="math inline">\hat x_5&gt;0</span>, in which case the
+original problem was infeasible.</li>
+</ul>
+<p>Note that in this example we added only one artificial variable, but
+it is possible that an artificial variable needs to be added for every
+constraint. Either way the method is the same: make sure the right-hand
+sides are non-negative, add the artificial variables, and keep iterating
+through simplex until the artificial variables are gone.</p>
+<h4>
+Choosing the entering basic variable
+</h4>
+<p>We may choose the entering basic variable to be any non-basic
+variable with a negative coefficient for <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}</span>. If there are multiple qualifying non-basic variables,
+a common rule-of-thumb is to select the variable whose coefficient has
+the largest absolute value. This is not guaranteed to be a
+<em>better</em> choice than any of the others. But the thinking is,
+might as well try the variable that gives you the most bang for your
+buck as far as objective value change.</p>
+<p>But what if there is a tie for the largest absolute value among
+negative coefficients? You can just pick arbitrarily. As we mentioned,
+simplex doesn’t really care that the largest absolute value is selected
+anyway. So no special tie-breaking rule is required here.</p>
+<h4>
+Tie for the exiting basic variable
+</h4>
+<p>We determine the exiting variable based on <em>minimum ratio
+test</em>. But what if the minimum ratio is shared between multiple
+basic variables? Unlike in the case of the entering basic variable,
+there actually <em>is</em> something to worry about in this case.</p>
+<p>Let’s recall what the minimum ratio test was calculating. In each
+row, we were determining how much we could increase the value of the
+entering variable before the corresponding basic variable becomes zero.
+A tie in the minimum ratio test would mean that multiple of the current
+basic variables would take on a value of 0 when the entering variable
+joins the basis. Thus in the next basic solution, at least one basic
+variable will have a value of 0. Such a BF solution is called a
+<strong>degenerate</strong> solution, and the 0-valued basic variables
+are called degenerate variables.</p>
+<p>Degeneracy can cause issues for the simplex method. In particular, if
+a degenerate basic variable is the exiting variable in a subsequent
+simplex iteration, then the entering variable cannot increase in value
+from zero without making the degenerate variable take a negative value.
+So even with the basis change, the solution stayed the same from one
+iteration to the next. Even worse, this could continue in a cycle such
+that simplex never stops iterating!</p>
+<p>Luckily these looping conditions are exceedingly rare in practical
+problems. Furthermore, there are rules for selecting the exiting basic
+variable that are guaranteed to avoid this infinite looping scenario
+(see e.g. <span class="citation" data-cites="simplexPivotNoLoops">Bland
+(<a href="#ref-simplexPivotNoLoops"
+role="doc-biblioref">1977</a>)</span>), though we won’t cover them in
+this course.</p>
+<h4>
+No exiting basic variable
+</h4>
+<p>Recall that during the minimum ratio test for determining the exiting
+basic variable, we only consider ratios in the rows where the
+coefficient on the entering variable is strictly positive. This is
+because a 0 or negative coefficient would imply that the entering
+variable could be increased arbitrarily without violating either the
+corresponding constraint or non-negativity for the corresponding basic
+variable. If <em>every</em> such coefficient were <span
+class="math inline">\leq 0</span>, this would imply that the entire
+system remains feasible no matter how much the entering variable is
+increased.</p>
+<p>Recall that we selected an entering variable whose inclusion would
+improve the objective value. But if the entering variable can be
+increased indefinitely, then also the objective can be increased
+indefinitely, so our problem is unbounded. So if at any point the
+simplex method comes to an iteration where the entering variable’s
+coefficients are all <span class="math inline">\leq0</span>, we
+terminate and declare the problem unbounded.</p>
+<h3 data-number="4.6.8" id="the-revised-simplex-method"><span
+class="header-section-number">4.6.8</span> The revised simplex
+method</h3>
+<p>We’ll end this section on the simplex method with a note on the
+so-called <strong>revised simplex method</strong>. Recall that every
+iteration of the simplex method requires us to find <span
+class="math inline">\mathbf{B}^{-1}</span>, the inverse of the columns
+of <span class="math inline">\mathbf{A}</span> corresponding to the
+basis variables. In practice, doing this inversion can be
+computationally expensive. But it is possible to cut down on the
+computation time by applying a nice trick to derive <span
+class="math inline">\mathbf{B}^{-1}</span> for the current iteration
+from the inverted matrix from the previous iteration. We won’t bother
+with the details here, but you can read about it in <span
+class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span>, section
+5.4.</p>
 <!-- {insertSection:sections/linear_programming/duality.md} -->
 <!-- {insertSection:sections/integer_programming.md} -->
 <h1 data-number="5" id="appendix"><span
@@ -3126,7 +4215,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(4)</span></span></p>
+</span><span class="eqnos-number">(10)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -3582,6 +4671,90 @@ formulation we could have <span class="math inline">y_j=2</span> and
 <span class="math inline">z_j=0</span>, or we could just as easily have
 something like <span class="math inline">y_j=12, z_j=10</span> or <span
 class="math inline">y_j=106.7, z_j=104.7</span>.<a href="#fnref21"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn22"><p>I’m not mentioning a lot of people by name in these
+notes, but I couldn’t skip Dantzig. Mostly I wanted to bring up this
+famous story: A student comes late to class one day, sees two problems
+written on the board, and assumes they are the day’s assigned homework.
+The problems are more difficult than usual, but he solves them. When he
+turns them in, the professor is elated - these weren’t homework problems
+at all, but rather famous unsolved problems in the field! You can find
+several versions of this story out there, citing several different
+people as the supposed student. Turns out <a
+href="https://www.snopes.com/fact-check/the-unsolvable-math-problem/#6oJOtz9WKFQUHhbw.99">this
+actually happened, and the student was Dantzig</a>.<a href="#fnref22"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn23"><p>There’s a neat story, quoting from <span
+class="citation" data-cites="tspPursuit">Cook (<a href="#ref-tspPursuit"
+role="doc-biblioref">2012</a>)</span>, in <a
+href="https://punkrockor.com/2014/04/29/happiness-is-assuming-the-world-is-linear/">this
+blog post</a> (yes, OR blogs are a thing). It’s specifically about
+Dantzig first introducing the simplex method during a talk in 1948, and
+more generally about understanding your assumptions 😀.<a
+href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn24"><p>Interestingly, several other linear programming
+algorithms have been devised whose theoretical properties seem to
+suggest they would be more efficient. But in practice that hasn’t been
+the case. Simplex continues to be the best algorithm in practice for the
+widest array of problems.<a href="#fnref24" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>There are corner-point infeasible solutions as well,
+which sit at intersections outside the feasible region<a href="#fnref25"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn26"><p>I’m used to calling them vertices, but the textbook
+tends to call them corner-point solutions, which I like as a more
+helpful, descriptive term. I’ll try to stick to corner-point solution
+for the notes, but I expect to slip up a few times, especially during
+lectures.<a href="#fnref26" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn27"><p>For those that are not aware, a
+<strong>theorem</strong> is a mathematical statement that has been
+proven to be true, based on some set of standard axioms. Anything I cite
+as a theorem in these notes, you can be confident it holds true, even if
+we don’t work through a rigorous proof.<a href="#fnref27"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn28"><p>At least not generally - for common variants of the
+simplex method, there exist examples where every CPF solution is visited
+during execution (<span class="citation" data-cites="kleeMinty">(<a
+href="#ref-kleeMinty" role="doc-biblioref">Klee and Minty
+1970</a>)</span> is the first, most famous example). But this isn’t
+usually an issue in practice.<a href="#fnref28" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn29"><p>This is really the key takeaway from our whole
+discussion in this section, and if this is the only thing you remember
+about the simplex method 10 years from now I’ll still be satisfied. This
+is the key insight, you can always re-learn the details later.<a
+href="#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn30"><p>The greek capital letter <span
+class="math inline">\Delta</span> is commonly used to denote an amount
+of change, and in these context is often read as “change in.”<a
+href="#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn31"><p>Note that having the highest per-unit change doesn’t
+necessarily make it the “best” choice in any particular way. It may be
+that choosing a different (but still improving) direction will mean that
+we finish the algorithm faster. But in general we can’t tell beforehand,
+so we often just choose the direction with the highest change as
+convenient rule-of-thumb.<a href="#fnref31" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn32"><p>It is also possible to have a tie in the minimum ratio
+test. This is another special case that we’ll cover later.<a
+href="#fnref32" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn33"><p>Now might be a good time to check out the simplex
+visualization in section <a href="#sec:simplexVisualized">4.6.2</a> and
+see if you understand the interpretation of the slack variable values in
+the solutions we’ve found.<a href="#fnref33" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn34"><p>Note also that if you came to the equality-constrained
+problem (<span
+class="math inline">\mathbf{A}\mathbf{x}=\mathbf{b}</span>) via a
+transformation from the inequality form (<span
+class="math inline">\mathbf{A}\mathbf{x}\leq\mathbf{b}</span>) by adding
+slack variables, the slack variables themselves guarantee full row
+rank.<a href="#fnref34" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn35"><p>Sorry to just present this to you as if it’s a mystical
+gift from the gods. We could have totally derived it ourselves, but I
+didn’t think it was worth the class time.<a href="#fnref35"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
