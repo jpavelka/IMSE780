@@ -1,4 +1,4 @@
-## The simplex method
+## The simplex method {#sec:simplex}
 
 We're just about ready to talk about LP solving algorithms, and we're of course starting with the **simplex method** (also sometimes called the **simplex algorithm**). Arguably the most important breakthrough in the history of OR was the development of the simplex method by George Dantzig[^dantzigStory] during the late 1940s[^assumeLinear]. It was perhaps the first practical algorithm developed for linear programming, and it continues to be the workhorse in linear and integer programming solvers today[^simplexNotKnownPoly].
 
@@ -398,6 +398,7 @@ $$
 & \Leftrightarrow \x_B = \B\inv\b && \quad(\text{definition of identity})
 \end{align*}
 $$
+{#eq:basicVariableValues}
 </div>
 
 So getting the variable values at a basic solution is as simple as taking $\x_N=\zeros$ and $\x_B=\B\inv\b$. If we similarly partition the objective vector $\c$ into $\c_B$ (corresponding to the basic variables) and $\c_N$ (non-basic variables) then the objective value at that solution is:

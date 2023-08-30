@@ -298,16 +298,29 @@ Let's take the vector $\y$ defined as $\y=\c_B\B\inv$. Subbing that into the abo
 $$
 \y\A - \c\geq0 \Leftrightarrow \y\A \geq\c
 $$
-which implies that $\y$ is a feasible solution for the dual. Furthermore, we have
+which implies that $\y$ is a feasible solution for the dual. Furthermore, noting that $\x_B^*=\B\inv\b$ by +@eq:basicVariableValues, we have
 $$
-\y\b = \c_B\B\inv\b=\c_B\x^*_B=\c\x^*.
+\begin{align*}
+\y\b &= \c_B\B\inv\b && \quad(\text{definition of }\y) \\
+     &= \c_B\x^*_B && \quad(\text{above note}) \\
+     &= \c\x^* && \quad(\x_N = \zeros) \\
+\end{align*}
 $$
 
-So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x$ in the primal.
+So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x^*$ in the primal. So by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $\y*$ is an optimal solution for the dual, and $\x^*,\y^*$ satisfy the condition of the theorem.
 </div>
 
 ### Simplex and the dual problem
 
-Hold on a second - do you see what we did when proving that last theorem?
+Hold on a second - do you see what we did in that last proof? We proved the theorem, sure, but there's more. This proof was constructive, meaning that we didn't just prove that the primal and dual optimal values are equal, we showed how to find $\y^*$ from $\x^*$. Not only that, but we showed how to derive $\y^*$ _using the simplex method_! The simplex method gives its own proof of optimality! All that time setting up the simplex method in +@sec:simplex we only gestured at why it works. But now we have the optimality proof sitting right in front of us!
+
+<div class='theorem' id='thm:simplexWorks' display-name='strong duality'>
+
+Given a linear program with an optimal solution, the simplex method will terminate at an optimal solution.
+
+</div>
+<div class='proof' for='thm:simplexWorks'>
+We'll first note that technically we need to bypass the cycling issue from degenerate solutions discussed in +@sec:lpOtherConsiderations. But assuming that is taken care of, the simplex method terminates at some solution $\x^*$. Taking the associated basis and following the steps of the proof to <span class='thmRef' for='thm:strongDuality'></span>, we obtain a solution $\y^*$ such that $\y^*\b = \c\x^*$. Thus by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $x^*$ is optimal.
+</div>
 
 ## Sensitivity analysis

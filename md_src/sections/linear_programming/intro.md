@@ -182,6 +182,8 @@ Our sample LP is in the form of a _resource allocation problem_, where the decis
 
 ## LP forms {#sec:lpForms}
 
+<div class='lectureVideoEmbed' video-id='d82d2e52c5e74e7283d5b095d5f8a9031d' video-date='2023-08-30'>LP forms, notation, and an intro to simplex</div>
+
 We're _almost_ ready to talk about algorithms for solving LPs, but first we should make a note on some different forms LPs can take. Crucially, it will turn out that all the forms we talk about here are, in a sense, equivalent. Thus no matter the specifics of how an LP is presented, we know we'll be able to solve it using the general methods.
 
 ### Standard form
