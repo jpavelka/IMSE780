@@ -17,6 +17,7 @@
     window.onload = () => {
         appendixSecNo = renumberAppendix();
         addMathContainers();
+        theoremHelpers();
         addRefsToToc();
         eqRefExpandLinksAndAddTooltips();
         citeRefExpandLinksAndAddTooltips();
@@ -25,7 +26,6 @@
         addCodeCopyButtons();
         tocHelpers();
         drawAllSvgPlots();
-        theoremHelpers();
         classModeSetup();
         videoEmbeds();
         document.onclick = closeClassMode;
