@@ -954,6 +954,7 @@
       window.onload = () => {
           appendixSecNo = renumberAppendix();
           addMathContainers();
+          theoremHelpers();
           addRefsToToc();
           eqRefExpandLinksAndAddTooltips();
           citeRefExpandLinksAndAddTooltips();
@@ -962,7 +963,6 @@
           addCodeCopyButtons();
           tocHelpers();
           drawAllSvgPlots();
-          theoremHelpers();
           classModeSetup();
           videoEmbeds();
           document.onclick = closeClassMode;
@@ -1680,6 +1680,8 @@
           transform: translateX(-50%);
           border-top: 1pt solid lightgray;
           font-size: 0.7rem;
+          display: flex;
+          justify-content: space-between;
       }
       .embedIndent {
           margin: 0 1rem;
@@ -1757,14 +1759,15 @@
           let theoremObj = {};
           for (thm of document.getElementsByClassName('theorem')) {
               ((thm) => {
-                  let h1El = thm.previousSibling;
-                  while (h1El.tagName !== 'H1') {
-                      h1El = h1El.previousSibling;
+                  let headerEl = thm.previousSibling;
+                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
+                      headerEl = headerEl.previousSibling;
                   }
+                  section = headerEl.getAttribute('data-number').split('.')[0];
                   theoremObj[thm.id] = {
                       'theorem': thm,
                       'proof': undefined,
-                      'section': h1El.getAttribute('data-number')
+                      'section': section
                   };
               })(thm)
           }
@@ -1786,10 +1789,12 @@
                       secNumThms[sec] = 0;
                   }
                   secNumThms[sec] += 1;
-                  el.setAttribute('refStr', `Theorem ${sec}.${secNumThms[sec]}`)
+                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
+                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
+                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
                   labelSpan = document.createElement('span');
                   labelSpan.classList = ['theoremLabel'];
-                  let preTheoremStr = `Theorem ${sec}.${secNumThms[sec]}`
+                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
                   if (!!thm.getAttribute('data-display-name')) {
                       preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
                   }
@@ -1988,7 +1993,8 @@ class="toc-section-number">4.5.2</span> Minimization problems</a></li>
 id="toc-sec:lpConstraintTransform"><span
 class="toc-section-number">4.5.3</span> Different constraint
 forms</a></li>
-<li><a href="#variable-bounds" id="toc-variable-bounds"><span
+<li><a href="#sec:lpVariableBoundTransform"
+id="toc-sec:lpVariableBoundTransform"><span
 class="toc-section-number">4.5.4</span> Variable bounds</a></li>
 <li><a href="#recap-of-allowed-forms"
 id="toc-recap-of-allowed-forms"><span
@@ -2927,7 +2933,7 @@ a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n = b_i - s_i
 <p>and <span class="math inline">s_i</span> is non-negative, so the
 left-hand side is less than (or equal to) <span
 class="math inline">b_i</span>.</p>
-<h3 data-number="4.5.4" id="variable-bounds"><span
+<h3 data-number="4.5.4" id="sec:lpVariableBoundTransform"><span
 class="header-section-number">4.5.4</span> Variable bounds</h3>
 <p>In the standard form problem, we enforce that all of our variables
 are non-negative. But what if we don’t want any explicit bounds on the
@@ -2952,17 +2958,17 @@ class="math inline">-x_j\leq0\Leftrightarrow x_j\geq 0</span>).</p>
 <p>Now the less obvious transformation. Say we have a formulation where
 the variable <span class="math inline">x_j</span> is unrestricted. How
 do we convert to non-negative variables? One way is to define two more
-variables, call them <span class="math inline">y_j</span> and <span
+variables, call them <span class="math inline">w_j</span> and <span
 class="math inline">z_j</span>, which will be our new non-negative
 variables. What we’ll do is simply replace <span
 class="math inline">x_j</span> with <span
-class="math inline">y_j-z_j</span>, so that the constraints become</p>
+class="math inline">w_j-z_j</span>, so that the constraints become</p>
 <p><span class="math display">
-a_{i1}x_1 + \cdots + a_{ij}y_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
+a_{i1}x_1 + \cdots + a_{ij}w_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
 </span></p>
 <p>for each <span class="math inline">i</span><a href="#fn21"
-class="footnote-ref" id="fnref21"
-role="doc-noteref"><sup>21</sup></a>.</p>
+class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>,
+and a similar replacement is done in the objective function.</p>
 <h3 data-number="4.5.5" id="recap-of-allowed-forms"><span
 class="header-section-number">4.5.5</span> Recap of allowed forms</h3>
 <p>As a recap: we defined the standard form LP where the objective is
@@ -3903,6 +3909,10 @@ class="math display">
 \mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}\\ \mathbf{B}^{-1}\mathbf{b}
 \end{bmatrix}
 </span><span class="eqnos-number">(9)</span></span></p>
+<p>The top row coefficients <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}</span> are often called the <strong>reduced costs</strong> of
+the variables at the current solution.</p>
 <p>Maybe this looks a little messy when seeing it the first time, but
 don’t let that scare you! Look at all the constituent elements of this
 system. <span class="math inline">\mathbf{A}, \mathbf{b}</span>, and
@@ -3934,7 +3944,7 @@ href="#sec:lpOtherConsiderations">4.6.7</a>).</li>
 <ul>
 <li><em>Test for optimality</em>: Examine the values of <span
 class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
-\mathbf{c}</span> (i.e., the top row of eq. <a
+\mathbf{c}</span> (i.e. the reduced costs, from the top row of eq. <a
 href="#eq:simplexMatrixGeneralized">9</a>) corresponding to the
 non-basic variables. If all coefficients are non-negative, terminate
 with the optimal solution. Otherwise, continue with the iteration.</li>
@@ -4758,8 +4768,26 @@ didn’t think it was worth the class time.<a href="#fnref35"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
+<script>
+    printerFunc = () => {
+        header = document.getElementsByClassName('navbar')[0];
+        footer = document.getElementsByTagName('footer')[0];
+        header.style.visibility = 'hidden';
+        footer.style.visibility = 'hidden';
+        window.print();
+        setTimeout(() => {})
+    }
+    window.onafterprint = function(){
+        header.style.visibility = 'visible';
+        footer.style.visibility = 'visible';
+    }
+</script>
 </div>
 <div id="classModeDiv"></div>
-<footer> <small>&copy; Copyright 2023, Jeffrey Pavelka</small> </footer>
+<footer>
+    <div style="width:3rem"></div>
+    <small>&copy; Copyright 2023, Jeffrey Pavelka</small>
+    <div style='cursor:pointer;margin:0 1rem' onclick="printerFunc()">&#128438;</div>
+</footer>
 </body>
 </html>
