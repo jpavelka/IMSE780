@@ -324,7 +324,7 @@ $$
 \begin{align*}
 \max && \sum_{j=1}^n c_jx_j    & \\
 \st  && \sum_{j=1}^n a_{ij}x_j & \leq b_i\quad \forall i\in\{1,...,m\} \\
-     && x_j                    & \geq 0_i\quad \forall j\in\{1,...,n\}
+     && x_j                    & \geq 0\quad \forall j\in\{1,...,n\}
 \end{align*}
 $$
 
