@@ -2002,7 +2002,7 @@ class="toc-section-number">4.5.5</span> Recap of allowed forms</a></li>
 <li><a href="#different-notation" id="toc-different-notation"><span
 class="toc-section-number">4.5.6</span> Different notation</a></li>
 </ul></li>
-<li><a href="#the-simplex-method" id="toc-the-simplex-method"><span
+<li><a href="#sec:simplex" id="toc-sec:simplex"><span
 class="toc-section-number">4.6</span> The simplex method</a>
 <ul>
 <li><a href="#corner-point-solutions"
@@ -2806,6 +2806,11 @@ that in the next notebook.</p>
 <script src="https://gist.github.com/0a3d429db92daf96fac2eeb23a3197f7.js"></script>
 <h2 data-number="4.5" id="sec:lpForms"><span
 class="header-section-number">4.5</span> LP forms</h2>
+<div class="lectureVideoEmbed"
+data-video-id="d82d2e52c5e74e7283d5b095d5f8a9031d"
+data-video-date="2023-08-30">
+LP forms, notation, and an intro to simplex
+</div>
 <p>We’re <em>almost</em> ready to talk about algorithms for solving LPs,
 but first we should make a note on some different forms LPs can take.
 Crucially, it will turn out that all the forms we talk about here are,
@@ -3064,7 +3069,7 @@ time to it already, we haven’t formally defined linear programming yet!
 I was waiting for this moment to do so. A <strong>linear
 program</strong> is an optimization problem in the form of eq. <a
 href="#eq:standardFormLpMatrix">3</a>.</p>
-<h2 data-number="4.6" id="the-simplex-method"><span
+<h2 data-number="4.6" id="sec:simplex"><span
 class="header-section-number">4.6</span> The simplex method</h2>
 <p>We’re just about ready to talk about LP solving algorithms, and we’re
 of course starting with the <strong>simplex method</strong> (also
@@ -3781,7 +3786,8 @@ of equations by <span class="math inline">\mathbf{B}^{-1}</span>.</p>
 <p>Given this, watch what happens when we pre-multiply both sides of our
 constraints by <span class="math inline">\mathbf{B}^{-1}</span>:</p>
 <div class="mathSmall">
-<p><span class="math display">
+<p><span id="eq:basicVariableValues" class="eqnos"><span
+class="math display">
 \begin{align*}
 \mathbf{A}\mathbf{x}= \mathbf{b}
 &amp; \Leftrightarrow \mathbf{B}^{-1}\mathbf{A}\mathbf{x}=
@@ -3804,7 +3810,7 @@ takes out other columns of }\mathbf{A}) \\
 &amp; \Leftrightarrow \mathbf{x}_B = \mathbf{B}^{-1}\mathbf{b}&amp;&amp;
 \quad(\text{definition of identity})
 \end{align*}
-</span></p>
+</span><span class="eqnos-number">(7)</span></span></p>
 </div>
 <p>So getting the variable values at a basic solution is as simple as
 taking <span class="math inline">\mathbf{x}_N=\mathbf{0}</span> and
@@ -3843,7 +3849,7 @@ Z \\ \mathbf{x}
 \begin{bmatrix}
 0 \\ \mathbf{b}
 \end{bmatrix}
-</span><span class="eqnos-number">(7)</span></span></p>
+</span><span class="eqnos-number">(8)</span></span></p>
 <p>where once again <span class="math inline">Z</span> is a “variable”
 representing the objective value. Note that this matches exactly with
 eq. <a href="#eq:simplexExampleMatrix1">5</a> from section <a
@@ -3863,9 +3869,9 @@ role="doc-noteref"><sup>35</sup></a>.</p>
 <p><span id="eq:magicMatrix" class="eqnos"><span class="math display">
 \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
 \mathbf{B}^{-1}\end{bmatrix}
-</span><span class="eqnos-number">(8)</span></span></p>
+</span><span class="eqnos-number">(9)</span></span></p>
 <p>Watch what happens when we pre-multiply this on the right-hand side
-of eq. <a href="#eq:simplexMatrixAllInfo">7</a>:</p>
+of eq. <a href="#eq:simplexMatrixAllInfo">8</a>:</p>
 <p><span class="math display">
 \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
 \mathbf{B}^{-1}\end{bmatrix}
@@ -3880,12 +3886,12 @@ of eq. <a href="#eq:simplexMatrixAllInfo">7</a>:</p>
 <p>The top of the result is the objective value <span
 class="math inline">Z</span> at the current basis solution, and the
 bottom give the values of <span class="math inline">\mathbf{x}_B</span>.
-So it looks like eq. <a href="#eq:magicMatrix">8</a> is precisely the
+So it looks like eq. <a href="#eq:magicMatrix">9</a> is precisely the
 matrix we need to encapsulate all the operations we did during a simplex
 iteration. Of course, any multiplication we apply on one side of an
 equation must also be applied to the other side to keep the system
-valid. So let’s apply pre-multiply eq. <a href="#eq:magicMatrix">8</a>
-on the left-hand side of eq. <a href="#eq:simplexMatrixAllInfo">7</a> as
+valid. So let’s apply pre-multiply eq. <a href="#eq:magicMatrix">9</a>
+on the left-hand side of eq. <a href="#eq:simplexMatrixAllInfo">8</a> as
 well:</p>
 <p><span class="math display">
 \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
@@ -3908,7 +3914,7 @@ class="math display">
 \begin{bmatrix}
 \mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}\\ \mathbf{B}^{-1}\mathbf{b}
 \end{bmatrix}
-</span><span class="eqnos-number">(9)</span></span></p>
+</span><span class="eqnos-number">(10)</span></span></p>
 <p>The top row coefficients <span
 class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
 \mathbf{c}</span> are often called the <strong>reduced costs</strong> of
@@ -3922,7 +3928,7 @@ do from iteration to iteration is choose the basis, invert <span
 class="math inline">\mathbf{B}</span> (which is just a sub-matrix of
 <span class="math inline">\mathbf{A}</span>), then multiply!</p>
 <p>To finish off this section, let’s use Python to verify that the
-system we recover from eq. <a href="#eq:simplexMatrixGeneralized">9</a>
+system we recover from eq. <a href="#eq:simplexMatrixGeneralized">10</a>
 matches with what we got during the iterations in section <a
 href="#sec:simplexExample">4.6.4</a>.</p>
 <script src="https://gist.github.com/e5817bc5b1eb52dce2737969e0ee0c83.js"></script>
@@ -3945,7 +3951,7 @@ href="#sec:lpOtherConsiderations">4.6.7</a>).</li>
 <li><em>Test for optimality</em>: Examine the values of <span
 class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
 \mathbf{c}</span> (i.e. the reduced costs, from the top row of eq. <a
-href="#eq:simplexMatrixGeneralized">9</a>) corresponding to the
+href="#eq:simplexMatrixGeneralized">10</a>) corresponding to the
 non-basic variables. If all coefficients are non-negative, terminate
 with the optimal solution. Otherwise, continue with the iteration.</li>
 <li><em>Determine the entering basic variable</em>: Select some variable
@@ -3960,7 +3966,7 @@ test</em> from section <a href="#sec:simplexExample">4.6.4</a>, dividing
 the entries of the vector <span
 class="math inline">\mathbf{B}^{-1}\mathbf{b}</span> (the right-hand
 side of the constraints portion of eq. <a
-href="#eq:simplexMatrixGeneralized">9</a>) by the entries in the <span
+href="#eq:simplexMatrixGeneralized">10</a>) by the entries in the <span
 class="math inline">j</span>th column of <span
 class="math inline">\mathbf{B}^{-1}\mathbf{A}</span>. For the exiting
 variable, select the basic variable corresponding to the row with the
@@ -4225,7 +4231,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(10)</span></span></p>
+</span><span class="eqnos-number">(11)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
