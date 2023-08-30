@@ -476,6 +476,8 @@ $$
 $$
 {#eq:simplexMatrixGeneralized}
 
+The top row coefficients $\c_B\B\inv\A - \c$ are often called the __reduced costs__ of the variables at the current solution.
+
 Maybe this looks a little messy when seeing it the first time, but don't let that scare you! Look at all the constituent elements of this system. $\A, \b$, and $\c$ are all just vectors/matrices from the problem definition. The only thing you need to do from iteration to iteration is choose the basis, invert $\B$ (which is just a sub-matrix of $\A$), then multiply!
 
 To finish off this section, let's use Python to verify that the system we recover from +@eq:simplexMatrixGeneralized matches with what we got during the iterations in +@sec:simplexExample.
@@ -488,7 +490,7 @@ While we still have some edge cases and gotchas to discuss, we have what we need
 
  - _Initialize_: Determine an initial BF solution (we'll discuss general methods for this in +@sec:lpOtherConsiderations).
  - _Iterate_:
-   - _Test for optimality_: Examine the values of $\c_B\B\inv\A - \c$ (i.e., the top row of +@eq:simplexMatrixGeneralized) corresponding to the non-basic variables. If all coefficients are non-negative, terminate with the optimal solution. Otherwise, continue with the iteration.
+   - _Test for optimality_: Examine the values of $\c_B\B\inv\A - \c$ (i.e. the reduced costs, from the top row of +@eq:simplexMatrixGeneralized) corresponding to the non-basic variables. If all coefficients are non-negative, terminate with the optimal solution. Otherwise, continue with the iteration.
    - _Determine the entering basic variable_: Select some variable whose coefficient in $\c_B\B\inv\A - \c$ is negative.
    - _Determine the exiting basic variable_: Suppose the entering variable from the last step corresponds to the $j$th column of the original constraint matrix $A$. Perform the _minimum ratio test_ from +@sec:simplexExample, dividing the entries of the vector $\B\inv\b$ (the right-hand side of the constraints portion of +@eq:simplexMatrixGeneralized) by the entries in the $j$th column of $\B\inv\A$. For the exiting variable, select the basic variable corresponding to the row with the smallest positive ratio.
 

@@ -2,7 +2,7 @@
 
 In this section we'll discuss the important LP concept of duality. We have a lot of beautiful theory to get to, but first we'll motivate it will a short story.
 
-### The corporate takeover
+### The corporate takeover {#sec:corporateTakeover}
 
 Suppose you really want to get into the glass manufacturing business. You figure that Wyndor Glass Co. (the company from +@sec:exampleLp, where we derived our sample LP +@eq:prototypeLp) might be willing to sell you time in their facilities. But you don't just want _some_ time, you have big plans and could really use _all_ their facility time for the next week. You decide to propose to buy their facility time at a cost of $y_i$ per hour in facility $i\in\{1, 2, 3\}$. How do you know what price to propose?
 
@@ -72,7 +72,7 @@ In general, the dual for the standard form LP is defined as follows:
 $$
 \begin{align*}
 &\textbf{primal:} &&&&&&\quad\textbf{dual:}&&&\\
-&\min && \c\x &
+&\max && \c\x &
 &&&\quad
 \min && \y\b &
 \\
@@ -88,7 +88,102 @@ $$
 
 {#eq:standardLpDual}
 
+But what if your problem is in a different form? Can we still talk about its dual in the same way? As you might have guessed, there is indeed a dual problem for your LP no matter how it is stated. The following gives another primal/dual pair:
+
+$$
+\begin{align*}
+&\textbf{primal:} &&&&&&\quad\textbf{dual:}&&&\\
+&\max && \c\x &
+&&&\quad
+\min && \y\b &
+\\
+&\text{s.t.} && \A\x=\b &
+&&&\quad
+\text{s.t.} && \y\A\geq\c &
+\\
+&&& \x\geq0 &
+&&&\quad
+&&&
+\end{align*}
+$$
+{#eq:augmentedLpDual}
+
+<div class='theorem' id='thm:dualEqualityForm'>
+The systems in +@eq:augmentedLpDual give a valid primal/dual pair.
+</div>
+<div class='proof' for='thm:dualEqualityForm' placement='appendix'>
+The concept for this proof is to transform the primal problem from +@eq:augmentedLpDual into inequality form so that we can use the definition of +@eq:standardLpDual to get the corresponding dual problem, then see what shakes out. To that end, let's use our trick from +@sec:lpConstraintTransform to convert to inequality constraints by replacing each $=$ constraint by one $\leq$ and one $\geq$ constraint:
+
+$$
+\begin{align*}
+&\max && \c\x &
+&&&\quad
+\max && \c\x &
+\\
+&\text{s.t.} && \A\x=\b &
+&& = \qquad&\quad
+\text{s.t.} && \begin{bmatrix}\A\\-\A\end{bmatrix}\x\leq \begin{bmatrix}\b\\-\b\end{bmatrix} &
+\\
+&&& \x\geq0 &
+&&&\quad
+&& \x\geq0&
+\end{align*}
+$$
+
+Now we can use +@eq:standardLpDual to find the dual. For reasons that will become clear later, we'll replace the usual $\y$ variable vector with two separate vectors $\mathbf{w}$ and $\mathbf{z}$, corresponding to the positive and negative constraint matrices.
+
+$$
+\begin{align*}
+&\min && \begin{bmatrix}\mathbf{w}&\mathbf{z}\end{bmatrix}\begin{bmatrix}\b\\-\b\end{bmatrix} &
+\\
+&\text{s.t.} && \begin{bmatrix}\mathbf{w}&\mathbf{z}\end{bmatrix}\begin{bmatrix}\A\\-\A\end{bmatrix}\geq \c &
+\\
+&&& \mathbf{w},\mathbf{z}\geq0 &
+\end{align*}
+$$
+
+Now, watch what happens when we multiply out the objective: $\begin{bmatrix}\mathbf{w}&\mathbf{z}\end{bmatrix}\begin{bmatrix}\b\\-\b\end{bmatrix} = \mathbf{w}\b - \mathbf{z}\b$, and because of the distributive property of matrix multiplication, we have $\mathbf{w}\b - \mathbf{z}\b = (\mathbf{w}-\mathbf{z})\b$. Similar can be done with the constraints, giving:
+
+$$
+\begin{align*}
+&\min && \begin{bmatrix}\mathbf{w}&\mathbf{z}\end{bmatrix}\begin{bmatrix}\b\\-\b\end{bmatrix} &
+&&&\quad
+\min && (\mathbf{w}-\mathbf{z})\b &
+\\
+&\text{s.t.} && \begin{bmatrix}\mathbf{w}&\mathbf{z}\end{bmatrix}\begin{bmatrix}\A\\-\A\end{bmatrix}\geq \c &
+&& = \qquad&\quad
+\text{s.t.} && (\mathbf{w}-\mathbf{z})\A\geq \c &
+\\
+&&& \mathbf{w},\mathbf{z}\geq0 &
+&&&\quad
+&& \mathbf{w},\mathbf{z}\geq0 &
+\end{align*}
+$$
+
+Perhaps this looks familiar. This is exactly the trick we highlighted in +@sec:lpVariableBoundTransform for transforming between non-negative variables and unrestricted variables. We can consider $\mathbf{w}$ and $\mathbf{z}$ as the respective "positive" and "negative" parts of some other variable $\y$. Because $\mathbf{w}$ and $\mathbf{z}$ always appear together in the formulation as $\mathbf{w}-\mathbf{z}$, we can replace $\mathbf{w}-\mathbf{z}$ by the unrestricted $\y$ and get an equivalent formulation. So the dual turns into
+
+$$
+\begin{align*}
+&\min && (\mathbf{w}-\mathbf{z})\b &
+&&&\quad
+\min && \y\b &
+\\
+&\text{s.t.} && (\mathbf{w}-\mathbf{z})\A\geq\c &
+&& = \qquad&\quad
+\text{s.t.} && \y\A\geq \c &
+\\
+&&& \mathbf{w},\mathbf{z}\geq0 &
+&&&\quad
+&& &
+\end{align*}
+$$
+
+which is precisely the dual form from +@eq:augmentedLpDual.
+</div>
+
 ### Properties of the dual LP
+
+A nice fact about duality is that the primal-dual relationship is symmetric, i.e.
 
 <div class='theorem' id='thm:dualOfDual'>
 
@@ -140,6 +235,8 @@ The move from bottom-right to bottom-left is the same as the move from top-left 
 
 </div>
 
+The solutions to the primal and dual problems hold a special relationship too, in that the objective value from one always bounds the possible objective values for the other:
+
 <div class='theorem' id='thm:weakDuality' display-name='weak duality'>
 
 If $\x$ is a feasible solution for the primal problem and $\y$ is a feasible solution for the dual problem, then
@@ -149,6 +246,7 @@ $$
 $$
 
 </div>
+
 <div class='proof' for='thm:weakDuality'>
 The proof for this is just some simple linear algebra. $\x$ being feasible for the primal problem means $\A\x\leq\b$. Pre-multiplying both sides by $\y$ will give us:
 $$
@@ -170,5 +268,46 @@ $$
 \c\x\leq\y\A\x\leq\y\b.
 $$
 </div>
+
+An immediate corollary[^whatIsACorollary] of <span class='thmRef' for='thm:weakDuality'></span> is the following:
+
+[^whatIsACorollary]: A _corollary_ is like a theorem, and we could just as easily have called this a theorem as well. But generally we use the word corollary when the result follows almost directly from a result presented previously.
+
+<div class='theorem' id='thm:dualSameValueThenOptimal' thm-type='corollary'>
+If $\x$ is a solution to the primal problem and $\y$ is a solution to the dual problem such that $\c\x=\y\b$, then $\x$ and $\y$ are optimal solutions to the primal and dual problems, respectively.
+</div>
+<div class='proof' for='thm:dualSameValueThenOptimal'>
+Since $\y$ is feasible for the dual problem, <span class='thmRef' for='thm:weakDuality'></span> tells us that no primal solution can have a value higher than $\y\b$. Then since $\c\x=\y\b$, $\x$ attains this highest possible value, thus it is optimal. A similar argument gives that $\y$ is optimal for the dual.
+</div>
+
+Among other things, <span class='thmRef' for='thm:weakDuality'></span> tells us that the problem +@eq:prototypeLpDual we formulated in +@sec:corporateTakeover had no hopes of attaining an objective value higher than the optimal for +@eq:prototypeLp. So 36 was the highest value we could have hoped for. And it turns out we were actually able to attain that value in the dual problem. Was this just luck? No, as it turns out, thanks to the following theorem.
+
+<div class='theorem' id='thm:strongDuality' display-name='strong duality'>
+
+If $\x^*$ is an optimal solution for the primal problem and $\y^*$ is an optimal solution for the dual problem, then
+
+$$
+\c\x^*=\y^*\b.
+$$
+
+</div>
+<div class='proof' for='thm:strongDuality'>
+For this proof we'll make use of the alternate primal/dual formulation of +@eq:augmentedLpDual and our knowledge of the simplex method. By assumption, the primal problem has an optimal solution $x^*$. Thus in the final simplex iteration the reduced costs are all non-negative. That is, for the optimal basis we have $\c_B\B\inv\A - \c\geq0$.
+
+Let's take the vector $\y$ defined as $\y=\c_B\B\inv$. Subbing that into the above inequality, we have
+$$
+\y\A - \c\geq0 \Leftrightarrow \y\A \geq\c
+$$
+which implies that $\y$ is a feasible solution for the dual. Furthermore, we have
+$$
+\y\b = \c_B\B\inv\b=\c_B\x^*_B=\c\x^*.
+$$
+
+So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x$ in the primal.
+</div>
+
+### Simplex and the dual problem
+
+Hold on a second - do you see what we did when proving that last theorem?
 
 ## Sensitivity analysis

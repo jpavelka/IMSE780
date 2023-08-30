@@ -282,7 +282,7 @@ $$
 
 and $s_i$ is non-negative, so the left-hand side is less than (or equal to) $b_i$.
 
-### Variable bounds
+### Variable bounds {#sec:lpVariableBoundTransform}
 
 In the standard form problem, we enforce that all of our variables are non-negative. But what if we don't want any explicit bounds on the variables? Is this a different class of problems? As it turns out, we can freely switch back and forth between non-negative variables and these so-called **unrestricted** or **free variables**.
 
@@ -294,13 +294,13 @@ $$
 
 where $b=0$, $a_j=-1$, and all other coefficients equal $0$ (i.e. $-x_j\leq0\Leftrightarrow x_j\geq 0$).
 
-Now the less obvious transformation. Say we have a formulation where the variable $x_j$ is unrestricted. How do we convert to non-negative variables? One way is to define two more variables, call them $y_j$ and $z_j$, which will be our new non-negative variables. What we'll do is simply replace $x_j$ with $y_j-z_j$, so that the constraints become
+Now the less obvious transformation. Say we have a formulation where the variable $x_j$ is unrestricted. How do we convert to non-negative variables? One way is to define two more variables, call them $w_j$ and $z_j$, which will be our new non-negative variables. What we'll do is simply replace $x_j$ with $w_j-z_j$, so that the constraints become
 
 $$
-a_{i1}x_1 + \cdots + a_{ij}y_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
+a_{i1}x_1 + \cdots + a_{ij}w_j - a_{ij}z_j + \cdots + a_{in}x_n \leq b_i
 $$
 
-for each $i$[^positiveAndNegativeParts].
+for each $i$[^positiveAndNegativeParts], and a similar replacement is done in the objective function.
 
 [^positiveAndNegativeParts]: You can think of $y_j$ as the "positive part" and $z_j$ as the "negative part" of $x_j$. Note that we haven't done anything to enforce that only one of $y_j$ and $z_j$ are nonzero at a time. So for example if some solution to the original formulation had $x_j=2$ then in the new formulation we could have $y_j=2$ and $z_j=0$, or we could just as easily have something like $y_j=12, z_j=10$ or $y_j=106.7, z_j=104.7$.
 
