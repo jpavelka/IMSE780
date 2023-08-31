@@ -19,7 +19,7 @@ Below, you should see a read-only image of a Colab notebook. The notebook gives 
 
 {colabGist:1Pxhkdd8WeC-29uLVDSW2I4v_PliO02Af,dcd6305c13b79bbdba7c49dc5c76d3c7}
 
-## Other coding environments
+## Other coding environments {#sec:pythonEnvironments}
 
 I suggest Colab because it is free and easy to set up, and it should work well for what you'll need during the course. But it is far from the only option for Python, and often not the best option depending on your needs. Here are a few other options to explore on your own:
 

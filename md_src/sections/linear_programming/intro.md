@@ -148,6 +148,8 @@ In this example, we've altered the objective function to $6x_1 + 4x_2$ so that i
 
 ## Solving LPs with software
 
+<div class='lectureVideoEmbed' video-id='b84d7d439309417aabb870fd25751e001d' video-date='2023-09-01'>Python coding environments (+@sec:pythonEnvironments), solving LPs with Python</div>
+
 Let's pause briefly now to explain, practically, how LPs can be solved in the real world. By which I mean: if given an LP in practice, what would you do to find the answer? I'm not talking about the theory behind what LP solving software does (we'll get the that later), just how to _use_ the software. This won't be a comprehensive discussion, really just giving you enough to solve our example LP. We'll expand on this discussion some when we get to modeling in the integer programming section.
 
 There are two key components to solving mathematical programming problems in practice: the modeling language and the solver.
