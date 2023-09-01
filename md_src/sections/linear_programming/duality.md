@@ -1,6 +1,6 @@
 ## Duality
 
-In this section we'll discuss the important concept of LP duality. This neat bit of theory will allow us to prove the correctness of the simplex method, and also open up avenues to potentially solve LPs faster in practice. We'll also see its fingerprints in +@sec:lpSensitivity when discussing sensitivity analysis. But before we get there, let's start with some light fiction.
+In this section we'll discuss the important concept of LP duality. This neat bit of theory will allow us to prove the correctness of the simplex method, and open up avenues to potentially solve LPs faster in practice. We'll also see its fingerprints in +@sec:lpSensitivity when discussing sensitivity analysis. But before we get there, let's start with some light fiction.
 
 ### The corporate takeover {#sec:corporateTakeover}
 
@@ -307,7 +307,7 @@ $$
 \end{align*}
 $$
 
-So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x^*$ in the primal. So by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $\y*$ is an optimal solution for the dual, and $\x^*,\y^*$ satisfy the condition of the theorem.
+So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x^*$ in the primal. So by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $\y^*$ is an optimal solution for the dual, and $\x^*,\y^*$ satisfy the condition of the theorem.
 </div>
 
 ### Simplex and the dual problem
@@ -340,13 +340,11 @@ To wrap up the duality section, let's discuss how the feasibility and boundednes
 The following relationships always hold between the primal LP and its associated dual:
 1. If primal is feasible with a bounded objective, the so is the dual.
 2. If the primal is feasible but with an unbounded objective, then the dual is infeasible.
-3. If the primal is infeaible, then the dual has either no
-feasible solutions or an unbounded objective function.
+3. If the primal is infeasible, then the dual has either no feasible solutions or an unbounded objective function.
 
 </div>
 <div class='proof' for='thm:primalDualRelations'>
 Case 1 follows directly from <span class='thmRef' for='thm:simplexWorks'></span>. Case 2 is a corollary of weak duality (<span class='thmRef' for='thm:strongDuality'></span>), since the existence of a dual solution would immediately bound the primal objective.
 
-Case 3 can be proven by contradiction using <span class='thmRef' for='thm:simplexWorks'></span> (and <span class='thmRef' for='thm:dualOfDual'></span>
-</div>): Suppose that the dual is neither infeasible nor unbounded. Then it must be feasible with a bounded objective, which by <span class='thmRef' for='thm:simplexWorks'></span> means that applying simplex to this problem will yield an optimal (and feasible) solution to the primal as well, a contradiction.
+Case 3 can be proven by contradiction using <span class='thmRef' for='thm:simplexWorks'></span> (and <span class='thmRef' for='thm:dualOfDual'></span>): Suppose that the dual is neither infeasible nor unbounded. Then it must be feasible with a bounded objective, which by <span class='thmRef' for='thm:simplexWorks'></span> means that applying simplex to this problem will yield an optimal (and feasible) solution to the primal as well, a contradiction.
 </div>
