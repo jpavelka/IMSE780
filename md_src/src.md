@@ -12,6 +12,8 @@
 
 <!-- {insertSection:sections/linear_programming/duality.md} -->
 
+<!-- {insertSection:sections/linear_programming/sensitivity.md} -->
+
 <!-- {insertSection:sections/integer_programming.md} -->
 
 {insertSection:sections/appendix.md}

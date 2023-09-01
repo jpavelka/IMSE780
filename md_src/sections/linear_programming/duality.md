@@ -1,6 +1,6 @@
 ## Duality
 
-In this section we'll discuss the important LP concept of duality. We have a lot of beautiful theory to get to, but first we'll motivate it will a short story.
+In this section we'll discuss the important concept of LP duality. This neat bit of theory will allow us to prove the correctness of the simplex method, and open up avenues to potentially solve LPs faster in practice. We'll also see its fingerprints in +@sec:lpSensitivity when discussing sensitivity analysis. But before we get there, let's start with some light fiction.
 
 ### The corporate takeover {#sec:corporateTakeover}
 
@@ -307,20 +307,44 @@ $$
 \end{align*}
 $$
 
-So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x^*$ in the primal. So by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $\y*$ is an optimal solution for the dual, and $\x^*,\y^*$ satisfy the condition of the theorem.
+So not only is $\y$ feasible for the dual, its objective value in the dual is equivalent to the objective value for $\x^*$ in the primal. So by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $\y^*$ is an optimal solution for the dual, and $\x^*,\y^*$ satisfy the condition of the theorem.
 </div>
 
 ### Simplex and the dual problem
 
-Hold on a second - do you see what we did in that last proof? We proved the theorem, sure, but there's more. This proof was constructive, meaning that we didn't just prove that the primal and dual optimal values are equal, we showed how to find $\y^*$ from $\x^*$. Not only that, but we showed how to derive $\y^*$ _using the simplex method_! The simplex method gives its own proof of optimality! All that time setting up the simplex method in +@sec:simplex we only gestured at why it works. But now we have the optimality proof sitting right in front of us!
+Hold on a second - do you see what we did in that last proof? We proved the theorem, sure, but there's more. This proof was constructive, meaning that we didn't just prove that the primal and dual optimal values are equal, we showed how to find $\y^*$ from $\x^*$. Not only that, but we showed how to derive $\y^*$ _using the simplex method_! Simplex gives its own proof of optimality! All that time setting up the simplex method in +@sec:simplex we only gestured at why it works. But now we have the proof of correctness sitting right in front of us!
 
 <div class='theorem' id='thm:simplexWorks' display-name='strong duality'>
 
-Given a linear program with an optimal solution, the simplex method will terminate at an optimal solution.
+Given a linear program with a bounded objective, the simplex method will terminate at an optimal solution. Moreover, an optimal solution to the dual problem may be retrieved from the optimal basis via $\c_B\B\inv$.
 
 </div>
 <div class='proof' for='thm:simplexWorks'>
-We'll first note that technically we need to bypass the cycling issue from degenerate solutions discussed in +@sec:lpOtherConsiderations. But assuming that is taken care of, the simplex method terminates at some solution $\x^*$. Taking the associated basis and following the steps of the proof to <span class='thmRef' for='thm:strongDuality'></span>, we obtain a solution $\y^*$ such that $\y^*\b = \c\x^*$. Thus by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $x^*$ is optimal.
+We'll first note that technically we need to bypass the cycling issue from degenerate solutions discussed in +@sec:lpOtherConsiderations. But assuming that is taken care of, the simplex method terminates at some solution $\x^*$. Taking the associated basis and following the steps of the proof to <span class='thmRef' for='thm:strongDuality'></span>, we obtain a solution $\y^*=\c_B\B\inv$ such that $\y^*\b = \c\x^*$. Thus by <span class='thmRef' for='thm:dualSameValueThenOptimal'></span> $x^*$ and $y^*$ are both optimal for their respective problems.
 </div>
 
-## Sensitivity analysis
+Also implied by the proof of <span class='thmRef' for='thm:strongDuality'></span>: Taking $\y=\c_B\B\inv$ for the any basis gives us a solution $\y$ to the dual problem such that $\y^*\b = \c_B\x_B^*$. However, due to <span class='thmRef' for='thm:strongDuality'></span>, we know that no _feasible_ solution to $\y$ can have any value lower than the optimal $\c\x^*$. So the $\y$ generated is feasible if and only if the basis generating it is optimal for the primal problem.
+
+We now know that the simplex method will generate optimal solutions for _both_ the primal problem _and_ the dual problem. This gives us an opportunity: what if for some reason we believe simplex will run faster on the dual problem than it would on the primal problem. As an example, the number of constraints in a problem is often related to the number of simplex iterations required to solve it. Since the constraints in the primal correspond directly to variables in the dual (and vice-versa) if you have a problem with many more constraints than variables, it stands to reason that simplex may solve the dual problem faster than the primal. Since simplex gives solutions to both the primal and dual problems (and the dual of the dual is the primal), running simplex on the dual may get us an optimal solution faster.
+
+Another notion worth mentioning is the __dual simplex__ method. We will not discuss it in any detail here,[^textbookDualSimplex] but it is an algorithm applied to the primal problem whose steps look as if it were regular simplex being applied to the dual problem. It can be useful to have both methods (primal and dual simplex) available when solving an LP, and most solvers do exactly this.
+
+[^textbookDualSimplex]: Interested readers can check @classText, section 8.1.
+
+### Primal/dual feasibility/boundedness relationships
+
+To wrap up the duality section, let's discuss how the feasibility and boundedness of the primal and dual problems relate to one another. The possibilities are summarized in the following result:
+
+<div class='theorem' id='thm:primalDualRelations' display-name='strong duality'>
+
+The following relationships always hold between the primal LP and its associated dual:
+1. If primal is feasible with a bounded objective, the so is the dual.
+2. If the primal is feasible but with an unbounded objective, then the dual is infeasible.
+3. If the primal is infeasible, then the dual has either no feasible solutions or an unbounded objective function.
+
+</div>
+<div class='proof' for='thm:primalDualRelations'>
+Case 1 follows directly from <span class='thmRef' for='thm:simplexWorks'></span>. Case 2 is a corollary of weak duality (<span class='thmRef' for='thm:strongDuality'></span>), since the existence of a dual solution would immediately bound the primal objective.
+
+Case 3 can be proven by contradiction using <span class='thmRef' for='thm:simplexWorks'></span> (and <span class='thmRef' for='thm:dualOfDual'></span>): Suppose that the dual is neither infeasible nor unbounded. Then it must be feasible with a bounded objective, which by <span class='thmRef' for='thm:simplexWorks'></span> means that applying simplex to this problem will yield an optimal (and feasible) solution to the primal as well, a contradiction.
+</div>
