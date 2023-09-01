@@ -133,7 +133,7 @@ Submit your answer to this question in one of two ways:\
 
     ```python
     import requests
-    url = 'https://raw.githubusercontent.com/jpavelka/IMSE780/dev/data/hw/not_solved.json'
+    url = 'https://raw.githubusercontent.com/jpavelka/IMSE780/main/data/hw/not_solved.json'
     bad_instance = requests.get(url).json()
     bad_instance['activity_resource_needs'] = {
         tuple(k.split(',')): v for k, v in bad_instance['activity_resource_needs'].items()
