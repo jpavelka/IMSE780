@@ -28,6 +28,17 @@
     th p {
         margin: 0.2rem;
     }
+    img {
+        border: 1pt solid black;
+        display: block;
+        margin: 1rem auto 1rem auto;
+    }
+    a {
+        color: blue;
+    }
+    a:visited {
+        color: purple;
+    }
 </style>
 
 <script>
@@ -154,7 +165,7 @@ Submit your answer to this question in one of two ways:\
     b. They believe that by paying overtime, they can expand the number of hours available at each facility. For a cost of $6,000, they can add two hours of availability at each facility every week. Would you advise them to do so? Why?
     c. They are considering adding a new product in the future. This product would require 2 hours of processing time at each facility per batch, and each batch would net a profit of $7,000. Would you advise them to offer this product? Why?
 
-1. (6 pts)* Using Python and whichever modeling library you prefer, formulate the following problem as a linear program and report the optimal solution. You may submit either the entire text of your program or a link to a Colab notebook.\
+1. (6 pts)* Using Python and whichever modeling library you prefer, formulate the following problem as a linear program and report the optimal solution. See <a href='#pyInstructions'>here</a> for instructions on submitting Python-based assignments.\
 \
 Larry Edison is the director of the Computer Center for Buckly College. He now needs to schedule the staffing of the center. It is open from 8 A.M. until midnight. Larry has monitored the usage of the center at various times of the day, and determined that the following number of computer consultants are required:
     
@@ -187,4 +198,29 @@ many part-time workers should work each shift to meet the above requirements at 
 </div>
 </div>
 
+<!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
+<div>
+
+</div>
+</div> -->
+
+<hr>
+
 \* : From Hillier & Lieberman, 2021.
+
+<hr>
+
+<h1 id='pyInstructions'>Instruction for submitting Python assignments:</h1>
+
+For the portions of assignments that require you to submit Python code, I'll accept submissions in one of the following modes:
+
+1. (Preferred) A link to a Colab notebook. Any `pip` installs or other dependency downloads should be included in the notebook. Starting with Homework 2, __I'll only accept these submissions if I have been added as an editor__ of the notebook, which allows me to see the document's revision history (to make sure nobody changes their code after I've graded it in an attempt to gain more points). To do this (steps illustrated below), click on "Share" in the upper-right portion of the screen. Then enter my gmail address (jeffp171@gmail.com) where it says "Add people and groups", and in the drop-down to the right select "Editor".
+
+    <img src='images/py-submit-share.png'></img>
+    <img src='images/py-submit-add-email.png'></img>
+    <img src='images/py-submit-editor.png'></img>
+
+2. Upload a file through Canvas.
+3. Copy the Python code directly into the Canvas submission.
+
+For the final two options, make sure to mention in a comment somewhere if I need to install any libraries or other dependencies to run your code.
