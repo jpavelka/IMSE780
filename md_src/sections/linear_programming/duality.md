@@ -1,12 +1,12 @@
 ## Duality
 
-In this section we'll discuss the important concept of LP duality. This neat bit of theory will allow us to prove the correctness of the simplex method, and open up avenues to potentially solve LPs faster in practice. We'll also see its fingerprints in +@sec:lpSensitivity when discussing sensitivity analysis. But before we get there, let's start with some light fiction.
+In this section we'll discuss the important concept of LP duality. This neat bit of theory will allow us to prove the correctness of the simplex method, and open up avenues to potentially solve LPs faster in practice. We'll also see its fingerprints when discussing sensitivity analysis. But before we get there, let's start with some light fiction.
 
 ### The corporate takeover {#sec:corporateTakeover}
 
 Suppose you really want to get into the glass manufacturing business. You figure that Wyndor Glass Co. (the company from +@sec:exampleLp, where we derived our sample LP +@eq:prototypeLp) might be willing to sell you time in their facilities. But you don't just want _some_ time, you have big plans and could really use _all_ their facility time for the next week. You decide to propose to buy their facility time at a cost of $y_i$ per hour in facility $i\in\{1, 2, 3\}$. How do you know what price to propose?
 
-You know a little bit about linear programming now, so you decide to solve an LP to make your decision. Naturally, you want to pay the least amount possible for their facility time. Since the facilities are open for 4, 12, and 18 hours per week respectively, your objective is to minimize $4y_1 + 12y_2 + 18y_3$.
+You know a little bit about linear programming now, so you decide to solve an LP to guide your decision. Naturally, you want to pay the least amount possible for their facility time. Since the facilities are open for 4, 12, and 18 hours per week respectively, your objective is to minimize $4y_1 + 12y_2 + 18y_3$.
 
 But how do you know if Wyndor will accept your offer? At a minimum, you know that they won't accept anything less than \$3,000 for an hour at Plant 1 plus three hours at Plant 3. Why? You've done your homework. With that time Wyndor can produce a full batch of Product 1 at a profit of that same \$3,000 figure. Similarly, you'll need to at least \$5,000 for two hours each at Plant 2 and Plant 3, to account for their profit on batches of Product 2. And they certainly won't be _paying_ you to take their valuable facility time, so for each Plant $i$ you must have $y_i\geq 0$.
 
@@ -23,7 +23,7 @@ $$
 
 {#eq:prototypeLpDual}
 
-You quickly throw together a Colab notebook to solve this problem. You know that Wyndor can make \$36,000 per week with their resources, so the difference between that and the optimal solution solution to you LP is pure profit for you. With visions of riches dancing through your head, you run the notebook and find the optimal objective value is ...
+You quickly throw together a Colab notebook to solve this problem. You know that Wyndor can make \$36,000 per week with their resources, so the difference between that and the optimal solution solution to this LP is pure profit for you. With visions of riches dancing through your head, you run the notebook and find the optimal objective value is ...
 
 {colabGist:19SykiilWTXG6QHnaXAD_cstFJK7V3m-0,f5076b20215d0fb98009ba74b83bb930}
 
@@ -31,7 +31,7 @@ You quickly throw together a Colab notebook to solve this problem. You know that
 
 ### Defining the dual LP
 
-Actually, this is no coincidence at all. It's simply a consequence of a neat bit of linear programming theory known as duality. For every LP, there is a second, associated LP that relates to it in a special way. We call the second LP the **dual** LP, and the original the **primal**. As it turns out, the problem +@eq:prototypeLpDual we just formulated is the dual problem of our original sample LP +@eq:prototypeLp.
+Actually, this is no coincidence at all. It's simply a consequence of LP duality. For every LP, there is a second, associated LP that relates to it in a special way. We call the second LP the **dual** LP, and the original the **primal**. As it turns out, the problem +@eq:prototypeLpDual we just formulated is the dual problem of our original sample LP +@eq:prototypeLp.
 
 Let's look a little closer at the relationship between +@eq:prototypeLp and +@eq:prototypeLpDual. To make things more obvious, let's write them out next to each other in matrix form. We'll also rearrange the order of the data and variable matrices in the dual problem:
 
@@ -53,7 +53,7 @@ $$
 $$
 </div>
 
-Side-by-side like this, it's easy to see the connection. The constraint matrix didn't change at all, though we're pre-multiplying the variables in the dual as opposed to post-multiplying in the primal. Further, the right-hand side coefficients from the primal became the objective coefficients in the dual, and vice-versa. It's kinda like the whole problem fell on its side[^dualOnSide].
+Side-by-side like this, it's easy to see the connection. The constraint matrix didn't change at all, though we're pre-multiplying the variables in the dual as opposed to post-multiplying in the primal. Further, the constraint right-hand side values from the primal became the objective coefficients in the dual, and vice-versa. It's kinda like the whole problem fell on its side[^dualOnSide].
 
 [^dualOnSide]:
     This "fell on its side" thing is easier to see if you post-multiply the dual variables instead:<div class='mathSmall'>$$
@@ -88,7 +88,7 @@ $$
 
 {#eq:standardLpDual}
 
-But what if your problem is in a different form? Can we still talk about its dual in the same way? As you might have guessed, there is indeed a dual problem for your LP no matter how it is stated. The following gives another primal/dual pair:
+But what if your problem is in a different form? Can we still talk about its dual in the same way? As you might have guessed, there is indeed a dual problem for your LP no matter how it is stated. The following gives another primal/dual pair (notice the lack of a non-negativity requirement for the dual variables):
 
 $$
 \begin{align*}
@@ -229,7 +229,7 @@ $$
 
 The top-left problem is the dual of the standard form LP. We don't know how to take its dual correctly, so we should put it in the form of +@eq:standardFormLpMatrix since we know what that dual looks like (+@eq:standardLpDual). Using our tricks from +@sec:lpForms, we multiply the objective by -1 to convert from minimization to maximization, and we multiply both sides of the inequalities by $-\identity$ to change from $\geq$ constraints to $\leq$ constraints, obtaining the top-right problem.
 
-We move from the top-right to the bottom-right simply by taking the dual from +@eq:standardLpDual. So we switch objective function coefficient with constraint right-hand side, and multiply the variables on the other side of the constraint matrix.
+We move from the top-right to the bottom-right simply by taking the dual from +@eq:standardLpDual. So we switch the objective function coefficients with the constraint right-hand side, change from maximization to minimization, and multiply the variables on the other side of the constraint matrix.
 
 The move from bottom-right to bottom-left is the same as the move from top-left to top-right, i.e. multiplying the objective by -1 and the constraints by $-\identity$. What we end up with is precisely the original standard-form problem +@eq:standardFormLpMatrix.
 
@@ -292,13 +292,13 @@ $$
 
 </div>
 <div class='proof' for='thm:strongDuality'>
-For this proof we'll make use of the alternate primal/dual formulation of +@eq:augmentedLpDual and our knowledge of the simplex method. By assumption, the primal problem has an optimal solution $x^*$. Thus in the final simplex iteration the reduced costs are all non-negative. That is, for the optimal basis we have $\c_B\B\inv\A - \c\geq0$.
+For this proof we'll make use of the alternate primal/dual formulation of +@eq:augmentedLpDual and our knowledge of the simplex method. By assumption, the primal problem has an optimal solution $x^*$. Thus in the final simplex iteration the reduced costs are all non-negative. That is, for the optimal basis we have $\c_B\B\inv\A - \c\geq0$ (you may want to check +@eq:simplexMatrixGeneralized to refresh your memory on what the system of equations looks like for a given simplex basis).
 
 Let's take the vector $\y$ defined as $\y=\c_B\B\inv$. Subbing that into the above inequality, we have
 $$
 \y\A - \c\geq0 \Leftrightarrow \y\A \geq\c
 $$
-which implies that $\y$ is a feasible solution for the dual. Furthermore, noting that $\x_B^*=\B\inv\b$ by +@eq:basicVariableValues, we have
+which implies that $\y$ is a feasible solution for the dual. Furthermore, noting that $\x_B^*=\B\inv\b$ (by +@eq:basicVariableValues), we have
 $$
 \begin{align*}
 \y\b &= \c_B\B\inv\b && \quad(\text{definition of }\y) \\
@@ -338,13 +338,14 @@ To wrap up the duality section, let's discuss how the feasibility and boundednes
 <div class='theorem' id='thm:primalDualRelations' display-name='strong duality'>
 
 The following relationships always hold between the primal LP and its associated dual:
-1. If primal is feasible with a bounded objective, the so is the dual.
-2. If the primal is feasible but with an unbounded objective, then the dual is infeasible.
-3. If the primal is infeasible, then the dual has either no feasible solutions or an unbounded objective function.
+
+1. If the primal problem is feasible with a bounded objective, the so is the dual.
+2. If the primal problem is feasible but with an unbounded objective, then the dual is infeasible.
+3. If the primal problem is infeasible, then the dual has either no feasible solutions or an unbounded objective function.
 
 </div>
 <div class='proof' for='thm:primalDualRelations'>
-Case 1 follows directly from <span class='thmRef' for='thm:simplexWorks'></span>. Case 2 is a corollary of weak duality (<span class='thmRef' for='thm:strongDuality'></span>), since the existence of a dual solution would immediately bound the primal objective.
+Case 1 follows directly from <span class='thmRef' for='thm:simplexWorks'></span>. Case 2 is a corollary of weak duality (<span class='thmRef' for='thm:weakDuality'></span>), since the existence of a dual solution would immediately bound the primal objective.
 
-Case 3 can be proven by contradiction using <span class='thmRef' for='thm:simplexWorks'></span> (and <span class='thmRef' for='thm:dualOfDual'></span>): Suppose that the dual is neither infeasible nor unbounded. Then it must be feasible with a bounded objective, which by <span class='thmRef' for='thm:simplexWorks'></span> means that applying simplex to this problem will yield an optimal (and feasible) solution to the primal as well, a contradiction.
+Case 3 can be proven by contradiction using <span class='thmRef' for='thm:simplexWorks'></span> (and <span class='thmRef' for='thm:dualOfDual'></span>): Suppose that the dual is neither infeasible nor unbounded. Then it must be feasible with a bounded objective, which by <span class='thmRef' for='thm:simplexWorks'></span> means that applying simplex to this problem will yield an optimal, and therefore feasible, solution to the primal as well, a contradiction.
 </div>
