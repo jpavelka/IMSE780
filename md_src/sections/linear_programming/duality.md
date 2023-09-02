@@ -314,7 +314,7 @@ So not only is $\y$ feasible for the dual, its objective value in the dual is eq
 
 Hold on a second - do you see what we did in that last proof? We proved the theorem, sure, but there's more. This proof was constructive, meaning that we didn't just prove that the primal and dual optimal values are equal, we showed how to find $\y^*$ from $\x^*$. Not only that, but we showed how to derive $\y^*$ _using the simplex method_! Simplex gives its own proof of optimality! All that time setting up the simplex method in +@sec:simplex we only gestured at why it works. But now we have the proof of correctness sitting right in front of us!
 
-<div class='theorem' id='thm:simplexWorks' display-name='strong duality'>
+<div class='theorem' id='thm:simplexWorks'>
 
 Given a linear program with a bounded objective, the simplex method will terminate at an optimal solution. Moreover, an optimal solution to the dual problem may be retrieved from the optimal basis via $\c_B\B\inv$.
 
@@ -335,7 +335,7 @@ Another notion worth mentioning is the __dual simplex__ method. We will not disc
 
 To wrap up the duality section, let's discuss how the feasibility and boundedness of the primal and dual problems relate to one another. The possibilities are summarized in the following result:
 
-<div class='theorem' id='thm:primalDualRelations' display-name='strong duality'>
+<div class='theorem' id='thm:primalDualRelations'>
 
 The following relationships always hold between the primal LP and its associated dual:
 
