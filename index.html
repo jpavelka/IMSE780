@@ -1829,17 +1829,18 @@
   </script>
   <style>
       .theorem p {
-          font-style: italic;
-          margin: 0;
           display: inline;
       }
       .theorem {
           border: 1pt solid gray;
           padding: 1rem;
           background-color: #eee;
+          font-style: italic;
+          margin: 0;
       }
       .theoremLabel {
           font-weight: bold;
+          font-style: normal;
       }
       .proof::after {
           display: block;
@@ -2033,6 +2034,27 @@ class="toc-section-number">4.6.7</span> Other considerations</a></li>
 id="toc-the-revised-simplex-method"><span
 class="toc-section-number">4.6.8</span> The revised simplex
 method</a></li>
+</ul></li>
+<li><a href="#duality" id="toc-duality"><span
+class="toc-section-number">4.7</span> Duality</a>
+<ul>
+<li><a href="#sec:corporateTakeover"
+id="toc-sec:corporateTakeover"><span
+class="toc-section-number">4.7.1</span> The corporate takeover</a></li>
+<li><a href="#defining-the-dual-lp" id="toc-defining-the-dual-lp"><span
+class="toc-section-number">4.7.2</span> Defining the dual LP</a></li>
+<li><a href="#properties-of-the-dual-lp"
+id="toc-properties-of-the-dual-lp"><span
+class="toc-section-number">4.7.3</span> Properties of the dual
+LP</a></li>
+<li><a href="#simplex-and-the-dual-problem"
+id="toc-simplex-and-the-dual-problem"><span
+class="toc-section-number">4.7.4</span> Simplex and the dual
+problem</a></li>
+<li><a href="#primaldual-feasibilityboundedness-relationships"
+id="toc-primaldual-feasibilityboundedness-relationships"><span
+class="toc-section-number">4.7.5</span> Primal/dual
+feasibility/boundedness relationships</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -4133,7 +4155,548 @@ with the details here, but you can read about it in <span
 class="citation" data-cites="classText">Hillier and Lieberman (<a
 href="#ref-classText" role="doc-biblioref">2021</a>)</span>, section
 5.4.</p>
-<!-- {insertSection:sections/linear_programming/duality.md} -->
+<h2 data-number="4.7" id="duality"><span
+class="header-section-number">4.7</span> Duality</h2>
+<p>In this section we’ll discuss the important concept of LP duality.
+This neat bit of theory will allow us to prove the correctness of the
+simplex method, and open up avenues to potentially solve LPs faster in
+practice. We’ll also see its fingerprints when discussing sensitivity
+analysis. But before we get there, let’s start with some light
+fiction.</p>
+<h3 data-number="4.7.1" id="sec:corporateTakeover"><span
+class="header-section-number">4.7.1</span> The corporate takeover</h3>
+<p>Suppose you really want to get into the glass manufacturing business.
+You figure that Wyndor Glass Co. (the company from section <a
+href="#sec:exampleLp">4.1</a>, where we derived our sample LP eq. <a
+href="#eq:prototypeLp">1</a>) might be willing to sell you time in their
+facilities. But you don’t just want <em>some</em> time, you have big
+plans and could really use <em>all</em> their facility time for the next
+week. You decide to propose to buy their facility time at a cost of
+<span class="math inline">y_i</span> per hour in facility <span
+class="math inline">i\in\{1, 2, 3\}</span>. How do you know what price
+to propose?</p>
+<p>You know a little bit about linear programming now, so you decide to
+solve an LP to guide your decision. Naturally, you want to pay the least
+amount possible for their facility time. Since the facilities are open
+for 4, 12, and 18 hours per week respectively, your objective is to
+minimize <span class="math inline">4y_1 + 12y_2 + 18y_3</span>.</p>
+<p>But how do you know if Wyndor will accept your offer? At a minimum,
+you know that they won’t accept anything less than $3,000 for an hour at
+Plant 1 plus three hours at Plant 3. Why? You’ve done your homework.
+With that time Wyndor can produce a full batch of Product 1 at a profit
+of that same $3,000 figure. Similarly, you’ll need to at least $5,000
+for two hours each at Plant 2 and Plant 3, to account for their profit
+on batches of Product 2. And they certainly won’t be <em>paying</em> you
+to take their valuable facility time, so for each Plant <span
+class="math inline">i</span> you must have <span
+class="math inline">y_i\geq 0</span>.</p>
+<p>Brining it all together, you get this formulation:</p>
+<p><span id="eq:prototypeLpDual" class="eqnos"><span
+class="math display">
+\begin{align*}
+\text{min}&amp;&amp; 4y_1 + 12y_2 + 18y_3 &amp; \\
+\text{s.t.}&amp;&amp;  y_1 +  3y_3 &amp; \geq 3 \\
+     &amp;&amp; 2y_2 +  2y_3 &amp; \geq 5 \\
+     &amp;&amp; y_1,y_2,y_3 &amp; \geq 0
+\end{align*}
+</span><span class="eqnos-number">(11)</span></span></p>
+<p>You quickly throw together a Colab notebook to solve this problem.
+You know that Wyndor can make $36,000 per week with their resources, so
+the difference between that and the optimal solution solution to this LP
+is pure profit for you. With visions of riches dancing through your
+head, you run the notebook and find the optimal objective value is …</p>
+<script src="https://gist.github.com/f5076b20215d0fb98009ba74b83bb930.js"></script>
+<p>… that same $36,000? What an odd coincidence.</p>
+<h3 data-number="4.7.2" id="defining-the-dual-lp"><span
+class="header-section-number">4.7.2</span> Defining the dual LP</h3>
+<p>Actually, this is no coincidence at all. It’s simply a consequence of
+LP duality. For every LP, there is a second, associated LP that relates
+to it in a special way. We call the second LP the <strong>dual</strong>
+LP, and the original the <strong>primal</strong>. As it turns out, the
+problem eq. <a href="#eq:prototypeLpDual">11</a> we just formulated is
+the dual problem of our original sample LP eq. <a
+href="#eq:prototypeLp">1</a>.</p>
+<p>Let’s look a little closer at the relationship between eq. <a
+href="#eq:prototypeLp">1</a> and eq. <a
+href="#eq:prototypeLpDual">11</a>. To make things more obvious, let’s
+write them out next to each other in matrix form. We’ll also rearrange
+the order of the data and variable matrices in the dual problem:</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \begin{bmatrix}3 &amp;
+5\end{bmatrix}\begin{bmatrix}x_1 \\ x_2\end{bmatrix} &amp;
+&amp; \quad
+\text{min}&amp;&amp; \begin{bmatrix}y_1 &amp; y_2 &amp;
+y_3\end{bmatrix}\begin{bmatrix}4 \\ 12 \\ 18\end{bmatrix} &amp;
+\\
+\text{s.t.} &amp;&amp; \begin{bmatrix}1 &amp; 0 \\ 0 &amp; 2 \\ 3 &amp;
+2\end{bmatrix}\begin{bmatrix}x_1 \\ x_2\end{bmatrix} &amp; \leq
+\begin{bmatrix}4 \\ 12 \\ 18\end{bmatrix}
+&amp; \quad
+\text{s.t.} &amp;&amp; \begin{bmatrix}y_1 &amp; y_2 &amp;
+y_3\end{bmatrix}\begin{bmatrix}1 &amp; 0 \\ 0 &amp; 2 \\ 3 &amp;
+2\end{bmatrix} &amp; \geq \begin{bmatrix}3 &amp; 5\end{bmatrix}
+\\
+&amp;&amp; x_1,x_2 &amp; \geq 0
+&amp; \quad
+&amp;&amp; y_1,y_2,y_3 &amp; \geq 0
+\end{align*}
+</span></p>
+</div>
+<p>Side-by-side like this, it’s easy to see the connection. The
+constraint matrix didn’t change at all, though we’re pre-multiplying the
+variables in the dual as opposed to post-multiplying in the primal.
+Further, the constraint right-hand side values from the primal became
+the objective coefficients in the dual, and vice-versa. It’s kinda like
+the whole problem fell on its side<a href="#fn36" class="footnote-ref"
+id="fnref36" role="doc-noteref"><sup>36</sup></a>.</p>
+<p>In general, the dual for the standard form LP is defined as
+follows:</p>
+<p><span id="eq:standardLpDual" class="eqnos"><span
+class="math display">
+\begin{align*}
+&amp;\textbf{primal:}
+&amp;&amp;&amp;&amp;&amp;&amp;\quad\textbf{dual:}&amp;&amp;&amp;\\
+&amp;\text{max}&amp;&amp; \mathbf{c}\mathbf{x}&amp;
+&amp;&amp;&amp;\quad
+\text{min}&amp;&amp; \mathbf{y}\mathbf{b}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp; \mathbf{A}\mathbf{x}\leq\mathbf{b}&amp;
+&amp;&amp;&amp;\quad
+\text{s.t.} &amp;&amp; \mathbf{y}\mathbf{A}\geq\mathbf{c}&amp;
+\\
+&amp;&amp;&amp; \mathbf{x}\geq0 &amp;
+&amp;&amp;&amp;\quad
+&amp;&amp; \mathbf{y}\geq0 &amp;
+\end{align*}
+</span><span class="eqnos-number">(12)</span></span></p>
+<p>But what if your problem is in a different form? Can we still talk
+about its dual in the same way? As you might have guessed, there is
+indeed a dual problem for your LP no matter how it is stated. The
+following gives another primal/dual pair (notice the lack of a
+non-negativity requirement for the dual variables):</p>
+<p><span id="eq:augmentedLpDual" class="eqnos"><span
+class="math display">
+\begin{align*}
+&amp;\textbf{primal:}
+&amp;&amp;&amp;&amp;&amp;&amp;\quad\textbf{dual:}&amp;&amp;&amp;\\
+&amp;\text{max}&amp;&amp; \mathbf{c}\mathbf{x}&amp;
+&amp;&amp;&amp;\quad
+\text{min}&amp;&amp; \mathbf{y}\mathbf{b}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp; \mathbf{A}\mathbf{x}=\mathbf{b}&amp;
+&amp;&amp;&amp;\quad
+\text{s.t.} &amp;&amp; \mathbf{y}\mathbf{A}\geq\mathbf{c}&amp;
+\\
+&amp;&amp;&amp; \mathbf{x}\geq0 &amp;
+&amp;&amp;&amp;\quad
+&amp;&amp;&amp;
+\end{align*}
+</span><span class="eqnos-number">(13)</span></span></p>
+<div id="thm:dualEqualityForm" class="theorem">
+<p>The systems in eq. <a href="#eq:augmentedLpDual">13</a> give a valid
+primal/dual pair.</p>
+</div>
+<div class="proof" for="thm:dualEqualityForm" data-placement="appendix">
+<p>The concept for this proof is to transform the primal problem from
+eq. <a href="#eq:augmentedLpDual">13</a> into inequality form so that we
+can use the definition of eq. <a href="#eq:standardLpDual">12</a> to get
+the corresponding dual problem, then see what shakes out. To that end,
+let’s use our trick from section <a
+href="#sec:lpConstraintTransform">4.5.3</a> to convert to inequality
+constraints by replacing each <span class="math inline">=</span>
+constraint by one <span class="math inline">\leq</span> and one <span
+class="math inline">\geq</span> constraint:</p>
+<p><span class="math display">
+\begin{align*}
+&amp;\text{max}&amp;&amp; \mathbf{c}\mathbf{x}&amp;
+&amp;&amp;&amp;\quad
+\text{max}&amp;&amp; \mathbf{c}\mathbf{x}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp; \mathbf{A}\mathbf{x}=\mathbf{b}&amp;
+&amp;&amp; = \qquad&amp;\quad
+\text{s.t.} &amp;&amp;
+\begin{bmatrix}\mathbf{A}\\-\mathbf{A}\end{bmatrix}\mathbf{x}\leq
+\begin{bmatrix}\mathbf{b}\\-\mathbf{b}\end{bmatrix} &amp;
+\\
+&amp;&amp;&amp; \mathbf{x}\geq0 &amp;
+&amp;&amp;&amp;\quad
+&amp;&amp; \mathbf{x}\geq0&amp;
+\end{align*}
+</span></p>
+<p>Now we can use eq. <a href="#eq:standardLpDual">12</a> to find the
+dual. For reasons that will become clear later, we’ll replace the usual
+<span class="math inline">\mathbf{y}</span> variable vector with two
+separate vectors <span class="math inline">\mathbf{w}</span> and <span
+class="math inline">\mathbf{z}</span>, corresponding to the positive and
+negative constraint matrices.</p>
+<p><span class="math display">
+\begin{align*}
+&amp;\text{min}&amp;&amp;
+\begin{bmatrix}\mathbf{w}&amp;\mathbf{z}\end{bmatrix}\begin{bmatrix}\mathbf{b}\\-\mathbf{b}\end{bmatrix}
+&amp;
+\\
+&amp;\text{s.t.} &amp;&amp;
+\begin{bmatrix}\mathbf{w}&amp;\mathbf{z}\end{bmatrix}\begin{bmatrix}\mathbf{A}\\-\mathbf{A}\end{bmatrix}\geq
+\mathbf{c}&amp;
+\\
+&amp;&amp;&amp; \mathbf{w},\mathbf{z}\geq0 &amp;
+\end{align*}
+</span></p>
+<p>Now, watch what happens when we multiply out the objective: <span
+class="math inline">\begin{bmatrix}\mathbf{w}&amp;\mathbf{z}\end{bmatrix}\begin{bmatrix}\mathbf{b}\\-\mathbf{b}\end{bmatrix}
+= \mathbf{w}\mathbf{b}- \mathbf{z}\mathbf{b}</span>, and because of the
+distributive property of matrix multiplication, we have <span
+class="math inline">\mathbf{w}\mathbf{b}- \mathbf{z}\mathbf{b}=
+(\mathbf{w}-\mathbf{z})\mathbf{b}</span>. Similar can be done with the
+constraints, giving:</p>
+<p><span class="math display">
+\begin{align*}
+&amp;\text{min}&amp;&amp;
+\begin{bmatrix}\mathbf{w}&amp;\mathbf{z}\end{bmatrix}\begin{bmatrix}\mathbf{b}\\-\mathbf{b}\end{bmatrix}
+&amp;
+&amp;&amp;&amp;\quad
+\text{min}&amp;&amp; (\mathbf{w}-\mathbf{z})\mathbf{b}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp;
+\begin{bmatrix}\mathbf{w}&amp;\mathbf{z}\end{bmatrix}\begin{bmatrix}\mathbf{A}\\-\mathbf{A}\end{bmatrix}\geq
+\mathbf{c}&amp;
+&amp;&amp; = \qquad&amp;\quad
+\text{s.t.} &amp;&amp; (\mathbf{w}-\mathbf{z})\mathbf{A}\geq
+\mathbf{c}&amp;
+\\
+&amp;&amp;&amp; \mathbf{w},\mathbf{z}\geq0 &amp;
+&amp;&amp;&amp;\quad
+&amp;&amp; \mathbf{w},\mathbf{z}\geq0 &amp;
+\end{align*}
+</span></p>
+<p>Perhaps this looks familiar. This is exactly the trick we highlighted
+in section <a href="#sec:lpVariableBoundTransform">4.5.4</a> for
+transforming between non-negative variables and unrestricted variables.
+We can consider <span class="math inline">\mathbf{w}</span> and <span
+class="math inline">\mathbf{z}</span> as the respective “positive” and
+“negative” parts of some other variable <span
+class="math inline">\mathbf{y}</span>. Because <span
+class="math inline">\mathbf{w}</span> and <span
+class="math inline">\mathbf{z}</span> always appear together in the
+formulation as <span class="math inline">\mathbf{w}-\mathbf{z}</span>,
+we can replace <span class="math inline">\mathbf{w}-\mathbf{z}</span> by
+the unrestricted <span class="math inline">\mathbf{y}</span> and get an
+equivalent formulation. So the dual turns into</p>
+<p><span class="math display">
+\begin{align*}
+&amp;\text{min}&amp;&amp; (\mathbf{w}-\mathbf{z})\mathbf{b}&amp;
+&amp;&amp;&amp;\quad
+\text{min}&amp;&amp; \mathbf{y}\mathbf{b}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp;
+(\mathbf{w}-\mathbf{z})\mathbf{A}\geq\mathbf{c}&amp;
+&amp;&amp; = \qquad&amp;\quad
+\text{s.t.} &amp;&amp; \mathbf{y}\mathbf{A}\geq \mathbf{c}&amp;
+\\
+&amp;&amp;&amp; \mathbf{w},\mathbf{z}\geq0 &amp;
+&amp;&amp;&amp;\quad
+&amp;&amp; &amp;
+\end{align*}
+</span></p>
+<p>which is precisely the dual form from eq. <a
+href="#eq:augmentedLpDual">13</a>.</p>
+</div>
+<h3 data-number="4.7.3" id="properties-of-the-dual-lp"><span
+class="header-section-number">4.7.3</span> Properties of the dual
+LP</h3>
+<p>A nice fact about duality is that the primal-dual relationship is
+symmetric, i.e.</p>
+<div id="thm:dualOfDual" class="theorem">
+<p>The dual of the dual problem is equivalent to the primal problem.</p>
+</div>
+<div class="proof" for="thm:dualOfDual" data-placement="appendix">
+<p>The steps required for his proof are encapsulated in the following
+diagram:</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+&amp;\text{min}&amp;&amp; \mathbf{y}\mathbf{b}&amp;
+&amp;&amp;&amp;
+\text{max}&amp;&amp; -\mathbf{y}\mathbf{b}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp; \mathbf{y}\mathbf{A}\leq\mathbf{c}&amp;
+&amp;&amp;\Rightarrow\qquad&amp;
+\text{s.t.} &amp;&amp; -\mathbf{y}\mathbf{A}\geq-\mathbf{c}&amp;
+\\
+&amp;&amp;&amp; \mathbf{y}\geq0 &amp;
+&amp;&amp;(\times -1)\quad&amp;
+&amp;&amp; \mathbf{y}\geq0 &amp;
+\\
+\\
+&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;\Downarrow\text{(dual)}&amp;\\
+\\
+&amp;\text{max}&amp;&amp; \mathbf{c}\mathbf{x}&amp;
+&amp;&amp;&amp;
+\text{min}&amp;&amp; -\mathbf{c}\mathbf{x}&amp;
+\\
+&amp;\text{s.t.} &amp;&amp; \mathbf{A}\mathbf{x}\geq\mathbf{b}&amp;
+&amp;&amp;\Leftarrow\qquad&amp;
+\text{s.t.} &amp;&amp; -\mathbf{A}\mathbf{x}\leq-\mathbf{b}&amp;
+\\
+&amp;&amp;&amp; \mathbf{x}\geq0 &amp;
+&amp;&amp;(\times -1)\quad&amp;
+&amp;&amp; \mathbf{x}\geq0 &amp;
+\end{align*}
+</span></p>
+</div>
+<p>The top-left problem is the dual of the standard form LP. We don’t
+know how to take its dual correctly, so we should put it in the form of
+eq. <a href="#eq:standardFormLpMatrix">3</a> since we know what that
+dual looks like (eq. <a href="#eq:standardLpDual">12</a>). Using our
+tricks from section <a href="#sec:lpForms">4.5</a>, we multiply the
+objective by -1 to convert from minimization to maximization, and we
+multiply both sides of the inequalities by <span
+class="math inline">-\mathbf{I}</span> to change from <span
+class="math inline">\geq</span> constraints to <span
+class="math inline">\leq</span> constraints, obtaining the top-right
+problem.</p>
+<p>We move from the top-right to the bottom-right simply by taking the
+dual from eq. <a href="#eq:standardLpDual">12</a>. So we switch the
+objective function coefficients with the constraint right-hand side,
+change from maximization to minimization, and multiply the variables on
+the other side of the constraint matrix.</p>
+<p>The move from bottom-right to bottom-left is the same as the move
+from top-left to top-right, i.e. multiplying the objective by -1 and the
+constraints by <span class="math inline">-\mathbf{I}</span>. What we end
+up with is precisely the original standard-form problem eq. <a
+href="#eq:standardFormLpMatrix">3</a>.</p>
+</div>
+<p>The solutions to the primal and dual problems hold a special
+relationship too, in that the objective value from one always bounds the
+possible objective values for the other:</p>
+<div id="thm:weakDuality" class="theorem"
+data-display-name="weak duality">
+<p>If <span class="math inline">\mathbf{x}</span> is a feasible solution
+for the primal problem and <span class="math inline">\mathbf{y}</span>
+is a feasible solution for the dual problem, then</p>
+<p><span class="math display">
+\mathbf{c}\mathbf{x}\leq\mathbf{y}\mathbf{b}.
+</span></p>
+</div>
+<div class="proof" for="thm:weakDuality">
+<p>The proof for this is just some simple linear algebra. <span
+class="math inline">\mathbf{x}</span> being feasible for the primal
+problem means <span
+class="math inline">\mathbf{A}\mathbf{x}\leq\mathbf{b}</span>.
+Pre-multiplying both sides by <span
+class="math inline">\mathbf{y}</span> will give us: <span
+class="math display">
+\mathbf{A}\mathbf{x}\leq\mathbf{b}
+\Leftrightarrow
+\mathbf{y}\mathbf{A}\mathbf{x}\leq\mathbf{y}\mathbf{b}.
+</span> Note the above wouldn’t necessarily hold if some values of <span
+class="math inline">\mathbf{y}</span> were negative, but since <span
+class="math inline">\mathbf{y}</span> is feasible for the dual we must
+have <span class="math inline">\mathbf{y}\geq0</span>, by definition of
+the dual problem.</p>
+<p>Similarly, with <span class="math inline">\mathbf{y}</span> being
+feasible to the dual, we have <span
+class="math inline">\mathbf{y}\mathbf{A}\geq\mathbf{c}</span>.
+Post-multiplying both sides by <span
+class="math inline">\mathbf{x}</span> (which similarly must be
+non-negative) gives: <span class="math display">
+\mathbf{y}\mathbf{A}\geq\mathbf{c}
+\Leftrightarrow
+\mathbf{y}\mathbf{A}\mathbf{x}\geq\mathbf{c}\mathbf{x}.
+</span></p>
+<p>Combining the two resultant inequalities gives us what we need: <span
+class="math display">
+\mathbf{c}\mathbf{x}\leq\mathbf{y}\mathbf{A}\mathbf{x}\leq\mathbf{y}\mathbf{b}.
+</span></p>
+</div>
+<p>An immediate corollary<a href="#fn37" class="footnote-ref"
+id="fnref37" role="doc-noteref"><sup>37</sup></a> of <span
+class="thmRef" for="thm:weakDuality"></span> is the following:</p>
+<div id="thm:dualSameValueThenOptimal" class="theorem"
+data-thm-type="corollary">
+<p>If <span class="math inline">\mathbf{x}</span> is a solution to the
+primal problem and <span class="math inline">\mathbf{y}</span> is a
+solution to the dual problem such that <span
+class="math inline">\mathbf{c}\mathbf{x}=\mathbf{y}\mathbf{b}</span>,
+then <span class="math inline">\mathbf{x}</span> and <span
+class="math inline">\mathbf{y}</span> are optimal solutions to the
+primal and dual problems, respectively.</p>
+</div>
+<div class="proof" for="thm:dualSameValueThenOptimal">
+<p>Since <span class="math inline">\mathbf{y}</span> is feasible for the
+dual problem, <span class="thmRef" for="thm:weakDuality"></span> tells
+us that no primal solution can have a value higher than <span
+class="math inline">\mathbf{y}\mathbf{b}</span>. Then since <span
+class="math inline">\mathbf{c}\mathbf{x}=\mathbf{y}\mathbf{b}</span>,
+<span class="math inline">\mathbf{x}</span> attains this highest
+possible value, thus it is optimal. A similar argument gives that <span
+class="math inline">\mathbf{y}</span> is optimal for the dual.</p>
+</div>
+<p>Among other things, <span class="thmRef"
+for="thm:weakDuality"></span> tells us that the problem eq. <a
+href="#eq:prototypeLpDual">11</a> we formulated in section <a
+href="#sec:corporateTakeover">4.7.1</a> had no hopes of attaining an
+objective value higher than the optimal for eq. <a
+href="#eq:prototypeLp">1</a>. So 36 was the highest value we could have
+hoped for. And it turns out we were actually able to attain that value
+in the dual problem. Was this just luck? No, as it turns out, thanks to
+the following theorem.</p>
+<div id="thm:strongDuality" class="theorem"
+data-display-name="strong duality">
+<p>If <span class="math inline">\mathbf{x}^*</span> is an optimal
+solution for the primal problem and <span
+class="math inline">\mathbf{y}^*</span> is an optimal solution for the
+dual problem, then</p>
+<p><span class="math display">
+\mathbf{c}\mathbf{x}^*=\mathbf{y}^*\mathbf{b}.
+</span></p>
+</div>
+<div class="proof" for="thm:strongDuality">
+<p>For this proof we’ll make use of the alternate primal/dual
+formulation of eq. <a href="#eq:augmentedLpDual">13</a> and our
+knowledge of the simplex method. By assumption, the primal problem has
+an optimal solution <span class="math inline">x^*</span>. Thus in the
+final simplex iteration the reduced costs are all non-negative. That is,
+for the optimal basis we have <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
+\mathbf{c}\geq0</span> (you may want to check eq. <a
+href="#eq:simplexMatrixGeneralized">10</a> to refresh your memory on
+what the system of equations looks like for a given simplex basis).</p>
+<p>Let’s take the vector <span class="math inline">\mathbf{y}</span>
+defined as <span
+class="math inline">\mathbf{y}=\mathbf{c}_B\mathbf{B}^{-1}</span>.
+Subbing that into the above inequality, we have <span
+class="math display">
+\mathbf{y}\mathbf{A}- \mathbf{c}\geq0 \Leftrightarrow
+\mathbf{y}\mathbf{A}\geq\mathbf{c}
+</span> which implies that <span class="math inline">\mathbf{y}</span>
+is a feasible solution for the dual. Furthermore, noting that <span
+class="math inline">\mathbf{x}_B^*=\mathbf{B}^{-1}\mathbf{b}</span> (by
+eq. <a href="#eq:basicVariableValues">7</a>), we have <span
+class="math display">
+\begin{align*}
+\mathbf{y}\mathbf{b}&amp;=
+\mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}&amp;&amp; \quad(\text{definition
+of }\mathbf{y}) \\
+     &amp;= \mathbf{c}_B\mathbf{x}^*_B &amp;&amp; \quad(\text{above
+note}) \\
+     &amp;= \mathbf{c}\mathbf{x}^* &amp;&amp; \quad(\mathbf{x}_N =
+\mathbf{0}) \\
+\end{align*}
+</span></p>
+<p>So not only is <span class="math inline">\mathbf{y}</span> feasible
+for the dual, its objective value in the dual is equivalent to the
+objective value for <span class="math inline">\mathbf{x}^*</span> in the
+primal. So by <span class="thmRef"
+for="thm:dualSameValueThenOptimal"></span> <span
+class="math inline">\mathbf{y}^*</span> is an optimal solution for the
+dual, and <span class="math inline">\mathbf{x}^*,\mathbf{y}^*</span>
+satisfy the condition of the theorem.</p>
+</div>
+<h3 data-number="4.7.4" id="simplex-and-the-dual-problem"><span
+class="header-section-number">4.7.4</span> Simplex and the dual
+problem</h3>
+<p>Hold on a second - do you see what we did in that last proof? We
+proved the theorem, sure, but there’s more. This proof was constructive,
+meaning that we didn’t just prove that the primal and dual optimal
+values are equal, we showed how to find <span
+class="math inline">\mathbf{y}^*</span> from <span
+class="math inline">\mathbf{x}^*</span>. Not only that, but we showed
+how to derive <span class="math inline">\mathbf{y}^*</span> <em>using
+the simplex method</em>! Simplex gives its own proof of optimality! All
+that time setting up the simplex method in section <a
+href="#sec:simplex">4.6</a> we only gestured at why it works. But now we
+have the proof of correctness sitting right in front of us!</p>
+<div id="thm:simplexWorks" class="theorem"
+data-display-name="strong duality">
+<p>Given a linear program with a bounded objective, the simplex method
+will terminate at an optimal solution. Moreover, an optimal solution to
+the dual problem may be retrieved from the optimal basis via <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}</span>.</p>
+</div>
+<div class="proof" for="thm:simplexWorks">
+<p>We’ll first note that technically we need to bypass the cycling issue
+from degenerate solutions discussed in section <a
+href="#sec:lpOtherConsiderations">4.6.7</a>. But assuming that is taken
+care of, the simplex method terminates at some solution <span
+class="math inline">\mathbf{x}^*</span>. Taking the associated basis and
+following the steps of the proof to <span class="thmRef"
+for="thm:strongDuality"></span>, we obtain a solution <span
+class="math inline">\mathbf{y}^*=\mathbf{c}_B\mathbf{B}^{-1}</span> such
+that <span class="math inline">\mathbf{y}^*\mathbf{b}=
+\mathbf{c}\mathbf{x}^*</span>. Thus by <span class="thmRef"
+for="thm:dualSameValueThenOptimal"></span> <span
+class="math inline">x^*</span> and <span class="math inline">y^*</span>
+are both optimal for their respective problems.</p>
+</div>
+<p>Also implied by the proof of <span class="thmRef"
+for="thm:strongDuality"></span>: Taking <span
+class="math inline">\mathbf{y}=\mathbf{c}_B\mathbf{B}^{-1}</span> for
+the any basis gives us a solution <span
+class="math inline">\mathbf{y}</span> to the dual problem such that
+<span class="math inline">\mathbf{y}^*\mathbf{b}=
+\mathbf{c}_B\mathbf{x}_B^*</span>. However, due to <span class="thmRef"
+for="thm:strongDuality"></span>, we know that no <em>feasible</em>
+solution to <span class="math inline">\mathbf{y}</span> can have any
+value lower than the optimal <span
+class="math inline">\mathbf{c}\mathbf{x}^*</span>. So the <span
+class="math inline">\mathbf{y}</span> generated is feasible if and only
+if the basis generating it is optimal for the primal problem.</p>
+<p>We now know that the simplex method will generate optimal solutions
+for <em>both</em> the primal problem <em>and</em> the dual problem. This
+gives us an opportunity: what if for some reason we believe simplex will
+run faster on the dual problem than it would on the primal problem. As
+an example, the number of constraints in a problem is often related to
+the number of simplex iterations required to solve it. Since the
+constraints in the primal correspond directly to variables in the dual
+(and vice-versa) if you have a problem with many more constraints than
+variables, it stands to reason that simplex may solve the dual problem
+faster than the primal. Since simplex gives solutions to both the primal
+and dual problems (and the dual of the dual is the primal), running
+simplex on the dual may get us an optimal solution faster.</p>
+<p>Another notion worth mentioning is the <strong>dual simplex</strong>
+method. We will not discuss it in any detail here,<a href="#fn38"
+class="footnote-ref" id="fnref38" role="doc-noteref"><sup>38</sup></a>
+but it is an algorithm applied to the primal problem whose steps look as
+if it were regular simplex being applied to the dual problem. It can be
+useful to have both methods (primal and dual simplex) available when
+solving an LP, and most solvers do exactly this.</p>
+<h3 data-number="4.7.5"
+id="primaldual-feasibilityboundedness-relationships"><span
+class="header-section-number">4.7.5</span> Primal/dual
+feasibility/boundedness relationships</h3>
+<p>To wrap up the duality section, let’s discuss how the feasibility and
+boundedness of the primal and dual problems relate to one another. The
+possibilities are summarized in the following result:</p>
+<div id="thm:primalDualRelations" class="theorem"
+data-display-name="strong duality">
+<p>The following relationships always hold between the primal LP and its
+associated dual:</p>
+<ol type="1">
+<li>If the primal problem is feasible with a bounded objective, the so
+is the dual.</li>
+<li>If the primal problem is feasible but with an unbounded objective,
+then the dual is infeasible.</li>
+<li>If the primal problem is infeasible, then the dual has either no
+feasible solutions or an unbounded objective function.</li>
+</ol>
+</div>
+<div class="proof" for="thm:primalDualRelations">
+<p>Case 1 follows directly from <span class="thmRef"
+for="thm:simplexWorks"></span>. Case 2 is a corollary of weak duality
+(<span class="thmRef" for="thm:weakDuality"></span>), since the
+existence of a dual solution would immediately bound the primal
+objective.</p>
+<p>Case 3 can be proven by contradiction using <span class="thmRef"
+for="thm:simplexWorks"></span> (and <span class="thmRef"
+for="thm:dualOfDual"></span>): Suppose that the dual is neither
+infeasible nor unbounded. Then it must be feasible with a bounded
+objective, which by <span class="thmRef" for="thm:simplexWorks"></span>
+means that applying simplex to this problem will yield an optimal, and
+therefore feasible, solution to the primal as well, a contradiction.</p>
+</div>
 <!-- {insertSection:sections/linear_programming/sensitivity.md} -->
 <!-- {insertSection:sections/integer_programming.md} -->
 <h1 data-number="5" id="appendix"><span
@@ -4238,7 +4801,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(11)</span></span></p>
+</span><span class="eqnos-number">(14)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -4778,6 +5341,30 @@ role="doc-backlink">↩︎</a></p></li>
 <li id="fn35"><p>Sorry to just present this to you as if it’s a mystical
 gift from the gods. We could have totally derived it ourselves, but I
 didn’t think it was worth the class time.<a href="#fnref35"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn36">This “fell on its side” thing is easier to see if you
+post-multiply the dual variables instead:
+<div class='mathSmall'>
+<p>$$ <span class="math display">\begin{align*}
+\text{min}&amp;&amp; \begin{bmatrix}4 &amp; 12 &amp;
+18\end{bmatrix}\begin{bmatrix}y_1 \\ y_2 \\ y_3\end{bmatrix} &amp; \\
+\text{s.t.} &amp;&amp; \begin{bmatrix}1 &amp; 0 &amp; 3 \\ 0 &amp; 2
+&amp; 2\end{bmatrix}\begin{bmatrix}y_1 \\ y_2 \\ y_3\end{bmatrix} &amp;
+\geq \begin{bmatrix}3 \\ 5\end{bmatrix} \\
+&amp;&amp; y_1,y_2,y_3 &amp; \geq 0
+\end{align*}</span></p>
+<p><span class="math display">
+&lt;/div&gt;
+</span><a href="#fnref36" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn37"><p>A <em>corollary</em> is like a theorem, and we could
+just as easily have called this a theorem as well. But generally we use
+the word corollary when the result follows almost directly from a result
+presented previously.<a href="#fnref37" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn38"><p>Interested readers can check <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>, section 8.1.<a href="#fnref38"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
