@@ -1,3 +1,15 @@
 # Integer Programming
 
-An integer program is an optimization problem with form @eq:id, but also requiring $x\in\integers$.
+## Rounding is not enough
+
+## Modeling techniques and tricks
+
+## Combinatorial explosion
+
+## Solving MIPs with software
+
+### Lazy constraints
+
+## Branch-and-bound
+
+## Cutting planes
