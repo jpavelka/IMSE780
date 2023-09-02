@@ -274,6 +274,17 @@
     th p {
         margin: 0.2rem;
     }
+    img {
+        border: 1pt solid black;
+        display: block;
+        margin: 1rem auto 1rem auto;
+    }
+    a {
+        color: blue;
+    }
+    a:visited {
+        color: purple;
+    }
 </style>
 <script>
     window.onload = () => {
@@ -457,8 +468,8 @@ them to offer this product? Why?</li>
 </ol></li>
 <li><p>(6 pts)* Using Python and whichever modeling library you prefer,
 formulate the following problem as a linear program and report the
-optimal solution. You may submit either the entire text of your program
-or a link to a Colab notebook.<br />
+optimal solution. See <a href='#pyInstructions'>here</a> for
+instructions on submitting Python-based assignments.<br />
 <br />
 Larry Edison is the director of the Computer Center for Buckly College.
 He now needs to schedule the staffing of the center. It is open from 8
@@ -523,6 +534,39 @@ requirements at the minimum possible cost.</p></li>
 </ol>
 </div>
 </div>
+<!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
+<div>
+
+</div>
+</div> -->
+<hr>
 <p>* : From Hillier &amp; Lieberman, 2021.</p>
+<hr>
+<h1 id="pyInstructions">
+Instruction for submitting Python assignments:
+</h1>
+<p>For the portions of assignments that require you to submit Python
+code, I’ll accept submissions in one of the following modes:</p>
+<ol type="1">
+<li><p>(Preferred) A link to a Colab notebook. Any <code>pip</code>
+installs or other dependency downloads should be included in the
+notebook. Starting with Homework 2, <strong>I’ll only accept these
+submissions if I have been added as an editor</strong> of the notebook,
+which allows me to see the document’s revision history (to make sure
+nobody changes their code after I’ve graded it in an attempt to gain
+more points). To do this (steps illustrated below), click on “Share” in
+the upper-right portion of the screen. Then enter my gmail address
+(jeffp171@gmail.com) where it says “Add people and groups”, and in the
+drop-down to the right select “Editor”.</p>
+<p><img src='images/py-submit-share.png'></img>
+<img src='images/py-submit-add-email.png'></img>
+<img src='images/py-submit-editor.png'></img></p></li>
+<li><p>Upload a file through Canvas.</p></li>
+<li><p>Copy the Python code directly into the Canvas
+submission.</p></li>
+</ol>
+<p>For the final two options, make sure to mention in a comment
+somewhere if I need to install any libraries or other dependencies to
+run your code.</p>
 </body>
 </html>
