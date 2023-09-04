@@ -346,6 +346,8 @@ Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
 \end{bmatrix}
 $$
 
+{#eq:simplexExampleFinalMatrix}
+
 Thus our new solution is $x_1=2, x_2=6, x_3=2, x_4=0$, and $x_5=0$[^slackInterpretation]. Since the top row has all positive coefficients, increasing these variables would only serve to decrease the objective. So we've passed the optimality test, and can terminate with the optimal solution!
 
 [^slackInterpretation]: Now might be a good time to check out the simplex visualization in +@sec:simplexVisualized and see if you understand the interpretation of the slack variable values in the solutions we've found.
