@@ -220,7 +220,7 @@ For the portions of assignments that require you to submit Python code, I'll acc
     <img src='images/py-submit-add-email.png'></img>
     <img src='images/py-submit-editor.png'></img>
 
-2. Upload a file through Canvas.
+2. Upload a file through Canvas. If you code using Colab and would like to submit your Colab notebook as a file, you can download a copy from the Colab menu by choosing File > Download > Download .ipynb.
 3. Copy the Python code directly into the Canvas submission.
 
-For the final two options, make sure to mention in a comment somewhere if I need to install any libraries or other dependencies to run your code.
+If you choose option 3, or choose option 2 with a file besides the Colab notebook, make sure to mention in a comment somewhere if I need to install any libraries or other dependencies to run your code.
