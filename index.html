@@ -2081,9 +2081,13 @@ class="toc-section-number">5.2.5</span> Systems of equations</a></li>
 id="toc-sec:elementaryRowOperations"><span
 class="toc-section-number">5.2.6</span> Elementary operations</a></li>
 </ul></li>
+<li><a href="#writing-mathematics-in-a-colab-notebook"
+id="toc-writing-mathematics-in-a-colab-notebook"><span
+class="toc-section-number">5.3</span> Writing mathematics in a Colab
+notebook</a></li>
 <li><a href="#sec:appendixSelectedProofs"
 id="toc-sec:appendixSelectedProofs"><span
-class="toc-section-number">5.3</span> Selected proofs</a></li>
+class="toc-section-number">5.4</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -3726,7 +3730,8 @@ x_1\text{ column: }\begin{bmatrix}1 \\ 0 \\ 3\end{bmatrix}\
 class="math inline">x_1</span> as the basic variable in the last
 constraint. Using elimination to build our identity structure yields the
 following matrix:</p>
-<p><span class="math display">
+<p><span id="eq:simplexExampleFinalMatrix" class="eqnos"><span
+class="math display">
 \begin{bmatrix}
 1 &amp; 0 &amp; 0 &amp; 0 &amp;  3/2 &amp;    1 \\
 0 &amp; 0 &amp; 0 &amp; 1 &amp;  1/3 &amp; -1/3 \\
@@ -3740,7 +3745,7 @@ Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
 \begin{bmatrix}
 36 \\ 2 \\ 6 \\ 2
 \end{bmatrix}
-</span></p>
+</span><span class="eqnos-number">(7)</span></span></p>
 <p>Thus our new solution is <span class="math inline">x_1=2, x_2=6,
 x_3=2, x_4=0</span>, and <span class="math inline">x_5=0</span><a
 href="#fn33" class="footnote-ref" id="fnref33"
@@ -3838,7 +3843,7 @@ takes out other columns of }\mathbf{A}) \\
 &amp; \Leftrightarrow \mathbf{x}_B = \mathbf{B}^{-1}\mathbf{b}&amp;&amp;
 \quad(\text{definition of identity})
 \end{align*}
-</span><span class="eqnos-number">(7)</span></span></p>
+</span><span class="eqnos-number">(8)</span></span></p>
 </div>
 <p>So getting the variable values at a basic solution is as simple as
 taking <span class="math inline">\mathbf{x}_N=\mathbf{0}</span> and
@@ -3877,7 +3882,7 @@ Z \\ \mathbf{x}
 \begin{bmatrix}
 0 \\ \mathbf{b}
 \end{bmatrix}
-</span><span class="eqnos-number">(8)</span></span></p>
+</span><span class="eqnos-number">(9)</span></span></p>
 <p>where once again <span class="math inline">Z</span> is a “variable”
 representing the objective value. Note that this matches exactly with
 eq. <a href="#eq:simplexExampleMatrix1">5</a> from section <a
@@ -3897,9 +3902,9 @@ role="doc-noteref"><sup>35</sup></a>.</p>
 <p><span id="eq:magicMatrix" class="eqnos"><span class="math display">
 \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
 \mathbf{B}^{-1}\end{bmatrix}
-</span><span class="eqnos-number">(9)</span></span></p>
+</span><span class="eqnos-number">(10)</span></span></p>
 <p>Watch what happens when we pre-multiply this on the right-hand side
-of eq. <a href="#eq:simplexMatrixAllInfo">8</a>:</p>
+of eq. <a href="#eq:simplexMatrixAllInfo">9</a>:</p>
 <p><span class="math display">
 \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
 \mathbf{B}^{-1}\end{bmatrix}
@@ -3914,12 +3919,12 @@ of eq. <a href="#eq:simplexMatrixAllInfo">8</a>:</p>
 <p>The top of the result is the objective value <span
 class="math inline">Z</span> at the current basis solution, and the
 bottom give the values of <span class="math inline">\mathbf{x}_B</span>.
-So it looks like eq. <a href="#eq:magicMatrix">9</a> is precisely the
+So it looks like eq. <a href="#eq:magicMatrix">10</a> is precisely the
 matrix we need to encapsulate all the operations we did during a simplex
 iteration. Of course, any multiplication we apply on one side of an
 equation must also be applied to the other side to keep the system
-valid. So let’s apply pre-multiply eq. <a href="#eq:magicMatrix">9</a>
-on the left-hand side of eq. <a href="#eq:simplexMatrixAllInfo">8</a> as
+valid. So let’s apply pre-multiply eq. <a href="#eq:magicMatrix">10</a>
+on the left-hand side of eq. <a href="#eq:simplexMatrixAllInfo">9</a> as
 well:</p>
 <p><span class="math display">
 \begin{bmatrix}1 &amp; \mathbf{c}_B\mathbf{B}^{-1}\\ \mathbf{0}&amp;
@@ -3942,7 +3947,7 @@ class="math display">
 \begin{bmatrix}
 \mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}\\ \mathbf{B}^{-1}\mathbf{b}
 \end{bmatrix}
-</span><span class="eqnos-number">(10)</span></span></p>
+</span><span class="eqnos-number">(11)</span></span></p>
 <p>The top row coefficients <span
 class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
 \mathbf{c}</span> are often called the <strong>reduced costs</strong> of
@@ -3956,7 +3961,7 @@ do from iteration to iteration is choose the basis, invert <span
 class="math inline">\mathbf{B}</span> (which is just a sub-matrix of
 <span class="math inline">\mathbf{A}</span>), then multiply!</p>
 <p>To finish off this section, let’s use Python to verify that the
-system we recover from eq. <a href="#eq:simplexMatrixGeneralized">10</a>
+system we recover from eq. <a href="#eq:simplexMatrixGeneralized">11</a>
 matches with what we got during the iterations in section <a
 href="#sec:simplexExample">4.6.4</a>.</p>
 <script src="https://gist.github.com/e5817bc5b1eb52dce2737969e0ee0c83.js"></script>
@@ -3979,7 +3984,7 @@ href="#sec:lpOtherConsiderations">4.6.7</a>).</li>
 <li><em>Test for optimality</em>: Examine the values of <span
 class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
 \mathbf{c}</span> (i.e. the reduced costs, from the top row of eq. <a
-href="#eq:simplexMatrixGeneralized">10</a>) corresponding to the
+href="#eq:simplexMatrixGeneralized">11</a>) corresponding to the
 non-basic variables. If all coefficients are non-negative, terminate
 with the optimal solution. Otherwise, continue with the iteration.</li>
 <li><em>Determine the entering basic variable</em>: Select some variable
@@ -3994,7 +3999,7 @@ test</em> from section <a href="#sec:simplexExample">4.6.4</a>, dividing
 the entries of the vector <span
 class="math inline">\mathbf{B}^{-1}\mathbf{b}</span> (the right-hand
 side of the constraints portion of eq. <a
-href="#eq:simplexMatrixGeneralized">10</a>) by the entries in the <span
+href="#eq:simplexMatrixGeneralized">11</a>) by the entries in the <span
 class="math inline">j</span>th column of <span
 class="math inline">\mathbf{B}^{-1}\mathbf{A}</span>. For the exiting
 variable, select the basic variable corresponding to the row with the
@@ -4199,7 +4204,7 @@ class="math display">
      &amp;&amp; 2y_2 +  2y_3 &amp; \geq 5 \\
      &amp;&amp; y_1,y_2,y_3 &amp; \geq 0
 \end{align*}
-</span><span class="eqnos-number">(11)</span></span></p>
+</span><span class="eqnos-number">(12)</span></span></p>
 <p>You quickly throw together a Colab notebook to solve this problem.
 You know that Wyndor can make $36,000 per week with their resources, so
 the difference between that and the optimal solution solution to this LP
@@ -4213,12 +4218,12 @@ class="header-section-number">4.7.2</span> Defining the dual LP</h3>
 LP duality. For every LP, there is a second, associated LP that relates
 to it in a special way. We call the second LP the <strong>dual</strong>
 LP, and the original the <strong>primal</strong>. As it turns out, the
-problem eq. <a href="#eq:prototypeLpDual">11</a> we just formulated is
+problem eq. <a href="#eq:prototypeLpDual">12</a> we just formulated is
 the dual problem of our original sample LP eq. <a
 href="#eq:prototypeLp">1</a>.</p>
 <p>Let’s look a little closer at the relationship between eq. <a
 href="#eq:prototypeLp">1</a> and eq. <a
-href="#eq:prototypeLpDual">11</a>. To make things more obvious, let’s
+href="#eq:prototypeLpDual">12</a>. To make things more obvious, let’s
 write them out next to each other in matrix form. We’ll also rearrange
 the order of the data and variable matrices in the dual problem:</p>
 <div class="mathSmall">
@@ -4270,7 +4275,7 @@ class="math display">
 &amp;&amp;&amp;\quad
 &amp;&amp; \mathbf{y}\geq0 &amp;
 \end{align*}
-</span><span class="eqnos-number">(12)</span></span></p>
+</span><span class="eqnos-number">(13)</span></span></p>
 <p>But what if your problem is in a different form? Can we still talk
 about its dual in the same way? As you might have guessed, there is
 indeed a dual problem for your LP no matter how it is stated. The
@@ -4293,15 +4298,15 @@ class="math display">
 &amp;&amp;&amp;\quad
 &amp;&amp;&amp;
 \end{align*}
-</span><span class="eqnos-number">(13)</span></span></p>
+</span><span class="eqnos-number">(14)</span></span></p>
 <div id="thm:dualEqualityForm" class="theorem">
-<p>The systems in eq. <a href="#eq:augmentedLpDual">13</a> give a valid
+<p>The systems in eq. <a href="#eq:augmentedLpDual">14</a> give a valid
 primal/dual pair.</p>
 </div>
 <div class="proof" for="thm:dualEqualityForm" data-placement="appendix">
 <p>The concept for this proof is to transform the primal problem from
-eq. <a href="#eq:augmentedLpDual">13</a> into inequality form so that we
-can use the definition of eq. <a href="#eq:standardLpDual">12</a> to get
+eq. <a href="#eq:augmentedLpDual">14</a> into inequality form so that we
+can use the definition of eq. <a href="#eq:standardLpDual">13</a> to get
 the corresponding dual problem, then see what shakes out. To that end,
 let’s use our trick from section <a
 href="#sec:lpConstraintTransform">4.5.3</a> to convert to inequality
@@ -4325,7 +4330,7 @@ class="math inline">\geq</span> constraint:</p>
 &amp;&amp; \mathbf{x}\geq0&amp;
 \end{align*}
 </span></p>
-<p>Now we can use eq. <a href="#eq:standardLpDual">12</a> to find the
+<p>Now we can use eq. <a href="#eq:standardLpDual">13</a> to find the
 dual. For reasons that will become clear later, we’ll replace the usual
 <span class="math inline">\mathbf{y}</span> variable vector with two
 separate vectors <span class="math inline">\mathbf{w}</span> and <span
@@ -4401,7 +4406,7 @@ equivalent formulation. So the dual turns into</p>
 \end{align*}
 </span></p>
 <p>which is precisely the dual form from eq. <a
-href="#eq:augmentedLpDual">13</a>.</p>
+href="#eq:augmentedLpDual">14</a>.</p>
 </div>
 <h3 data-number="4.7.3" id="properties-of-the-dual-lp"><span
 class="header-section-number">4.7.3</span> Properties of the dual
@@ -4449,7 +4454,7 @@ diagram:</p>
 <p>The top-left problem is the dual of the standard form LP. We don’t
 know how to take its dual correctly, so we should put it in the form of
 eq. <a href="#eq:standardFormLpMatrix">3</a> since we know what that
-dual looks like (eq. <a href="#eq:standardLpDual">12</a>). Using our
+dual looks like (eq. <a href="#eq:standardLpDual">13</a>). Using our
 tricks from section <a href="#sec:lpForms">4.5</a>, we multiply the
 objective by -1 to convert from minimization to maximization, and we
 multiply both sides of the inequalities by <span
@@ -4458,7 +4463,7 @@ class="math inline">\geq</span> constraints to <span
 class="math inline">\leq</span> constraints, obtaining the top-right
 problem.</p>
 <p>We move from the top-right to the bottom-right simply by taking the
-dual from eq. <a href="#eq:standardLpDual">12</a>. So we switch the
+dual from eq. <a href="#eq:standardLpDual">13</a>. So we switch the
 objective function coefficients with the constraint right-hand side,
 change from maximization to minimization, and multiply the variables on
 the other side of the constraint matrix.</p>
@@ -4536,7 +4541,7 @@ class="math inline">\mathbf{y}</span> is optimal for the dual.</p>
 </div>
 <p>Among other things, <span class="thmRef"
 for="thm:weakDuality"></span> tells us that the problem eq. <a
-href="#eq:prototypeLpDual">11</a> we formulated in section <a
+href="#eq:prototypeLpDual">12</a> we formulated in section <a
 href="#sec:corporateTakeover">4.7.1</a> had no hopes of attaining an
 objective value higher than the optimal for eq. <a
 href="#eq:prototypeLp">1</a>. So 36 was the highest value we could have
@@ -4555,14 +4560,14 @@ dual problem, then</p>
 </div>
 <div class="proof" for="thm:strongDuality">
 <p>For this proof we’ll make use of the alternate primal/dual
-formulation of eq. <a href="#eq:augmentedLpDual">13</a> and our
+formulation of eq. <a href="#eq:augmentedLpDual">14</a> and our
 knowledge of the simplex method. By assumption, the primal problem has
 an optimal solution <span class="math inline">x^*</span>. Thus in the
 final simplex iteration the reduced costs are all non-negative. That is,
 for the optimal basis we have <span
 class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-
 \mathbf{c}\geq0</span> (you may want to check eq. <a
-href="#eq:simplexMatrixGeneralized">10</a> to refresh your memory on
+href="#eq:simplexMatrixGeneralized">11</a> to refresh your memory on
 what the system of equations looks like for a given simplex basis).</p>
 <p>Let’s take the vector <span class="math inline">\mathbf{y}</span>
 defined as <span
@@ -4574,7 +4579,7 @@ class="math display">
 </span> which implies that <span class="math inline">\mathbf{y}</span>
 is a feasible solution for the dual. Furthermore, noting that <span
 class="math inline">\mathbf{x}_B^*=\mathbf{B}^{-1}\mathbf{b}</span> (by
-eq. <a href="#eq:basicVariableValues">7</a>), we have <span
+eq. <a href="#eq:basicVariableValues">8</a>), we have <span
 class="math display">
 \begin{align*}
 \mathbf{y}\mathbf{b}&amp;=
@@ -4799,7 +4804,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(14)</span></span></p>
+</span><span class="eqnos-number">(15)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -5107,8 +5112,27 @@ x_1 \\ x_2
 \end{bmatrix}
 </span></li>
 </ul>
-<h2 data-number="5.3" id="sec:appendixSelectedProofs"><span
-class="header-section-number">5.3</span> Selected proofs</h2>
+<h2 data-number="5.3" id="writing-mathematics-in-a-colab-notebook"><span
+class="header-section-number">5.3</span> Writing mathematics in a Colab
+notebook</h2>
+<p>Besides writing Python code, another useful feature of a Colab
+notebook is the ability to use “text” cells to write Markdown. <a
+href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> provides a
+convenient way to render formatted text, and in fact the notes you are
+reading now were written using it. The flavor of Markdown implemented in
+Colab allows for the addition of <a
+href="https://en.wikipedia.org/wiki/LaTeX">LaTeX</a> syntax for
+rendering mathematical symbols. Colab is far from the only place where
+you can use Markdown, but as usual it is simple to set up and use right
+out of the box.</p>
+<p>In the following notebook, I’ve included examples of how to render
+mathematical symbols inside Colab. This is far from a comprehensive
+guide, sticking to items I think might be useful for the class. I came
+across a more extensive guide you may want to check out <a
+href="https://ashki23.github.io/markdown-latex.html">here</a>.</p>
+<script src="https://gist.github.com/eea93b3fac7b6040bcb074e95b4e5076.js"></script>
+<h2 data-number="5.4" id="sec:appendixSelectedProofs"><span
+class="header-section-number">5.4</span> Selected proofs</h2>
 <p>This section contains proofs to selected statements in the main
 text.</p>
 <h1 id="References">References</h1>
