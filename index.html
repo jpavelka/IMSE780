@@ -1956,7 +1956,7 @@ LP</a></li>
 </ul></li>
 <li><a href="#lp-terminology" id="toc-lp-terminology"><span
 class="toc-section-number">4.2</span> LP terminology</a></li>
-<li><a href="#lp-visualized" id="toc-lp-visualized"><span
+<li><a href="#sec:lpVisualized" id="toc-sec:lpVisualized"><span
 class="toc-section-number">4.3</span> LP visualized</a>
 <ul>
 <li><a href="#solving-an-lp-visually"
@@ -2056,6 +2056,20 @@ id="toc-primaldual-feasibilityboundedness-relationships"><span
 class="toc-section-number">4.7.5</span> Primal/dual
 feasibility/boundedness relationships</a></li>
 </ul></li>
+<li><a href="#sec:lpPostOpt" id="toc-sec:lpPostOpt"><span
+class="toc-section-number">4.8</span> Post-optimality analysis</a>
+<ul>
+<li><a href="#re-optimization" id="toc-re-optimization"><span
+class="toc-section-number">4.8.1</span> Re-optimization</a></li>
+<li><a href="#sec:shadowPrices" id="toc-sec:shadowPrices"><span
+class="toc-section-number">4.8.2</span> Shadow Prices</a></li>
+<li><a href="#sec:sensitivityAnalysis"
+id="toc-sec:sensitivityAnalysis"><span
+class="toc-section-number">4.8.3</span> Sensitivity Analysis</a></li>
+</ul></li>
+<li><a href="#notes-and-further-reading"
+id="toc-notes-and-further-reading"><span
+class="toc-section-number">4.9</span> Notes and further reading</a></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">5</span> Appendix</a>
@@ -2641,7 +2655,7 @@ attain the optimal value. It is also possible to have no optimal
 solutions at all, as in the case of an infeasible problem. Another
 situation with no optimal solution is an <strong>unbounded</strong>
 problem, where the objective value can become arbitrarily favorable.</p>
-<h2 data-number="4.3" id="lp-visualized"><span
+<h2 data-number="4.3" id="sec:lpVisualized"><span
 class="header-section-number">4.3</span> LP visualized</h2>
 <p>Let’s get hands-on again to see our new definitions in action. Since
 our sample problem includes only two decision variables, we can
@@ -3763,6 +3777,12 @@ with the optimal solution!</p>
 <h3 data-number="4.6.5" id="simplex-in-matrix-notation"><span
 class="header-section-number">4.6.5</span> Simplex in matrix
 notation</h3>
+<div class="lectureVideoEmbed"
+data-video-id="aa0f8c8329cd4138a5313757a8f8f1a51d"
+data-video-date="2023-09-08">
+Python basics. The video cut off a bit at the end, but you don’t miss
+anything important.
+</div>
 <p>Now that we have the mechanics down, let’s tidy up our presentation
 of the simplex method by writing out the steps in matrix notation.
 Recall that for simplex we need equality constraints and non-negative
@@ -4172,9 +4192,9 @@ class="header-section-number">4.7</span> Duality</h2>
 <p>In this section we’ll discuss the important concept of LP duality.
 This neat bit of theory will allow us to prove the correctness of the
 simplex method, and open up avenues to potentially solve LPs faster in
-practice. We’ll also see its fingerprints when discussing sensitivity
-analysis. But before we get there, let’s start with some light
-fiction.</p>
+practice. We’ll also see its fingerprints when discussing
+post-optimality analysis in section <a href="#sec:lpPostOpt">4.8</a>.
+But before we get there, let’s start with some light fiction.</p>
 <h3 data-number="4.7.1" id="sec:corporateTakeover"><span
 class="header-section-number">4.7.1</span> The corporate takeover</h3>
 <p>Suppose you really want to get into the glass manufacturing business.
@@ -4707,7 +4727,372 @@ objective, which by <span class="thmRef" for="thm:simplexWorks"></span>
 means that applying simplex to this problem will yield an optimal, and
 therefore feasible, solution to the primal as well, a contradiction.</p>
 </div>
-<!-- {insertSection:sections/linear_programming/sensitivity.md} -->
+<h2 data-number="4.8" id="sec:lpPostOpt"><span
+class="header-section-number">4.8</span> Post-optimality analysis</h2>
+<p>After a linear program has been solved, it is often the case that
+you’d like to consider separate, but similar scenarios for you problem
+of interest. In the case of our example LP eq. <a
+href="#eq:prototypeLp">1</a>, the company might like to know how much
+the solution would change if they could add another hour of production
+time to one of their facilities. Additionally, often when a problem is
+formulated, the exact data (<span class="math inline">\mathbf{A},
+\mathbf{b}, \mathbf{c}</span>) that is used is only an estimate, or
+subject to decisions made by upper management. In these cases we might
+like to know something about how the objective could change with small
+updates to these values. These activities all fall under the heading of
+<strong>post-optimality analysis</strong>, and LP theory gives us some
+tools for dealing with them.</p>
+<h3 data-number="4.8.1" id="re-optimization"><span
+class="header-section-number">4.8.1</span> Re-optimization</h3>
+<p>In the simplest and most general case, say that we’ve already solved
+a very large LP, and for whatever reason we need to make a few tweaks to
+the problem and see how the solution changes. One approach to this could
+be to re-run simplex from scratch on the new problem. But for very large
+LPs, a better approach may be <strong>re-optimization</strong>, which is
+essentially a way to “start where you left off” on the previous problem.
+The idea is to start from the previous optimal basis and deduce how
+changes in the data affect the simplex information from eq. <a
+href="#eq:simplexMatrixGeneralized">11</a>.</p>
+<p>The advantage here is that since the original problem is very similar
+to the one being solved now, the new optimal solution is likely to be
+“nearby” to the old optimal solution, and thus we can hope that fewer
+simplex iterations are needed to complete the re-optimization process
+when compared to re-solving the problem from scratch. It is very
+possible that, even with the changes, the previous optimal solution is
+still optimal for the new problem, which you could know by checking the
+newly-calculated reduced costs. Even if the old solution is no longer
+optimal, it may still be feasible, allowing you to continue the simplex
+algorithm from there. Lastly, even if the old solution is no longer
+feasible for the new problem, a few iterations of the <em>dual</em>
+simplex algorithm may take you to an optimal solution.</p>
+<h3 data-number="4.8.2" id="sec:shadowPrices"><span
+class="header-section-number">4.8.2</span> Shadow Prices</h3>
+<p>Consider a resource allocation problem, like e.g. our sample LP
+eq. <a href="#eq:prototypeLp">1</a>, where the problem is of the form
+eq. <a href="#eq:standardFormLpMatrix">3</a> and the constraints denote
+how much of each resource is needed for each possible activity. In these
+cases, at the optimal basis the reduced costs <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}-\mathbf{c}</span>
+corresponding to the slack variable for each constraint denote the
+so-called <strong>shadow price</strong> of the associated resource.</p>
+<p>Let’s look again eq. <a href="#eq:simplexExampleFinalMatrix">7</a>,
+which was how our system looked after we completed the simplex method
+while solving the sample LP in section <a
+href="#sec:simplexExample">4.6.4</a>. The final three coefficients in
+the top row are the shadow prices of the three resources, i.e. an hour
+of production capacities at Plants 1, 2, and 3, respectively. Looking at
+the system, we see a shadow price of 0 for Plant 1, a price of <span
+class="math inline">\frac{3}{2}</span> for Plant 2, and a price of <span
+class="math inline">1</span> for Plant 3.</p>
+<p>How do we interpret these shadow prices? Let’s consider Plant 3,
+whose shadow price is 1. In the context of the final simplex iteration,
+that same value 1 was the reduced cost on <span
+class="math inline">x_5</span>, the slack variable for the Plant 3
+constraint. We interpret that to mean that a small increase in <span
+class="math inline">x_5</span> would decrease the objective value by
+$1,000 per unit, which is why we decided not to bring <span
+class="math inline">x_5</span> into the basis. Since <span
+class="math inline">x_5</span> is the <em>slack</em> in the Plant 3
+constraint, we can interpret an increase in <span
+class="math inline">x_5</span> as <em>taking away</em> capacity from
+Plant 3. So we could also interpret that reduced cost as telling us that
+taking away capacity from Plant 3 would cost us $1,000 per hour. On the
+flip side, this should also mean that <em>increasing</em> capacity at
+Plant 3 would be worth and extra $1,000 per hour to us.</p>
+<p>This insight is the key to interpreting the shadow price. It is the
+amount we would expect the objective to increase if we could gain a
+<em>little more</em><a href="#fn39" class="footnote-ref" id="fnref39"
+role="doc-noteref"><sup>39</sup></a> of a given resource, and hence also
+the maximum <em>price</em> we’d be willing to pay in order to secure
+this increase.</p>
+<p>So in our sample problem, we should be willing to pay $1,500 for an
+extra hour of capacity at Plant 2, and $1,000 for an extra hour at Plant
+3. But the shadow price for Plant 1 is 0. Why is that? Well, in the
+optimal solution to the sample problem, we only use 2 of the available 4
+hours at Plant 1. We already have 2 hours of capacity there that we
+aren’t using, so why would we pay anybody for even more?</p>
+<p>Another nice interpretation for the shadow price comes from the dual
+problem. Recall in section <a href="#sec:corporateTakeover">4.7.1</a>
+when we formulated our “corporate takeover” problem eq. <a
+href="#eq:prototypeLpDual">12</a>, which we later found was actually the
+dual to our sample LP. In that formulation, the variables <span
+class="math inline">y_1, y_2, y_3</span> represented how much we’d be
+willing to pay for time at Wyndor’s three facilities, and when we ran
+the notebook in section <a href="#sec:corporateTakeover">4.7.1</a> the
+optimal values for these variables were again those same values from
+above, <span class="math inline">0, \frac{3}{2}</span>, and <span
+class="math inline">1</span>. Of course, it should be no surprise that
+these are exactly equal to the shadow prices, as we’ve already seen the
+connection between the two in the proof to <span class="thmRef"
+for="thm:simplexWorks"></span>.</p>
+<h3 data-number="4.8.3" id="sec:sensitivityAnalysis"><span
+class="header-section-number">4.8.3</span> Sensitivity Analysis</h3>
+<p><strong>Sensitivity analysis</strong> is the process of determining
+how small changes in problem data can alter the optimal solution. As
+explained in <span class="citation" data-cites="classText">Hillier and
+Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>, section 7.2,</p>
+<blockquote>
+<p>one assumption of linear programming is that all the parameters of
+the model (<span class="math inline">a_{ij}</span>, <span
+class="math inline">b_i</span>, and <span
+class="math inline">c_j</span>) are known constants. Actually, the
+parameter values used in the model normally are just estimates based on
+a prediction of future conditions. The data obtained to develop these
+estimates often are rather crude or nonexistent, so that the parameters
+in the original formulation may represent little more than quick rules
+of thumb provided by busy line personnel. The data may even represent
+deliberate overestimates or underestimates to protect the interests of
+the estimators.</p>
+</blockquote>
+<p>Thus it is valuable to know if changes in problem data will have
+outsized effects on the optimal solution. In this section, we’ll discuss
+ways to determine the so-called <em>allowable range</em> for different
+values, meaning the values a particular coefficient can take without
+changing the optimal solution.</p>
+<p>For the sake of brevity, we’ll only carry out this analysis for the
+right-hand side values <span class="math inline">b_i</span>. Changes in
+other problem data are covered in section 7.2 of <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>.</p>
+<h4>
+Changing a single rhs value
+</h4>
+<p>Suppose after running simplex you would like to consider changes to
+the right-hand side values, from <span
+class="math inline">\mathbf{b}</span> to <span
+class="math inline">\mathbf{\hat b}</span>. From eq. <a
+href="#eq:simplexMatrixGeneralized">11</a>, we know that the values of
+<span class="math inline">\mathbf{b}</span> affect only the right-hand
+side of the final matrix system. So, in particular, the reduced costs on
+all variables will stay the same. Thus if the new right-hand side values
+<span class="math inline">\mathbf{B}^{-1}\mathbf{\hat b}</span> are all
+non-negative, we’re still at the optimal solution.</p>
+<p>Let’s take our the Wyndor Glass problem as an example. sample LP
+eq. <a href="#eq:prototypeLp">1</a>. <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> gives the following
+exposition:</p>
+<blockquote>
+<p>Sensitivity analysis is begun for the original Wyndor Glass
+Co. problem by examining the optimal values of the <span
+class="math inline">y_i</span> dual variables <span
+class="math inline">( y_1^* = 0, y_2^* = \frac{3}{2}, y_3^*=1)</span>.
+These shadow prices give the marginal value of each resource <span
+class="math inline">i</span> (the available production capacity of Plant
+<span class="math inline">i</span>) for the activities (two new
+products) under consideration, where marginal value is expressed in the
+units of <span class="math inline">Z</span> (thousands of dollars of
+profit per week). As discussed previously, the total profit from these
+activities can be increased $1,500 per week (<span
+class="math inline">y_2^*</span> times $1,000 per week) for each
+additional unit of resource 2 (hour of production time per week in Plant
+2) that is made available. This increase in profit holds for relatively
+small changes that do not affect the feasibility of the current basic
+solution (and so do not affect the <span
+class="math inline">y_i^*</span> values). Consequently, the OR team has
+investigated the marginal profitability from the other current uses of
+this resource to determine if any are less than $1,500 per week. This
+investigation reveals that one old product is far less profitable. The
+production rate for this product already has been reduced to the minimum
+amount that would justify its marketing expenses. However, it can be
+discontinued altogether, which would provide an additional 12 units of
+resource 2 for the new products. Thus, the next step is to determine the
+profit that could be obtained from the new products if this shift were
+made. This shift changes <span class="math inline">b_2</span> from 12 to
+24 in the linear programming model.</p>
+</blockquote>
+<p>So we’d like to know what happens when we change <span
+class="math inline">b_2</span> from 12 to 24. As a first step, let’s
+take a look at the plot for this problem with the modified
+constraint:</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;chooseObjVals&quot;: true, &quot;yMax&quot;: 14.99, &quot;removeConstraints&quot;: [2], &quot;addConstraints&quot;: [[[0, 2, 24, &quot;l&quot;], [6, 13.1]]]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Compared to our first plot of this problem from section <a
+href="#sec:lpVisualized">4.3</a>, we see that the bounding line for the
+constraint on <span class="math inline">x_2</span> has been moved way
+up, such that this constraint does not even touch the feasible region
+anymore<a href="#fn40" class="footnote-ref" id="fnref40"
+role="doc-noteref"><sup>40</sup></a>. How might this affect the
+solution?</p>
+<p>Let’s go ahead and calculate the altered right-hand side according to
+eq. <a href="#eq:simplexMatrixGeneralized">11</a>. Following the
+formulas, we’ll get <span class="math display">
+Z = \mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}= 54,\qquad \begin{bmatrix}x_3
+\\ x_2 \\ x_1\end{bmatrix} = \mathbf{x}_B = \mathbf{B}^{-1}\mathbf{b}=
+\begin{bmatrix}6 \\ 12 \\ -2\end{bmatrix}
+</span> at our previous optimal basis. For simplex, a negative
+right-hand side means a negative value for a basic variable, and thus an
+infeasible solution. So our old optimal basis is no longer feasible.</p>
+<p>What happened here? In terms of the plots, the original basic
+solution came at the intersection of the constraints <span
+class="math inline">3x_1 + 2x_2 \leq 18</span> and <span
+class="math inline">2x_2 \leq 12</span>. That intersection used to be in
+the feasible region, but when the second constraint was changed to <span
+class="math inline">2x_2 \leq 24</span> the intersection changed to
+somewhere off the plot entirely.</p>
+<p>So finding the optimal solution to our new problem requires a change
+of basis. Starting from a primal-infeasible basis, the best way to
+proceed is an application of the dual simplex method to regain
+feasibility<a href="#fn41" class="footnote-ref" id="fnref41"
+role="doc-noteref"><sup>41</sup></a>. Doing so would bring us to a new
+basis of <span class="math inline">(x_4, x_2, x_3)</span> and a new
+optimal solution of <span class="math inline">(x_1, x_2, x_3, x_4, x_5)
+= (0, 9, 4, 6, 0)</span>, which has a corresponding objective value of
+<span class="math inline">Z=45</span>.</p>
+<h4>
+Determining the allowable range
+</h4>
+<p>Let’s recap what we’ve done here. We were considering a change to the
+right-hand side values of our LP. Our analysis involved changing the
+right-hand side then re-optimizing. We found that increasing <span
+class="math inline">b_2</span> by 12 changed our optimal basis and
+increased the objective value by 9, from 36 to 45. But wait, the shadow
+price on <span class="math inline">b_2</span> in the original model was
+<span class="math inline">\frac{3}{2}</span>, so why didn’t we get an
+increase of <span class="math inline">9\times\frac{3}{2}=13.5</span>?
+And we’re already past the re-optimization section, so why did we run
+simplex again?</p>
+<p>On the shadow price issue: We mentioned when introducing shadow
+prices in section <a href="#sec:shadowPrices">4.8.2</a> that they are
+only valid <em>locally</em>, i.e. they hold from “small” changes in the
+resource, but if changes become too big then all bets are off. But how
+big is too big? We’ll explore that next, and we won’t even (fully) run
+simplex to do it!</p>
+<p>Let’s first set some notation. We’ll use the capital greek letter
+<span class="math inline">\Delta</span> to denote the “change in” some
+value, so that <span class="math inline">\Delta b_2</span> is the amount
+we change <span class="math inline">b_2</span> for the analysis. So in
+our previous example, we had <span class="math inline">\Delta b_2 = 24 -
+12 = 12</span>. We’d like to find the range of values for <span
+class="math inline">\Delta b_2</span> such that our previous basis is
+still optimal.</p>
+<p>Let’s first consider feasibility. Recall that a basic solution is
+feasible if and only if all the variable values are non-negative, which
+from eq. <a href="#eq:simplexMatrixGeneralized">11</a> gives us <span
+class="math inline">\mathbf{B}^{-1}\mathbf{b}\geq0</span>. At the
+optimal solution to our sample problem, we have</p>
+<p><span class="math display">
+\mathbf{B}^{-1}= \begin{bmatrix}
+1 &amp; \frac{1}{3} &amp; -\frac{1}{3} \\
+0 &amp; \frac{1}{2} &amp; 0 \\
+0 &amp; -\frac{1}{3} &amp; \frac{1}{3}
+\end{bmatrix}
+</span></p>
+<p>Changing <span class="math inline">b_2</span> to <span
+class="math inline">b_2 + \Delta b_2</span> turns the requirement
+into:</p>
+<p><span class="math display">
+\begin{align*}
+&amp;&amp;
+\begin{bmatrix}
+1 &amp; \frac{1}{3} &amp; -\frac{1}{3} \\
+0 &amp; \frac{1}{2} &amp; 0 \\
+0 &amp; -\frac{1}{3} &amp; \frac{1}{3}
+\end{bmatrix}
+\begin{bmatrix}
+4 \\ 12 + \Delta b_2 \\ 18
+\end{bmatrix}
+&amp;\geq\mathbf{0}\\
+\Leftrightarrow &amp;&amp;
+\begin{bmatrix}
+2 + \frac{1}{3}\Delta b_2 \\
+6 + \frac{1}{2}\Delta b_2 \\
+2 - \frac{1}{3}\Delta b_2 \\
+\end{bmatrix}
+&amp;\geq\mathbf{0}
+\end{align*}
+</span></p>
+<p>The first inequality implies <span class="math inline">\Delta
+b_2\geq-6</span>, the second implies <span class="math inline">\Delta
+b_2\geq-12</span>, and the third implies <span
+class="math inline">\Delta b_2\leq 6</span>. So to satisfy all three
+simultaneously, we need to keep <span class="math inline">-6\leq\Delta
+b_2\leq6</span>, the equivalent of saying <span
+class="math inline">6\leq b_2\leq 18</span>.</p>
+<p>So keeping <span class="math inline">6\leq b_2\leq 18</span> gives a
+feasible solution, but is the old basis still optimal? It turns out that
+we can answer that very simply, by noticing that changes to <span
+class="math inline">\mathbf{b}</span> have no effect on the reduced cost
+vector <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}\mathbf{A}-\mathbf{c}</span>.
+Since this basis was optimal for the original, those same reduced costs
+must still be non-negative, so the old optimal basis is still optimal
+whenever <span class="math inline">\Delta b_2</span> is in the
+acceptable range.</p>
+<p>As for how much the objective changes, let’s recall (again from
+eq. <a href="#eq:simplexMatrixGeneralized">11</a>) that the objective
+value at a basic solution is given by <span
+class="math inline">Z=\mathbf{c}_B\mathbf{B}^{-1}\mathbf{b}</span>.
+We’ve already calculated <span
+class="math inline">\mathbf{c}_B\mathbf{B}^{-1}= \begin{bmatrix}0 &amp;
+\frac{3}{2} &amp; 1\end{bmatrix}</span> at the optimal basis, and thus
+altering <span class="math inline">b_2</span> gives us</p>
+<p><span class="math display">
+Z = \begin{bmatrix}0 &amp; \frac{3}{2} &amp;
+1\end{bmatrix}\begin{bmatrix}4 \\ 12 + \Delta b_2 \\ 18\end{bmatrix}
+  = 36 + \frac{3}{2}\Delta b_2.
+</span></p>
+<p>So our interpretation of the shadow price holds over this range as
+well.</p>
+<p>Lastly, let’s take a look at the plots of the problem when we take
+<span class="math inline">b_2</span> at the limits of its allowable
+range. First, for <span class="math inline">b_2=6</span>:</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;chooseObjVals&quot;: true, &quot;removeConstraints&quot;: [2], &quot;addConstraints&quot;: [[[0, 2, 6, &quot;l&quot;], [6, 4.1]]]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>And for <span class="math inline">b_2=18</span>.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeLp" altArgs="{&quot;chooseObjVals&quot;: true, &quot;removeConstraints&quot;: [2], &quot;addConstraints&quot;: [[[0, 2, 18, &quot;l&quot;], [6, 10.1]]]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>We won’t spend much time dwelling on this, but notice how the
+original optimal solution came at the intersection of the second and
+third constraints of eq. <a href="#eq:prototypeLp">1</a>. Now on these
+two plots, the optimal is still at that intersection, while also adding
+a third intersecting constraint<a href="#fn42" class="footnote-ref"
+id="fnref42" role="doc-noteref"><sup>42</sup></a>. Moving any further
+would make that intersection infeasible, which is why the allowable
+range stops there.</p>
+<h2 data-number="4.9" id="notes-and-further-reading"><span
+class="header-section-number">4.9</span> Notes and further reading</h2>
+<p>The presentation in this section followed very closely to various
+sections in chapters 3-7 in <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>. Some other topics for the
+interested reader to follow up on:</p>
+<ul>
+<li>We briefly mentioned <em>dual simplex</em> and some of its uses in
+these notes. <span class="citation" data-cites="classText">Hillier and
+Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> section 8.1 covers it in more
+detail.</li>
+<li>When covering sensitivity analysis (section <a
+href="#sec:sensitivityAnalysis">4.8.3</a>) we only considered changes to
+a single rhs value. <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> (section 7.2) covers further
+cases, like analyzing changes in other problem data, or simultaneous
+changes in multiple rhs values.</li>
+<li>Section 7.4 in <span class="citation" data-cites="classText">Hillier
+and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> briefly discusses <em>robust
+optimization</em>, where the setup includes ranges of potential values
+of model data, and the goal is to find solutions that will be feasible
+and close to optimal for the entire set of potential problem data.</li>
+<li>Simplex is not the only algorithm for solving LPs. Sections 4.9 and
+8.4 of <span class="citation" data-cites="classText">Hillier and
+Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> study so-called <em>interior
+point</em> algorithms for linear programs. These algorithms have an
+interesting role in the history of LP. Most notably, many of these
+methods have been proven to terminate in a number of steps
+<em>polynomial</em> in the size of the LP considered, a feat that has
+not been duplicated for the simplex method. But even with this
+theoretical advantage, the interior point methods are not usually faster
+than simplex in practice. Even so, most solvers will include an interior
+point method that will be called upon in certain circumstances.</li>
+</ul>
 <!-- {insertSection:sections/integer_programming.md} -->
 <h1 data-number="5" id="appendix"><span
 class="header-section-number">5</span> Appendix</h1>
@@ -5394,6 +5779,20 @@ role="doc-backlink">↩︎</a></p></li>
 <li id="fn38"><p>Interested readers can check <span class="citation"
 data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
 role="doc-biblioref">2021</a>)</span>, section 8.1.<a href="#fnref38"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn39"><p>If you increase it too much, interactions from other
+constraints may change the effect. How much is too much? We’ll explore
+this question in section <a href="#sec:sensitivityAnalysis">4.8.3</a><a
+href="#fnref39" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn40"><p>This might be a first hint that our problem has changed
+significantly.<a href="#fnref40" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn41"><p>We aren’t covering dual simplex in this course, but I
+think it’s good for you to know that it exists, and in particular that
+it has a role to play in sensitivity analysis or re-optimization.<a
+href="#fnref41" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn42"><p>This also introduces potential degeneracy issues, but
+we’ll ignore that for the purposes of this class.<a href="#fnref42"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
