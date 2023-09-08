@@ -356,6 +356,8 @@ Thus our new solution is $x_1=2, x_2=6, x_3=2, x_4=0$, and $x_5=0$[^slackInterpr
 
 ### Simplex in matrix notation
 
+<div class='lectureVideoEmbed' video-id='aa0f8c8329cd4138a5313757a8f8f1a51d' video-date='2023-09-08'>Python basics. The video cut off a bit at the end, but you don't miss anything important.</div>
+
 Now that we have the mechanics down, let's tidy up our presentation of the simplex method by writing out the steps in matrix notation. Recall that for simplex we need equality constraints and non-negative variables, so our problem is formulated as in +@eq:augmentedFormLpMatrix. Additionally, we will assume that the $m\times n$ matrix $A$ is has rank $m$ and is _non-singular_, so in particular $n\geq m$ and there are no _redundant_ constraints (which would be any constraint that is a linear combination of some of the others). The rank assumption can be done without loss of generality, because any redundant system can be reduced to non-redundant by removing constraints[^standardToAugmentedNoProblem].
 
 [^standardToAugmentedNoProblem]: Note also that if you came to the equality-constrained problem ($\A\x=\b$) via a transformation from the inequality form ($\A\x\leq\b$) by adding slack variables, the slack variables themselves guarantee full row rank.
