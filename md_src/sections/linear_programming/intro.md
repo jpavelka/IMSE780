@@ -95,7 +95,7 @@ When solving an LP, the goal is to find an **optimal solution**, a feasible solu
 
 [^mostFavorable]: The smallest value if we have a minimization problem, or the largest value for a maximization problem.
 
-## LP visualized
+## LP visualized {#sec:lpVisualized}
 
 Let's get hands-on again to see our new definitions in action. Since our sample problem includes only two decision variables, we can visualize what's going on in a plot:
 
