@@ -249,6 +249,9 @@
         margin-left: 0.5rem;
         display: none;
     }
+    .mathSmall {
+        font-size: 0.8rem;
+    }
     h1 {
         cursor: pointer;
         margin: 0;
@@ -407,7 +410,7 @@ like, opinions anyway.</li>
 </div>
 </div>
 <div id="Homework 2" class="assignmentContainer"
-data-sub-name="Intro to linear programming" data-due="2023-09-11">
+data-sub-name="Intro to linear programming" data-due="2023-09-13">
 <div>
 <ol type="1">
 <li><p>(2 pts) Complete this matrix multiplication: <span
@@ -534,6 +537,203 @@ requirements at the minimum possible cost.</p></li>
 </ol>
 </div>
 </div>
+<div id="Homework 3" class="assignmentContainer"
+data-sub-name="The simplex method" data-due="2023-09-18">
+<div>
+<ol type="1">
+<li><p>(8pts)* Fred Jonasson manages a family-owned farm. To supplement
+several food products grown on the farm, Fred also raises pigs for
+market. He now wishes to determine the quantities of the available types
+of feed (corn, tankage, and alfalfa) that should be given to each pig.
+Since pigs will eat any mix of these feed types, the objective is to
+determine which mix will meet certain nutritional requirements at a
+minimum cost. The number of units of each type of basic nutritional
+ingredient contained within a kilogram of each feed type is given in the
+following table, along with the daily nutritional requirements and feed
+costs:</p>
+<table>
+<tr>
+<th>
+</th>
+<th>
+<p>kg of Corn</p>
+</th>
+<th>
+<p>kg of Tankage</p>
+</th>
+<th>
+<p>kg of Alfalfa</p>
+</th>
+<th>
+<p>Min Daily Requirement</p>
+</th>
+</tr>
+<tr>
+<td>
+<p><b>Carbs</b></p>
+</td>
+<td>
+<p>90</p>
+</td>
+<td>
+<p>20</p>
+</td>
+<td>
+<p>40</p>
+</td>
+<td>
+<p>200</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><b>Protein</b></p>
+</td>
+<td>
+<p>30</p>
+</td>
+<td>
+<p>80</p>
+</td>
+<td>
+<p>60</p>
+</td>
+<td>
+<p>180</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><b>Vitamins</b></p>
+</td>
+<td>
+<p>10</p>
+</td>
+<td>
+<p>20</p>
+</td>
+<td>
+<p>60</p>
+</td>
+<td>
+<p>150</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><b>Cost</b></p>
+</td>
+<td>
+<p>$2.10</p>
+</td>
+<td>
+<p>$1.80</p>
+</td>
+<td>
+<p>$1.50</p>
+</td>
+<td>
+</td>
+</tr>
+</table>
+<ol type="a">
+<li>Model the problem as a linear program.</li>
+<li>Rewrite your model as a matrix system set up for running simplex,
+adding slack and/or artificial variables as necessary. The matrix should
+be set up such that it is ready for a new iteration of simplex, i.e. it
+should look something like:</li>
+</ol>
+<div class="mathSmall">
+<span class="math display">
+\begin{bmatrix}
+     1 &amp; -c_1    &amp; -c_2    &amp; \cdots &amp; -c_{n-m}  &amp; 0
+&amp; 0 &amp; \cdots &amp; 0 \\
+     0 &amp; a_{1,1} &amp; a_{1,2} &amp; \cdots &amp; a_{1,n-m} &amp; 1
+&amp; 0 &amp; \cdots &amp; 0 \\
+     0 &amp; a_{2,1} &amp; a_{2,2} &amp; \cdots &amp; a_{2,n-m} &amp; 0
+&amp; 0 &amp; \cdots &amp; 0 \\
+     \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp;
+\vdots &amp; \ddots &amp; \vdots \\
+     0 &amp; a_{m,1} &amp; a_{m,2} &amp; \cdots &amp; a_{m,n-m} &amp; 0
+&amp; 0 &amp; \cdots &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+     Z \\ x_1 \\ x_2 \\ \vdots \\ x_n
+\end{bmatrix}
+=
+\begin{bmatrix}
+     \textit{objective value} \\ b_1 \\ b_2 \\ \vdots \\ b_m
+\end{bmatrix}
+</span>
+</div></li>
+<li><p>(12pts) The following matrix systems each display a system of
+equations ready for an iteration of the simplex method. For each system,
+tell me:</p></li>
+</ol>
+<ul>
+<li>What variables make up the current basis?</li>
+<li>What is the objective value at the current basic solution?</li>
+<li>Is the current basis optimal?</li>
+<li>If the current basis is not optimal, further provide the following:
+<ul>
+<li>What variable would you next bring into the basis?</li>
+<li>Given your selection of incoming variable, what variable should exit
+the basis?</li>
+<li>Given your selection of incoming and outgoing variables, what are
+the values for all the variables at the next basic solution?</li>
+</ul>
+<ol type="a">
+<li><span class="math display">
+\begin{bmatrix}
+  1 &amp;  1 &amp;  1 &amp; -2 &amp; 0 &amp; 0 &amp; 0 \\
+  0 &amp;  1 &amp;  2 &amp; -1 &amp; 1 &amp; 0 &amp; 0 \\
+  0 &amp; -2 &amp;  4 &amp;  2 &amp; 0 &amp; 1 &amp; 0 \\
+  0 &amp;  2 &amp;  3 &amp;  1 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+  Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\x_5 \\ x_6
+\end{bmatrix}
+=
+\begin{bmatrix}
+  0 \\ 20 \\ 60 \\ 50
+\end{bmatrix}
+</span></li>
+<li><span class="math display">
+\begin{bmatrix}
+  1 &amp; -3 &amp; -5 &amp; -6 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+  0 &amp;  2 &amp;  1 &amp;  1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+  0 &amp;  1 &amp;  2 &amp;  1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
+  0 &amp;  1 &amp;  1 &amp;  2 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\
+  0 &amp;  1 &amp;  1 &amp;  1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+  Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\x_5 \\ x_6 \\ x_7
+\end{bmatrix}
+=
+\begin{bmatrix}
+  0 \\ 4 \\ 4 \\ 4 \\ 3
+\end{bmatrix}
+</span></li>
+<li><span class="math display">
+\begin{bmatrix}
+  1 &amp; 0 &amp;   -1 &amp;  0 &amp; 0 &amp; 0 &amp;   2 \\
+  0 &amp; 0 &amp;    2 &amp;  1 &amp; 0 &amp; 0 &amp;  -1 \\
+  0 &amp; 0 &amp;  7/2 &amp;  0 &amp; 1 &amp; 0 &amp; 3/2 \\
+  0 &amp; 0 &amp;    2 &amp;  0 &amp; 0 &amp; 1 &amp;   0 \\
+  0 &amp; 1 &amp;  1/2 &amp;  0 &amp; 0 &amp; 0 &amp; 1/2 \\
+\end{bmatrix}
+\begin{bmatrix}
+  Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\x_5 \\ x_6
+\end{bmatrix}
+=
+\begin{bmatrix}
+  8 \\ 2 \\ 9 \\ 5 \\ 2
+\end{bmatrix}
+</span></li>
+</ol></li>
+</ul>
+</div>
+</div>
 <!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>
 
@@ -543,7 +743,7 @@ requirements at the minimum possible cost.</p></li>
 <p>* : From Hillier &amp; Lieberman, 2021.</p>
 <hr>
 <h1 id="pyInstructions">
-Instruction for submitting Python assignments:
+Instructions for submitting Python assignments:
 </h1>
 <p>For the portions of assignments that require you to submit Python
 code, I’ll accept submissions in one of the following modes:</p>
