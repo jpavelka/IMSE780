@@ -1,6 +1,6 @@
 ## Notes and further reading
 
-The presentation in this section followed very closely to various sections in chapters 3-7 in @classText. Some other topics for the interested reader to follow up on:
+The presentation in this section followed very closely to various sections in chapters 3-7 in @classText. Many of the proofs in +@sec:lpDuality were adapted from @bertsimas-LPbook. Some other topics for the interested reader to follow up on:
 
 - We briefly mentioned _dual simplex_ and some of its uses in these notes. @classText section 8.1 covers it in more detail.
 - When covering sensitivity analysis (+@sec:sensitivityAnalysis) we only considered changes to a single rhs value. @classText (section 7.2) covers further cases, like analyzing changes in other problem data, or simultaneous changes in multiple rhs values.
