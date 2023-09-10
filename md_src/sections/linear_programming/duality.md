@@ -1,4 +1,4 @@
-## Duality
+## Duality {#sec:lpDuality}
 
 In this section we'll discuss the important concept of LP duality. This neat bit of theory will allow us to prove the correctness of the simplex method, and open up avenues to potentially solve LPs faster in practice. We'll also see its fingerprints when discussing post-optimality analysis in +@sec:lpPostOpt. But before we get there, let's start with some light fiction.
 
