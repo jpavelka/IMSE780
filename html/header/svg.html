@@ -8,9 +8,21 @@
             obj: [3, 5],
             ineqs: [[3, 2, 18, "l"], [1, 0, 4, "l"], [0, 2, 12, "l"]],
             ineqTextPlaces: [[5, 2.5], [2.25, 8], [6, 6.9]]
+        },
+        prototypeIp: {
+            xMin: -1,
+            xMax: 7.99,
+            yMin: -1,
+            yMax: 5.99,
+            obj: [12, 10],
+            ineqs: [[-7, 5, 5, "l"], [9, 7, 54, "l"]],
+            ineqTextPlaces: [[3, 5.25], [4.25, 3]],
+            plotIntegerFeasible: true,
+            addFeasibleRegionText: false
         }
     }
     const drawPlot = (svg, svgId) => {
+        // parameters
         svg.id = svgId;
         const parentDiv = document.createElement('div');
         svg.parentNode.insertBefore(parentDiv, svg);
@@ -74,6 +86,11 @@
         const extraMathText = args['extraMathText'] || [];
         const extraLines = args['extraLines'] || [];
         const extraEqns = args['extraEqns'] || [];
+        const plotIntegerFeasible = args['plotIntegerFeasible'] || false;
+        let addFeasibleRegionText = args['addFeasibleRegionText'];
+        if (addFeasibleRegionText === undefined) {
+            addFeasibleRegionText = true;
+        }
         const x1ObjStr = obj[0] == 0 ? '' : `${obj[0]}x_1`;
         const x2ObjStr = obj[1] == 0 ? '' : `${obj[1]}x_2`;
         const betweenObjStr = obj[0] == 0 ? '' : (obj[1] > 0 ? '+' : '');
@@ -82,15 +99,17 @@
         const h = svg.getAttribute('height');
         const leq = String.fromCharCode(8804);
         const geq = String.fromCharCode(8805);
+        const getObjVal = (x, y) => obj[0] * x + obj[1] * y;
+        const unitPixToCoordX = (xMax - xMin) / w;
+        const unitPixToCoordY = (yMax - yMin) / h;
+        svg.style.marginLeft = -Math.abs(1 / unitPixToCoordX) / 2;
+        
+        // functions
         const coordToPix = (xCoord, yCoord) => {
             xPix = w * (xCoord - xMin) / (xMax - xMin);
             yPix = h - h * (yCoord - yMin) / (yMax - yMin);
             return [xPix, yPix]
         }
-        const getObjVal = (x, y) => obj[0] * x + obj[1] * y;
-        const unitPixToCoordX = (xMax - xMin) / w;
-        const unitPixToCoordY = (yMax - yMin) / h;
-        svg.style.marginLeft = -Math.abs(1 / unitPixToCoordX) / 2;
         const pixToCoord = (xPix, yPix) => {
             xCoord = xPix * ((xMax - xMin) / w) + xMin;
             yCoord = (yPix - h) * (-(yMax - yMin) / h) + yMin;
@@ -200,12 +219,21 @@
         }
         const getEqnEndpoints = (xCoef, yCoef, rhs) => {
             if (xCoef === 0) {
-                return [0, rhs / yCoef, xMax, rhs / yCoef]
+                pts = [0, rhs / yCoef, xMax, rhs / yCoef];
             } else if (yCoef === 0) {
-                return [rhs / xCoef, 0, rhs / xCoef, yMax]
+                pts = [rhs / xCoef, 0, rhs / xCoef, yMax];
             } else {
-                return [0, rhs / yCoef, rhs / xCoef, 0]
+                pts = [0, rhs / yCoef, rhs / xCoef, 0];
             }
+            if (pts[1] < 0) {
+                pts[1] = (rhs - xCoef * xMax) / yCoef;
+                pts[0] = xMax;
+            }
+            if (pts[2] < 0) {
+                pts[2] = (rhs - yCoef * yMax) / xCoef;
+                pts[3] = yMax;
+            }
+            return pts
         }
         const drawTickMarks = () => {
             xTick = 0
@@ -245,6 +273,12 @@
                 return [feasible, violated];
             }
             return feasible
+        }
+        const onPlot = (x, y) => {
+            if (x < 0 || x > xMax || y < 0 || y > yMax) {
+                return false
+            }
+            return true
         }
         const ineqSatisfied = (x, y, xCoef, yCoef, rhs, sense) => {
             if (sense === "l") {
@@ -287,7 +321,7 @@
                 let vertexStrs = [];
                 let vertices = [];
                 for ([x, y, i, j] of intersections) {
-                    if (isFeasible(x, y)) {
+                    if (isFeasible(x, y) && onPlot(x, y)) {
                         vertices.push([x, y, i, j]);
                     }
                 }
@@ -333,8 +367,10 @@
                 const yWeighted = verts.map(v => v[1]).reduce((a, b) => a + b) / verts.length;
                 const [xPix, yPix] = coordToPix(xWeighted, yWeighted);
             }
-            addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
-            addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
+            if (addFeasibleRegionText) {
+                addText("Feasible", xPix - 30, yPix, {'font-size': '12pt'});
+                addText("Region", xPix - 30, yPix + 20, {'font-size': '12pt'});
+            }
         }
         const placePoint = (x, y, attrs) => {
             circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -406,7 +442,7 @@
                 interStr = xIntersect + '---' + yIntersect;
                 p = [xIntersect, yIntersect]
                 if (!intersectionStrs.includes(interStr) && xIntersect === xIntersect && yIntersect === yIntersect) {
-                    if (!checkFeas || isFeasible(...p)) {
+                    if ((!checkFeas || isFeasible(...p)) && onPlot(...p)) {
                         intersectionStrs.push(interStr);
                         intersections.push(p)
                     }
@@ -414,6 +450,27 @@
             }
             return intersections
         }
+        const gcd = (a, b) => {
+            if (!b) {
+                return Math.abs(a);
+            }
+            return Math.abs(gcd(b, a % b));
+        }
+        const addIntegerFeasiblePoints = () => {
+            let xVal = Math.ceil(xMin);
+            while (xVal <= xMax) {
+                let yVal = Math.ceil(yMin);
+                while (yVal <= yMax) {
+                    if (isFeasible(xVal, yVal)) {
+                        placePoint(xVal, yVal);
+                    }
+                    yVal += 1;
+                }
+                xVal += 1;
+            }
+        }
+
+        // logic
         const vertices = getVertices();
         const verticesAndPlotEdges = getVertices(true);
         drawIneqs();
@@ -435,12 +492,6 @@
         }
         for (tx of extraMathText) {
             addMathText(...tx);
-        }
-        const gcd = (a, b) => {
-            if (!b) {
-                return Math.abs(a);
-            }
-            return Math.abs(gcd(b, a % b));
         }
         if (choosePoints) {
             const underDiv = document.createElement('div');
@@ -494,11 +545,6 @@
                         textDiv.textContent = `(${x1}, ${x2}) is infeasible.`
                         for (v of violated) {
                             plotEqn(...v, {'style': 'stroke:red;stroke-width:0', 'class': 'violatedIneq ' + lineClass})
-                            // setTimeout(() => {
-                            //     for (violEl of [...document.getElementsByClassName(lineClass)]){
-                            //         violEl.remove();
-                            //     }
-                            // }, 800)
                         }
                     }
                     placePoint(input1.value, input2.value, {'id': pointId, 'style': `stroke:${color};fill:${color}`});
@@ -746,6 +792,9 @@
                 changePoint();
             }
             changePoint();
+        }
+        if (plotIntegerFeasible) {
+            addIntegerFeasiblePoints();
         }
     }
     const drawAllSvgPlots = () => {
