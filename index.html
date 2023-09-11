@@ -2120,37 +2120,46 @@ class="toc-section-number">4.8.3</span> Sensitivity Analysis</a></li>
 id="toc-notes-and-further-reading"><span
 class="toc-section-number">4.9</span> Notes and further reading</a></li>
 </ul></li>
+<li><a href="#integer-programming" id="toc-integer-programming"><span
+class="toc-section-number">5</span> Integer programming</a>
+<ul>
+<li><a href="#definitions" id="toc-definitions"><span
+class="toc-section-number">5.1</span> Definitions</a></li>
+<li><a href="#sec:ipRoundingNotEnough"
+id="toc-sec:ipRoundingNotEnough"><span
+class="toc-section-number">5.2</span> Rounding is not enough</a></li>
+</ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
-class="toc-section-number">5</span> Appendix</a>
+class="toc-section-number">6</span> Appendix</a>
 <ul>
 <li><a href="#sec:symbols" id="toc-sec:symbols"><span
-class="toc-section-number">5.1</span> Special symbols</a></li>
+class="toc-section-number">6.1</span> Special symbols</a></li>
 <li><a href="#sec:linearAlgebra" id="toc-sec:linearAlgebra"><span
-class="toc-section-number">5.2</span> Linear algebra review</a>
+class="toc-section-number">6.2</span> Linear algebra review</a>
 <ul>
 <li><a href="#sec:matrixMath" id="toc-sec:matrixMath"><span
-class="toc-section-number">5.2.1</span> Matrix math</a></li>
+class="toc-section-number">6.2.1</span> Matrix math</a></li>
 <li><a href="#properties-of-matrix-operations"
 id="toc-properties-of-matrix-operations"><span
-class="toc-section-number">5.2.2</span> Properties of matrix
+class="toc-section-number">6.2.2</span> Properties of matrix
 operations</a></li>
 <li><a href="#special-matrices" id="toc-special-matrices"><span
-class="toc-section-number">5.2.3</span> Special matrices</a></li>
+class="toc-section-number">6.2.3</span> Special matrices</a></li>
 <li><a href="#rank-and-inverse" id="toc-rank-and-inverse"><span
-class="toc-section-number">5.2.4</span> Rank and inverse</a></li>
+class="toc-section-number">6.2.4</span> Rank and inverse</a></li>
 <li><a href="#systems-of-equations" id="toc-systems-of-equations"><span
-class="toc-section-number">5.2.5</span> Systems of equations</a></li>
+class="toc-section-number">6.2.5</span> Systems of equations</a></li>
 <li><a href="#sec:elementaryRowOperations"
 id="toc-sec:elementaryRowOperations"><span
-class="toc-section-number">5.2.6</span> Elementary operations</a></li>
+class="toc-section-number">6.2.6</span> Elementary operations</a></li>
 </ul></li>
 <li><a href="#writing-mathematics-in-a-colab-notebook"
 id="toc-writing-mathematics-in-a-colab-notebook"><span
-class="toc-section-number">5.3</span> Writing mathematics in a Colab
+class="toc-section-number">6.3</span> Writing mathematics in a Colab
 notebook</a></li>
 <li><a href="#sec:appendixSelectedProofs"
 id="toc-sec:appendixSelectedProofs"><span
-class="toc-section-number">5.4</span> Selected proofs</a></li>
+class="toc-section-number">6.4</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -3117,12 +3126,12 @@ class="math inline">\forall</span> in particular) may be new. And
 sometimes new is intimidating. But fear not! These things get clearer
 and clearer the more you see them, and I think the benefit is worth it.
 There is a section in the appendix (section <a
-href="#sec:symbols">5.1</a>) dedicated to special symbols. Beyond that,
+href="#sec:symbols">6.1</a>) dedicated to special symbols. Beyond that,
 if you’re ever confused about something, you can always ask me!</p>
 <p>We’ll see more notation like the above as we formulate more specific
 problems, but for much of the theory sections to come I actually much
 prefer matrix notation. You should already be familiar with linear
-algebra (section <a href="#sec:linearAlgebra">5.2</a> in the appendix
+algebra (section <a href="#sec:linearAlgebra">6.2</a> in the appendix
 gives a brief review), so you should be able to notice how matrix
 algebra fits nicely with the formulations we’ve already given. For some
 <span class="math inline">m\times n</span> matrix <span
@@ -3599,7 +3608,7 @@ was essentially an identity matrix, so we just needed to read the values
 off the right-hand side. Indeed, as we move from one BF solution to
 another, we will explicitly manipulate the matrix (using basic row
 operations, as in section <a
-href="#sec:elementaryRowOperations">5.2.6</a>) to yield an identity
+href="#sec:elementaryRowOperations">6.2.6</a>) to yield an identity
 structure in the basic columns.</p>
 <p>But we’re not there yet. We just have an initial BF solution, and
 need to figure out how to move to an adjacent one while improving the
@@ -5149,7 +5158,137 @@ theoretical advantage, the interior point methods are not usually faster
 than simplex in practice. Even so, most solvers will include an interior
 point method that will be called upon in certain circumstances.</li>
 </ul>
-<!-- {insertSection:sections/integer_programming/intro.md} -->
+<h1 data-number="5" id="integer-programming"><span
+class="header-section-number">5</span> Integer programming</h1>
+<p>In this section we will introduce integer programming (IP), which is
+an of extension of linear programming that includes restrictions that
+some (or all) of the decision variables must take integer values. While
+this may initially seem like a small tweak, the addition of these
+integrality<a href="#fn43" class="footnote-ref" id="fnref43"
+role="doc-noteref"><sup>43</sup></a> constraints is actually quite
+powerful, and will allow us to model all types of interesting problems
+that linear programming could not handle. The added expressiveness comes
+with a tradeoff, though, as integer programs generally take much more
+effort to solve than their linear counterparts.</p>
+<p>For this course, we will discuss some preliminaries before moving on
+to IP modeling techniques. We’ll spend more time on modeling here than
+in the LP section, in order to explore the flexibility integer programs
+provide and discuss some of the tricks that can be used to set up
+problems of all types. We’ll finish our practical discussion with a
+section on solving IPs with Python. On the theoretical side, we’ll touch
+a bit on the theory that helps explain what makes solving IPs so
+difficult. We’ll then get into solution techniques, including
+branch-and-bound and cutting plane procedures.</p>
+<h2 data-number="5.1" id="definitions"><span
+class="header-section-number">5.1</span> Definitions</h2>
+<p>We’ll consider a few forms of integer programs in this course. A
+<strong>(pure) integer (linear) program</strong><a href="#fn44"
+class="footnote-ref" id="fnref44" role="doc-noteref"><sup>44</sup></a>
+(<strong>IP</strong>)<a href="#fn45" class="footnote-ref" id="fnref45"
+role="doc-noteref"><sup>45</sup></a> is a linear program where
+<em>all</em> the decision variables are required to be integer, i.e. it
+is a problem of the form<a href="#fn46" class="footnote-ref"
+id="fnref46" role="doc-noteref"><sup>46</sup></a>:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \mathbf{c}\mathbf{x}\\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
+     &amp;&amp; \mathbf{x}&amp;\in\mathbb{I}^n_+
+\end{align*}
+</span></p>
+<p>In contrast, a <strong>mixed integer (linear) program</strong>
+(<strong>MIP</strong>) is a linear program where some, but not
+necessarily all, of the decision variables are required to be integer,
+i.e.</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \mathbf{c}\mathbf{x}+ \mathbf{h}\mathbf{y}\\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}+
+\mathbf{G}\mathbf{y}&amp;\leq\mathbf{b}\\
+     &amp;&amp; \mathbf{x}&amp;\in\mathbb{I}^n_+ \\
+     &amp;&amp; \mathbf{y}&amp;\geq\mathbf{0}
+\end{align*}
+</span></p>
+<p>A MIP is more flexible that a pure IP, but much of the theory we
+cover will be easier to talk about for IPs. When we present results for
+IPs, know that they can likely be extended to MIPs as well, but with
+some minor modifications.</p>
+<p>A <strong>binary integer (linear) program</strong>
+(<strong>BIP</strong>) is a subclass of IPs where the variables are
+restricted not just to integers, but to either one of the values <span
+class="math inline">0</span> or <span class="math inline">1</span>. Thus
+we can define a BIP as having the form:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \mathbf{c}\mathbf{x}\\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
+     &amp;&amp; \mathbf{x}&amp;\in\{0,1\}^n
+\end{align*}
+</span></p>
+<p>A BIP is sometimes also called a <strong>0-1 integer (linear)
+program</strong>.</p>
+<p>As you can see, every IP by definition has an associated LP
+underlying it, obtained from the IP by removing the integrality
+constraints. This underlying LP is very important in the study of
+integer programs, and is known as the IP’s <strong>LP
+relaxation</strong> or <strong>linear relaxation</strong><a href="#fn47"
+class="footnote-ref" id="fnref47"
+role="doc-noteref"><sup>47</sup></a>.</p>
+<h2 data-number="5.2" id="sec:ipRoundingNotEnough"><span
+class="header-section-number">5.2</span> Rounding is not enough</h2>
+<p>Right about now, you may be wondering how important IP’s integer
+restriction really is. Can’t we just solve the related LP, round the
+solution to the nearest integer, then be done with it?</p>
+<p>Theoretically, the answer is a resounding no. Practically, the answer
+may change depending on your requirements. But let’s try to illustrate
+why the rounding method could be problematic. Consider the following
+integer program:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 12x_1 + 10x_2 &amp; \\
+\text{s.t.}&amp;&amp; -7x_1 + 5x_2 &amp; \leq 5 \\
+     &amp;&amp;  9x_1 +  7x_2 &amp; \leq 54 \\
+     &amp;&amp; x_1,x_2 &amp; \in\mathbb{I}_+
+\end{align*}
+</span></p>
+<p>We’ve shown this 2-dimensional IP in a plot below. Shaded in gray is
+the feasible region to the problem’s LP relaxation. The plotted points
+are all the feasible solutions to the IP, i.e. the points inside the LP
+relaxation’s feasible region which are also integer. In this case, you
+can verify graphically that the optimal solution to the LP relaxation is
+<span class="math inline">(x_1, x_2)=(2.5, 4.5)</span> with an objective
+value of 75.</p>
+<svg width="350" height="350" class="lpDraw" base="prototypeIp" altArgs="{&quot;chooseObjVals&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Say we’d like to find our integer solution by simply rounding the
+optimal LP relaxation solution. The first difficulty would be
+determining which way (up vs. down) to round the numbers. But another,
+more fundamental difficulty is that there is no guarantee that
+<em>any</em> rounded solution will be feasible. Indeed, that is the case
+we find ourselves in here, as each of the rounded solutions <span
+class="math inline">(2, 4), (2, 5), (3, 4)</span>, and <span
+class="math inline">(3, 5)</span> are infeasible<a href="#fn48"
+class="footnote-ref" id="fnref48"
+role="doc-noteref"><sup>48</sup></a>.</p>
+<p>Ok, so say instead you just want to find the feasible integer
+solution that is closest to the LP relaxation solution. Putting aside
+the question of how to do that, there is no guarantee that even that
+solution will be the optimal integer solution. Indeed, in this example
+the closest feasible integer solutions are <span class="math inline">(2,
+3)</span> and <span class="math inline">(3, 3)</span>, of which <span
+class="math inline">(3, 3)</span> has the best objective value at 66.
+But in fact the best integer solution is <span
+class="math inline">(6,0)</span> with an objective value of 72, a 9%
+increase!</p>
+<p>Even worse still, we’ll often formulate BIPs such that the
+interpretation of the 0-1 variable is whether or not to take some
+action. For some types of problems, it’s not at all uncommon for the LP
+relaxation solution to a BIP to be every variable taking the value <span
+class="math inline">0.5</span>! Such a solution would leave you no clue
+as to which direction you should round the solutions. In these cases,
+considering only the LP relaxation gives you no hint whatsoever about
+how to proceed.</p>
 <!-- {insertSection:sections/integer_programming/modeling.md} -->
 <!-- {insertSection:sections/integer_programming/software.md} -->
 <!-- {insertSection:sections/integer_programming/computational_complexity.md} -->
@@ -5157,10 +5296,10 @@ point method that will be called upon in certain circumstances.</li>
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
 <!-- {insertSection:sections/integer_programming/easy_ips.md} -->
 <!-- {insertSection:sections/integer_programming/notes.md} -->
-<h1 data-number="5" id="appendix"><span
-class="header-section-number">5</span> Appendix</h1>
-<h2 data-number="5.1" id="sec:symbols"><span
-class="header-section-number">5.1</span> Special symbols</h2>
+<h1 data-number="6" id="appendix"><span
+class="header-section-number">6</span> Appendix</h1>
+<h2 data-number="6.1" id="sec:symbols"><span
+class="header-section-number">6.1</span> Special symbols</h2>
 <ul>
 <li><span class="math inline">\mathbb{R}</span>: The set of real
 numbers, i.e. anything on the number line between (though not
@@ -5228,8 +5367,8 @@ indicates the the statement to the left is logically equivalent to the
 statement on the right, e.g. <span class="math inline">a &gt; b
 \Leftrightarrow -a &lt; -b</span>.</li>
 </ul>
-<h2 data-number="5.2" id="sec:linearAlgebra"><span
-class="header-section-number">5.2</span> Linear algebra review</h2>
+<h2 data-number="6.2" id="sec:linearAlgebra"><span
+class="header-section-number">6.2</span> Linear algebra review</h2>
 <p>Linear algebra is the study of math involving matrices, vectors, and
 linear transformations. A <strong>matrix</strong> (the basic object of
 linear algebra) is a rectangular array of numbers. For example,</p>
@@ -5242,8 +5381,8 @@ said to be <strong>square</strong> if it has the same number of rows and
 columns.</p>
 <p>In these notes, we will usually denote matrices with boldface,
 uppercase letters.</p>
-<h3 data-number="5.2.1" id="sec:matrixMath"><span
-class="header-section-number">5.2.1</span> Matrix math</h3>
+<h3 data-number="6.2.1" id="sec:matrixMath"><span
+class="header-section-number">6.2.1</span> Matrix math</h3>
 <p>We say Matrices <span class="math inline">\mathbf{A}</span>, <span
 class="math inline">\mathbf{B}</span> are <strong>equal</strong> if
 <em>all</em> of their elements are equal. First off, that means <span
@@ -5331,8 +5470,8 @@ sa_{21} &amp; sa_{22} &amp; \cdots &amp; sa_{2n} \\
 sa_{m1} &amp; sa_{m2} &amp; \cdots &amp; sa_{mn} \\
 \end{bmatrix}
 </span></p>
-<h3 data-number="5.2.2" id="properties-of-matrix-operations"><span
-class="header-section-number">5.2.2</span> Properties of matrix
+<h3 data-number="6.2.2" id="properties-of-matrix-operations"><span
+class="header-section-number">6.2.2</span> Properties of matrix
 operations</h3>
 <p>The above matrix operations satisfy the following properties:</p>
 <ul>
@@ -5358,8 +5497,8 @@ class="math inline">\mathbf{B}\mathbf{A}</span> is not even defined if
 <span class="math inline">m\neq s</span>. Even if <span
 class="math inline">m=s</span> and the product is defined, the result
 needs not be the same.</p>
-<h3 data-number="5.2.3" id="special-matrices"><span
-class="header-section-number">5.2.3</span> Special matrices</h3>
+<h3 data-number="6.2.3" id="special-matrices"><span
+class="header-section-number">6.2.3</span> Special matrices</h3>
 <p>A <strong>vector</strong> is a special type of matrix with either a
 single column or a single row, e.g.</p>
 <p><span class="math display">
@@ -5404,8 +5543,8 @@ zero matrix satisfies:</p>
 <p>Note that <span class="math inline">\mathbf{I}</span> and <span
 class="math inline">\mathbf{0}</span> play roles in matrix operations
 similar to the roles of 1 and 0 (respectively) in arithmetic.</p>
-<h3 data-number="5.2.4" id="rank-and-inverse"><span
-class="header-section-number">5.2.4</span> Rank and inverse</h3>
+<h3 data-number="6.2.4" id="rank-and-inverse"><span
+class="header-section-number">6.2.4</span> Rank and inverse</h3>
 <p>A set of vectors <span class="math inline">\mathbf{x}_1,
 \mathbf{x}_2, \dots, \mathbf{x}_m</span> is said to be <strong>linearly
 dependent</strong> if there exists <span class="math inline">m</span>
@@ -5459,8 +5598,8 @@ such that</p>
 the <strong>inverse</strong> of <span
 class="math inline">\mathbf{A}</span>. Furthermore, singular matrices do
 not have inverses.</p>
-<h3 data-number="5.2.5" id="systems-of-equations"><span
-class="header-section-number">5.2.5</span> Systems of equations</h3>
+<h3 data-number="6.2.5" id="systems-of-equations"><span
+class="header-section-number">6.2.5</span> Systems of equations</h3>
 <p>Matrices are great for concisely stating systems of linear equations,
 linear equations in some set of variables you’d like to hold true
 simultaneously. For example, the set of equations</p>
@@ -5482,8 +5621,8 @@ x_1 \\ x_2
 7 \\ 6
 \end{bmatrix}
 </span></p>
-<h3 data-number="5.2.6" id="sec:elementaryRowOperations"><span
-class="header-section-number">5.2.6</span> Elementary operations</h3>
+<h3 data-number="6.2.6" id="sec:elementaryRowOperations"><span
+class="header-section-number">6.2.6</span> Elementary operations</h3>
 <p>There are certain elementary operations one can perform on a system
 of linear equations that don’t have an effect on the solution of the
 system. I’ll state these operations in terms of rows, but similar
@@ -5567,8 +5706,8 @@ x_1 \\ x_2
 \end{bmatrix}
 </span></li>
 </ul>
-<h2 data-number="5.3" id="writing-mathematics-in-a-colab-notebook"><span
-class="header-section-number">5.3</span> Writing mathematics in a Colab
+<h2 data-number="6.3" id="writing-mathematics-in-a-colab-notebook"><span
+class="header-section-number">6.3</span> Writing mathematics in a Colab
 notebook</h2>
 <p>Besides writing Python code, another useful feature of a Colab
 notebook is the ability to use “text” cells to write Markdown. <a
@@ -5586,8 +5725,8 @@ guide, sticking to items I think might be useful for the class. I came
 across a more extensive guide you may want to check out <a
 href="https://ashki23.github.io/markdown-latex.html">here</a>.</p>
 <script src="https://gist.github.com/eea93b3fac7b6040bcb074e95b4e5076.js"></script>
-<h2 data-number="5.4" id="sec:appendixSelectedProofs"><span
-class="header-section-number">5.4</span> Selected proofs</h2>
+<h2 data-number="6.4" id="sec:appendixSelectedProofs"><span
+class="header-section-number">6.4</span> Selected proofs</h2>
 <p>This section contains proofs to selected statements in the main
 text.</p>
 <h1 id="References">References</h1>
@@ -5866,6 +6005,58 @@ href="#fnref41" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn42"><p>This also introduces potential degeneracy issues, but
 we’ll ignore that for the purposes of this class.<a href="#fnref42"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn43"><p>In this context, we use the word <em>integral</em> to
+mean “of or denoted by an integer” (which, as of the time of writing, is
+the second definition provided by Google when searching the word). I
+agree it’s somewhat confusing since the word has a separate common
+meaning when used in casual conversation, and even a separate meaning in
+mathematics that you’re familiar with from calculus.<a href="#fnref43"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn44"><p>Of course, you could also talk about non-linear
+optimization problems with integer variable restrictions. Still, the
+terminology <em>integer programming</em> is usually restricted to
+integer extensions to LPs.<a href="#fnref44" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn45"><p>Some sources will include an “L” (for “linear”) in the
+initialism as well. So if you see things like ILP, MILP, or BILP in
+other texts, know that these are likely the same as what we’re calling
+IP, MIP, and BIP.<a href="#fnref45" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn46"><p>New notation alert: as mentioned in section <a
+href="#sec:symbols">6.1</a>, the symbol <span
+class="math inline">\mathbb{I}</span> stands for the set of integer
+numbers. The <span class="math inline">+</span> in the subscript means
+that we are considering non-negative integers (though this is just a
+convention, as we saw with linear programs in section <a
+href="#sec:lpForms">4.5</a> we can bypass non-negativity with certain
+formulation tricks). The <span class="math inline">n</span> in the
+superscript is just from the dimension of the vector <span
+class="math inline">\mathbf{x}</span>, in this case meaning that a valid
+selection for <span class="math inline">\mathbf{x}</span> must consist
+of <span class="math inline">n</span> such integers.<a href="#fnref46"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn47"><p>The notion of a <em>relaxation</em> shows up in other
+places in optimization theory as well. In general, a relaxation <span
+class="math inline">R</span> of some minimization problem <span
+class="math inline">P</span> is another optimization problem such that
+the set of feasible solutions to <span class="math inline">P</span> is a
+subset of the feasible solutions to <span class="math inline">R</span>.
+Further, for any solution <span class="math inline">x</span> to <span
+class="math inline">P</span>, the objective value at <span
+class="math inline">x</span> in <span class="math inline">R</span> is
+less than or equal to the objective value at <span
+class="math inline">x</span> in <span class="math inline">P</span> (in
+the case of the LP relaxation to an IP, the objective values are equal).
+Relaxations are usually easier to solve than the original problem and
+can be useful as approximations or in bounding <span
+class="math inline">P</span>’s possible objective values.<a
+href="#fnref47" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn48"><p>I should point out that, in a practical application,
+there is often some wiggle room in the (sometimes shoddily estimated)
+problem data such that you could fudge a little and make one of these
+rounded solutions work. This may or may not be an option depending on
+your scenario.<a href="#fnref48" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
