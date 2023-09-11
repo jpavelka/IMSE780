@@ -1,10 +1,10 @@
 # Integer programming
 
-In this section we will introduce integer programming (IP), which is an of extension of linear programming that includes restrictions that some (or all) of the decision variables be restricted to integer values. While this may initially seem like a small tweak, the addition of these integrality[^integralAndInteger] constraints is actually quite powerful, and will allow us to model all types of interesting problems that linear programming could not handle. The added expressiveness comes with a tradeoff, though, as integer programs generally take much more effort to solve than their linear counterparts.
+In this section we will introduce integer programming (IP), which is an of extension of linear programming that includes restrictions that some (or all) of the decision variables must take integer values. While this may initially seem like a small tweak, the addition of these integrality[^integralAndInteger] constraints is actually quite powerful, and will allow us to model all types of interesting problems that linear programming could not handle. The added expressiveness comes with a tradeoff, though, as integer programs generally take much more effort to solve than their linear counterparts.
 
 [^integralAndInteger]: In this context, we use the word _integral_ to mean "of or denoted by an integer" (which, as of the time of writing, is the second definition provided by Google when searching the word). I agree it's somewhat confusing since the word has a separate common meaning when used in casual conversation, and even a separate meaning in mathematics that you're familiar with from calculus.
 
-For this course, we will discuss some preliminaries before moving on to IP modeling techniques. We'll spend more time on modeling here than in the LP section, in order to explore the flexibility integer programs provide and discuss some of the tricks that can be used to set up problems of all types. We'll finish our practical discussion with on section on IP solvers. On the theoretical side, we'll touch a bit on the theory that helps explain what makes solving IPs so difficult. We'll then get into solution techniques, including branch-and-bound and cutting plane procedures.
+For this course, we will discuss some preliminaries before moving on to IP modeling techniques. We'll spend more time on modeling here than in the LP section, in order to explore the flexibility integer programs provide and discuss some of the tricks that can be used to set up problems of all types. We'll finish our practical discussion with a section on solving IPs with Python. On the theoretical side, we'll touch a bit on the theory that helps explain what makes solving IPs so difficult. We'll then get into solution techniques, including branch-and-bound and cutting plane procedures.
 
 ## Definitions
 
@@ -22,7 +22,7 @@ $$
 
 [^linearNotInInitialism]: Some sources will include an "L" (for "linear") in the initialism as well. So if you see things like ILP, MILP, or BILP in other texts, know that these are likely the same as what we're calling IP, MIP, and BIP.
 
-[^setOfIntegers]: New notation alert: as mentioned in +@sec:symbols, the symbol $\I$ stands for the set of integer numbers. The $+$ in the subscript means that we are considering non-negative integers (though this is just a convention, as we saw with linear programs in +@sec:lpForms we can bypass non-negativity with certain formulation tricks). The $n$ in the superscript means is just from the dimension of the vector $\x$, in this case meaning that a valid selection for $\x$ must consist of $n$ such integers.
+[^setOfIntegers]: New notation alert: as mentioned in +@sec:symbols, the symbol $\I$ stands for the set of integer numbers. The $+$ in the subscript means that we are considering non-negative integers (though this is just a convention, as we saw with linear programs in +@sec:lpForms we can bypass non-negativity with certain formulation tricks). The $n$ in the superscript is just from the dimension of the vector $\x$, in this case meaning that a valid selection for $\x$ must consist of $n$ such integers.
 
 In contrast, a __mixed integer (linear) program__ (__MIP__) is a linear program where some, but not necessarily all, of the decision variables are required to be integer, i.e.
 
@@ -35,7 +35,7 @@ $$
 \end{align*}
 $$
 
-A MIP is more flexible that a pure IP, but much of the theory we cover will be easier to talk about for IPs. So when we present results for IPs, know that they can likely be extended to MIPs as well, but with some minor modifications.
+A MIP is more flexible that a pure IP, but much of the theory we cover will be easier to talk about for IPs. When we present results for IPs, know that they can likely be extended to MIPs as well, but with some minor modifications.
 
 A __binary integer (linear) program__ (__BIP__) is a subclass of IPs where the variables are restricted not just to integers, but to either one of the values $0$ or $1$. Thus we can define a BIP as having the form:
 
@@ -68,11 +68,11 @@ $$
 \end{align*}
 $$
 
-We've shown this 2-dimensional IP in a plot below. Shaded in gray is the feasible region to the IP's __LP relaxation__. The plotted points are all the feasible solutions to the IP, i.e. the points inside the LP relaxation's feasible region which are also integer. In this case, you can verify graphically that the optimal solution to the LP relaxation is $(x_1, x_2)=(2.5, 4.5)$ with an objective value of 75.
+We've shown this 2-dimensional IP in a plot below. Shaded in gray is the feasible region to the problem's LP relaxation. The plotted points are all the feasible solutions to the IP, i.e. the points inside the LP relaxation's feasible region which are also integer. In this case, you can verify graphically that the optimal solution to the LP relaxation is $(x_1, x_2)=(2.5, 4.5)$ with an objective value of 75.
 
 <svg width=350 height=350 class="lpDraw" base="prototypeIp" altArgs='{"chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg>
 
-Say we'd like to find our integer solution by simply rounding the optimal LP relaxation solution. The first difficulty would be determining which way (up vs. down) to round the numbers. But another, more fundamental difficulty is that there is no guarantee that _any_ rounded solution will be feasible. Indeed, that is the case we find ourselves in here, as each of the solutions $(2, 4), (2, 5), (3, 4)$, and $(3, 5)$ are infeasible[^areTheIntegersReallyInfeasible].
+Say we'd like to find our integer solution by simply rounding the optimal LP relaxation solution. The first difficulty would be determining which way (up vs. down) to round the numbers. But another, more fundamental difficulty is that there is no guarantee that _any_ rounded solution will be feasible. Indeed, that is the case we find ourselves in here, as each of the rounded solutions $(2, 4), (2, 5), (3, 4)$, and $(3, 5)$ are infeasible[^areTheIntegersReallyInfeasible].
 
 [^areTheIntegersReallyInfeasible]: I should point out that, in a practical application, there is often some wiggle room in the (sometimes shoddily estimated) problem data such that you could fudge a little and make one of these rounded solutions work. This may or may not be an option depending on your scenario.
 
