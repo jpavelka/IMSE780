@@ -16,7 +16,7 @@
 
 {insertSection:sections/linear_programming/notes.md}
 
-<!-- {insertSection:sections/integer_programming/intro.md} -->
+{insertSection:sections/integer_programming/intro.md}
 
 <!-- {insertSection:sections/integer_programming/modeling.md} -->
 
