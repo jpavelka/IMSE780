@@ -356,7 +356,7 @@ Thus our new solution is $x_1=2, x_2=6, x_3=2, x_4=0$, and $x_5=0$[^slackInterpr
 
 ### Simplex in matrix notation
 
-<div class='lectureVideoEmbed' video-id='aa0f8c8329cd4138a5313757a8f8f1a51d' video-date='2023-09-08'>Python basics. The video cut off a bit at the end, but you don't miss anything important.</div>
+<div class='lectureVideoEmbed' video-id='aa0f8c8329cd4138a5313757a8f8f1a51d' video-date='2023-09-08'>Simplex with matrices</div>
 
 Now that we have the mechanics down, let's tidy up our presentation of the simplex method by writing out the steps in matrix notation. Recall that for simplex we need equality constraints and non-negative variables, so our problem is formulated as in +@eq:augmentedFormLpMatrix. Additionally, we will assume that the $m\times n$ matrix $A$ is has rank $m$ and is _non-singular_, so in particular $n\geq m$ and there are no _redundant_ constraints (which would be any constraint that is a linear combination of some of the others). The rank assumption can be done without loss of generality, because any redundant system can be reduced to non-redundant by removing constraints[^standardToAugmentedNoProblem].
 
@@ -504,6 +504,8 @@ While we still have some edge cases and gotchas to discuss, we have what we need
 And that's it!
 
 ### Other considerations {#sec:lpOtherConsiderations}
+
+<div class='lectureVideoEmbed' video-id='aa5bd6de00194e58bdfae5570433587c1d' video-date='2023-09-11'>Finishing simplex, starting duality</div>
 
 Let's now discuss some implementation details that add slight complications to the simplex algorithm, and would need to be taken care of in any LP solving software.
 

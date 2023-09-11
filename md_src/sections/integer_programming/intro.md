@@ -4,7 +4,7 @@ In this section we will introduce integer programming (IP), which is an of exten
 
 [^integralAndInteger]: In this context, we use the word _integral_ to mean "of or denoted by an integer" (which, as of the time of writing, is the second definition provided by Google when searching the word). I agree it's somewhat confusing since the word has a separate common meaning when used in casual conversation, and even a separate meaning in mathematics that you're familiar with from calculus.
 
-For this course, we will discuss some preliminaries before moving on to IP modeling techniques. We'll spend more time on modeling here to explore the flexibility integer programs provide, and discuss some of the tricks that can be used to set up problems of all types. We'll then touch a bit on the theory that helps explain what makes solving IPs so difficult. We'll finish our practical discussion with on section on IP solvers. Lastly, we'll get a little more theoretical again to discuss some IP solutions techniques, including branch-and-bound and cutting plane procedures.
+For this course, we will discuss some preliminaries before moving on to IP modeling techniques. We'll spend more time on modeling here than in the LP section, in order to explore the flexibility integer programs provide and discuss some of the tricks that can be used to set up problems of all types. We'll finish our practical discussion with on section on IP solvers. On the theoretical side, we'll touch a bit on the theory that helps explain what makes solving IPs so difficult. We'll then get into solution techniques, including branch-and-bound and cutting plane procedures.
 
 ## Definitions
 
@@ -53,7 +53,7 @@ As you can see, every IP by definition has an associated LP underlying it, obtai
 
 [^generalRelaxation]: The notion of a _relaxation_ shows up in other places in optimization theory as well. In general, a relaxation $R$ of some minimization problem $P$ is another optimization problem such that the set of feasible solutions to $P$ is a subset of the feasible solutions to $R$. Further, for any solution $x$ to $P$, the objective value at $x$ in $R$ is less than or equal to the objective value at $x$ in $P$ (in the case of the LP relaxation to an IP, the objective values are equal). Relaxations are usually easier to solve than the original problem and can be useful as approximations or in bounding $P$'s possible objective values.
 
-## Rounding is not enough
+## Rounding is not enough {#sec:ipRoundingNotEnough}
 
 Right about now, you may be wondering how important IP's integer restriction really is. Can't we just solve the related LP, round the solution to the nearest integer, then be done with it?
 

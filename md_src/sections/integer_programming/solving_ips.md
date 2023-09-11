@@ -1,8 +1,5 @@
-### Combinatorial explosion
-<!-- for the appendix, wolsey chp 6 -->
+## Solving IPs with software
 
 ### Solvers
 
-### Lazy constraints
-
-### GRB logical constraints
+### Reading the logs

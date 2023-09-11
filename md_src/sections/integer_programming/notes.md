@@ -1,6 +1,8 @@
 ## Notes and further reading
 
-Follows @wolsey2020integer
+Largely follows @wolsey2020integer
+Most of the modeling examples from @classText (and some from @wolsey2020integer)
 
-heuristics (chp 13)
-column generation (chp 11)
+heuristics (wolsey chp 13)
+column generation (wolsey chp 11)
+special ordered sets

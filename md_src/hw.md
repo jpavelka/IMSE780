@@ -308,6 +308,8 @@ many part-time workers should work each shift to meet the above requirements at 
 </div>
 </div>
 
+<!-- some future homework: either/or constraints for each Wyndor facility -->
+
 <!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>
 
