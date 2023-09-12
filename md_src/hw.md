@@ -231,7 +231,7 @@ many part-time workers should work each shift to meet the above requirements at 
     \begin{bmatrix}
         1 & -c_1    & -c_2    & \cdots & -c_{n-m}  & 0 & 0 & \cdots & 0 \\
         0 & a_{1,1} & a_{1,2} & \cdots & a_{1,n-m} & 1 & 0 & \cdots & 0 \\
-        0 & a_{2,1} & a_{2,2} & \cdots & a_{2,n-m} & 0 & 0 & \cdots & 0 \\
+        0 & a_{2,1} & a_{2,2} & \cdots & a_{2,n-m} & 0 & 1 & \cdots & 0 \\
         \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
         0 & a_{m,1} & a_{m,2} & \cdots & a_{m,n-m} & 0 & 0 & \cdots & 1 \\
     \end{bmatrix}
@@ -309,6 +309,8 @@ many part-time workers should work each shift to meet the above requirements at 
 </div>
 
 <!-- some future homework: either/or constraints for each Wyndor facility -->
+<!-- some future homework: constraints for inverse XOR -->
+<!-- model assignment problem with model/data separation in python -->
 
 <!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>

@@ -174,7 +174,7 @@ The second option is a fully open-source option using PuLP, a Python modeling la
 
 {colabGist:1_mwxc4xRRVjaMDZL0ObAc0ROqqw5UrJ3,9c7e1b589a3efb40590606ba6eed102f}
 
-### Model/data separation
+### Model/data separation {#sec:lpModelDataSep}
 
 Our Python models from the last notebook certainly work for the sample problem, but that's about it. The real power of programming comes when you can write one bit of code that can be applied in a wide range of contexts.
 
