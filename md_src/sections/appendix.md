@@ -8,6 +8,7 @@
 - $\I_+$: The set of non-negative integer numbers, i.e. anything in $\I$ that is greater than or equal to 0.
 - $\{\cdots\}$: Set notation. Items inside the curly brackets are the elements of the set, so $\{0,1\}$ is the 2-element set consisting of just the numbers 0 and 1.
 - $\in$: Set inclusion. When we write $x\in S$, we mean that $x$ is an element of the set $S$. For example, we could write $\pi\in\R$, meaning the number $\pi$ is a real number.
+- $\subseteq$: Subset. For two sets $S, S'$, we say $S'\subseteq S$ (said "$S'$ is a subset of $S$") if every element of $S'$ is also an element of $S$.
 - $\forall$: For all. We use this symbol when we want to specify that something should be done for all elements in some set. So if we're writing out the constraints for some model and we say $x_j\geq 0\ \forall\ j\in\{1, 2, \cdots, n\}$ we're just saying that each of $x_1, x_2, \cdots, x_n$ should be non-negative.
 - $S^m$: The set of vectors with $m$ elements, all of which are from some set $S$. For example, $\R^3$ is the set of 3-element, real number vectors. So we could say
   $$

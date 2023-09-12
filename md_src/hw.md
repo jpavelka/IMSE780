@@ -309,6 +309,8 @@ many part-time workers should work each shift to meet the above requirements at 
 </div>
 
 <!-- some future homework: either/or constraints for each Wyndor facility -->
+<!-- some future homework: constraints for inverse XOR -->
+<!-- model assignment problem with model/data separation in python -->
 
 <!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>
