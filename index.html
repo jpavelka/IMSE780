@@ -1746,6 +1746,12 @@
       .mathSmall {
           font-size: 1rem;
       }
+      .katexSideBySide {
+          align-self: center;
+      }
+      .katexSideBySide .katexContainer {
+          overflow-x: hidden;
+      }
   </style>
   <style>   
       #classModeDiv {
@@ -2028,7 +2034,7 @@ class="toc-section-number">4.4.2</span> Solvers</a></li>
 id="toc-solving-our-lp-with-python"><span
 class="toc-section-number">4.4.3</span> Solving our LP with
 Python</a></li>
-<li><a href="#modeldata-separation" id="toc-modeldata-separation"><span
+<li><a href="#sec:lpModelDataSep" id="toc-sec:lpModelDataSep"><span
 class="toc-section-number">4.4.4</span> Model/data separation</a></li>
 </ul></li>
 <li><a href="#sec:lpForms" id="toc-sec:lpForms"><span
@@ -2894,7 +2900,7 @@ locked-in to a single solver. But it also may be slightly less
 performant, or may lack some solver-specific features that come with a
 solver’s built-in API.</p>
 <script src="https://gist.github.com/9c7e1b589a3efb40590606ba6eed102f.js"></script>
-<h3 data-number="4.4.4" id="modeldata-separation"><span
+<h3 data-number="4.4.4" id="sec:lpModelDataSep"><span
 class="header-section-number">4.4.4</span> Model/data separation</h3>
 <p>Our Python models from the last notebook certainly work for the
 sample problem, but that’s about it. The real power of programming comes
@@ -5330,6 +5336,13 @@ class="math inline">x</span> is an element of the set <span
 class="math inline">S</span>. For example, we could write <span
 class="math inline">\pi\in\mathbb{R}</span>, meaning the number <span
 class="math inline">\pi</span> is a real number.</li>
+<li><span class="math inline">\subseteq</span>: Subset. For two sets
+<span class="math inline">S, S&#39;</span>, we say <span
+class="math inline">S&#39;\subseteq S</span> (said “<span
+class="math inline">S&#39;</span> is a subset of <span
+class="math inline">S</span>”) if every element of <span
+class="math inline">S&#39;</span> is also an element of <span
+class="math inline">S</span>.</li>
 <li><span class="math inline">\forall</span>: For all. We use this
 symbol when we want to specify that something should be done for all
 elements in some set. So if we’re writing out the constraints for some
