@@ -1957,8 +1957,7 @@ Research?</a></li>
 <li><a href="#example-or-problems" id="toc-example-or-problems"><span
 class="toc-section-number">2.2</span> Example OR problems</a>
 <ul>
-<li><a href="#traveling-salesman-problem"
-id="toc-traveling-salesman-problem"><span
+<li><a href="#sec:tsp" id="toc-sec:tsp"><span
 class="toc-section-number">2.2.1</span> Traveling Salesman
 Problem</a></li>
 <li><a href="#job-shop-scheduling" id="toc-job-shop-scheduling"><span
@@ -2268,7 +2267,7 @@ class="header-section-number">2.2</span> Example OR problems</h2>
 <p>The above definitions were great, but maybe it’s feeling a little too
 abstract at this point. Fair enough. Let’s outline a few common problems
 in the OR space.</p>
-<h3 data-number="2.2.1" id="traveling-salesman-problem"><span
+<h3 data-number="2.2.1" id="sec:tsp"><span
 class="header-section-number">2.2.1</span> Traveling Salesman
 Problem</h3>
 <p>There are many well-known problems in the world of OR, but I reckon
@@ -4309,6 +4308,11 @@ head, you run the notebook and find the optimal objective value is …</p>
 <p>… that same $36,000? What an odd coincidence.</p>
 <h3 data-number="4.7.2" id="defining-the-dual-lp"><span
 class="header-section-number">4.7.2</span> Defining the dual LP</h3>
+<div class="lectureVideoEmbed"
+data-video-id="ef7be5c2f335464abb0d0b06c1796b761d"
+data-video-date="2023-09-13">
+Duality redux, plus some post-optimality analysis.
+</div>
 <p>Actually, this is no coincidence at all. It’s simply a consequence of
 LP duality. For every LP, there is a second, associated LP that relates
 to it in a special way. We call the second LP the <strong>dual</strong>
@@ -4773,7 +4777,7 @@ possibilities are summarized in the following result:</p>
 <p>The following relationships always hold between the primal LP and its
 associated dual:</p>
 <ol type="1">
-<li>If the primal problem is feasible with a bounded objective, the so
+<li>If the primal problem is feasible with a bounded objective, then so
 is the dual.</li>
 <li>If the primal problem is feasible but with an unbounded objective,
 then the dual is infeasible.</li>
@@ -5305,6 +5309,7 @@ how to proceed.</p>
 <!-- {insertSection:sections/integer_programming/branch_and_bound.md} -->
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
 <!-- {insertSection:sections/integer_programming/easy_ips.md} -->
+<!-- {insertSection:sections/integer_programming/theory_to_practice.md} -->
 <!-- {insertSection:sections/integer_programming/notes.md} -->
 <h1 data-number="6" id="appendix"><span
 class="header-section-number">6</span> Appendix</h1>
@@ -5343,6 +5348,11 @@ class="math inline">S&#39;</span> is a subset of <span
 class="math inline">S</span>”) if every element of <span
 class="math inline">S&#39;</span> is also an element of <span
 class="math inline">S</span>.</li>
+<li><span class="math inline">|S|</span>: Size of a set. This denotes
+the number of elements in a set, so e.g. <span
+class="math inline">|\{1,5,7,12\}|=4</span>.</li>
+<li><span class="math inline">\emptyset</span>: Empty set. A set with no
+elements.</li>
 <li><span class="math inline">\forall</span>: For all. We use this
 symbol when we want to specify that something should be done for all
 elements in some set. So if we’re writing out the constraints for some
@@ -5350,6 +5360,13 @@ model and we say <span class="math inline">x_j\geq 0\ \forall\ j\in\{1,
 2, \cdots, n\}</span> we’re just saying that each of <span
 class="math inline">x_1, x_2, \cdots, x_n</span> should be
 non-negative.</li>
+<li><span class="math inline">\{x: x\textit{ satisfies some
+condition}\}</span>: Conditional set. This represents the set of all
+<span class="math inline">x</span> such that <span
+class="math inline">x</span> satisfies the condition to the right of the
+colon (:). For example, <span class="math inline">\{n\in\mathbb{I}:5\leq
+n\leq 10\}</span> is the set of all integers between 5 and 10,
+i.e. <span class="math inline">\{5,6,7,8,9,10\}</span></li>
 <li><span class="math inline">S^m</span>: The set of vectors with <span
 class="math inline">m</span> elements, all of which are from some set
 <span class="math inline">S</span>. For example, <span
@@ -5781,8 +5798,7 @@ href="https://api.semanticscholar.org/CorpusID:117965841">https://api.semanticsc
 href="https://www.math.uwaterloo.ca/tsp/"
 class="uri">https://www.math.uwaterloo.ca/tsp/</a>.
 </div>
-<div id="ref-wolsey2020integer" class="csl-entry"
-role="doc-biblioentry">
+<div id="ref-wolsey2020" class="csl-entry" role="doc-biblioentry">
 Wolsey, L. A. 2020. <em>Integer Programming</em>. Wiley. <a
 href="https://books.google.com/books?id=3yhPwwEACAAJ">https://books.google.com/books?id=3yhPwwEACAAJ</a>.
 </div>
