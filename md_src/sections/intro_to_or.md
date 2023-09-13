@@ -22,7 +22,7 @@ Right. So the practice of OR involves using mathematical techniques to find the 
 
 The above definitions were great, but maybe it's feeling a little too abstract at this point. Fair enough. Let's outline a few common problems in the OR space.
 
-### Traveling Salesman Problem
+### Traveling Salesman Problem {#sec:tsp}
 
 There are many well-known problems in the world of OR, but I reckon the [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) (TSP) is the best-known and most-loved among them. The setup is simple: Some old-timey door-to-door salesman is heading out on the road to sell his product to the masses. He plans to visit a certain group of cities, and thanks to his trusty atlas he knows the way between any pair of cities. Less clear, however, is the shortest path that will lead you through _all_ of the cities, and this is the aim of the TSP: In which order should you visit the cities such that your total distance traveled is minimized?
 

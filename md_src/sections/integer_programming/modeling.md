@@ -7,6 +7,7 @@ Hopefully the preceding section gave you some appreciation for why integrality c
 The most straightforward application if IPs is modeling an LP where the decision variables can't be fractional. For example, say you're building an optimization model to decide how many washing machines to buy for your fleet of laundromats. There is no way to meaningfully buy, say, half of a washing machine to deploy in your store. This is a case where integer-valued decisions are required.
 
 As far as writing out the model, it is as simple as adding a $\x\in\I^n$ line to your formulation. For example, in the Wyndor Glass sample LP +@eq:prototypeLp say we can only make whole batches of each product. A new formulation would look like:
+
 $$
 \begin{align*}
 \max && 3x_1 + 5x_2 & \\
@@ -16,6 +17,7 @@ $$
      && x_1,x_2 & \in \ \I_+
 \end{align*}
 $$
+
 {#eq:wyndorIp}
 
 We've seen in +@sec:ipRoundingNotEnough that the optimal solution can change quite a bit when moving from real-valued variables to integral ones, motivating the IP solution techniques we'll be exploring later.
@@ -79,7 +81,7 @@ By constraining $y_1 + y_2 \leq 1$, we allow only $(y_1, y_2)\in\{(0, 0),(1, 0),
 
 <h4>Fixed-charge formulations</h4>
 
-A common occurrence in OR problems is a so-called __fixed-charge problem__, where there is a one-time setup cost involved in participating in some activity. Suppose in the Wyndor problem that the three facilities did not exist yet, so they need to decide which facilities to build as well as the ultimate product mix. Say that in order to build any of the plants, they'd need to take out a loan that they plan to pay back with their weekly profits for the foreseeable future. If the weekly payback for any given facility is \$6,000, how can we model this with an integer program? Take a look at the following formulation:
+A common occurrence in OR problems is a so-called **fixed-charge problem**, where there is a one-time setup cost involved in participating in some activity. Suppose in the Wyndor problem that the three facilities did not exist yet, so they need to decide which facilities to build as well as the ultimate product mix. Say that in order to build any of the plants, they'd need to take out a loan that they plan to pay back with their weekly profits for the foreseeable future. If the weekly payback for any given facility is \$6,000, how can we model this with an integer program? Take a look at the following formulation:
 
 $$
 \begin{align*}
@@ -96,8 +98,8 @@ We've added new binary variables, $y_1, y_2$, and $y_3$, which we'd like to inte
 
 <h4>Boolean algebra</h4>
 
-Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolean algebra](https://en.wikipedia.org/wiki/Boolean_algebra) 
- (AND, OR, XOR) in integer programs. In each case, we'll do this with an auxiliary binary variable $y$. For each operation, I'll show the associated truth table (telling the values of $y$ that should correspond to each possible value of $x_1, x_2$) and the corresponding set of linear constraints. It's a good exercise to go through each row of the table and verify that the constraints do indeed enforce the relation.
+Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolean algebra](https://en.wikipedia.org/wiki/Boolean_algebra)
+(AND, OR, XOR) in integer programs. In each case, we'll do this with an auxiliary binary variable $y$. For each operation, I'll show the associated truth table (telling the values of $y$ that should correspond to each possible value of $x_1, x_2$) and the corresponding set of linear constraints. It's a good exercise to go through each row of the table and verify that the constraints do indeed enforce the relation.
 
 - AND: $y=1$ if and only if $x_1=x_2=1$:
      <div style='display:flex;justify-content:space-around'>
@@ -173,11 +175,11 @@ Here we present the sample scenarios in section 12.4 of @classText, and talk abo
 > The Research and Development Division of the GOOD PRODUCTS COMPANY has developed three possible new products. However, to avoid undue diversification of the company’s product line, management has imposed the following restriction:
 >
 > Restriction 1: From the three possible new products, at most two should be chosen to be produced.
->  
+>
 > Each of these products can be produced in either of two plants. For administrative reasons, management has imposed a second restriction in this regard.
->  
+>
 > Restriction 2: Just one of the two plants should be chosen to be the sole producer of the new products.
->  
+>
 > The production cost per unit of each product would be essentially the same in the two plants. However, because of differences in their production facilities, the number of hours of production time needed per unit of each product might differ between the two plants. These data are given in Table 12.2, along with other relevant information, including marketing estimates of the number of units of each product that could be sold per week if it is produced. The objective is to choose the products, the plant, and the production rates of the chosen products so as to maximize total profit.
 
 ![Data for the Good Products Company problem [@classText]](images/ip-example-1-data.png)
@@ -299,7 +301,9 @@ Ok, that was a mouthful, let's try to explain with an example. Remember the airl
 
 Let's give one more example to motivate our formulation. Say a new city is deciding where to place their fire stations. They require that every neighborhood in the city can be reached in under 5 minutes by at least on fire station. There are $n$ potential building sites for the new stations, and $m$ different neighborhoods in the city (so $S=\{1,2,\dots,m\}$). For each potential building site $j\in\{1,2,\dots,n\}$, there is a set $S_j\subseteq S$ of neighborhoods that can be reached from that site in under 5 minutes. There is also a cost $c_j\in\R$ associated with building a station at site $j$. How can the city minimize building costs while still meeting the requirements?
 
-Our formulation will include binary variables $x_j$ with the interpretation that a station will be built at site $j$ if and only if $x_j=1$. The formulation follows:
+Our formulation will include binary variables $x_j$ with the interpretation that a station will be built at site $j$ if and only if $x_j=1$. The formulation follows[^newNotationConditionalSet]:
+
+[^newNotationConditionalSet]: Note the new notation in the second summation, $\{j:i\in S_j\}$. We call this the "conditional set" notation in +@sec:symbols. It means the set of all $j$ such that the condition $i\in S_j$ is true.
 
 $$
 \begin{align*}
@@ -309,10 +313,57 @@ $$
 \end{align*}
 $$
 
-New notation!
-
 <h4>Traveling salesman</h4>
 
-<!-- from wolsey 1.3 -->
+We've touched on the traveling salesman problem (TSP) already, way back in +@sec:tsp. This is the famous problem where you have a list of cities to visit and need to find the shortest possible path that leads you through every city before returning to your starting point.
 
+To formalize things a bit, say the salesman needs to visit a list of $n$ cities, and the distances between any two cities $i,j\in\{1,\dots,n\}, i\neq j$ is known and denoted as $d_{ij}$. We'll use binary variables $x_{ij}$ for each $i,j\in\{1,\dots,n\}, i\neq j$, with the interpretation that $x_{ij}=1$ if and only if the salesman chooses to travel directly from city $i$ to city $j$ as part of his path. A first attempt at this model might look like this:
 
+$$
+\begin{align*}
+\min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
+\st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
+&& \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
+&&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
+\end{align*}
+$$
+
+On first inspection, this _looks like_ it's a correct formulation. There are two groups of constraints above. In the first group you set some $i$, then amongst all $j\neq i$ you ensure that exactly one $x_{ij}$ equals $1$. This has the effect of enforcing that the salesman leaves every town exactly once. The second group of constraints does something similar, enforcing that the salesman arrives in every town exactly once.
+
+So, what's the problem? It might not be evident initially[^ipModelsNotStraightforward], but this formulation does nothing to eliminate so-called _subtours_ in the formulation. That is to say, the feasible solutions include a solution where the salesman visits, say, the first half of the cities in one tour and the second half of the cities in a second, separate tour, with no links between the two. A solution including subtours is illustrated below.
+
+[^ipModelsNotStraightforward]: I can't tell you how many times I've come up with what I thought was a valid formulation for a problem, only to solve the model and get some invalid result because I overlooked some subtle case my model didn't cover. Modeling a given IP is not always as straightforward as it might initially appear.
+
+$\includeSubtourImage$
+
+To recover a valid formulation, we'll need to include constraints that make these subtours impossible. How might we do that? Consider the above image, where we see a subtour among cities 3, 8, and 9. We can keep this from happening by way of a constraint that ensures that the salesman travels at least once between some city in the set $\{3, 8, 9\}$ and another city not in that set, i.e. one of $\{1, 2, 4, 5, 6, 7, 10\}$. That is, we can add the constraint:
+
+$$
+\sum_{i\in\{3, 8, 9\}}\sum_{j\in\{1, 2, 4, 5, 6, 7, 10\}}x_{ij} \geq 1
+$$
+
+Alternatively, we could write the constraint in terms of the original set $\{3, 8, 9\}$ only by restricting the number of edges between set members to less than 3 (the size of the set).
+
+$$
+\sum_{i\in\{3, 8, 9\}}\sum_{j\in\{3, 8, 9\}}x_{ij} \leq 2
+$$
+
+Of course, this constraint will only eliminate the possibility of that one subtour (and its complement). There are plenty of other subtours possible, one for essentially every subset of $\{1,\dots,n\}$. So a truly valid formulation for the TSP must include one of these __subtour elimination constraints__ for every subset $S\subseteq\{1,\dots,n\}$[^tspAlmostEverySubset]. Such a formulation including these constraints[^tspLotsOfConstraints] could look like[^justSubtourElim]: 
+
+[^tspLotsOfConstraints]: If you're thinking "that could be a lot of constraints", you're right. It can be a problem. We'll be coming back to this observation later.
+
+[^tspAlmostEverySubset]: Technically we don't need _every_ subset, since the same constraint will cover both the selected subset and its complement (e.g. the constraint above will eliminate the possibility of subtours in both sets $\{3, 8, 0\}$ and $\{1, 2, 4, 5, 6, 7, 10\}$). Further, subsets of size 1 are technically covered by the basic "leave every city once" constraints.
+
+[^justSubtourElim]: In fact, you could make due with _only_ the subtour elimination constraints, since the original functional constraints are essentially just subtour elimination constraints for the subtours of size $n-1$.
+
+<div class="mathSmall">
+$$
+\begin{align*}
+\min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
+\st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
+&& \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
+&& \sum_{i\in S}\sum_{j\in S}x_{ij} &\leq |S|-1 && \forall \ S\subseteq \{1,\dots,n\}, S\neq\emptyset\\
+&&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
+\end{align*}
+$$
+</div>
