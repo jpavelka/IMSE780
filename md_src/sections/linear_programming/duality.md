@@ -31,6 +31,8 @@ You quickly throw together a Colab notebook to solve this problem. You know that
 
 ### Defining the dual LP
 
+<div class='lectureVideoEmbed' video-id='ef7be5c2f335464abb0d0b06c1796b761d' video-date='2023-09-13'>Duality redux, plus some post-optimality analysis.</div>
+
 Actually, this is no coincidence at all. It's simply a consequence of LP duality. For every LP, there is a second, associated LP that relates to it in a special way. We call the second LP the **dual** LP, and the original the **primal**. As it turns out, the problem +@eq:prototypeLpDual we just formulated is the dual problem of our original sample LP +@eq:prototypeLp.
 
 Let's look a little closer at the relationship between +@eq:prototypeLp and +@eq:prototypeLpDual. To make things more obvious, let's write them out next to each other in matrix form. We'll also rearrange the order of the data and variable matrices in the dual problem:
@@ -339,7 +341,7 @@ To wrap up the duality section, let's discuss how the feasibility and boundednes
 
 The following relationships always hold between the primal LP and its associated dual:
 
-1. If the primal problem is feasible with a bounded objective, the so is the dual.
+1. If the primal problem is feasible with a bounded objective, then so is the dual.
 2. If the primal problem is feasible but with an unbounded objective, then the dual is infeasible.
 3. If the primal problem is infeasible, then the dual has either no feasible solutions or an unbounded objective function.
 
