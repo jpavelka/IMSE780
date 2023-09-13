@@ -317,7 +317,9 @@ $$
 
 We've touched on the traveling salesman problem (TSP) already, way back in +@sec:tsp. This is the famous problem where you have a list of cities to visit and need to find the shortest possible path that leads you through every city before returning to your starting point.
 
-To formalize things a bit, say the salesman needs to visit a list of $n$ cities, and the distances between any two cities $i,j\in\{1,\dots,n\}, i\neq j$ is known and denoted as $d_{ij}$. We'll use binary variables $x_{ij}$ for each $i,j\in\{1,\dots,n\}, i\neq j$, with the interpretation that $x_{ij}=1$ if and only if the salesman chooses to travel directly from city $i$ to city $j$ as part of his path. A first attempt at this model might look like this:
+To formalize things a bit, say the salesman needs to visit a list of $n$ cities, and the distances between any two cities $i,j\in\{1,\dots,n\}, i\neq j$ is known and denoted as $d_{ij}$[^symmetricTSP]. We'll use binary variables $x_{ij}$ for each $i,j\in\{1,\dots,n\}, i\neq j$, with the interpretation that $x_{ij}=1$ if and only if the salesman chooses to travel directly from city $i$ to city $j$ as part of his path. A first attempt at this model might look like this:
+
+[^symmetricTSP]: If $d_{ij}=d_{ji}$ for all $i,j$ then we call it a _symmetric TSP_. But this doesn't need to hold for our formulations to work.
 
 $$
 \begin{align*}
@@ -334,7 +336,7 @@ So, what's the problem? It might not be evident initially[^ipModelsNotStraightfo
 
 [^ipModelsNotStraightforward]: I can't tell you how many times I've come up with what I thought was a valid formulation for a problem, only to solve the model and get some invalid result because I overlooked some subtle case my model didn't cover. Modeling a given IP is not always as straightforward as it might initially appear.
 
-$\includeSubtourImage$
+![TSP subtours [@wolsey2020]](images/subtours.png)
 
 To recover a valid formulation, we'll need to include constraints that make these subtours impossible. How might we do that? Consider the above image, where we see a subtour among cities 3, 8, and 9. We can keep this from happening by way of a constraint that ensures that the salesman travels at least once between some city in the set $\{3, 8, 9\}$ and another city not in that set, i.e. one of $\{1, 2, 4, 5, 6, 7, 10\}$. That is, we can add the constraint:
 
@@ -362,7 +364,7 @@ $$
 \min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
 \st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
 && \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
-&& \sum_{i\in S}\sum_{j\in S}x_{ij} &\leq |S|-1 && \forall \ S\subseteq \{1,\dots,n\}, S\neq\emptyset\\
+&& \sum_{i\in S}\sum_{j\in S:i\neq j}x_{ij} &\leq |S|-1 && \forall \ S\subseteq \{1,\dots,n\}, S\neq\emptyset\\
 &&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
 \end{align*}
 $$
