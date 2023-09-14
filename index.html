@@ -177,6 +177,659 @@
       margin-left: 2em;
     }
   </style>
+  <style>   
+      #classModeDiv {
+          position: fixed;
+          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+          padding: 30pt;
+          top: 200px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          border: 2pt solid;
+          border-radius: 10pt;
+          padding: 10px;
+          box-shadow: 5px 5px rgb(200, 200, 200);
+          visibility: hidden;
+      }
+  </style>
+  <script>
+      const classModeSetup = () => {
+          const classMode = document.getElementById('classModeDiv');
+          let noClassModeHref = window.location.href.split('#')[0];
+          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
+              noClassModeHref += '/';
+          }
+          noClassModeHref += '?classmode=false';
+          classMode.onclick = closeClassMode;
+          classMode.innerHTML = `
+              <div>
+                  Welcome to class mode! This is your friendly reminder to check that:
+                  <ul>
+                      <li>The mics are on.</li>
+                      <li>The camera is pointed at the whiteboard.</li>
+                      <li>PIP is off.</li>
+                  </ul>
+                  Click anywhere to close this window.
+                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+              </div>
+          `
+      }
+      const closeClassMode = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+          const minutesBetweenReminders = 30;
+          if (classMode.style.visibility === "visible") {
+              classMode.style.visibility = "hidden";
+              classMode.innerHTML = `
+                  <div>
+                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                  </div>
+              `
+              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+          }
+      }
+  </script>
+  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+  <style>
+      nav#TOC:nth-child(2) {
+          margin-top: 0.6rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+      }
+      nav#TOC li {
+          list-style-type: none;
+      }
+      nav#TOC > ul {
+          margin-bottom: 1.5rem;
+          margin-top: 2rem;
+          line-height: 1.9rem;
+      }
+      #TOC ul {
+          padding-left: 0;
+      }
+      nav#TOC {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #ebebeb;
+          overflow-x: hidden;
+          padding-top: 1rem;
+          transition: 0.5s;
+          overflow-y: scroll;
+      }
+      nav#TOC a {
+          text-decoration: none;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+          color: #000;
+          display: block;
+          transition: 0.3s;
+          padding-top: 0.2rem;
+          padding-bottom: 0.3rem;
+          border-bottom: 1pt solid lightgray;
+      }
+      nav#TOC a:hover {
+          color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
+      }
+      #tocTop {
+          height: 1.5em;
+          display: flex;
+          justify-content: space-between;
+          padding-top: 0.5rem;
+          padding-bottom: 0.65rem;
+          position: fixed;
+          top: 0;
+          visibility: hidden;
+          background-color: #ebebeb;
+          z-index: 1;
+          border-bottom: 1pt solid gray;
+      }
+      .tocHidden {
+          display: none     
+      }
+      .tocExpand {
+          margin-left: auto;
+          font-size: 30pt !important;
+          font-family: 'Courier New', Courier, monospace;
+      }
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-size: 1.1rem;
+          background-color: #ebebeb;
+          width: 100%;
+          border-bottom: 1pt solid gray;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          z-index: 2;
+      }
+      @media screen and (max-height: 450px) {
+          .sidenav {
+              padding-top: 15px;
+          }
+
+          .sidenav a {
+              font-size: 18px;
+          }
+      }
+  </style>
+  <script>
+      function openCloseNav() {
+          const tocTop = document.getElementById("tocTop")
+          if (tocTop.style.visibility == "visible") {
+              closeNav();
+              return
+          }
+          const screenWidth = window.innerWidth;
+          const tocWidth = Math.min(0.75 * screenWidth, 350);
+          const leftoverWidth = screenWidth - tocWidth;
+          const main = document.getElementById("main");
+          const mainWidth = main.offsetWidth;
+          document.getElementById("TOC").style.width = tocWidth + 'px';
+          tocTop.style.width = tocWidth + 'px';
+          tocTop.style.visibility = "visible";
+          if (leftoverWidth >= mainWidth) {
+              main.style.marginLeft = tocWidth / 2 + 'px';
+          }
+      }
+      function closeNav() {
+          document.getElementById("TOC").style.width = "0";
+          document.getElementById("main").style.marginLeft = null;
+          document.getElementById("tocTop").style.visibility = "hidden";
+      }
+      function closeNavIfSmall() {
+          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
+              closeNav()
+          }
+      }
+  </script>
+  <script>
+      const theoremHelpers = () => {
+          let theoremObj = {};
+          for (thm of document.getElementsByClassName('theorem')) {
+              ((thm) => {
+                  let headerEl = thm.previousSibling;
+                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
+                      headerEl = headerEl.previousSibling;
+                  }
+                  section = headerEl.getAttribute('data-number').split('.')[0];
+                  theoremObj[thm.id] = {
+                      'theorem': thm,
+                      'proof': undefined,
+                      'section': section
+                  };
+              })(thm)
+          }
+          for (prf of document.getElementsByClassName('proof')) {
+              ((prf) => {
+                  theoremObj[prf.getAttribute('for')].proof = prf;
+                  firstP = prf.getElementsByTagName('p')[0];
+                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
+              })(prf)
+          }
+          secNumThms = {};
+          for ([thmId, thmObj] of Object.entries(theoremObj)) {
+              ((thmId, thmObj) => {
+                  thm = document.getElementById(thmId);
+                  sec = thmObj.section;
+                  el = thmObj.theorem;
+                  proof = thmObj.proof;
+                  if (!Object.keys(secNumThms).includes(sec)) {
+                      secNumThms[sec] = 0;
+                  }
+                  secNumThms[sec] += 1;
+                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
+                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
+                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
+                  labelSpan = document.createElement('span');
+                  labelSpan.classList = ['theoremLabel'];
+                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
+                  if (!!thm.getAttribute('data-display-name')) {
+                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
+                  }
+                  labelSpan.textContent = preTheoremStr + ': ';
+                  el.insertBefore(labelSpan, el.firstChild);
+                  const main = document.getElementById('main');
+                  if (!!proof) {
+                      if (proof.getAttribute('data-placement') === 'appendix') {
+                          const appLink = document.createElement('p');
+                          const thmClone = thm.cloneNode(true);
+                          thmClone.id = thm.id + 'AppendixVersionWithProof';
+                          thmCloneLabel = thmClone.firstChild;
+                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                          main.insertBefore(appLink, thm.nextSibling);
+                          const refs = document.getElementById('References');
+                          main.insertBefore(thmClone, refs);
+                          main.insertBefore(proof, refs);
+                      }
+                  }
+              })(thmId, thmObj)
+          }
+          const refEls = document.getElementsByClassName('thmRef');
+          for (ref of refEls) {
+              ((ref) => {
+                  thm = document.getElementById(ref.getAttribute('for'));
+                  ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+              })(ref)
+          }
+          addTooltips([...refEls].map(el => el.firstChild), true);
+      }
+  </script>
+  <script>
+      document.onreadystatechange = () => {
+          if (document.readyState !== "complete") {
+              document.querySelector("#main").style.display = "none";
+              document.querySelector(".navbar").style.display = "none";
+              document.querySelector("#loader").style.visibility = "visible";
+              document.querySelector("#classModeDiv").style.visibility = "hidden";
+          } else {
+              document.querySelector("#loader").style.display = "none";
+              document.querySelector(".navbar").style.display = "flex";
+              document.querySelector("#main").style.display = "block";
+              if (getUrlParameter('classmode') !== 'false') {
+                  document.querySelector("#classModeDiv").style.visibility = "visible";
+              }
+          }
+      };
+      window.onload = () => {
+          appendixSecNo = renumberAppendix();
+          addMathContainers();
+          theoremHelpers();
+          addRefsToToc();
+          eqRefExpandLinksAndAddTooltips();
+          citeRefExpandLinksAndAddTooltips();
+          secRefExpandLinksAndAddBackArrow(appendixSecNo);
+          addFootnoteTooltips();
+          addCodeCopyButtons();
+          tocHelpers();
+          drawAllSvgPlots();
+          classModeSetup();
+          videoEmbeds();
+          document.onclick = closeClassMode;
+          document.getElementById('main').onclick = closeNavIfSmall;
+      }
+      videoEmbeds = () => {
+          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
+              ((el) => {
+                  const descHTML = el.innerHTML;
+                  const dt = el.getAttribute('data-video-date');
+                  const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
+                  el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
+                  el.style.cursor = 'pointer';
+                  const embedIndentDiv = document.createElement('div');
+                  embedIndentDiv.classList = ['embedIndent'];
+                  el.appendChild(embedIndentDiv);
+                  el.onclick = () => {
+                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
+                  }
+                  const textDiv = document.createElement('div');
+                  textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
+                  embedIndentDiv.appendChild(textDiv);
+                  const vidIframe = document.createElement('iframe');
+                  vidIframe.classList = ['lectureEmbedIframe'];
+                  vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
+                  embedIndentDiv.appendChild(vidIframe);
+              })(el)
+          }
+      }
+      getUrlParameter = (name) => {
+          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+          var results = regex.exec(location.search);
+          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      };
+      addMathContainers = () => {
+          for (el of document.querySelectorAll('.math.display')){
+              katexContainer = document.createElement('div');
+              katexContainer.classList = ['katexContainer'];
+              el.parentNode.insertBefore(katexContainer, el);
+              katexContainer.appendChild(el);
+          }
+      }
+      renumberAppendix = () => {
+          const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
+          const appendixSecNo = appendixEl.getAttribute('data-number');
+          appendixEl.setAttribute('data-number', 'A');
+          appendixEl.firstChild.remove();
+          const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
+              return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
+          })
+          for (apSec of appendixSections){
+              const numSplit = apSec.getAttribute('data-number').split('.');
+              const secNo = 'A.' + numSplit.slice(1).join('.');
+              apSec.setAttribute('data-number', secNo);
+              apSec.firstChild.textContent = secNo;
+          }
+          const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
+              return (el.textContent).split('.')[0] === appendixSecNo;
+          })
+          for (tocEl of tocEls) {
+              if (tocEl.textContent == appendixSecNo){
+                  tocEl.remove();
+              } else {
+                  const numSplit = tocEl.textContent.split('.');
+                  const secNo = 'A.' + numSplit.slice(1).join('.');
+                  tocEl.textContent = secNo;
+              }
+          }
+          return appendixSecNo
+      }
+      tocHelpers = () => {
+          for (el of document.querySelectorAll('#TOC a')){
+              const hrefId = el.getAttribute('href').slice(1);
+              let parentEl = el.parentNode;
+              let numUlsNested = 0;
+              while (!!parentEl){
+                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
+                  parentEl = parentEl.parentNode
+              }
+              innerHTML = el.innerHTML;
+              el.innerHTML = '';
+              newEl = document.createElement('div');
+              newEl.innerHTML = innerHTML;
+              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
+              newEl.style.display = 'flex';
+              newEl.innerHTML = innerHTML;
+              if (numUlsNested > 1) {
+                  el.parentNode.classList.add('tocHideable');
+                  el.parentNode.classList.add('tocHidden');
+              } 
+              liParent = el.parentNode;
+              if (liParent.getElementsByTagName('UL').length > 0) {
+                  expandEl = document.createElement('span');
+                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                  expandEl.classList = ['tocExpand'];
+                  newEl.appendChild(expandEl);
+                  ((expandEl, liParent) => {
+                      expandEl.onclick = (e) => {
+                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]){
+                              let hideableParent = hideable.parentNode;
+                              while (hideableParent.tagName !== 'LI'){
+                                  hideableParent = hideableParent.parentNode
+                              }
+                              if (hideableParent !== liParent) {
+                                  continue
+                              }
+                              if ([...hideable.classList].includes('tocHidden')) {
+                                  hideable.classList.remove('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
+                              } else {
+                                  hideable.classList.add('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                              }
+                          };
+                          e.preventDefault();
+                      }
+                  })(expandEl, liParent)
+              }
+              el.appendChild(newEl);
+          }
+      }
+      addCodeCopyButtons = () => {
+          buttonAddFunc = () => {
+              copyButtons = document.querySelectorAll('.copyButton');
+              wide = 700;
+              if (copyButtons.length > 0) {
+                  if (window.innerWidth < wide) {
+                      for (cb of copyButtons){
+                          cb.remove();
+                      }
+                  }
+              } else {
+                  if (window.innerWidth >= wide) {
+                      for (el of document.querySelectorAll('div.sourceCode')){
+                          copyEl = document.createElement('span');
+                          el.insertBefore(copyEl, el.firstChild);
+                          copyEl.innerHTML = '📋';
+                          copyEl.classList = ['copyButton'];
+                          ((el, copyEl) => {
+                              copyEl.onclick = () => {
+                                  text = el.getElementsByTagName('pre')[0].textContent;
+                                  navigator.clipboard.writeText(text);
+                                  infoEl = document.createElement('div');
+                                  infoEl.textContent = 'Copied!';
+                                  infoEl.classList = ['copyMessage']
+                                  copyEl.appendChild(infoEl);
+                                  setTimeout(() => infoEl.remove(), 2000);
+                              };
+                          })(el, copyEl)
+                      }
+                  }
+              }
+          }
+          buttonAddFunc();
+          window.addEventListener("resize", buttonAddFunc);
+      }
+      addRefsToToc = () => {
+          liEl = document.createElement('li');
+          aEl = document.createElement('a');
+          aEl.href = '#References';
+          aEl.innerHTML = 'References';
+          ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
+          liEl.appendChild(aEl);
+          ulEl.appendChild(liEl);
+      }
+      addTooltips = (els, includeLinkBacks, arrowFloat=false) => {
+          for ([i, el] of els.entries()) {
+              ((el, i) => {
+                  refId = el.getAttribute('href');
+                  refEl = document.getElementById(refId.slice(1));
+                  el.setAttribute('href', '#');
+                  el.classList = ['eqnRef'];
+                  nextEl = document.createElement('span');
+                  el.parentNode.insertBefore(nextEl, el.nextSibling);
+                  popupId = refId + 'popup' + i;
+                  elId = popupId + 'Ref';
+                  nextEl.id = elId;
+                  ((a, b, c, d, e) => {
+                      a.onclick = () => {
+                          footnoteOnTooltipClick(b, c, d, e);
+                          return false
+                      };                
+                  })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+                  if (includeLinkBacks) {
+                      backId = 'back' + refId;
+                      backEl = document.getElementById(backId);
+                      if (!!!backEl) {
+                          backEl = document.createElement('div');
+                          backEl.id = backId;
+                          backEl.classList = ['backRefElement'];
+                          backArrowEl = document.createElement('a');
+                          backArrowEl.id = backId + 'Arrow';
+                          backArrowEl.innerHTML = "↩︎";
+                          backArrowEl.style.display = 'none';
+                          backEl.onclick = () => backEl.style.display = 'none';
+                          backEl.appendChild(backArrowEl);
+                          refEl.appendChild(backEl);
+                      }
+                  }
+              })(el, i)
+          }
+      }
+      expandLinks = (els, prevWordInclude) => {
+          for (const el of els) {
+              sib = el.previousSibling;
+              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
+              prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
+              if (prevWordInclude.includes(prevWord)){
+                  repS = RegExp(`${prevWord}[^a-zA-Z]$`);
+                  el.innerHTML = prevWord + ' ' + el.innerHTML;
+                  sib.textContent = sib.textContent.replace(repS, '');
+              }
+          }
+      }
+      eqRefExpandLinksAndAddTooltips = () => {
+          els = document.querySelectorAll('[href^="\#eq:"]');
+          expandLinks(els, ['eq.', 'Equation']);
+          addTooltips(els, true);
+      }
+      secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
+          els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
+              return el.parentNode.tagName !== 'LI'
+          });
+          const appendixStr = 'the appendix';
+          for (el of els) {
+              if (el.textContent == appendixSecNo) {                
+                  sib = el.previousSibling;
+                  sib.remove();
+                  el.textContent = appendixStr;
+              } else {
+                  el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
+              }
+          }
+          expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
+          for ([i, el] of els.entries()) {
+              const secId = el.getAttribute('href').slice(1);
+              const elId = 'linkToSec' + secId + i;
+              el.id = elId;
+              const toSec = document.getElementById(secId);
+              el.onclick = () => {
+                  backArrowId = secId + 'ReturnLink';
+                  let backArrowEl = document.getElementById(backArrowId);
+                  if (!!backArrowEl) {
+                      backArrowEl.remove();
+                  }
+                  backArrowEl = document.createElement('a');
+                  backArrowEl.id = backArrowId
+                  backArrowEl.setAttribute('href', '#' + elId);
+                  backArrowEl.style.float = 'right';
+                  backArrowEl.innerHTML = "↩︎";
+                  backArrowEl.onclick = () => backArrowEl.remove();
+                  toSec.appendChild(backArrowEl);
+              }
+          }
+      }
+      citeRefExpandLinksAndAddTooltips = () => {
+          els = document.getElementById('main').getElementsByClassName('citation');
+          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+          for (el of els) {
+              textContent = el.textContent;
+              el.getElementsByTagName('a')[0].textContent = textContent;
+              for (childEl of el.childNodes) {
+                  if (!!!childEl.tagName) {
+                      childEl.textContent = '';
+                  }
+              }
+          }
+      }
+      addFootnoteTooltips = () => {
+          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
+              fnBack.remove();
+          }
+          els = document.getElementById('main').getElementsByClassName('footnote-ref');
+          addTooltips([...els], false);
+          document.getElementById('footnotes').remove();
+          for (el of document.getElementsByClassName('eqnRef')) {
+              const childEl = el.firstChild;
+              if (childEl.tagName === 'SUP') {
+                  childEl.textContent = 'note';
+                  childEl.style.fontSize = '0.5rem';
+              }
+          }
+      }
+  </script>
+  <style>
+      .lpDraw {
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      .pointChooseDiv {
+          text-align: center;
+      }
+      .pointChooseInput {
+          border: solid 1pt black;
+          border-radius: 2pt;
+          width: 2rem;
+          height: 1.1rem;
+      }
+      .pointChooseLabel {
+          font-size: 14pt;
+          padding-left: 5pt;
+          padding-right: 5pt;
+      }
+      .pointChooseText {
+          text-align: center;
+          font-size: max(12pt, 1rem);
+      }
+      .underPlot {
+          margin-top: -10pt;
+      }
+      @keyframes append-animate {
+          0% {
+              stroke-width: 0;
+          }
+          25% {
+              stroke-width: 4;
+          }
+          50% {
+              stroke-width: 0;
+          }
+      }
+      .violatedIneq {
+          animation: append-animate 4s infinite;
+      }
+      @keyframes simplex-arrow-flash {
+          0% {
+              stroke-width: 3;
+          }
+          5% {
+              stroke-width: 4;
+          }
+          10% {
+              stroke-width: 3;
+          }
+          100% {
+              stroke-width: 3;
+          }
+      }
+      .simplexArrowChosen {
+          animation: simplex-arrow-flash 12s infinite;
+      }
+      .simplexDirectionTable {
+          margin: 0;
+          margin-left: auto;
+          margin-right: auto;
+          width: 350px;
+      }
+      .pointChooseText button {
+          font-size: 0.8rem;
+          padding: 0.5rem;
+          margin: 0 0.1rem;
+      }
+  </style>
+  <style>
+      .eqnos {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          overflow-x: auto;
+      }
+      .eqnos br {
+          display: none;
+      }
+      .eqnos-number {
+          margin-left: auto;
+          padding-left: 1rem;
+      }
+      .katexContainer {
+          flex-grow: 1;
+          overflow-x: auto;
+      }
+  </style>
   <script>
       let baseLps = {
           prototypeLp: {
@@ -984,441 +1637,6 @@
           }
       }
   </script>
-  <script>
-      document.onreadystatechange = () => {
-          if (document.readyState !== "complete") {
-              document.querySelector("#main").style.display = "none";
-              document.querySelector(".navbar").style.display = "none";
-              document.querySelector("#loader").style.visibility = "visible";
-              document.querySelector("#classModeDiv").style.visibility = "hidden";
-          } else {
-              document.querySelector("#loader").style.display = "none";
-              document.querySelector(".navbar").style.display = "flex";
-              document.querySelector("#main").style.display = "block";
-              if (getUrlParameter('classmode') !== 'false') {
-                  document.querySelector("#classModeDiv").style.visibility = "visible";
-              }
-          }
-      };
-      window.onload = () => {
-          appendixSecNo = renumberAppendix();
-          addMathContainers();
-          theoremHelpers();
-          addRefsToToc();
-          eqRefExpandLinksAndAddTooltips();
-          citeRefExpandLinksAndAddTooltips();
-          secRefExpandLinksAndAddBackArrow(appendixSecNo);
-          addFootnoteTooltips();
-          addCodeCopyButtons();
-          tocHelpers();
-          drawAllSvgPlots();
-          classModeSetup();
-          videoEmbeds();
-          document.onclick = closeClassMode;
-          document.getElementById('main').onclick = closeNavIfSmall;
-      }
-      videoEmbeds = () => {
-          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
-              ((el) => {
-                  const descHTML = el.innerHTML;
-                  const dt = el.getAttribute('data-video-date');
-                  const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
-                  el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
-                  el.style.cursor = 'pointer';
-                  const embedIndentDiv = document.createElement('div');
-                  embedIndentDiv.classList = ['embedIndent'];
-                  el.appendChild(embedIndentDiv);
-                  el.onclick = () => {
-                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
-                  }
-                  const textDiv = document.createElement('div');
-                  textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
-                  embedIndentDiv.appendChild(textDiv);
-                  const vidIframe = document.createElement('iframe');
-                  vidIframe.classList = ['lectureEmbedIframe'];
-                  vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
-                  embedIndentDiv.appendChild(vidIframe);
-              })(el)
-          }
-      }
-      getUrlParameter = (name) => {
-          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-          var results = regex.exec(location.search);
-          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-      };
-      addMathContainers = () => {
-          for (el of document.querySelectorAll('.math.display')){
-              katexContainer = document.createElement('div');
-              katexContainer.classList = ['katexContainer'];
-              el.parentNode.insertBefore(katexContainer, el);
-              katexContainer.appendChild(el);
-          }
-      }
-      renumberAppendix = () => {
-          const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
-          const appendixSecNo = appendixEl.getAttribute('data-number');
-          appendixEl.setAttribute('data-number', 'A');
-          appendixEl.firstChild.remove();
-          const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
-              return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
-          })
-          for (apSec of appendixSections){
-              const numSplit = apSec.getAttribute('data-number').split('.');
-              const secNo = 'A.' + numSplit.slice(1).join('.');
-              apSec.setAttribute('data-number', secNo);
-              apSec.firstChild.textContent = secNo;
-          }
-          const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
-              return (el.textContent).split('.')[0] === appendixSecNo;
-          })
-          for (tocEl of tocEls) {
-              if (tocEl.textContent == appendixSecNo){
-                  tocEl.remove();
-              } else {
-                  const numSplit = tocEl.textContent.split('.');
-                  const secNo = 'A.' + numSplit.slice(1).join('.');
-                  tocEl.textContent = secNo;
-              }
-          }
-          return appendixSecNo
-      }
-      tocHelpers = () => {
-          for (el of document.querySelectorAll('#TOC a')){
-              const hrefId = el.getAttribute('href').slice(1);
-              let parentEl = el.parentNode;
-              let numUlsNested = 0;
-              while (!!parentEl){
-                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
-                  parentEl = parentEl.parentNode
-              }
-              innerHTML = el.innerHTML;
-              el.innerHTML = '';
-              newEl = document.createElement('div');
-              newEl.innerHTML = innerHTML;
-              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
-              newEl.style.display = 'flex';
-              newEl.innerHTML = innerHTML;
-              if (numUlsNested > 1) {
-                  el.parentNode.classList.add('tocHideable');
-                  el.parentNode.classList.add('tocHidden');
-              } 
-              liParent = el.parentNode;
-              if (liParent.getElementsByTagName('UL').length > 0) {
-                  expandEl = document.createElement('span');
-                  expandEl.innerHTML = '&nbsp;+&nbsp;';
-                  expandEl.classList = ['tocExpand'];
-                  newEl.appendChild(expandEl);
-                  ((expandEl, liParent) => {
-                      expandEl.onclick = (e) => {
-                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]){
-                              let hideableParent = hideable.parentNode;
-                              while (hideableParent.tagName !== 'LI'){
-                                  hideableParent = hideableParent.parentNode
-                              }
-                              if (hideableParent !== liParent) {
-                                  continue
-                              }
-                              if ([...hideable.classList].includes('tocHidden')) {
-                                  hideable.classList.remove('tocHidden');
-                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
-                              } else {
-                                  hideable.classList.add('tocHidden');
-                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
-                              }
-                          };
-                          e.preventDefault();
-                      }
-                  })(expandEl, liParent)
-              }
-              el.appendChild(newEl);
-          }
-      }
-      addCodeCopyButtons = () => {
-          buttonAddFunc = () => {
-              copyButtons = document.querySelectorAll('.copyButton');
-              wide = 700;
-              if (copyButtons.length > 0) {
-                  if (window.innerWidth < wide) {
-                      for (cb of copyButtons){
-                          cb.remove();
-                      }
-                  }
-              } else {
-                  if (window.innerWidth >= wide) {
-                      for (el of document.querySelectorAll('div.sourceCode')){
-                          copyEl = document.createElement('span');
-                          el.insertBefore(copyEl, el.firstChild);
-                          copyEl.innerHTML = '📋';
-                          copyEl.classList = ['copyButton'];
-                          ((el, copyEl) => {
-                              copyEl.onclick = () => {
-                                  text = el.getElementsByTagName('pre')[0].textContent;
-                                  navigator.clipboard.writeText(text);
-                                  infoEl = document.createElement('div');
-                                  infoEl.textContent = 'Copied!';
-                                  infoEl.classList = ['copyMessage']
-                                  copyEl.appendChild(infoEl);
-                                  setTimeout(() => infoEl.remove(), 2000);
-                              };
-                          })(el, copyEl)
-                      }
-                  }
-              }
-          }
-          buttonAddFunc();
-          window.addEventListener("resize", buttonAddFunc);
-      }
-      addRefsToToc = () => {
-          liEl = document.createElement('li');
-          aEl = document.createElement('a');
-          aEl.href = '#References';
-          aEl.innerHTML = 'References';
-          ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
-          liEl.appendChild(aEl);
-          ulEl.appendChild(liEl);
-      }
-      addTooltips = (els, includeLinkBacks, arrowFloat=false) => {
-          for ([i, el] of els.entries()) {
-              ((el, i) => {
-                  refId = el.getAttribute('href');
-                  refEl = document.getElementById(refId.slice(1));
-                  el.setAttribute('href', '#');
-                  el.classList = ['eqnRef'];
-                  nextEl = document.createElement('span');
-                  el.parentNode.insertBefore(nextEl, el.nextSibling);
-                  popupId = refId + 'popup' + i;
-                  elId = popupId + 'Ref';
-                  nextEl.id = elId;
-                  ((a, b, c, d, e) => {
-                      a.onclick = () => {
-                          footnoteOnTooltipClick(b, c, d, e);
-                          return false
-                      };                
-                  })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
-                  if (includeLinkBacks) {
-                      backId = 'back' + refId;
-                      backEl = document.getElementById(backId);
-                      if (!!!backEl) {
-                          backEl = document.createElement('div');
-                          backEl.id = backId;
-                          backEl.classList = ['backRefElement'];
-                          backArrowEl = document.createElement('a');
-                          backArrowEl.id = backId + 'Arrow';
-                          backArrowEl.innerHTML = "↩︎";
-                          backArrowEl.style.display = 'none';
-                          backEl.onclick = () => backEl.style.display = 'none';
-                          backEl.appendChild(backArrowEl);
-                          refEl.appendChild(backEl);
-                      }
-                  }
-              })(el, i)
-          }
-      }
-      expandLinks = (els, prevWordInclude) => {
-          for (const el of els) {
-              sib = el.previousSibling;
-              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
-              prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
-              if (prevWordInclude.includes(prevWord)){
-                  repS = RegExp(`${prevWord}[^a-zA-Z]$`);
-                  el.innerHTML = prevWord + ' ' + el.innerHTML;
-                  sib.textContent = sib.textContent.replace(repS, '');
-              }
-          }
-      }
-      eqRefExpandLinksAndAddTooltips = () => {
-          els = document.querySelectorAll('[href^="\#eq:"]');
-          expandLinks(els, ['eq.', 'Equation']);
-          addTooltips(els, true);
-      }
-      secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
-          els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
-              return el.parentNode.tagName !== 'LI'
-          });
-          const appendixStr = 'the appendix';
-          for (el of els) {
-              if (el.textContent == appendixSecNo) {                
-                  sib = el.previousSibling;
-                  sib.remove();
-                  el.textContent = appendixStr;
-              } else {
-                  el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
-              }
-          }
-          expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
-          for ([i, el] of els.entries()) {
-              const secId = el.getAttribute('href').slice(1);
-              const elId = 'linkToSec' + secId + i;
-              el.id = elId;
-              const toSec = document.getElementById(secId);
-              el.onclick = () => {
-                  backArrowId = secId + 'ReturnLink';
-                  let backArrowEl = document.getElementById(backArrowId);
-                  if (!!backArrowEl) {
-                      backArrowEl.remove();
-                  }
-                  backArrowEl = document.createElement('a');
-                  backArrowEl.id = backArrowId
-                  backArrowEl.setAttribute('href', '#' + elId);
-                  backArrowEl.style.float = 'right';
-                  backArrowEl.innerHTML = "↩︎";
-                  backArrowEl.onclick = () => backArrowEl.remove();
-                  toSec.appendChild(backArrowEl);
-              }
-          }
-      }
-      citeRefExpandLinksAndAddTooltips = () => {
-          els = document.getElementById('main').getElementsByClassName('citation');
-          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
-          for (el of els) {
-              textContent = el.textContent;
-              el.getElementsByTagName('a')[0].textContent = textContent;
-              for (childEl of el.childNodes) {
-                  if (!!!childEl.tagName) {
-                      childEl.textContent = '';
-                  }
-              }
-          }
-      }
-      addFootnoteTooltips = () => {
-          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
-              fnBack.remove();
-          }
-          els = document.getElementById('main').getElementsByClassName('footnote-ref');
-          addTooltips([...els], false);
-          document.getElementById('footnotes').remove();
-          for (el of document.getElementsByClassName('eqnRef')) {
-              const childEl = el.firstChild;
-              if (childEl.tagName === 'SUP') {
-                  childEl.textContent = 'note';
-                  childEl.style.fontSize = '0.5rem';
-              }
-          }
-      }
-  </script>
-  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-  <style>
-      nav#TOC:nth-child(2) {
-          margin-top: 0.6rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
-      }
-      nav#TOC li {
-          list-style-type: none;
-      }
-      nav#TOC > ul {
-          margin-bottom: 1.5rem;
-          margin-top: 2rem;
-          line-height: 1.9rem;
-      }
-      #TOC ul {
-          padding-left: 0;
-      }
-      nav#TOC {
-          height: 100%;
-          width: 0;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #ebebeb;
-          overflow-x: hidden;
-          padding-top: 1rem;
-          transition: 0.5s;
-          overflow-y: scroll;
-      }
-      nav#TOC a {
-          text-decoration: none;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-          color: #000;
-          display: block;
-          transition: 0.3s;
-          padding-top: 0.2rem;
-          padding-bottom: 0.3rem;
-          border-bottom: 1pt solid lightgray;
-      }
-      nav#TOC a:hover {
-          color: #888;
-      }
-      #TOC .toc-section-number::after {
-          content: ':\00a0'
-      }
-      #tocTop {
-          height: 1.5em;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 0.5rem;
-          padding-bottom: 0.65rem;
-          position: fixed;
-          top: 0;
-          visibility: hidden;
-          background-color: #ebebeb;
-          z-index: 1;
-          border-bottom: 1pt solid gray;
-      }
-      .tocHidden {
-          display: none     
-      }
-      .tocExpand {
-          margin-left: auto;
-          font-size: 30pt !important;
-          font-family: 'Courier New', Courier, monospace;
-      }
-      .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          font-size: 1.1rem;
-          background-color: #ebebeb;
-          width: 100%;
-          border-bottom: 1pt solid gray;
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          display: flex;
-          justify-content: space-between;
-          z-index: 2;
-      }
-      @media screen and (max-height: 450px) {
-          .sidenav {
-              padding-top: 15px;
-          }
-
-          .sidenav a {
-              font-size: 18px;
-          }
-      }
-  </style>
-  <script>
-      function openCloseNav() {
-          const tocTop = document.getElementById("tocTop")
-          if (tocTop.style.visibility == "visible") {
-              closeNav();
-              return
-          }
-          const screenWidth = window.innerWidth;
-          const tocWidth = Math.min(0.75 * screenWidth, 350);
-          const leftoverWidth = screenWidth - tocWidth;
-          const main = document.getElementById("main");
-          const mainWidth = main.offsetWidth;
-          document.getElementById("TOC").style.width = tocWidth + 'px';
-          tocTop.style.width = tocWidth + 'px';
-          tocTop.style.visibility = "visible";
-          if (leftoverWidth >= mainWidth) {
-              main.style.marginLeft = tocWidth / 2 + 'px';
-          }
-      }
-      function closeNav() {
-          document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = null;
-          document.getElementById("tocTop").style.visibility = "hidden";
-      }
-      function closeNavIfSmall() {
-          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
-              closeNav()
-          }
-      }
-  </script>
   <style>
       .footnoteTooltipClose {
           color: #222;
@@ -1504,113 +1722,6 @@
           document.getElementById(id).remove();
       }
   </script>
-  <style>
-      .eqnos {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          overflow-x: auto;
-      }
-      .eqnos br {
-          display: none;
-      }
-      .eqnos-number {
-          margin-left: auto;
-          padding-left: 1rem;
-      }
-      .katexContainer {
-          flex-grow: 1;
-          overflow-x: auto;
-      }
-  </style>
-  <style>
-      .lpDraw {
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
-      }
-      .pointChooseDiv {
-          text-align: center;
-      }
-      .pointChooseInput {
-          border: solid 1pt black;
-          border-radius: 2pt;
-          width: 2rem;
-          height: 1.1rem;
-      }
-      .pointChooseLabel {
-          font-size: 14pt;
-          padding-left: 5pt;
-          padding-right: 5pt;
-      }
-      .pointChooseText {
-          text-align: center;
-          font-size: max(12pt, 1rem);
-      }
-      .underPlot {
-          margin-top: -10pt;
-      }
-      @keyframes append-animate {
-          0% {
-              stroke-width: 0;
-          }
-          25% {
-              stroke-width: 4;
-          }
-          50% {
-              stroke-width: 0;
-          }
-      }
-      .violatedIneq {
-          animation: append-animate 4s infinite;
-      }
-      @keyframes simplex-arrow-flash {
-          0% {
-              stroke-width: 3;
-          }
-          5% {
-              stroke-width: 4;
-          }
-          10% {
-              stroke-width: 3;
-          }
-          100% {
-              stroke-width: 3;
-          }
-      }
-      .simplexArrowChosen {
-          animation: simplex-arrow-flash 12s infinite;
-      }
-      .simplexDirectionTable {
-          margin: 0;
-          margin-left: auto;
-          margin-right: auto;
-          width: 350px;
-      }
-      .pointChooseText button {
-          font-size: 0.8rem;
-          padding: 0.5rem;
-          margin: 0 0.1rem;
-      }
-  </style>
-  <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-      }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
   <style>
       #main {
           font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
@@ -1753,135 +1864,24 @@
           overflow-x: hidden;
       }
   </style>
-  <style>   
-      #classModeDiv {
-          position: fixed;
-          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
-          padding: 30pt;
-          top: 200px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 2pt solid;
-          border-radius: 10pt;
-          padding: 10px;
-          box-shadow: 5px 5px rgb(200, 200, 200);
-          visibility: hidden;
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
       }
   </style>
-  <script>
-      const classModeSetup = () => {
-          const classMode = document.getElementById('classModeDiv');
-          let noClassModeHref = window.location.href.split('#')[0];
-          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
-              noClassModeHref += '/';
-          }
-          noClassModeHref += '?classmode=false';
-          classMode.onclick = closeClassMode;
-          classMode.innerHTML = `
-              <div>
-                  Welcome to class mode! This is your friendly reminder to check that:
-                  <ul>
-                      <li>The mics are on.</li>
-                      <li>The camera is pointed at the whiteboard.</li>
-                      <li>PIP is off.</li>
-                  </ul>
-                  Click anywhere to close this window.
-                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-              </div>
-          `
-      }
-      const closeClassMode = () => {
-          const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
-          const minutesBetweenReminders = 30;
-          if (classMode.style.visibility === "visible") {
-              classMode.style.visibility = "hidden";
-              classMode.innerHTML = `
-                  <div>
-                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
-                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
-                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
-                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-                  </div>
-              `
-              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
-          }
-      }
-  </script>
-  <script>
-      const theoremHelpers = () => {
-          let theoremObj = {};
-          for (thm of document.getElementsByClassName('theorem')) {
-              ((thm) => {
-                  let headerEl = thm.previousSibling;
-                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
-                      headerEl = headerEl.previousSibling;
-                  }
-                  section = headerEl.getAttribute('data-number').split('.')[0];
-                  theoremObj[thm.id] = {
-                      'theorem': thm,
-                      'proof': undefined,
-                      'section': section
-                  };
-              })(thm)
-          }
-          for (prf of document.getElementsByClassName('proof')) {
-              ((prf) => {
-                  theoremObj[prf.getAttribute('for')].proof = prf;
-                  firstP = prf.getElementsByTagName('p')[0];
-                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
-              })(prf)
-          }
-          secNumThms = {};
-          for ([thmId, thmObj] of Object.entries(theoremObj)) {
-              ((thmId, thmObj) => {
-                  thm = document.getElementById(thmId);
-                  sec = thmObj.section;
-                  el = thmObj.theorem;
-                  proof = thmObj.proof;
-                  if (!Object.keys(secNumThms).includes(sec)) {
-                      secNumThms[sec] = 0;
-                  }
-                  secNumThms[sec] += 1;
-                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
-                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
-                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
-                  labelSpan = document.createElement('span');
-                  labelSpan.classList = ['theoremLabel'];
-                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
-                  if (!!thm.getAttribute('data-display-name')) {
-                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
-                  }
-                  labelSpan.textContent = preTheoremStr + ': ';
-                  el.insertBefore(labelSpan, el.firstChild);
-                  const main = document.getElementById('main');
-                  if (!!proof) {
-                      if (proof.getAttribute('data-placement') === 'appendix') {
-                          const appLink = document.createElement('p');
-                          const thmClone = thm.cloneNode(true);
-                          thmClone.id = thm.id + 'AppendixVersionWithProof';
-                          thmCloneLabel = thmClone.firstChild;
-                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
-                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
-                          main.insertBefore(appLink, thm.nextSibling);
-                          const refs = document.getElementById('References');
-                          main.insertBefore(thmClone, refs);
-                          main.insertBefore(proof, refs);
-                      }
-                  }
-              })(thmId, thmObj)
-          }
-          const refEls = document.getElementsByClassName('thmRef');
-          for (ref of refEls) {
-              ((ref) => {
-                  thm = document.getElementById(ref.getAttribute('for'));
-                  ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
-              })(ref)
-          }
-          addTooltips([...refEls].map(el => el.firstChild), true);
-      }
-  </script>
   <style>
       .theorem p {
           display: inline;
@@ -2133,6 +2133,20 @@ class="toc-section-number">5.1</span> Definitions</a></li>
 <li><a href="#sec:ipRoundingNotEnough"
 id="toc-sec:ipRoundingNotEnough"><span
 class="toc-section-number">5.2</span> Rounding is not enough</a></li>
+<li><a href="#ip-modeling" id="toc-ip-modeling"><span
+class="toc-section-number">5.3</span> IP modeling</a>
+<ul>
+<li><a href="#general-integer-variables"
+id="toc-general-integer-variables"><span
+class="toc-section-number">5.3.1</span> General integer
+variables</a></li>
+<li><a href="#sec:binVarTricks" id="toc-sec:binVarTricks"><span
+class="toc-section-number">5.3.2</span> Binary variable tricks</a></li>
+<li><a href="#sec:ipWordProblems" id="toc-sec:ipWordProblems"><span
+class="toc-section-number">5.3.3</span> Example word problems</a></li>
+<li><a href="#modeldata-separation" id="toc-modeldata-separation"><span
+class="toc-section-number">5.3.4</span> Model/data separation</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">6</span> Appendix</a>
@@ -5303,7 +5317,936 @@ class="math inline">0.5</span>! Such a solution would leave you no clue
 as to which direction you should round the solutions. In these cases,
 considering only the LP relaxation gives you no hint whatsoever about
 how to proceed.</p>
-<!-- {insertSection:sections/integer_programming/modeling.md} -->
+<h2 data-number="5.3" id="ip-modeling"><span
+class="header-section-number">5.3</span> IP modeling</h2>
+<p>Hopefully the preceding section gave you some appreciation for why
+integrality constraints can be useful. The aim for this section is to
+give you a broader idea of what situations can be modeled with IPs. Of
+particular interest is the use of binary variables to encode different
+types of logic in our models.</p>
+<h3 data-number="5.3.1" id="general-integer-variables"><span
+class="header-section-number">5.3.1</span> General integer
+variables</h3>
+<p>The most straightforward application if IPs is modeling an LP where
+the decision variables can’t be fractional. For example, say you’re
+building an optimization model to decide how many washing machines to
+buy for your fleet of laundromats. There is no way to meaningfully buy,
+say, half of a washing machine to deploy in your stores. This is a case
+where integer-valued decisions are required.</p>
+<p>As far as writing out the model, it is as simple as adding a <span
+class="math inline">\mathbf{x}\in\mathbb{I}^n</span> line to your
+formulation. For example, suppose in the Wyndor Glass sample LP (eq. <a
+href="#eq:prototypeLp">1</a>) we can only make whole batches of each
+product. A new formulation would look like:</p>
+<p><span id="eq:wyndorIp" class="eqnos"><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 &amp; \leq \ \ 4  \\
+     &amp;&amp; 2x_2 &amp; \leq 12 \\
+     &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+
+\end{align*}
+</span><span class="eqnos-number">(15)</span></span></p>
+<p>We’ve seen in section <a href="#sec:ipRoundingNotEnough">5.2</a> that
+the optimal solution can change quite a bit when moving from real-valued
+variables to integral ones, motivating the IP solution techniques we’ll
+be exploring later.</p>
+<h3 data-number="5.3.2" id="sec:binVarTricks"><span
+class="header-section-number">5.3.2</span> Binary variable tricks</h3>
+<p>Finding solutions with general integer values is great. But in my
+opinion the real power in integer programming comes from using binary
+variables to encode new kinds of logic that you can’t replicate in a
+linear program. In this section, we will explore some of these binary
+variable tricks. We’ll consider eq. <a href="#eq:wyndorIp">15</a>, our
+new integer version of the Wyndor glass problem, as a jumping-off point
+for our examples.</p>
+<h4>
+Either/or constraints
+</h4>
+<p>For our first example, let’s consider a scenario where exactly one
+out of two constraints needs to be satisfied, and we get to decide which
+one to enforce as part of the problem. For example, let’s consider a
+modification to the Wyndor glass IP eq. <a href="#eq:wyndorIp">15</a>
+where we have the potential to build a new facility to replace Plant 3.
+This new facility would be available for only 13 hours per week.
+However, due to updated technology, producing batches of each product
+will take less time: Product 1 will require 2 hours at the new Plant 3,
+while Product 2 will require only 1 hour. In effect, we’d like to
+replace the old Plant 3 constraint with something like:</p>
+<p><span class="math display">
+\begin{align*}
+\text{either}&amp;&amp;3x_1 + 2x_2 \leq 18 \\
+\text{or}    &amp;&amp;2x_1 + x_2 \leq 13
+\end{align*}
+</span></p>
+<p>There is no “native” facility for this type of constraint in IP,
+we’re still stuck with only linear functions of our decision variables.
+But we can implement this “either/or” logic by adding an auxiliary,
+binary variable <span class="math inline">y</span> to the problem in a
+certain fashion<a href="#fn49" class="footnote-ref" id="fnref49"
+role="doc-noteref"><sup>49</sup></a>. Consider the following IP:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 &amp; \leq \ \ 4  \\
+     &amp;&amp; 2x_2 &amp; \leq 12 \\
+     &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 + My \\
+     &amp;&amp; 2x_1 + x_2 &amp; \leq 13 + M(1 - y)\\
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+ \\
+     &amp;&amp; y &amp; \in \ \{0, 1\}
+\end{align*}
+</span></p>
+<p>Here, <span class="math inline">M</span><a href="#fn50"
+class="footnote-ref" id="fnref50" role="doc-noteref"><sup>50</sup></a>
+is some sufficiently large constant (something like 100 would be more
+than sufficient in this case).</p>
+<p>What did we accomplish by adding <span class="math inline">y</span>
+and <span class="math inline">M</span> in this manner? First, let’s
+notice that the new constraints are still linear functions of the
+variables. (Remember, <span class="math inline">M</span> is a constant
+and not a variable.) Now, think what it would mean if <span
+class="math inline">y=1</span>. In that case, the constraint</p>
+<p><span class="math display">
+3x_1 + 2x_2 \leq 18 + My
+</span></p>
+<p>becomes</p>
+<p><span class="math display">
+3x_1 + 2x_2 \leq \textit{some very large number}
+</span></p>
+<p>so that any reasonable setting of the <span
+class="math inline">\mathbf{x}</span> variables will satisfy it.
+Meanwhile, the constraint</p>
+<p><span class="math display">
+2x_1 + x_2 \leq 13 + M(1 - y)
+</span></p>
+<p>becomes just</p>
+<p><span class="math display">
+2x_1 + x_2 \leq 13
+</span></p>
+<p>So if we choose <span class="math inline">y=1</span>, then only the
+constraint <span class="math inline">2x_1 + x_2 \leq 13</span> will
+matter, i.e. we’re using the new facility. Similarly, if we set <span
+class="math inline">y=0</span>, then the only constraint that matters is
+<span class="math inline">3x_1 + 2x_2 \leq 18</span>, i.e. we’re not
+using the new facility and making due with the old one. Thus we’ve
+successfully recreated the either/or logic using linear constraints and
+binary variables!</p>
+<h4>
+Functions taking one of <span class="math inline">n</span> possible
+values
+</h4>
+<p>Sometimes the right-hand side of your linear constraints might be
+able to take one of several distinct values. As an example, let’s say
+that Wyndor’s Plant 3 may be open for additional hours at some extra
+cost. It may remain open for 3 extra hours at a cost of $2,000, or it
+may remain open for 6 extra hours at a cost of $4,500. How could eq. <a
+href="#eq:wyndorIp">15</a> be modified to take this into account? Take a
+look at this formulation:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 - 2y_1 - 4.5y_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 &amp; \leq \ \ 4  \\
+     &amp;&amp; 2x_2 &amp; \leq 12 \\
+     &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 + 3y_1 + 6y_2 \\
+     &amp;&amp; y_1 + y_2 &amp; \leq \ \ 1 \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+ \\
+     &amp;&amp; y_1,y_2 &amp; \in \ \{0, 1\}
+\end{align*}
+</span></p>
+<p>By constraining <span class="math inline">y_1 + y_2 \leq 1</span>, we
+allow only <span class="math inline">(y_1, y_2)\in\{(0, 0),(1, 0),(0,
+1)\}</span>. If <span class="math inline">(y_1,y_2)=(0,0)</span> this
+would reduce back to the original problem. If <span
+class="math inline">(y_1,y_2)=(1,0)</span> then we’d have the situation
+where the plant is open for 3 extra hours, and we’ve reduced our profits
+by $2,000 to account for the extra cost. Similarly, if <span
+class="math inline">(y_1,y_2)=(0,1)</span> then we’ll have an extra 6
+hours of use in the plant, but at the required cost of $4,500.</p>
+<h4>
+Fixed-charge formulations
+</h4>
+<p>A common occurrence in OR problems is a so-called
+<strong>fixed-charge problem</strong>, where there is a one-time setup
+cost involved in participating in some activity. Suppose in the Wyndor
+problem that the three facilities did not exist yet, so they need to
+decide which facilities to build as well as the ultimate product mix.
+Say that in order to build any of the plants, they’d need to take out a
+loan that they plan to pay back with their weekly profits for the
+foreseeable future. If the weekly payback for any given facility is
+$6,000, how can we model this with an integer program? Take a look at
+the following formulation:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 - 6y_1 - 6y_2 -6y_3&amp; \\
+\text{s.t.}&amp;&amp; x_1 &amp; \leq \ \ 4y_1  \\
+     &amp;&amp; 2x_2 &amp; \leq 12y_2 \\
+     &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18y_3 \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+ \\
+     &amp;&amp; y_1,y_2,y_3 &amp; \in \{0, 1\}
+\end{align*}
+</span></p>
+<p>We’ve added new binary variables, <span class="math inline">y_1,
+y_2</span>, and <span class="math inline">y_3</span>, which we’d like to
+interpret as a value of <span class="math inline">1</span> for <span
+class="math inline">y_i</span> means that facility <span
+class="math inline">i</span> will be built, and a value of <span
+class="math inline">0</span> means it won’t be built. How does that
+alter the formulation? We know that building a facility will cost us
+$6,000 weekly over the loan term, so we’ll subtract $6,000 from our
+weekly profits for any facility via the term <span
+class="math inline">-6y_i</span> in the objective. Furthermore, we can
+only use the time in each facility if it is built. So the constants on
+right-hand sides of the original formulation are all now multiplied by
+the corresponding <span class="math inline">y_i</span> variable. This
+way, if we decide not to build the facility by setting <span
+class="math inline">y_i=0</span>, there is no time available at the
+(non-existent) facility. Otherwise, its time is available as usual.</p>
+<h4>
+Boolean algebra
+</h4>
+<p>Given binary variables <span class="math inline">x_1, x_2</span> we
+can mimic the basic operations from <a
+href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean algebra</a>
+(AND, OR, XOR) in integer programs. In each case, we’ll do this with an
+auxiliary binary variable <span class="math inline">y</span>. For each
+operation, I’ll show the associated truth table (telling the values of
+<span class="math inline">y</span> that should correspond to each
+possible value of <span class="math inline">x_1, x_2</span>) and the
+corresponding set of linear constraints. It’s a good exercise to go
+through each row of the table and verify that the constraints do indeed
+enforce the relation.</p>
+<ul>
+<li>AND: <span class="math inline">y=1</span> if and only if <span
+class="math inline">x_1=x_2=1</span>:
+<div style="display:flex;justify-content:space-around">
+<div>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<span class="math inline">x_1</span>
+</th>
+<th>
+<span class="math inline">x_2</span>
+</th>
+<th style="border-left:1px solid black">
+<span class="math inline">y</span>
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+</tbody style='border:none'>
+</table>
+</div>
+<div class="katexSideBySide">
+<span class="math display">
+   \begin{align*}
+   y&amp;\leq x_1 \\
+   y&amp;\leq x_2 \\
+   y&amp;\geq x_1 + x_2 - 1
+   \end{align*}
+   </span>
+</div>
+</div></li>
+<li>OR: <span class="math inline">y=1</span> if and only if <em>at
+least</em> one of <span class="math inline">x_1</span> or <span
+class="math inline">x_2</span> equals <span
+class="math inline">1</span>:
+<div style="display:flex;justify-content:space-around">
+<div>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<span class="math inline">x_1</span>
+</th>
+<th>
+<span class="math inline">x_2</span>
+</th>
+<th style="border-left:1px solid black">
+<span class="math inline">y</span>
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+</tbody style='border:none'>
+</table>
+</div>
+<div class="katexSideBySide">
+<span class="math display">
+   \begin{align*}
+   y&amp;\leq x_1 + x_2 \\
+   y&amp;\geq x_1 \\
+   y&amp;\geq x_2
+   \end{align*}
+   </span>
+</div>
+</div></li>
+<li>XOR: <span class="math inline">y=1</span> if and only if
+<em>exactly</em> one of <span class="math inline">x_1</span> or <span
+class="math inline">x_2</span> equals <span
+class="math inline">1</span>:
+<div style="display:flex;justify-content:space-around">
+<div>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<span class="math inline">x_1</span>
+</th>
+<th>
+<span class="math inline">x_2</span>
+</th>
+<th style="border-left:1px solid black">
+<span class="math inline">y</span>
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+</tbody style='border:none'>
+</table>
+</div>
+<div class="katexSideBySide">
+<span class="math display">
+   \begin{align*}
+   y&amp;\leq x_1 + x_2 \\
+   y&amp;\geq x_1 - x_2 \\
+   y&amp;\geq x_2 - x_1 \\
+   y&amp;\leq 2 - x_1 - x_2
+   \end{align*}
+   </span>
+</div>
+</div></li>
+</ul>
+<p>Note that these constraint sets wouldn’t normally constitute an IP on
+their own, but instead they would be just a subset of the constraints
+you’d find inside a larger, more complex problem. Let’s consider the
+following addition to the Wyndor IP: The company realizes that they
+cannot use the full 18 hours available at Plant 3 if they produce
+<em>both</em> Product 1 and Product 2 during a given week, since they’ll
+require some down time in order to set up the line for a change in
+product. They anticipate this setup to take 2 hours away from their
+production time.</p>
+<p>We’ll alter eq. <a href="#eq:wyndorIp">15</a> by including three
+additional, binary variables <span class="math inline">y_1, y_2</span>,
+and <span class="math inline">z</span>. We’ll set up the <span
+class="math inline">y_i</span> variables so that <span
+class="math inline">y_i=1</span> if we plan to produce any of Product
+<span class="math inline">i</span> (i.e. <span
+class="math inline">x_i&gt;0</span>), and we’ll let <span
+class="math inline">z=1</span> if and only if <span
+class="math inline">y_1=y_2=1</span>. The formulation follows:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 + 5x_2 &amp; \\
+\text{s.t.}&amp;&amp; y_1 &amp; \leq x_1 \\
+     &amp;&amp; My_1 &amp; \geq x_1 \\
+     &amp;&amp; y_2 &amp; \leq x_2 \\
+     &amp;&amp; My_2 &amp; \geq x_2 \\
+     &amp;&amp; z&amp;\leq y_1 \\
+     &amp;&amp; z&amp;\leq y_2 \\
+     &amp;&amp; z&amp;\geq y_1 + y_2 - 1\\
+     &amp;&amp; x_1 &amp; \leq \ \ 4  \\
+     &amp;&amp; 2x_2 &amp; \leq 12 \\
+     &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 - 2z \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+
+\end{align*}
+</span></p>
+<p>The constraints</p>
+<p><span class="math display">
+\begin{align*}
+y_i &amp; \leq x_i \\
+My_i &amp; \geq x_i \\
+\end{align*}
+</span></p>
+<p>(with sufficiently large <span class="math inline">M</span>) serve to
+ensure that <span class="math inline">y_i=1</span> if and only if <span
+class="math inline">x_i&gt;0</span> (which, since we have <span
+class="math inline">x_i\in\mathbb{I}</span>, also means <span
+class="math inline">x_i\geq1</span>)<a href="#fn51" class="footnote-ref"
+id="fnref51" role="doc-noteref"><sup>51</sup></a>. The next constraints
+involving <span class="math inline">y_1, y_2</span>, and <span
+class="math inline">z</span> are exactly the AND logical constraints
+from above, ensuring that <span class="math inline">z=1</span> if and
+only if both <span class="math inline">y_1</span> and <span
+class="math inline">y_2</span> are 1 (and hence <span
+class="math inline">x_1,x_2&gt;0</span>). The final modification comes
+in the Plant 3 resource constraint</p>
+<p><span class="math display">
+3x_1 + 2x_2 \leq 18 - 2z
+</span></p>
+<p>which serves to reduce the available production time when both
+products are being produced.</p>
+<h3 data-number="5.3.3" id="sec:ipWordProblems"><span
+class="header-section-number">5.3.3</span> Example word problems</h3>
+<p>Here we present the sample scenarios in section 12.4 of <span
+class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span>, and talk
+about how to model each scenario. Each formulation will require some
+tricks with binary variables.</p>
+<h4>
+Resource allocation with extra restrictions
+</h4>
+<blockquote>
+<p>The Research and Development Division of the GOOD PRODUCTS COMPANY
+has developed three possible new products. However, to avoid undue
+diversification of the company’s product line, management has imposed
+the following restriction:</p>
+<p>Restriction 1: From the three possible new products, at most two
+should be chosen to be produced.</p>
+<p>Each of these products can be produced in either of two plants. For
+administrative reasons, management has imposed a second restriction in
+this regard.</p>
+<p>Restriction 2: Just one of the two plants should be chosen to be the
+sole producer of the new products.</p>
+<p>The production cost per unit of each product would be essentially the
+same in the two plants. However, because of differences in their
+production facilities, the number of hours of production time needed per
+unit of each product might differ between the two plants. These data are
+given in Table 12.2, along with other relevant information, including
+marketing estimates of the number of units of each product that could be
+sold per week if it is produced. The objective is to choose the
+products, the plant, and the production rates of the chosen products so
+as to maximize total profit.</p>
+</blockquote>
+<figure>
+<img src="images/ip-example-1-data.png"
+alt="Data for the Good Products Company problem (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Data for the Good Products Company
+problem <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<p>This feels a lot like the Wyndor Glass problem, but there are several
+extra restrictions put in. First of all, we have a bound on the number
+of items sold per week, but this is something that we could handle in
+plain old linear programming. More interesting are Restriction 1 and
+Restriction 2, which will require us to add some binary variables to the
+formulation and carefully set up the constraints to enforce the desired
+logic. To that end, let’s examine the following model<a href="#fn52"
+class="footnote-ref" id="fnref52"
+role="doc-noteref"><sup>52</sup></a>:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 5x_1 + 7x_2 + 3x_3&amp; \\
+\text{s.t.}&amp;&amp; x_1 &amp; \leq 7y_1  \\
+     &amp;&amp; x_2 &amp; \leq 5y_2 \\
+     &amp;&amp; x_3 &amp; \leq 9y_3 \\
+     &amp;&amp; y_1 + y_2 + y_3 &amp; \leq 2 \\
+     &amp;&amp; 3x_1 + 4x_2 + 2x_3 &amp; \leq 30 + My_4 \\
+     &amp;&amp; 4x_1 + 6x_2 + 2x_3 &amp; \leq 40 + M(1 - y_4) \\
+     &amp;&amp; x_1,x_2,x_3 &amp; \in \ \mathbb{I}_+ \\
+     &amp;&amp; y_1,y_2,y_3,y_4 &amp; \in \{0, 1\}
+\end{align*}
+</span></p>
+<p>Without the <span class="math inline">y_i</span> variables, this is
+essentially just another resource allocation problem like the integer
+version of the Wyndor problem eq. <a href="#eq:wyndorIp">15</a>. But now
+we have variables <span class="math inline">y_1, y_2, y_3</span> to
+account for the problem’s Restriction 1, and <span
+class="math inline">y_4</span> accounts for Restriction 2.</p>
+<p>How does it work? Well, <span class="math inline">y_4</span> is
+applying the either/or constraint trick we saw earlier in section <a
+href="#sec:binVarTricks">5.3.2</a>. Notice that if <span
+class="math inline">y_4=1</span> (and <span class="math inline">M</span>
+is selected large enough) then the constraint on production in Plant 1
+has so much slack that any reasonable settings of the <span
+class="math inline">x_i</span> variables will not violate it. Thus the
+only constraint in effect is the Plant 2 resource constraint. So the
+interpretation is that <span class="math inline">y_4=1</span> means that
+Plant 2 is the plant chosen to satisfy Restriction 2. Similarly, <span
+class="math inline">y_4=0</span> means that Plant 1 is the one selected
+plant that handles the production.</p>
+<p>How about the other <span class="math inline">y_i</span> variables?
+Notice that if <span class="math inline">y_i=0</span> for any <span
+class="math inline">i</span>, then the corresponding constraint on <span
+class="math inline">x_i</span> becomes <span
+class="math inline">x_i\leq0</span>, meaning that Product <span
+class="math inline">i</span> cannot be produced. Otherwise, if <span
+class="math inline">y_i=1</span>, then <span
+class="math inline">x_i</span> is only bounded by the weekly sales
+potential from the table, and thus Product <span
+class="math inline">i</span> <em>is</em> allowed to be produced. Then
+adding the constraint <span class="math inline">y_1 + y_2 + y_3 \leq
+2</span> codifies the requirement that at most 2 of the products may be
+produced.</p>
+<h4>
+Violating proportionality
+</h4>
+<blockquote>
+<p>The SUPERSUDS CORPORATION is developing its marketing plans for next
+year’s new products. For three of these products, the decision has been
+made to purchase a total of five TV spots for commercials on national
+television networks. The problem we will focus on is how to allocate the
+five spots to these three products, with a maximum of three spots (and a
+minimum of zero) for each product.</p>
+<p>The following table shows the estimated impact of allocating zero,
+one, two, or three spots to each product. This impact is measured in
+terms of the profit (in units of millions of dollars) from the
+additional sales that would result from the spots, considering also the
+cost of producing the commercial and purchasing the spots. The objective
+is to allocate five spots to the products so as to maximize the total
+profit.</p>
+</blockquote>
+<figure>
+<img src="images/ip-example-2-data.png"
+alt="Data for Supersuds Corporation problem (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Data for Supersuds Corporation problem
+<span class="citation" data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<p>Your first thought for modeling this may be to have integer variables
+<span class="math inline">x_1, x_2, x_3</span>, with the value of <span
+class="math inline">x_i</span> denoting the number of TV spots allocated
+to product <span class="math inline">i</span>. But this won’t work,
+because the objective violates the so-called <em>proportionality
+assumption</em> for linear functions, i.e. that each extra unit of a
+variable affects the value of the function by the same amount. That is
+not true here, e.g. for product 1 doubling from 1 spot to 2 does not
+double the profit.</p>
+<p>Instead, let’s define a separate binary variable for each product and
+each possible selection of TV spots for the product. So we’ll have a
+binary variables <span class="math inline">y_{ij}</span> such that <span
+class="math inline">y_{ij}=1</span> if and only if we decide on <span
+class="math inline">j</span> TV spots for product <span
+class="math inline">i</span>, and otherwise <span
+class="math inline">y_{ij}=0</span>. With this setup, our model would
+look like:</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; y_{11} + 3y_{12} + 3y_{13} + 2y_{22} + 3y_{23} -
+y_{31} + 2y_{32} + 4y_{33}&amp; \\
+\text{s.t.}&amp;&amp; y_{11} + y_{12} + y_{13} &amp; \leq 1 \\
+     &amp;&amp; y_{21} + y_{22} + y_{23} &amp; \leq 1 \\
+     &amp;&amp; y_{31} + y_{32} + y_{33} &amp; \leq 1 \\
+     &amp;&amp; y_{11} + 2y_{12} + 3y_{13} + y_{12} + 2y_{22} + 3y_{23}
++ y_{31} + 2y_{32} + 3y_{33} &amp; \leq 5 \\
+     &amp;&amp; y_{ij} &amp; \in \{0,1\} \ \ \forall\ i,j
+\end{align*}
+</span></p>
+</div>
+<p>The objective is straightforward, coming directly from the numbers in
+the table. As for the constraints, lets start with the first three. We
+shouldn’t have something like, say, both <span
+class="math inline">y_{11}=1</span> and <span
+class="math inline">y_{12}=1</span>, since it doesn’t make sense to
+allocate both <span class="math inline">1</span> and <span
+class="math inline">2</span> spots for the same product. At most one of
+<span class="math inline">y_{i1}, y_{i2}</span>, or <span
+class="math inline">y_{i3}</span> can be chosen which is why we’ve
+included the</p>
+<p><span class="math display">
+y_{i1} + y_{i2} + y_{i3} \leq 1
+</span></p>
+<p>constraints.</p>
+<p>What about the final (functional) constraint? The left-hand side of
+the constraint sums up the total number of TV spots that are allocated.
+So the reason that, for example, we see the term <span
+class="math inline">3y_{13}</span> is that selecting <span
+class="math inline">y_{13}=1</span> allocates 3 spots to product 1, thus
+making use of 3 of the available 5 slots. Then the 5 on the right-hand
+side enforces that at most 5 TV spots are allocated overall.</p>
+<h4>
+Covering all characteristics
+</h4>
+<blockquote>
+<p>SOUTHWESTERN AIRWAYS needs to assign its crews to cover all its
+upcoming flights. We will focus on the problem of assigning three crews
+based in San Francisco to the flights listed in the first column of the
+following table. The other 12 columns show the 12 feasible sequences of
+flights for a crew. (The numbers in each column indicate the order of
+the flights.) Exactly three of the sequences need to be chosen (one per
+crew) in such a way that every flight is covered. (It is permissible to
+have more than one crew on a flight, where the extra crews would fly as
+passengers, but union contracts require that the extra crews would still
+need to be paid for their time as if they were working.) The cost of
+assigning a crew to a particular sequence of flights is given (in
+thousands of dollars) in the bottom row of the table. The objective is
+to minimize the total cost of the three crew assignments that cover all
+the flights.</p>
+</blockquote>
+<figure>
+<img src="images/ip-example-3-data.png"
+alt="Data for Southwestern Airways problem (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Data for Southwestern Airways problem
+<span class="citation" data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<p>We can model this problem in the following way, with the binary
+variable <span class="math inline">x_i=1</span> if we assign sequence
+<span class="math inline">i</span> to some crew, and otherwise <span
+class="math inline">x_i=0</span>:</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+\text{min}&amp;&amp; 2x_1 + 3x_2 + 4x_3 + 6x_4 + 7x_5 + 5x_6 &amp; \\
+     &amp;&amp; + 7x_7 + 8x_8 + 9x_9 + 9x_{10} + 8x_{11} + 9x_{12}&amp;
+\\
+\text{s.t.}&amp;&amp; x_1 + x_4 + x_7 + x_{10} &amp; \geq 1
+\qquad  \text{(SF to LA)} \\
+     &amp;&amp; x_2 + x_5 + x_8 + x_{11} &amp; \geq 1 \qquad \text{(SF
+to Den)} \\
+     &amp;&amp; x_3 + x_6 + x_9 + x_{12} &amp; \geq 1 \qquad \text{(SF
+to Sea)} \\
+     &amp;&amp; x_4 + x_7 + x_9 + x_{10} + x_{12} &amp; \geq 1 \qquad
+\text{(LA to Chi)} \\
+     &amp;&amp; x_1 + x_6 + x_{10} + x_{11} &amp; \geq 1 \qquad
+\text{(LA to SF)} \\
+     &amp;&amp; x_4 + x_5 + x_9 &amp; \geq 1 \qquad \text{(Chi to Den)}
+\\
+     &amp;&amp; x_7 + x_8 + x_{10} + x_{11} + x_{12} &amp; \geq 1 \qquad
+\text{(Chi to Sea)} \\
+     &amp;&amp; x_2 + x_4 + x_5 + x_9 &amp; \geq 1 \qquad \text{(Den to
+SF)} \\
+     &amp;&amp; x_5 + x_8 + x_{11} &amp; \geq 1 \qquad \text{(Den to
+Chi)} \\
+     &amp;&amp; x_3 + x_7 + x_8 + x_{12} &amp; \geq 1 \qquad \text{(Sea
+to SF)} \\
+     &amp;&amp; x_6 + x_9 + x_{10} + x_{11} + x_{12} &amp; \geq 1 \qquad
+\text{(Sea to LA)} \\
+     &amp;&amp; \sum_{j=1}^{12} x_j &amp; = 3 \qquad \text{(3 crews)} \\
+     &amp;&amp; x_j &amp; \in \{0,1\} \ \ \ \forall\ j
+\end{align*}
+</span></p>
+</div>
+<p>The objective function is straightforward: if we assign one of the
+sequences to some crew, then we must pay the costs according to the
+bottom row of the table. Our constraints are that we are required to
+cover every flight. Take the first constraint for example. This is the
+constraint that enforces that we must have some crew flying from SF to
+LA. Which sequences contain that flight? From the first row in the
+table, we see this leg is included in sequences 1, 4, 7, and 10. So we
+are required to select at least one of those sequences to make sure
+there is a crew flying from SF to LA, hence we have the constraint <span
+class="math inline">x_1 + x_4 + x_7 + x_{10} \geq 1</span>.</p>
+<p>In the final formulation, we follow this logic for every flight in
+the table. Lastly, we are required to make an assignment for three
+crews, which we encode with the <span
+class="math inline">\sum_{j=1}^{12} x_j = 3</span> constraint.</p>
+<h3 data-number="5.3.4" id="modeldata-separation"><span
+class="header-section-number">5.3.4</span> Model/data separation</h3>
+<p>The above ad-hoc modeling is useful, but in real applications we
+often have to solve different, but similarly structured models on some
+regular schedule. We’d prefer not to write a new model from scratch
+every time we need to solve one. As we discussed in section <a
+href="#sec:lpModelDataSep">4.4.4</a>, the best practice is to write<a
+href="#fn53" class="footnote-ref" id="fnref53"
+role="doc-noteref"><sup>53</sup></a> a base, general model which encodes
+all the logic for the problem, then inject the relevant problem data
+when an instance needs to be solved.</p>
+<p>To that end, in this section we’ll present some generalized IP
+formulations for common OR problems.</p>
+<h4>
+Knapsack
+</h4>
+<p>We’ll start with a simple one, the <a
+href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack
+problem</a>. The classical framing is something like this: you’re going
+on a camping trip. The weight you can carry in your backpack is limited
+to <span class="math inline">W\in\mathbb{R}</span>. There are <span
+class="math inline">n</span> items you can take with you, and for each
+<span class="math inline">j\in\{1,2,\dots,n\}</span>, item <span
+class="math inline">j</span> has some weight <span
+class="math inline">w_j</span> and some value to you <span
+class="math inline">v_j</span>. The goal is to select which items to
+take with you, subject to the weight constraint, such that the total
+value of the items taken is maximized.</p>
+<p>We can model this problem with binary variables <span
+class="math inline">x_j</span>, <span
+class="math inline">j\in\{1,2,\dots,n\}</span> so that <span
+class="math inline">x_j=1</span> if we choose to take item <span
+class="math inline">j</span>, and otherwise <span
+class="math inline">x_j=0</span>. The formulation looks like:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \sum_{j=1}^n v_jx_j&amp; \\
+\text{s.t.}&amp;&amp; \sum_{j=1}^n w_jx_j&amp;\leq W \\
+&amp;&amp;x_j&amp;\in\{0, 1\} \ \ \forall \ j\in\{1,2,\dots,n\}
+\end{align*}
+</span></p>
+<h4>
+Set covering
+</h4>
+<p>The <a href="https://en.wikipedia.org/wiki/Set_cover_problem">set
+covering problem</a> is another classic OR problem with several
+applications (the Southwestern Airlines crew scheduling problem in
+section <a href="#sec:ipWordProblems">5.3.3</a> was one example). In
+abstract terms, the idea is that there is some set of items <span
+class="math inline">S</span>, and some number of <span
+class="math inline">n</span> subsets<a href="#fn54" class="footnote-ref"
+id="fnref54" role="doc-noteref"><sup>54</sup></a> <span
+class="math inline">S_j\subseteq S</span>, <span
+class="math inline">j\in\{1,2,\dots,n\}</span>. The idea is to choose
+some collection of the subsets so that every member of <span
+class="math inline">S</span> is also present in at least one subset.</p>
+<p>Ok, that was a mouthful, let’s try to explain with an example.
+Remember the airline crew scheduling problem referenced above? In that
+case, the base set <span class="math inline">S</span> was the set of
+flight segments that the airline needed to fly (SF to LA, Chicago to
+Denver, etc.). The <span class="math inline">S_j</span> subsets were the
+feasible flight sequences, like sequence 6 from the table that consisted
+of flying from SF to Seattle, then Seattle to LA, and finally LA to SF.
+Our job was to select the flight sequences such that every flight
+segment was flown at least once<a href="#fn55" class="footnote-ref"
+id="fnref55" role="doc-noteref"><sup>55</sup></a>.</p>
+<p>Let’s give one more example to motivate our formulation. Say a new
+city is deciding where to place their fire stations. They require that
+every neighborhood in the city can be reached in under 5 minutes by at
+least one fire station. There are <span class="math inline">n</span>
+potential building sites for the new stations, and <span
+class="math inline">m</span> different neighborhoods in the city (so
+<span class="math inline">S=\{1,2,\dots,m\}</span>). For each potential
+building site <span class="math inline">j\in\{1,2,\dots,n\}</span>,
+there is a set <span class="math inline">S_j\subseteq S</span> of
+neighborhoods that can be reached from that site in under 5 minutes.
+There is also a cost <span class="math inline">c_j\in\mathbb{R}</span>
+associated with building a station at site <span
+class="math inline">j</span>. How can the city minimize building costs
+while still meeting the requirements?</p>
+<p>Our formulation will include binary variables <span
+class="math inline">x_j</span> with the interpretation that a station
+will be built at site <span class="math inline">j</span> if and only if
+<span class="math inline">x_j=1</span>. The formulation follows<a
+href="#fn56" class="footnote-ref" id="fnref56"
+role="doc-noteref"><sup>56</sup></a>:</p>
+<p><span class="math display">
+\begin{align*}
+\text{min}&amp;&amp; \sum_{j=1}^n c_jx_j&amp; \\
+\text{s.t.}&amp;&amp; \sum_{j:i\in S_j} x_j&amp;\geq 1 &amp; \forall
+i\in\{1,2,\dots,m\}\\
+&amp;&amp;x_j&amp;\in\{0, 1\} &amp; \forall \ j\in\{1,2,\dots,n\}
+\end{align*}
+</span></p>
+<h4>
+Traveling salesman
+</h4>
+<p>We’ve touched on the traveling salesman problem (TSP) already, way
+back in section <a href="#sec:tsp">2.2.1</a>. This is the famous problem
+where a salesman has a list of cities to visit and needs to find the
+shortest possible path that leads him through every city before
+returning to the starting point.</p>
+<p>To formalize things a bit, say the salesman needs to visit a list of
+<span class="math inline">n</span> cities, and the distances between any
+two cities <span class="math inline">i,j\in\{1,\dots,n\}, i\neq j</span>
+is known and denoted as <span class="math inline">d_{ij}</span><a
+href="#fn57" class="footnote-ref" id="fnref57"
+role="doc-noteref"><sup>57</sup></a>. We’ll use binary variables <span
+class="math inline">x_{ij}</span> for each <span
+class="math inline">i,j\in\{1,\dots,n\}, i\neq j</span>, with the
+interpretation that <span class="math inline">x_{ij}=1</span> if and
+only if the salesman chooses to travel directly from city <span
+class="math inline">i</span> to city <span class="math inline">j</span>
+as part of his path. A first attempt at this model might look like
+this:</p>
+<p><span class="math display">
+\begin{align*}
+\text{min}&amp;&amp;
+\sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i}
+d_{ij}x_{ij}&amp; \\
+\text{s.t.}&amp;&amp; \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &amp;=
+1&amp;&amp; \forall \ i\in\{1,\dots,n\}\\
+&amp;&amp; \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &amp;= 1&amp;&amp;
+\forall \ j\in\{1,\dots,n\}\\
+&amp;&amp;x_{ij}&amp;\in\{0, 1\} &amp;&amp; \forall \ i\neq j
+\end{align*}
+</span></p>
+<p>On first inspection, this <em>looks like</em> it’s a correct
+formulation. There are two groups of constraints above. In the first
+group you set some <span class="math inline">i</span>, then amongst all
+<span class="math inline">j\neq i</span> you ensure that exactly one
+<span class="math inline">x_{ij}</span> equals <span
+class="math inline">1</span>. This has the effect of enforcing that the
+salesman leaves every town exactly once. The second group of constraints
+does something similar, enforcing that the salesman arrives in every
+town exactly once.</p>
+<p>So, what’s the problem? It might not be evident initially<a
+href="#fn58" class="footnote-ref" id="fnref58"
+role="doc-noteref"><sup>58</sup></a>, but this formulation does nothing
+to eliminate so-called <em>subtours</em> in the formulation. That is to
+say, the feasible solutions to the above model include a solution where
+the salesman visits, say, the first half of the cities in one tour and
+the second half of the cities in a second, separate tour, with no links
+between the two. A solution including subtours is illustrated below.</p>
+<figure>
+<img src="images/subtours.png" alt="TSP subtours (Wolsey 2020)" />
+<figcaption aria-hidden="true">TSP subtours <span class="citation"
+data-cites="wolsey2020">(<a href="#ref-wolsey2020"
+role="doc-biblioref">Wolsey 2020</a>)</span></figcaption>
+</figure>
+<p>To recover a valid formulation, we’ll need to include constraints
+that make these subtours impossible. How might we do that? Consider the
+above image, where we see a subtour among cities 3, 8, and 9. We can
+keep this from happening by way of a constraint that ensures that the
+salesman travels at least once between some city in the set <span
+class="math inline">\{3, 8, 9\}</span> and another city not in that set,
+i.e. a city in the complement set <span class="math inline">\{1, 2, 4,
+5, 6, 7, 10\}</span>. That is, we can add the constraint:</p>
+<p><span class="math display">
+\sum_{i\in\{3, 8, 9\}}\sum_{j\in\{1, 2, 4, 5, 6, 7, 10\}}x_{ij} \geq 1
+</span></p>
+<p>Alternatively, we could write the constraint in terms of just the
+original set <span class="math inline">\{3, 8, 9\}</span> by restricting
+the number of edges between set members to less than 3 (the size of the
+set).</p>
+<p><span class="math display">
+\sum_{i\in\{3, 8, 9\}}\sum_{j\in\{3, 8, 9\}}x_{ij} \leq 2
+</span></p>
+<p>Of course, this constraint will only eliminate the possibility of
+that one subtour (and its complement). There are plenty of other
+subtours possible, one for essentially every subset of <span
+class="math inline">\{1,\dots,n\}</span>. So a truly valid formulation
+for the TSP must include one of these <strong>subtour elimination
+constraints</strong> for every<a href="#fn59" class="footnote-ref"
+id="fnref59" role="doc-noteref"><sup>59</sup></a> subset <span
+class="math inline">S\subseteq\{1,\dots,n\}</span><a href="#fn60"
+class="footnote-ref" id="fnref60" role="doc-noteref"><sup>60</sup></a>.
+Such a formulation including these constraints<a href="#fn61"
+class="footnote-ref" id="fnref61" role="doc-noteref"><sup>61</sup></a>
+could look like<a href="#fn62" class="footnote-ref" id="fnref62"
+role="doc-noteref"><sup>62</sup></a>:</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+\text{min}&amp;&amp;
+\sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i}
+d_{ij}x_{ij}&amp; \\
+\text{s.t.}&amp;&amp; \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &amp;=
+1&amp;&amp; \forall \ i\in\{1,\dots,n\}\\
+&amp;&amp; \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &amp;= 1&amp;&amp;
+\forall \ j\in\{1,\dots,n\}\\
+&amp;&amp; \sum_{i\in S}\sum_{j\in S:i\neq j}x_{ij} &amp;\leq |S|-1
+&amp;&amp; \forall \ S\subseteq \{1,\dots,n\}, S\neq\emptyset\\
+&amp;&amp;x_{ij}&amp;\in\{0, 1\} &amp;&amp; \forall \ i\neq j
+\end{align*}
+</span></p>
+</div>
 <!-- {insertSection:sections/integer_programming/software.md} -->
 <!-- {insertSection:sections/integer_programming/computational_complexity.md} -->
 <!-- {insertSection:sections/integer_programming/branch_and_bound.md} -->
@@ -5432,7 +6375,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(15)</span></span></p>
+</span><span class="eqnos-number">(16)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -6089,6 +7032,82 @@ there is often some wiggle room in the (sometimes shoddily estimated)
 problem data such that you could fudge a little and make one of these
 rounded solutions work. This may or may not be an option depending on
 your scenario.<a href="#fnref48" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn49"><p>Another way to approach this particular problem may be
+to just solve two different IPs, one with the first constraint and one
+with the second, then compare the resultant solutions. But it’s not too
+hard to imagine a scenario where perhaps a new build is considered for
+each facility, and with enough facilities you wouldn’t want to do a new
+model for each possible combination of new/old facilities.<a
+href="#fnref49" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn50"><p>This is the second time we’ve seen <span
+class="math inline">M</span> represent some very large number - it’s a
+recurring theme in OR.<a href="#fnref50" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn51"><p>Verify this by seeing what the constraints reduce to
+when <span class="math inline">x_i=0</span> versus when <span
+class="math inline">x_i&gt;0</span>.<a href="#fnref51"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn52"><p>For some reason, the presentation of this problem in
+the textbook leaves the <span class="math inline">x_i</span> variables
+are real-valued instead of integers. I figure integers are more
+realistic, and since we’re in the IP portion of the notes, why not do it
+that way?<a href="#fnref52" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn53"><p>Ideally in computer code.<a href="#fnref53"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn54"><p>New notation: when we write <span
+class="math inline">S&#39;\subseteq S</span>, we mean to say that <span
+class="math inline">S&#39;</span> is a subset of <span
+class="math inline">S</span>. That is, <span
+class="math inline">S</span> and <span class="math inline">S&#39;</span>
+are both sets, and every element of <span
+class="math inline">S&#39;</span> is also an element of <span
+class="math inline">S</span>.<a href="#fnref54" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn55"><p>Plus an extra constraint on the number of flight
+segments to choose - this constraint is not included in the classical
+set covering problem.<a href="#fnref55" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn56"><p>Note the new notation in the second summation, <span
+class="math inline">\{j:i\in S_j\}</span>. We call this the “conditional
+set” notation in section <a href="#sec:symbols">6.1</a>. It means the
+set of all <span class="math inline">j</span> such that the condition
+<span class="math inline">i\in S_j</span> is true.<a href="#fnref56"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn57"><p>If <span class="math inline">d_{ij}=d_{ji}</span> for
+all <span class="math inline">i,j</span> then we call it a <em>symmetric
+TSP</em>. But this doesn’t need to hold for our formulations to work.<a
+href="#fnref57" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn58"><p>I can’t tell you how many times I’ve come up with what
+I thought was a valid formulation for a problem, only to solve the model
+and get some invalid result because I overlooked some subtle case my
+model didn’t cover. Modeling a given IP is not always as straightforward
+as it might initially appear.<a href="#fnref58" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn59"><p>Technically we don’t need <em>every</em> subset, since
+the same constraint will cover both the selected subset and its
+complement (e.g. the constraint above will eliminate the possibility of
+subtours in both sets <span class="math inline">\{3, 8, 0\}</span> and
+<span class="math inline">\{1, 2, 4, 5, 6, 7, 10\}</span>). Further,
+subsets of size 1 are technically covered by the basic “leave every city
+once” constraints.<a href="#fnref59" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn60"><p>If you’re thinking “that could be a lot of
+constraints”, you’re right. It can be a problem. We’ll be coming back to
+this observation later.<a href="#fnref60" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn61"><p>In fact, you could make due with <em>only</em> the
+subtour elimination constraints, since the original functional
+constraints are essentially just subtour elimination constraints for the
+subtours of size <span class="math inline">n-1</span>.<a href="#fnref61"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn62"><p>New notation: <span
+class="math inline">\emptyset</span> represents an empty set, i.e. a set
+with no elements. Technically, <span
+class="math inline">\emptyset</span> is a subset of all other sets, but
+we don’t want to consider it in our formulation so we’ll explicitly
+exclude it.<a href="#fnref62" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
