@@ -18,7 +18,7 @@
 
 {insertSection:sections/integer_programming/intro.md}
 
-<!-- {insertSection:sections/integer_programming/modeling.md} -->
+{insertSection:sections/integer_programming/modeling.md}
 
 <!-- {insertSection:sections/integer_programming/software.md} -->
 
