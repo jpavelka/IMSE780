@@ -424,7 +424,7 @@ $$
 \sum_{i\in\{3, 8, 9\}}\sum_{j\in\{3, 8, 9\}}x_{ij} \leq 2
 $$
 
-Of course, this constraint will only eliminate the possibility of that one subtour (and its complement). There are plenty of other subtours possible, one for essentially every subset of $\{1,\dots,n\}$. So a truly valid formulation for the TSP must include one of these __subtour elimination constraints__ for every[^tspAlmostEverySubset] subset $S\subseteq\{1,\dots,n\}$[^tspLotsOfConstraints]. Such a formulation including these constraints[^justSubtourElim] could look like[^newNotationEmptySet]: 
+Of course, this constraint will only eliminate the possibility of that one subtour (and its complement). There are plenty of other subtours possible, one for essentially every subset of $\{1,\dots,n\}$. So a truly valid formulation for the TSP must include one of these __subtour elimination constraints__ for every[^tspAlmostEverySubset] subset $S\subseteq\{1,\dots,n\}$[^tspLotsOfConstraints]. Such a formulation including these constraints[^justSubtourElim] could look like[^newNotationEmptySetSize]: 
 
 [^tspLotsOfConstraints]: If you're thinking "that could be a lot of constraints", you're right. It can be a problem. We'll be coming back to this observation later.
 
@@ -432,7 +432,7 @@ Of course, this constraint will only eliminate the possibility of that one subto
 
 [^justSubtourElim]: In fact, you could make due with _only_ the subtour elimination constraints, since the original functional constraints are essentially just subtour elimination constraints for the subtours of size $n-1$.
 
-[^newNotationEmptySet]: New notation: $\emptyset$ represents an empty set, i.e. a set with no elements. Technically, $\emptyset$ is a subset of all other sets, but we don't want to consider it in our formulation so we'll explicitly exclude it.
+[^newNotationEmptySetSize]: Two bits of new notation here. First, $\emptyset$ represents an empty set, i.e. a set with no elements. Technically, $\emptyset$ is a subset of all other sets, but we don't want to consider it in our formulation so we'll explicitly exclude it. Second, $|S|$ denotes the size of a set, i.e. the number of elements in it.
 
 <div class="mathSmall">
 $$
