@@ -278,7 +278,7 @@ How about the other $y_i$ variables? Notice that if $y_i=0$ for any $i$, then th
 >
 > The following table shows the estimated impact of allocating zero, one, two, or three spots to each product. This impact is measured in terms of the profit (in units of millions of dollars) from the additional sales that would result from the spots, considering also the cost of producing the commercial and purchasing the spots. The objective is to allocate five spots to the products so as to maximize the total profit.
 
-![Data for Supersuds Corporation problem [@classText]](images/ip-example-2-data.png)
+![Data for the Supersuds Corporation problem [@classText]](images/ip-example-2-data.png)
 
 Your first thought for modeling this may be to have integer variables $x_1, x_2, x_3$, with the value of $x_i$ denoting the number of TV spots allocated to product $i$. But this won't work, because the objective violates the so-called _proportionality assumption_ for linear functions, i.e. that each extra unit of a variable affects the value of the function by the same amount. That is not true here, e.g. for product 1 doubling from 1 spot to 2 does not double the profit.
 
@@ -311,7 +311,7 @@ What about the final (functional) constraint? The left-hand side of the constrai
 
 > SOUTHWESTERN AIRWAYS needs to assign its crews to cover all its upcoming flights. We will focus on the problem of assigning three crews based in San Francisco to the flights listed in the first column of the following table. The other 12 columns show the 12 feasible sequences of flights for a crew. (The numbers in each column indicate the order of the flights.) Exactly three of the sequences need to be chosen (one per crew) in such a way that every flight is covered. (It is permissible to have more than one crew on a flight, where the extra crews would fly as passengers, but union contracts require that the extra crews would still need to be paid for their time as if they were working.) The cost of assigning a crew to a particular sequence of flights is given (in thousands of dollars) in the bottom row of the table. The objective is to minimize the total cost of the three crew assignments that cover all the flights.
 
-![Data for Southwestern Airways problem [@classText]](images/ip-example-3-data.png)
+![Data for the Southwestern Airways problem [@classText]](images/ip-example-3-data.png)
 
 We can model this problem in the following way, with the binary variable $x_i=1$ if we assign sequence $i$ to some crew, and otherwise $x_i=0$:
 
