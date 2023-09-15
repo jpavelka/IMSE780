@@ -460,6 +460,12 @@
           videoEmbeds();
           document.onclick = closeClassMode;
           document.getElementById('main').onclick = closeNavIfSmall;
+          makeAssignmentLink();
+      }
+      makeAssignmentLink = () => {
+          document.getElementById('toAssignments').setAttribute('href', 
+              window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
+          )
       }
       videoEmbeds = () => {
           for (el of document.getElementsByClassName('lectureVideoEmbed')) {
@@ -2209,8 +2215,7 @@ reference<a href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a>. The syllabus, assignments, and
 other course materials may be found via the <a
 href="https://k-state.instructure.com/">class Canvas site</a>. Course
-homeworks/assignments may be found
-<a href='/assignments.html'>here</a>.</p>
+homeworks/assignments may be found <a id='toAssignments'>here</a>.</p>
 <h2 data-number="1.2" id="notes-on-these-notes"><span
 class="header-section-number">1.2</span> Notes on these notes</h2>
 <p>I wrote the notes in this format in an attempt to alleviate all my
