@@ -57,6 +57,10 @@
                     <h2>${el.getAttribute('data-sub-name')}</h2>
             ` + el.innerHTML + '</div>'
         }
+        loc_split = window.location.href.split('/')
+        document.getElementById('toNotes').setAttribute('href', 
+            loc_split.slice(0, loc_split.length - 1).join('/') + '/?classmode=false'
+        )
     }
     const headerClick = (elId) => {
         el = document.getElementById(`assignment${elId}Content`);
@@ -67,7 +71,7 @@
     }
 </script>
 
-<a href='/?classmode=false'>Course notes</a>
+<a id='toNotes'>Course notes</a>
 
 <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>

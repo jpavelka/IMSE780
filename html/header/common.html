@@ -30,6 +30,12 @@
         videoEmbeds();
         document.onclick = closeClassMode;
         document.getElementById('main').onclick = closeNavIfSmall;
+        makeAssignmentLink();
+    }
+    makeAssignmentLink = () => {
+        document.getElementById('toAssignments').setAttribute('href', 
+            window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
+        )
     }
     videoEmbeds = () => {
         for (el of document.getElementsByClassName('lectureVideoEmbed')) {
