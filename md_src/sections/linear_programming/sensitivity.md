@@ -24,6 +24,9 @@ So in our sample problem, we should be willing to pay \$1,500 for an extra hour 
 Another nice interpretation for the shadow price comes from the dual problem. Recall in +@sec:corporateTakeover when we formulated our "corporate takeover" problem +@eq:prototypeLpDual, which we later found was actually the dual to our sample LP. In that formulation, the variables $y_1, y_2, y_3$ represented how much we'd be willing to pay for time at Wyndor's three facilities, and when we ran the notebook in +@sec:corporateTakeover the optimal values for these variables were again those same values from above, $0, \frac{3}{2}$, and $1$. Of course, it should be no surprise that these are exactly equal to the shadow prices, as we've already seen the connection between the two in the proof to <span class='thmRef' for='thm:simplexWorks'></span>.
 
 ### Sensitivity Analysis {#sec:sensitivityAnalysis}
+
+<div class='lectureVideoEmbed' video-id='02852e5c6cf44834912154ba1636a5851d' video-date='2023-09-15'>Wrapping up sensitivity analysis and LP. Discussed HW2, particularly question 5. Video cuts off, but you don't really miss anything.</div>
+
 __Sensitivity analysis__ is the process of determining how small changes in problem data can alter the optimal solution. As explained in @classText, section 7.2, 
 
 > one assumption of linear programming is that all the parameters of the model ($a_{ij}$, $b_i$, and $c_j$) are known constants. Actually, the parameter values used in the model normally are just estimates based on a prediction of future conditions. The data obtained to develop these estimates often are rather crude or nonexistent, so that the parameters in the original formulation may represent little more than quick rules of thumb provided by busy line personnel. The data may even represent deliberate overestimates or underestimates to protect the interests of the estimators.
