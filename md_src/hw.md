@@ -67,6 +67,8 @@
     }
 </script>
 
+<a href='/?classmode=false'>Course notes</a>
+
 <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>
 

@@ -6,7 +6,7 @@ You're reading the class notes for _IMSE 780: Methods of Operations Research_ ta
 
 ## Course materials
 
-The core of this course will be taught from these notes. Additionally, I encourage students to use the textbook _Introduction to Operations Research_ [@classText] as a reference[^bookVersion]. The syllabus, assignments, and other course materials may be found via the [class Canvas site](https://k-state.instructure.com/).
+The core of this course will be taught from these notes. Additionally, I encourage students to use the textbook _Introduction to Operations Research_ [@classText] as a reference[^bookVersion]. The syllabus, assignments, and other course materials may be found via the [class Canvas site](https://k-state.instructure.com/). Course homeworks/assignments may be found <a href='/assignments.html'>here</a>.
 
 [^bookVersion]: The most recent version of this textbook is the 11th edition, which came out in 2021. But much of the content quoted here comes from the 10th edition from 2015. Nothing about the course will require you to have a certain edition, or any book at all. But I think it's a very useful reference.
 
