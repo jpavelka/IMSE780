@@ -301,6 +301,9 @@
                 <div id="assignment${el.id}Content" class="assignmentContent">
                     <h2>${el.getAttribute('data-sub-name')}</h2>
             ` + el.innerHTML + '</div>'
+            if (new Date() <= addDays(new Date(dt), 1)) {
+                headerClick(el.id);
+            }
         }
         loc_split = window.location.href.split('/')
         document.getElementById('toNotes').setAttribute('href', 
@@ -313,6 +316,10 @@
         el.style.display = displaying ? 'none' : 'block';
         arrowEl = document.getElementById(`assignment${elId}HeaderArrow`);
         arrowEl.innerHTML = displaying ? '&#9654;' : '&#9660;';
+    }
+    const addDays = (date, days) => {
+        date.setDate(date.getDate() + days);
+        return date;
     }
 </script>
 <p><a id='toNotes'>Course notes</a></p>
@@ -739,12 +746,195 @@ the values for all the variables at the next basic solution?</li>
 </ul>
 </div>
 </div>
-<!-- duality: prove weak duality for = constraint form -->
+<div id="Homework 4" class="assignmentContainer"
+data-sub-name="LP duality and sensitivity" data-due="2023-09-25"
+data-leave-open="y">
+<div>
+<ol type="1">
+<li><p>(4pts) Construct the dual to the following linear program: <span
+class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 3x_1 - 4x_3 \\
+\text{s.t.}&amp;&amp; 4x_1 + 5x_2 + 7x_3 &amp; \leq 15 \\
+      &amp;&amp; x_1 + 3x_2 - x_3 &amp; \leq 8 \\
+      &amp;&amp; x_1,x_2,x_3 &amp; \geq 0
+\end{align*}
+</span></p></li>
+<li><p>(4pts) Suppose some vector <span
+class="math inline">\mathbf{x}</span> satisfies <span
+class="math inline">\mathbf{A}\mathbf{x}=\mathbf{b}</span>, <span
+class="math inline">\mathbf{x}\geq 0</span>, and some vector <span
+class="math inline">\mathbf{y}</span> satisfies <span
+class="math inline">\mathbf{y}\mathbf{A}\geq\mathbf{c}</span>.</p>
+<ol type="a">
+<li>What does the weak duality theorem tell you about how the values
+<span class="math inline">\mathbf{c}\mathbf{x}</span> and <span
+class="math inline">\mathbf{y}\mathbf{b}</span> relate to each
+other?</li>
+<li>Without appealing directly to weak duality, prove that the
+relationship from part (a) holds. (Meaning, don’t just say it is true
+because of weak duality. Go through the matrix math necessary to show
+it. It is ok for your proof to follow the same sort of steps we took in
+class while proving weak duality.)</li>
+</ol></li>
+<li><p>(4pts) In section 4.8.3 of the notes, we calculated the allowable
+range for <span class="math inline">b_2</span> in the Wyndor problem,
+i.e. the range over which the number of hours available at Plant 2 could
+change without altering the problem’s optimal basis. Follow the same
+process to find the allowable range for <span
+class="math inline">b_3</span>.</p></li>
+<li><p>(4pts) Suppose that the Wyndor problem were altered in one of the
+following ways. Will the optimal basis for the original problem still be
+optimal in the altered problem? Provide your reasoning. (Each scenario
+is distinct, do not combine them.)</p>
+<ol type="a">
+<li>Production capacities at all facilities are increased. There are now
+7 hours available per week at Plant 1, 15 at Plant 2, and 20 at Plant
+3.</li>
+<li>New technological advances have made Product 1 much easier to
+produce, and thus much more profitable. Each batch can now bring $7,000
+in profit.</li>
+</ol></li>
+<li><p>(4pts)* Using Python and whichever modeling library you prefer,
+formulate the following problem as a linear program and report the
+optimal solution.</p>
+<p>A cargo plane has three compartments for storing cargo: front,
+center, and back. These compartments have capacity limits on both weight
+and space, as summarized below:</p>
+<table>
+<tr>
+<th>
+<p>Compartment</p>
+</th>
+<th>
+<p>Weight Cap (tons)</p>
+</th>
+<th>
+<p>Volume Cap(<span class="math inline">\text{ft}^3</span>)</p>
+</th>
+</tr>
+<tr>
+<td>
+<p>Front</p>
+</td>
+<td>
+<p>12</p>
+</td>
+<td>
+<p>7,000</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Center</p>
+</td>
+<td>
+<p>18</p>
+</td>
+<td>
+<p>9,000</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Back</p>
+</td>
+<td>
+<p>10</p>
+</td>
+<td>
+<p>5,000</p>
+</td>
+</tr>
+</table>
+<p>Furthermore, the weight of the cargo in the respective compartments
+must be the same proportion of that compartment’s weight capacity to
+maintain the balance of the airplane.</p>
+<p>The following four cargoes have been offered for shipment on an
+upcoming flight as space is available:</p>
+<table>
+<tr>
+<th>
+<p>Cargo</p>
+</th>
+<th>
+<p>Weight (tons)</p>
+</th>
+<th>
+<p>Volume (<span class="math inline">\text{ft}^3</span>/ton)</p>
+</th>
+<th>
+<p>Profit ($/ton)</p>
+</th>
+</tr>
+<tr>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>20</p>
+</td>
+<td>
+<p>500</p>
+</td>
+<td>
+<p>320</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>2</p>
+</td>
+<td>
+<p>16</p>
+</td>
+<td>
+<p>700</p>
+</td>
+<td>
+<p>400</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>3</p>
+</td>
+<td>
+<p>25</p>
+</td>
+<td>
+<p>600</p>
+</td>
+<td>
+<p>360</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>4</p>
+</td>
+<td>
+<p>13</p>
+</td>
+<td>
+<p>400</p>
+</td>
+<td>
+<p>290</p>
+</td>
+</tr>
+</table>
+<p>Any portion of these cargoes can be accepted. The objective is to
+determine how much (if any) of each cargo should be accepted and how to
+distribute each among the compartments to maximize the total profit for
+the flight.</p></li>
+</ol>
+</div>
+</div>
 <!-- some future homework: either/or constraints for each Wyndor facility -->
 <!-- some future homework: constraints for inverse XOR -->
 <!-- model assignment problem with model/data separation in python -->
 <!-- wyndor ip with and constraints from notes: determine good values for M1, M2 -->
-<!-- model the general assignment problem (wolsey) -->
 <!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
 <div>
 
