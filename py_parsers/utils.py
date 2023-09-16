@@ -10,14 +10,7 @@ def pandoc_convert(fpath, dest_fpath):
     dest_fpath = Path(dest_fpath)
     dest_ftype = dest_fpath.suffix[1:]
     os.system('pandoc citations.bibtex -s -f bibtex -t markdown > citations.md')
-    hw_cmds = [
-        'pandoc',
-        '-s md_src/hw.md',
-        '-o converted/assignments.html',
-        '--katex=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/',
-        '--metadata pagetitle="Assignments"'
-    ]
-    os.system(' '.join(hw_cmds))
+    hw_pandoc_convert()
     cmds = [
         'pandoc',
         '-s {}'.format(fpath),
@@ -41,6 +34,20 @@ def pandoc_convert(fpath, dest_fpath):
             cmds.append('--include-after-body=html/after-body/' + fname)
     cmd = ' '.join(cmds)
     os.system(' '.join(cmds))
+
+
+def hw_pandoc_convert():
+    os.system('cat md_src/macros.md md_src/hw.md > hw_concat.md')
+    hw_cmds = [
+        'pandoc',
+        '-s hw_concat.md',
+        '-o converted/assignments.html',
+        '--katex=https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/',
+        '--metadata pagetitle="Assignments"'
+    ]
+    os.system(' '.join(hw_cmds))
+    os.system('rm hw_concat.md')
+
 
 
 def add_sections(text):
