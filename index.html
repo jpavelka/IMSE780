@@ -6292,10 +6292,10 @@ problems you can model are broad and useful, while at the same time
 software has improved to a point that the models are viable to be solved
 within reasonable time frames. To illustrate the effects of recent
 software improvements, let’s consider the case of Gurobi. The company
-was founded 2008. As of their latest major version (10.0) release in
+was founded 2008. As of their latest major version release (10.0) in
 November 2022, <a
 href="https://www.gurobi.com/features/gurobi-optimizer-delivers-unmatched-performance/">they
-reported a 75x speedup</a> in the solve times over the 1.1 version. Note
+reported a 75x speedup</a> in solve times over the 1.1 version. Note
 that this includes just the software improvements, not taking into
 account the hardware advances in that period as well.</p>
 <p>As mentioned earlier, there are basically two classes of solvers
@@ -6319,13 +6319,20 @@ role="doc-noteref"><sup>63</sup></a> are indicative of the usual trend,
 that the commercial offerings can solve far more of the test instances
 within the specified time limit, and the solve times are generally 5-10x
 faster<a href="#fn64" class="footnote-ref" id="fnref64"
-role="doc-noteref"><sup>64</sup></a>. You can generally download and use
-the big commercial solvers on problems of very limited size. But the
-limits are such that they would generally not be offering a large
-benefit over the free solvers anyway. Further, the commercial solvers do
-offer free licenses to students and academic for non-commercial use, and
-these licenses do not come with any size limitations. You may want to
-take advantage of this for your class project.</p>
+role="doc-noteref"><sup>64</sup></a>.</p>
+<p>License costs for this software can be expensive, but you don’t
+always need to pay a lot to use them. You can usually download and use
+the big commercial solvers on smaller problems in non-commercial
+contexts, with limits on the number of variables and constraints in your
+models. But the limits are such that they would generally not be
+offering a large benefit over the free solvers anyway. More useful for
+you, the commercial solvers do offer free licenses to students and
+academics for non-commercial use, and these licenses do not come with
+any size limitations<a href="#fn65" class="footnote-ref" id="fnref65"
+role="doc-noteref"><sup>65</sup></a>. Lastly, even commercial users can
+request free (but temporary) trial licenses for development purposes,
+letting you “try before you buy” when you have a new use case in
+mind.</p>
 <h3 data-number="5.4.2" id="solving-ips-with-python"><span
 class="header-section-number">5.4.2</span> Solving IPs with Python</h3>
 <p>Now that we’ve got some modeling down, let’s see how we can implement
@@ -7210,6 +7217,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 reported speed differences underestimate the differences on larger
 problems that are more likely to be of interest in industry
 applications.<a href="#fnref64" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn65"><p>You may want to take advantage of this for your class
+project.<a href="#fnref65" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
