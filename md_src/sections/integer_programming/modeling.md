@@ -341,7 +341,7 @@ The objective function is straightforward: if we assign one of the sequences to 
 
 In the final formulation, we follow this logic for every flight in the table. Lastly, we are required to make an assignment for three crews, which we encode with the $\sum_{j=1}^{12} x_j = 3$ constraint.
 
-### Model/data separation
+### Model/data separation {#sec:ipModelDataSep}
 
 The above ad-hoc modeling is useful, but in real applications we often have to solve different, but similarly structured models on some regular schedule. We'd prefer not to write a new model from scratch every time we need to solve one. As we discussed in +@sec:lpModelDataSep, the best practice is to write[^writeComputerCode] a base, general model which encodes all the logic for the problem, then inject the relevant problem data when an instance needs to be solved.
 

@@ -1,5 +1,7 @@
 # Integer programming
 
+<div class='lectureVideoEmbed' video-id='82e9cb1ddf1b4cbbaa625d040d42b0891d' video-date='2023-09-18'>Integer programming definitions, intro to modeling IPs. I forgot to turn on my lapel mic at the beginning of class (about the first 7 minutes), though the room mic was on and seemed to pick up most everything ok.</div>
+
 In this section we will introduce integer programming (IP), which is an of extension of linear programming that includes restrictions that some (or all) of the decision variables must take integer values. While this may initially seem like a small tweak, the addition of these integrality[^integralAndInteger] constraints is actually quite powerful, and will allow us to model all types of interesting problems that linear programming could not handle. The added expressiveness comes with a tradeoff, though, as integer programs generally take much more effort to solve than their linear counterparts.
 
 [^integralAndInteger]: In this context, we use the word _integral_ to mean "of or denoted by an integer" (which, as of the time of writing, is the second definition provided by Google when searching the word). I agree it's somewhat confusing since the word has a separate common meaning when used in casual conversation, and even a separate meaning in mathematics that you're familiar with from calculus.
