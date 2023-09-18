@@ -2027,8 +2027,7 @@ id="toc-visualizing-other-scenarios"><span
 class="toc-section-number">4.3.2</span> Visualizing other
 scenarios</a></li>
 </ul></li>
-<li><a href="#solving-lps-with-software"
-id="toc-solving-lps-with-software"><span
+<li><a href="#sec:lpSoftware" id="toc-sec:lpSoftware"><span
 class="toc-section-number">4.4</span> Solving LPs with software</a>
 <ul>
 <li><a href="#modeling-languages" id="toc-modeling-languages"><span
@@ -2150,8 +2149,18 @@ variables</a></li>
 class="toc-section-number">5.3.2</span> Binary variable tricks</a></li>
 <li><a href="#sec:ipWordProblems" id="toc-sec:ipWordProblems"><span
 class="toc-section-number">5.3.3</span> Example word problems</a></li>
-<li><a href="#modeldata-separation" id="toc-modeldata-separation"><span
+<li><a href="#sec:ipModelDataSep" id="toc-sec:ipModelDataSep"><span
 class="toc-section-number">5.3.4</span> Model/data separation</a></li>
+</ul></li>
+<li><a href="#solving-ips-with-software"
+id="toc-solving-ips-with-software"><span
+class="toc-section-number">5.4</span> Solving IPs with software</a>
+<ul>
+<li><a href="#solvers-1" id="toc-solvers-1"><span
+class="toc-section-number">5.4.1</span> Solvers</a></li>
+<li><a href="#solving-ips-with-python"
+id="toc-solving-ips-with-python"><span
+class="toc-section-number">5.4.2</span> Solving IPs with Python</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -2850,7 +2859,7 @@ class="math inline">Z=36</span>, where the objective line intersects an
 entire face (bounding line) of the feasible region. Since any point on
 that bounding line attains the optimal objective value, they are all
 optimal solutions.</p>
-<h2 data-number="4.4" id="solving-lps-with-software"><span
+<h2 data-number="4.4" id="sec:lpSoftware"><span
 class="header-section-number">4.4</span> Solving LPs with software</h2>
 <div class="lectureVideoEmbed"
 data-video-id="b84d7d439309417aabb870fd25751e001d"
@@ -5201,6 +5210,13 @@ href="https://catalog.k-state.edu/preview_course_nopop.php?catoid=54&amp;coid=37
 theory.</p>
 <h1 data-number="5" id="integer-programming"><span
 class="header-section-number">5</span> Integer programming</h1>
+<div class="lectureVideoEmbed"
+data-video-id="82e9cb1ddf1b4cbbaa625d040d42b0891d"
+data-video-date="2023-09-18">
+Integer programming definitions, intro to modeling IPs. I forgot to turn
+on my lapel mic at the beginning of class (about the first 7 minutes),
+though the room mic was on and seemed to pick up most everything ok.
+</div>
 <p>In this section we will introduce integer programming (IP), which is
 an of extension of linear programming that includes restrictions that
 some (or all) of the decision variables must take integer values. While
@@ -6064,7 +6080,7 @@ class="math inline">x_1 + x_4 + x_7 + x_{10} \geq 1</span>.</p>
 the table. Lastly, we are required to make an assignment for three
 crews, which we encode with the <span
 class="math inline">\sum_{j=1}^{12} x_j = 3</span> constraint.</p>
-<h3 data-number="5.3.4" id="modeldata-separation"><span
+<h3 data-number="5.3.4" id="sec:ipModelDataSep"><span
 class="header-section-number">5.3.4</span> Model/data separation</h3>
 <p>The above ad-hoc modeling is useful, but in real applications we
 often have to solve different, but similarly structured models on some
@@ -6261,7 +6277,64 @@ d_{ij}x_{ij}&amp; \\
 \end{align*}
 </span></p>
 </div>
-<!-- {insertSection:sections/integer_programming/software.md} -->
+<h2 data-number="5.4" id="solving-ips-with-software"><span
+class="header-section-number">5.4</span> Solving IPs with software</h2>
+<p>Let’s now talk a bit about using software to solve integer
+programming problems. This discussion is an extension to the one we
+already had in section <a href="#sec:lpSoftware">4.4</a>, where we spoke
+about solvers in the context of linear programs. Much of what we said
+there applies here as well, and there is significant overlap between the
+best LP solvers and best IP solvers.</p>
+<h3 data-number="5.4.1" id="solvers-1"><span
+class="header-section-number">5.4.1</span> Solvers</h3>
+<p>Speaking of, let’s talk a bit more about IP solvers. In my opinion,
+integer programs sit in something of a sweet spot where the types of
+problems you can model are broad and useful, while at the same time
+software has improved to a point that the models are viable to be solved
+within reasonable time frames. To illustrate the effects of recent
+software improvements, let’s consider the case of Gurobi. The company
+was founded 2008. As of their latest major version (10.0) release in
+November 2022, <a
+href="https://www.gurobi.com/features/gurobi-optimizer-delivers-unmatched-performance/">they
+reported a 75x speedup</a> in the solve times over the 1.1 version. Note
+that this includes just the software improvements, not taking into
+account the hardware advances in that period as well.</p>
+<p>As mentioned earlier, there are basically two classes of solvers
+available: the free, open source ones (<a
+href="https://www.coin-or.org/">CBC</a>, <a
+href="https://scipopt.org/">SCIP</a>, <a
+href="https://highs.dev/">HiGHS</a>), and the commercial (paid) ones (<a
+href="https://www.gurobi.com/">Gurobi</a>, <a
+href="https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer">CPLEX</a>,
+<a
+href="https://www.fico.com/en/products/fico-xpress-optimization">Xpress</a>,
+<a href="https://www.shanshu.ai/copt/">COPT</a>). As far as performance,
+you generally get what you pay for. For the last couple decades,
+regularly updated performance benchmarks for these solvers have been
+published <span class="citation" data-cites="solverBenchmarks">(<a
+href="#ref-solverBenchmarks" role="doc-biblioref"><span>“Mittelmann
+Benchmarks,”</span> n.d.</a>)</span>. The <a
+href="https://plato.asu.edu/ftp/milp.html">latest MIP benchmarks</a><a
+href="#fn63" class="footnote-ref" id="fnref63"
+role="doc-noteref"><sup>63</sup></a> are indicative of the usual trend,
+that the commercial offerings can solve far more of the test instances
+within the specified time limit, and the solve times are generally 5-10x
+faster<a href="#fn64" class="footnote-ref" id="fnref64"
+role="doc-noteref"><sup>64</sup></a>. You can generally download and use
+the big commercial solvers on problems of very limited size. But the
+limits are such that they would generally not be offering a large
+benefit over the free solvers anyway. Further, the commercial solvers do
+offer free licenses to students and academic for non-commercial use, and
+these licenses do not come with any size limitations. You may want to
+take advantage of this for your class project.</p>
+<h3 data-number="5.4.2" id="solving-ips-with-python"><span
+class="header-section-number">5.4.2</span> Solving IPs with Python</h3>
+<p>Now that we’ve got some modeling down, let’s see how we can implement
+the models using Python code. In the following notebook, we illustrate
+how to set up several of the models explored above, with special
+attentions paid to the generalized models of section <a
+href="#sec:ipModelDataSep">5.3.4</a>.</p>
+<script src="https://gist.github.com/73f227dfef3ba217c11fe80db18d6b5f.js"></script>
 <!-- {insertSection:sections/integer_programming/computational_complexity.md} -->
 <!-- {insertSection:sections/integer_programming/branch_and_bound.md} -->
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
@@ -6750,6 +6823,10 @@ Klee, Victor, and George J. Minty. 1970. <span>“HOW GOOD IS THE SIMPLEX
 ALGORITHM.”</span> In. <a
 href="https://api.semanticscholar.org/CorpusID:117965841">https://api.semanticscholar.org/CorpusID:117965841</a>.
 </div>
+<div id="ref-solverBenchmarks" class="csl-entry" role="doc-biblioentry">
+<span>“Mittelmann Benchmarks.”</span> n.d. <a
+href="https://plato.asu.edu/bench.html">https://plato.asu.edu/bench.html</a>.
+</div>
 <div id="ref-tspPic" class="csl-entry" role="doc-biblioentry">
 <span>“Waterloo TSP.”</span> n.d. <a
 href="https://www.math.uwaterloo.ca/tsp/"
@@ -7124,6 +7201,17 @@ we don’t want to consider it in our formulation so we’ll explicitly
 exclude it. Second, <span class="math inline">|S|</span> denotes the
 size of a set, i.e. the number of elements in it.<a href="#fnref62"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn63"><p>You’ll notice some of the big names (specifically CPLEX
+and Xpress) are missing from these benchmarks. They used to be included
+as well, but there was some bit of drama from a few years back that led
+to the big commercial solvers asking to be excluded from these public
+benchmarks. Gurobi has since returned.<a href="#fnref63"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn64"><p>Note that, due to the nature of the benchmarks, the
+reported speed differences underestimate the differences on larger
+problems that are more likely to be of interest in industry
+applications.<a href="#fnref64" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
