@@ -101,9 +101,9 @@ $$
 
 By constraining $y_1 + y_2 \leq 1$, we allow only $(y_1, y_2)\in\{(0, 0),(1, 0),(0, 1)\}$. If $(y_1,y_2)=(0,0)$ this would reduce back to the original problem. If $(y_1,y_2)=(1,0)$ then we'd have the situation where the plant is open for 3 extra hours, and we've reduced our profits by \$2,000 to account for the extra cost. Similarly, if $(y_1,y_2)=(0,1)$ then we'll have an extra 6 hours of use in the plant, but at the required cost of \$4,500.
 
-<h4>Fixed-charge formulations</h4>
+<h4>Setup costs</h4>
 
-A common occurrence in OR problems is a so-called **fixed-charge problem**, where there is a one-time setup cost involved in participating in some activity. Suppose in the Wyndor problem that the three facilities did not exist yet, so they need to decide which facilities to build as well as the ultimate product mix. Say that in order to build any of the plants, they'd need to take out a loan that they plan to pay back with their weekly profits for the foreseeable future. If the weekly payback for any given facility is \$6,000, how can we model this with an integer program? Take a look at the following formulation:
+A common occurrence in OR problems is a setup cost involved in participating in some activity. Suppose in the Wyndor problem that the three facilities did not exist yet, so they need to decide which facilities to build as well as the ultimate product mix. Say that in order to build any of the plants, they'd need to take out a loan that they plan to pay back with their weekly profits for the foreseeable future. If the weekly payback for any given facility is \$6,000, how can we model this with an integer program? Take a look at the following formulation:
 
 $$
 \begin{align*}
