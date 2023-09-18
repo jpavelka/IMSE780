@@ -20,7 +20,7 @@
 
 {insertSection:sections/integer_programming/modeling.md}
 
-<!-- {insertSection:sections/integer_programming/software.md} -->
+{insertSection:sections/integer_programming/software.md}
 
 <!-- {insertSection:sections/integer_programming/computational_complexity.md} -->
 
