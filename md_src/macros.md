@@ -15,3 +15,5 @@
 \newcommand{\zeros}{\mat{0}}
 \newcommand{\ones}{\mat{1}}
 \newcommand{\identity}{\mat{I}}
+\newcommand{\P}{\mathcal{P}}
+\newcommand{\NP}{\mathcal{NP}}

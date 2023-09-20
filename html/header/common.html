@@ -31,9 +31,20 @@
         document.onclick = closeClassMode;
         document.getElementById('main').onclick = closeNavIfSmall;
         makeAssignmentLink();
+        drawPlotlyCharts();
+    }
+    drawPlotlyCharts = () => {
+        for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
+            chartId = 'plotyChart' + ind;
+            el.id = chartId;
+            console.log(el.getAttribute('data-plot-layout') || {})
+            plotData = JSON.parse(el.getAttribute('data-plot-data'));
+            plotLayout = JSON.parse(el.getAttribute('data-plot-layout') || '{}');
+            Plotly.newPlot(chartId, plotData, plotLayout)
+        }
     }
     makeAssignmentLink = () => {
-        document.getElementById('toAssignments').setAttribute('href', 
+        document.getElementById('toAssignments').setAttribute('href',
             window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
         )
     }
@@ -68,7 +79,7 @@
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     };
     addMathContainers = () => {
-        for (el of document.querySelectorAll('.math.display')){
+        for (el of document.querySelectorAll('.math.display')) {
             katexContainer = document.createElement('div');
             katexContainer.classList = ['katexContainer'];
             el.parentNode.insertBefore(katexContainer, el);
@@ -83,7 +94,7 @@
         const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
             return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
         })
-        for (apSec of appendixSections){
+        for (apSec of appendixSections) {
             const numSplit = apSec.getAttribute('data-number').split('.');
             const secNo = 'A.' + numSplit.slice(1).join('.');
             apSec.setAttribute('data-number', secNo);
@@ -93,7 +104,7 @@
             return (el.textContent).split('.')[0] === appendixSecNo;
         })
         for (tocEl of tocEls) {
-            if (tocEl.textContent == appendixSecNo){
+            if (tocEl.textContent == appendixSecNo) {
                 tocEl.remove();
             } else {
                 const numSplit = tocEl.textContent.split('.');
@@ -104,11 +115,11 @@
         return appendixSecNo
     }
     tocHelpers = () => {
-        for (el of document.querySelectorAll('#TOC a')){
+        for (el of document.querySelectorAll('#TOC a')) {
             const hrefId = el.getAttribute('href').slice(1);
             let parentEl = el.parentNode;
             let numUlsNested = 0;
-            while (!!parentEl){
+            while (!!parentEl) {
                 numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
                 parentEl = parentEl.parentNode
             }
@@ -122,7 +133,7 @@
             if (numUlsNested > 1) {
                 el.parentNode.classList.add('tocHideable');
                 el.parentNode.classList.add('tocHidden');
-            } 
+            }
             liParent = el.parentNode;
             if (liParent.getElementsByTagName('UL').length > 0) {
                 expandEl = document.createElement('span');
@@ -131,9 +142,9 @@
                 newEl.appendChild(expandEl);
                 ((expandEl, liParent) => {
                     expandEl.onclick = (e) => {
-                        for (hideable of [...liParent.getElementsByClassName('tocHideable')]){
+                        for (hideable of [...liParent.getElementsByClassName('tocHideable')]) {
                             let hideableParent = hideable.parentNode;
-                            while (hideableParent.tagName !== 'LI'){
+                            while (hideableParent.tagName !== 'LI') {
                                 hideableParent = hideableParent.parentNode
                             }
                             if (hideableParent !== liParent) {
@@ -160,13 +171,13 @@
             wide = 700;
             if (copyButtons.length > 0) {
                 if (window.innerWidth < wide) {
-                    for (cb of copyButtons){
+                    for (cb of copyButtons) {
                         cb.remove();
                     }
                 }
             } else {
                 if (window.innerWidth >= wide) {
-                    for (el of document.querySelectorAll('div.sourceCode')){
+                    for (el of document.querySelectorAll('div.sourceCode')) {
                         copyEl = document.createElement('span');
                         el.insertBefore(copyEl, el.firstChild);
                         copyEl.innerHTML = '📋';
@@ -198,7 +209,7 @@
         liEl.appendChild(aEl);
         ulEl.appendChild(liEl);
     }
-    addTooltips = (els, includeLinkBacks, arrowFloat=false) => {
+    addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
         for ([i, el] of els.entries()) {
             ((el, i) => {
                 refId = el.getAttribute('href');
@@ -214,7 +225,7 @@
                     a.onclick = () => {
                         footnoteOnTooltipClick(b, c, d, e);
                         return false
-                    };                
+                    };
                 })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
                 if (includeLinkBacks) {
                     backId = 'back' + refId;
@@ -240,7 +251,7 @@
             sib = el.previousSibling;
             sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
             prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
-            if (prevWordInclude.includes(prevWord)){
+            if (prevWordInclude.includes(prevWord)) {
                 repS = RegExp(`${prevWord}[^a-zA-Z]$`);
                 el.innerHTML = prevWord + ' ' + el.innerHTML;
                 sib.textContent = sib.textContent.replace(repS, '');
@@ -258,7 +269,7 @@
         });
         const appendixStr = 'the appendix';
         for (el of els) {
-            if (el.textContent == appendixSecNo) {                
+            if (el.textContent == appendixSecNo) {
                 sib = el.previousSibling;
                 sib.remove();
                 el.textContent = appendixStr;
