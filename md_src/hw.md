@@ -48,6 +48,7 @@
     window.onload = () => {
         for (el of document.getElementsByClassName('assignmentContainer')) {
             dt = el.getAttribute('data-due');
+            gradingNotesLink = el.getAttribute('data-grading-notes-link') || '';
             el.innerHTML = `
                 <h1 id="assignment${el.id}Header" onclick="headerClick('${el.id}')">
                     ${el.id} (due ${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))})
@@ -55,6 +56,7 @@
                 </h1>
                 <div id="assignment${el.id}Content" class="assignmentContent">
                     <h2>${el.getAttribute('data-sub-name')}</h2>
+                    <a href="${gradingNotesLink}">${gradingNotesLink === '' ? '' : 'Partial solutions'}</a>
             ` + el.innerHTML + '</div>'
             if (new Date() <= addDays(new Date(dt), 1)) {
                 headerClick(el.id);
@@ -132,7 +134,7 @@ Submit your answer to this question in one of two ways:\
 </div>
 </div>
 
-<div class='assignmentContainer' id='Homework 2' sub-name='Intro to linear programming' due='2023-09-13'>
+<div class='assignmentContainer' id='Homework 2' sub-name='Intro to linear programming' due='2023-09-13' grading-notes-link='https://colab.research.google.com/drive/1IMatpj2ADUF3m6f2vUhLdmcvE_1e3fR-?usp=sharing'>
 <div>
 
 1. (2 pts) Complete this matrix multiplication:
@@ -214,7 +216,7 @@ many part-time workers should work each shift to meet the above requirements at 
 </div>
 </div>
 
-<div class='assignmentContainer' id='Homework 3' sub-name='The simplex method' due='2023-09-18'>
+<div class='assignmentContainer' id='Homework 3' sub-name='The simplex method' due='2023-09-18' grading-notes-link='https://colab.research.google.com/drive/1ESgWjaS1rzgfaAbK2jfEvtqfjUSo15zF?usp=sharing'>
 <div>
 1. (8pts)* Fred Jonasson manages a family-owned farm. To supplement several food products grown on the farm, Fred also raises pigs for market. He now wishes to determine the quantities of the available types of feed (corn, tankage, and alfalfa) that should be given to each pig. Since pigs will eat any mix of these feed types, the objective is to determine which mix will meet certain nutritional requirements at a minimum cost. The number of units of each type of basic nutritional ingredient contained within a kilogram of each feed type is given in the following table, along with the daily nutritional requirements and feed costs:
 
@@ -321,7 +323,7 @@ many part-time workers should work each shift to meet the above requirements at 
 </div>
 </div>
 
-<div class='assignmentContainer' id='Homework 4' sub-name='LP duality and sensitivity' due='2023-09-25' leave-open='y'>
+<div class='assignmentContainer' id='Homework 4' sub-name='LP duality and sensitivity' due='2023-09-25'>
 <div>
 
 1. (4pts) Construct the dual to the following linear program:
