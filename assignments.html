@@ -293,6 +293,7 @@
     window.onload = () => {
         for (el of document.getElementsByClassName('assignmentContainer')) {
             dt = el.getAttribute('data-due');
+            gradingNotesLink = el.getAttribute('data-grading-notes-link') || '';
             el.innerHTML = `
                 <h1 id="assignment${el.id}Header" onclick="headerClick('${el.id}')">
                     ${el.id} (due ${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))})
@@ -300,6 +301,7 @@
                 </h1>
                 <div id="assignment${el.id}Content" class="assignmentContent">
                     <h2>${el.getAttribute('data-sub-name')}</h2>
+                    <a href="${gradingNotesLink}">${gradingNotesLink === '' ? '' : 'Partial solutions'}</a>
             ` + el.innerHTML + '</div>'
             if (new Date() <= addDays(new Date(dt), 1)) {
                 headerClick(el.id);
@@ -422,7 +424,8 @@ like, opinions anyway.</li>
 </div>
 </div>
 <div id="Homework 2" class="assignmentContainer"
-data-sub-name="Intro to linear programming" data-due="2023-09-13">
+data-sub-name="Intro to linear programming" data-due="2023-09-13"
+data-grading-notes-link="https://colab.research.google.com/drive/1IMatpj2ADUF3m6f2vUhLdmcvE_1e3fR-?usp=sharing">
 <div>
 <ol type="1">
 <li><p>(2 pts) Complete this matrix multiplication: <span
@@ -550,7 +553,8 @@ requirements at the minimum possible cost.</p></li>
 </div>
 </div>
 <div id="Homework 3" class="assignmentContainer"
-data-sub-name="The simplex method" data-due="2023-09-18">
+data-sub-name="The simplex method" data-due="2023-09-18"
+data-grading-notes-link="https://colab.research.google.com/drive/1ESgWjaS1rzgfaAbK2jfEvtqfjUSo15zF?usp=sharing">
 <div>
 <ol type="1">
 <li><p>(8pts)* Fred Jonasson manages a family-owned farm. To supplement
@@ -747,8 +751,7 @@ the values for all the variables at the next basic solution?</li>
 </div>
 </div>
 <div id="Homework 4" class="assignmentContainer"
-data-sub-name="LP duality and sensitivity" data-due="2023-09-25"
-data-leave-open="y">
+data-sub-name="LP duality and sensitivity" data-due="2023-09-25">
 <div>
 <ol type="1">
 <li><p>(4pts) Construct the dual to the following linear program: <span

@@ -2228,9 +2228,15 @@ class="toc-section-number">6.2.6</span> Elementary operations</a></li>
 id="toc-writing-mathematics-in-a-colab-notebook"><span
 class="toc-section-number">6.3</span> Writing mathematics in a Colab
 notebook</a></li>
+<li><a href="#sec:badIpModels" id="toc-sec:badIpModels"><span
+class="toc-section-number">6.4</span> Examples of bad IP modeling</a>
+<ul>
+<li><a href="#boolean-algebra" id="toc-boolean-algebra"><span
+class="toc-section-number">6.4.1</span> Boolean algebra</a></li>
+</ul></li>
 <li><a href="#sec:appendixSelectedProofs"
 id="toc-sec:appendixSelectedProofs"><span
-class="toc-section-number">6.4</span> Selected proofs</a></li>
+class="toc-section-number">6.5</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -5569,6 +5575,11 @@ class="math inline">y_i=0</span>, there is no time available at the
 <h4>
 Boolean algebra
 </h4>
+<div class="lectureVideoEmbed"
+data-video-id="c73d5c4374034d25b0f305548fd8ddc41d"
+data-video-date="2023-09-20">
+A quick recap of HW3, then more IP modeling.
+</div>
 <p>Given binary variables <span class="math inline">x_1, x_2</span> we
 can mimic the basic operations from <a
 href="https://en.wikipedia.org/wiki/Boolean_algebra">Boolean algebra</a>
@@ -5809,6 +5820,11 @@ class="math inline">1</span>:
 </div>
 </div></li>
 </ul>
+<p>(It occurred to me while presenting this that maybe it would be
+helpful to provide some <em>incorrect</em> formulations for these
+concepts, in order to illustrate what might go wrong while modeling. You
+can find this in the appendix, section <a
+href="#sec:badIpModels">6.4</a>)</p>
 <p>Note that these constraint sets wouldn’t normally constitute an IP on
 their own, but instead they would be just a subset of the constraints
 you’d find inside a larger, more complex problem. Let’s consider the
@@ -5840,7 +5856,8 @@ class="math inline">y_1=y_2=1</span>. The formulation follows:</p>
      &amp;&amp; x_1 &amp; \leq \ \ 4  \\
      &amp;&amp; 2x_2 &amp; \leq 12 \\
      &amp;&amp; 3x_1 + 2x_2 &amp; \leq 18 - 2z \\
-     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+ \\
+     &amp;&amp; y_1,y_2,z &amp; \in \ \{0, 1\}
 \end{align*}
 </span></p>
 <p>The constraints</p>
@@ -7280,8 +7297,293 @@ guide, sticking to items I think might be useful for the class. I came
 across a more extensive guide you may want to check out <a
 href="https://ashki23.github.io/markdown-latex.html">here</a>.</p>
 <script src="https://gist.github.com/eea93b3fac7b6040bcb074e95b4e5076.js"></script>
-<h2 data-number="6.4" id="sec:appendixSelectedProofs"><span
-class="header-section-number">6.4</span> Selected proofs</h2>
+<h2 data-number="6.4" id="sec:badIpModels"><span
+class="header-section-number">6.4</span> Examples of bad IP
+modeling</h2>
+<p>When modeling problems as integer programs, and especially when using
+binary variables to encode some type of logic, it can be very easy to
+<em>think</em> you’ve come up with a valid formulation, only to solve
+the problem and get an answer that you weren’t expecting due to some bad
+constraints. In this section, I’ll give some sample “bad” IP models that
+do not properly enforce the logic they were meant to, and discuss how
+things went wrong.</p>
+<h3 data-number="6.4.1" id="boolean-algebra"><span
+class="header-section-number">6.4.1</span> Boolean algebra</h3>
+<p>Let’s consider the Boolean algebra operations we modeled in
+section <a href="#sec:binVarTricks">5.3.2</a>. We’ll show wrong ways to
+model each of AND, OR, and XOR, and explain why they don’t work as
+required. In each model, we want the binary variable <span
+class="math inline">y</span> to equal the output of the specified
+Boolean function applied to binary variables <span
+class="math inline">x_1</span> and <span
+class="math inline">x_2</span>.</p>
+<h4>
+AND
+</h4>
+<p>Recall the truth table for the AND function:</p>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<span class="math inline">x_1</span>
+</th>
+<th>
+<span class="math inline">x_2</span>
+</th>
+<th style="border-left:1px solid black">
+<span class="math inline">y</span>
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+</tbody style='border:none'>
+</table>
+<p>An example incorrect formulation might be:</p>
+<p><span class="math display">
+\begin{align*}
+y&amp;\leq x_1 \\
+y&amp;\leq x_2 \\
+y&amp;\geq \frac{1}{2}(x_1 + x_2)
+\end{align*}
+</span></p>
+<p>It is easy to look at this and say something like: “when <span
+class="math inline">x_1=x_2=1</span> then the third constraint makes
+<span class="math inline">y=1</span>, and otherwise one of <span
+class="math inline">y\leq x_1</span> or <span class="math inline">y\leq
+x_2</span> will force <span class="math inline">y=0</span>”. And while
+that statement is true, it fails to account for the fact that all
+constraints are active in an integer program, and we don’t get to pick
+and choose which ones to enforce based on the situation.</p>
+<p>Once we start considering every constraint, we see that if only one
+of <span class="math inline">x_1</span> or <span
+class="math inline">x_2</span> equal 1 then there is no feasible value
+for <span class="math inline">y</span>. For example, suppose that we
+have <span class="math inline">x_1=1</span> and <span
+class="math inline">x_2=0</span>. Then the second constraint will say
+<span class="math inline">y\leq0</span>, while the third constraint will
+say <span class="math inline">y\geq1/2</span>, and these two clearly
+can’t be satisfied simultaneously. As a result, any model with this as
+part of the constraints will not be able to return a solution where
+<span class="math inline">x_1+x_2=1</span>, which is probably not what
+you wanted.</p>
+<h4>
+OR
+</h4>
+<p>Here is the truth table:</p>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<span class="math inline">x_1</span>
+</th>
+<th>
+<span class="math inline">x_2</span>
+</th>
+<th style="border-left:1px solid black">
+<span class="math inline">y</span>
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+</tbody style='border:none'>
+</table>
+<p>And here is a bad formulation:</p>
+<p><span class="math display">
+\begin{align*}
+y&amp;\geq x_1 \\
+y&amp;\geq x_2
+\end{align*}
+</span></p>
+<p>This will correctly force <span class="math inline">y=1</span> in
+situations where either <span class="math inline">x_1</span> or <span
+class="math inline">x_2</span> (or both) are <span
+class="math inline">1</span>, but it fails to properly account for the
+converse, i.e. the top row of the truth table when <span
+class="math inline">x_1=x_2=0</span>. These constraints will allow
+either <span class="math inline">y=0</span> or <span
+class="math inline">y=1</span> in that case, instead of enforcing <span
+class="math inline">y=0</span> like we want.</p>
+<h4>
+XOR
+</h4>
+<p>The truth table:</p>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<span class="math inline">x_1</span>
+</th>
+<th>
+<span class="math inline">x_2</span>
+</th>
+<th style="border-left:1px solid black">
+<span class="math inline">y</span>
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+0
+</td>
+<td style="border-left:1px solid black">
+1
+</td>
+</tr>
+<tr>
+<td>
+1
+</td>
+<td>
+1
+</td>
+<td style="border-left:1px solid black">
+0
+</td>
+</tr>
+</tbody style='border:none'>
+</table>
+<p>The bad formulation:</p>
+<p><span class="math display">
+\begin{align*}
+y&amp;\leq x_1 + x_2 \\
+y&amp;\geq x_1 \\
+y&amp;\geq x_2 \\
+y&amp;\leq x_1 - x_2
+\end{align*}
+</span></p>
+<p>We could once again be tricked by this formulation if we only
+consider certain constraints for certain scenarios. We could say:</p>
+<ul>
+<li>Constraint 1 forces <span class="math inline">y=0</span> when <span
+class="math inline">x_1=0,x_2=0</span></li>
+<li>Constraint 2 forces <span class="math inline">y=1</span> when <span
+class="math inline">x_1=1,x_2=0</span></li>
+<li>Constraint 3 forces <span class="math inline">y=1</span> when <span
+class="math inline">x_1=0,x_2=1</span></li>
+<li>Constraint 4 forces <span class="math inline">y=0</span> when <span
+class="math inline">x_1=1,x_2=1</span></li>
+</ul>
+<p>and think that we’ve satisfied all of our requirements. The catch, as
+with our AND formulation, is that these constraints must be considered
+<em>simultaneously</em> in <em>every</em> situation. So for example, in
+the situation <span class="math inline">x_1=0,x_2=1</span> we would
+indeed get the third constraint forcing <span
+class="math inline">y=1</span>. But we’d also have the fourth constraint
+forcing <span class="math inline">y\leq-1</span>, meaning that the
+constraints can not all be satisfied in this case. Thus a model with
+this as part of the constraint set could never return a solution with
+<span class="math inline">x_1=0, x_2=1</span>, incorrectly cutting off
+an entire segment of the problem’s feasible region.</p>
+<h2 data-number="6.5" id="sec:appendixSelectedProofs"><span
+class="header-section-number">6.5</span> Selected proofs</h2>
 <p>This section contains proofs to selected statements in the main
 text.</p>
 <h1 id="References">References</h1>
