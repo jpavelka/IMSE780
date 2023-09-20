@@ -16,7 +16,7 @@ License costs for this software can be expensive, but you don't always need to p
 
 [^academicLicenseClassProject]: You may want to take advantage of this for your class project.
 
-### Solving IPs with Python
+### Solving IPs with Python {#sec:solvingIpsWithPython}
 
 Now that we've got some modeling down, let's see how we can implement the models using Python code. In the following notebook, we illustrate how to set up several of the models explored above, with special attentions paid to the generalized models of +@sec:ipModelDataSep.
 
