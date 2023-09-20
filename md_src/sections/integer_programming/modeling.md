@@ -120,6 +120,8 @@ We've added new binary variables, $y_1, y_2$, and $y_3$, which we'd like to inte
 
 <h4>Boolean algebra</h4>
 
+<div class='lectureVideoEmbed' video-id='c73d5c4374034d25b0f305548fd8ddc41d' video-date='2023-09-20'>A quick recap of HW3, then more IP modeling.</div>
+
 Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolean algebra](https://en.wikipedia.org/wiki/Boolean_algebra)
 (AND, OR, XOR) in integer programs. In each case, we'll do this with an auxiliary binary variable $y$. For each operation, I'll show the associated truth table (telling the values of $y$ that should correspond to each possible value of $x_1, x_2$) and the corresponding set of linear constraints. It's a good exercise to go through each row of the table and verify that the constraints do indeed enforce the relation.
 
@@ -188,6 +190,8 @@ Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolea
      </div>
      </div>
 
+(It occurred to me while presenting this that maybe it would be helpful to provide some _incorrect_ formulations for these concepts, in order to illustrate what might go wrong while modeling. You can find this in the appendix, +@sec:badIpModels)
+
 Note that these constraint sets wouldn't normally constitute an IP on their own, but instead they would be just a subset of the constraints you'd find inside a larger, more complex problem. Let's consider the following addition to the Wyndor IP: The company realizes that they cannot use the full 18 hours available at Plant 3 if they produce _both_ Product 1 and Product 2 during a given week, since they'll require some down time in order to set up the line for a change in product. They anticipate this setup to take 2 hours away from their production time.
 
 We'll alter +@eq:wyndorIp by including three additional, binary variables $y_1, y_2$, and $z$. We'll set up the $y_i$ variables so that $y_i=1$ if we plan to produce any of Product $i$ (i.e. $x_i>0$), and we'll let $z=1$ if and only if $y_1=y_2=1$. The formulation follows:
@@ -205,7 +209,8 @@ $$
      && x_1 & \leq \ \ 4  \\
      && 2x_2 & \leq 12 \\
      && 3x_1 + 2x_2 & \leq 18 - 2z \\
-     && x_1,x_2 & \in \ \I_+
+     && x_1,x_2 & \in \ \I_+ \\
+     && y_1,y_2,z & \in \ \{0, 1\}
 \end{align*}
 $$
 
@@ -225,8 +230,6 @@ $$
 $$
 
 which serves to reduce the available production time when both products are being produced.
-
-
 
 [^truthTableVerification]: Verify this by seeing what the constraints reduce to when $x_i=0$ versus when $x_i>0$.
 
