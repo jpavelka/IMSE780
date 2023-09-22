@@ -238,6 +238,8 @@ which serves to reduce the available production time when both products are bein
 
 ### Example word problems {#sec:ipWordProblems}
 
+<div class='lectureVideoEmbed' video-id='f24c71ae75c74c6ab8fe1f1146ccea831d' video-date='2023-09-22'>Even ore IP modeling. Tried to address the confusion from last lecture, then modeled a few more word problems.</div>
+
 Here we present the sample scenarios in section 12.4 of @classText, and talk about how to model each scenario. Each formulation will require some tricks with binary variables.
 
 <h4>Resource allocation with extra restrictions</h4>
