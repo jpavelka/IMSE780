@@ -288,6 +288,9 @@
     a:visited {
         color: purple;
     }
+    th.rowHead {
+        border: none;
+    }
 </style>
 <script>
     window.onload = () => {
@@ -324,7 +327,7 @@
         return date;
     }
 </script>
-<p><a id='toNotes'>Course notes</a></p>
+<a id='toNotes'>Course notes</a>
 <div id="Homework 0" class="assignmentContainer"
 data-sub-name="Introduction and course goals" data-due="2023-08-28">
 <div>
@@ -934,15 +937,281 @@ the flight.</p></li>
 </ol>
 </div>
 </div>
-<!-- some future homework: either/or constraints for each Wyndor facility -->
-<!-- some future homework: constraints for inverse XOR -->
-<!-- model assignment problem with model/data separation in python -->
-<!-- wyndor ip with and constraints from notes: determine good values for M1, M2 -->
-<!-- <div class='assignmentContainer' id='Homework 0' sub-name='Introduction and course goals' due='2023-08-28'>
+<div id="Homework 5" class="assignmentContainer"
+data-sub-name="IP modeling" data-due="2023-10-02">
 <div>
-
+<ol type="1">
+<li><p>Model the following problems as integer programs:</p>
+<ol type="a">
+<li><p>(5pts)* Vincent Cardoza is the owner and manager of a machine
+shop that does custom order work. This Wednesday afternoon, he has
+received calls from two customers who would like to place rush orders.
+One is a trailer hitch company which would like some custom-made
+heavy-duty tow bars. The other is a mini-car-carrier company which needs
+some customized stabilizer bars. Both customers would like as many as
+possible by the end of the week (two working days). Since both products
+would require the use of the same two machines, Vincent needs to decide
+and inform the customers this afternoon about how many of each product
+he will agree to make over the next two days.</p>
+<p>Each tow bar requires 3.2 hours on machine 1 and 2 hours on machine
+2. Each stabilizer bar requires 2.4 hours on machine 1 and 3 hours on
+machine 2. Machine 1 will be available for 16 hours over the next two
+days and machine 2 will be available for 15 hours. The profit for each
+tow bar produced would be $130 and the profit for each stabilizer bar
+produced would be $150. Vincent now wants to determine the mix of these
+production quantities that will maximize the total profit.</p></li>
+<li><p>(5pts)* The board of directors of General Wheels Co. is
+considering six large capital investments. Each investment can be made
+only once. These investments differ in the estimated long-run profit
+(net present value) that they will generate as well as in the amount of
+capital required, as shown by the following table (in units of millions
+of dollars):</p>
+<table>
+<tr>
+<th>
+<p>Investment</p>
+</th>
+<th>
+<p>1</p>
+</th>
+<th>
+<p>2</p>
+</th>
+<th>
+<p>3</p>
+</th>
+<th>
+<p>4</p>
+</th>
+<th>
+<p>5</p>
+</th>
+<th>
+<p>6</p>
+</th>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Estimated profit</p>
+</th>
+<td>
+<p>15</p>
+</td>
+<td>
+<p>12</p>
+</td>
+<td>
+<p>16</p>
+</td>
+<td>
+<p>18</p>
+</td>
+<td>
+<p>9</p>
+</td>
+<td>
+<p>11</p>
+</td>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Capital required</p>
+</th>
+<td>
+<p>38</p>
+</td>
+<td>
+<p>33</p>
+</td>
+<td>
+<p>39</p>
+</td>
+<td>
+<p>45</p>
+</td>
+<td>
+<p>23</p>
+</td>
+<td>
+<p>27</p>
+</td>
+</tr>
+</table>
+<p>The total amount of capital available for these investments is $100
+million. Investment opportunities 1 and 2 are mutually exclusive, and so
+are 3 and 4. Furthermore, neither 3 nor 4 can be undertaken unless one
+of the first two opportunities is undertaken. There are no such
+restrictions on investment opportunities 5 and 6. The objective is to
+select the combination of capital investments that will maximize the
+total estimated long-run profit (net present value).</p></li>
+<li><p>(5pts)* The Fly-Right Airplane Company builds small jet airplanes
+to sell to corporations for the use of their executives. To meet the
+needs of these executives, the company’s customers sometimes order a
+custom design of the airplanes being purchased. When this occurs, a
+substantial start-up cost is incurred to initiate the production of
+these airplanes.</p>
+<p>Fly-Right has recently received purchase requests from three
+customers with short deadlines. However, because the company’s
+production facilities already are almost completely tied up filling
+previous orders, it will not be able to accept all three orders.
+Therefore, a decision now needs to be made on the number of airplanes
+the company will agree to produce (if any) for each of the three
+customers.</p>
+<p>The relevant data are given in the next table. The first row gives
+the start-up cost required to initiate the production of the airplanes
+for each customer. Once production is under way, the marginal net
+revenue (which is the purchase price minus the marginal production cost)
+from each airplane produced is shown in the second row. The third row
+gives the percentage of the available production capacity that would be
+used for each airplane produced. The last row indicates the maximum
+number of airplanes requested by each customer (but less will be
+accepted).</p>
+<table>
+<tr>
+<th>
+<p>Customer</p>
+</th>
+<th>
+<p>1</p>
+</th>
+<th>
+<p>2</p>
+</th>
+<th>
+<p>3</p>
+</th>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Start-up cost</p>
+</th>
+<td>
+<p>$3M</p>
+</td>
+<td>
+<p>$2M</p>
+</td>
+<td>
+<p>0</p>
+</td>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Marginal net revenue</p>
+</th>
+<td>
+<p>$2M</p>
+</td>
+<td>
+<p>$3M</p>
+</td>
+<td>
+<p>$0.8M</p>
+</td>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Capacity used per plane</p>
+</th>
+<td>
+<p>20%</p>
+</td>
+<td>
+<p>40%</p>
+</td>
+<td>
+<p>20%</p>
+</td>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Maximum order</p>
+</th>
+<td>
+<p>3 planes</p>
+</td>
+<td>
+<p>2 planes</p>
+</td>
+<td>
+<p>5 planes</p>
+</td>
+</tr>
+</table>
+<p>Fly-Right now wants to determine how many airplanes to produce for
+each customer (if any) to maximize the company’s total profit (total net
+revenue minus start-up costs).</p></li>
+</ol></li>
+<li><p>(5pts) In section 5.3.2 of the notes we showed how to use integer
+programming to mimic the Boolean logical operators AND, OR, and XOR.
+Similarly, suppose an IP model includes two binary variables <span
+class="math inline">x_1</span> and <span class="math inline">x_2</span>.
+Give a set of constraints that enforce that a new binary variable <span
+class="math inline">y</span> equals 1 if and only if <span
+class="math inline">x_1=x_2</span>. The associated truth table is
+below:</p>
+<table>
+<tbody>
+<tr style="border-bottom:1px solid black">
+<th>
+<p><span class="math inline">x_1</span></p>
+</th>
+<th>
+<p><span class="math inline">x_2</span></p>
+</th>
+<th style="border-left:1px solid black">
+<p><span class="math inline">y</span></p>
+</th>
+</tr>
+<tr>
+<td>
+<p>0</p>
+</td>
+<td>
+<p>0</p>
+</td>
+<td style="border-left:1px solid black">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>0</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td style="border-left:1px solid black">
+<p>0</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>0</p>
+</td>
+<td style="border-left:1px solid black">
+<p>0</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td style="border-left:1px solid black">
+<p>1</p>
+</td>
+</tr>
+</tbody style='border:none'>
+</table></li>
+</ol>
 </div>
-</div> -->
+</div>
 <hr>
 <p>* : From Hillier &amp; Lieberman, 2021.</p>
 <hr>
