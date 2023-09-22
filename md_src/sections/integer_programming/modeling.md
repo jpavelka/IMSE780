@@ -141,7 +141,8 @@ Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolea
      \begin{align*}
      y&\leq x_1 \\
      y&\leq x_2 \\
-     y&\geq x_1 + x_2 - 1
+     y&\geq x_1 + x_2 - 1 \\
+     x_1, x_2, y & \in \{0,1\}
      \end{align*}
      $$
      </div>
@@ -162,7 +163,8 @@ Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolea
      \begin{align*}
      y&\leq x_1 + x_2 \\
      y&\geq x_1 \\
-     y&\geq x_2
+     y&\geq x_2 \\
+     x_1, x_2, y & \in \{0,1\}
      \end{align*}
      $$
      </div>
@@ -184,7 +186,8 @@ Given binary variables $x_1, x_2$ we can mimic the basic operations from [Boolea
      y&\leq x_1 + x_2 \\
      y&\geq x_1 - x_2 \\
      y&\geq x_2 - x_1 \\
-     y&\leq 2 - x_1 - x_2
+     y&\leq 2 - x_1 - x_2 \\
+     x_1, x_2, y & \in \{0,1\}
      \end{align*}
      $$
      </div>
@@ -294,7 +297,7 @@ $$
 \st  && y_{11} + y_{12} + y_{13} & \leq 1 \\
      && y_{21} + y_{22} + y_{23} & \leq 1 \\
      && y_{31} + y_{32} + y_{33} & \leq 1 \\
-     && y_{11} + 2y_{12} + 3y_{13} + y_{12} + 2y_{22} + 3y_{23} + y_{31} + 2y_{32} + 3y_{33} & \leq 5 \\
+     && y_{11} + 2y_{12} + 3y_{13} + y_{21} + 2y_{22} + 3y_{23} + y_{31} + 2y_{32} + 3y_{33} & \leq 5 \\
      && y_{ij} & \in \{0,1\} \ \ \forall\ i,j
 \end{align*}
 $$

@@ -9,7 +9,7 @@
             ineqs: [[3, 2, 18, "l"], [1, 0, 4, "l"], [0, 2, 12, "l"]],
             ineqTextPlaces: [[5, 2.5], [2.25, 8], [6, 6.9]]
         },
-        prototypeIp: {
+        roundingIp: {
             xMin: -1,
             xMax: 7.99,
             yMin: -1,
@@ -17,6 +17,28 @@
             obj: [12, 10],
             ineqs: [[-7, 5, 5, "l"], [9, 7, 54, "l"]],
             ineqTextPlaces: [[3, 5.25], [4.25, 3]],
+            plotIntegerFeasible: true,
+            addFeasibleRegionText: false
+        },
+        bbExample1: {
+            xMin: -1,
+            xMax: 7.99,
+            yMin: -1,
+            yMax: 5.99,
+            obj: [12, 10],
+            ineqs: [[-7, 5, 5, "l"], [9, 7, 54, "l"], [1, 0, 2, 'l', [1]], [1, 0, 3, 'g', [2]]],
+            ineqTextPlaces: [[3.4, 5.65], [5, 2], [0.5, 4.5], [3.15, 4.5]],
+            plotIntegerFeasible: true,
+            addFeasibleRegionText: false
+        },
+        bbExample2: {
+            xMin: -1,
+            xMax: 7.99,
+            yMin: -1,
+            yMax: 5.99,
+            obj: [12, 10],
+            ineqs: [[-7, 5, 5, "l"], [9, 7, 54, "l"], [1, 0, 2, 'l', [1]], [1, 0, 3, 'g', [2]], [0, 1, 3, 'l', [2]]],
+            ineqTextPlaces: [[3.4, 5.65], [5, 2], [0.5, 4.5], [3.15, 4.5], [5, 3.5]],
             plotIntegerFeasible: true,
             addFeasibleRegionText: false
         }
@@ -61,21 +83,20 @@
         if (Object.keys(args).includes('altObj')){
             obj = args['altObj'];
         }
-        let ineqs = args['ineqs'];
+        let initialIneqs = args['ineqs'];
         let ineqTextPlaces = args['ineqTextPlaces'];
         const removeConstraints = args['removeConstraints'] || [];
         const addConstraints = args['addConstraints'] || []
         if (removeConstraints.length > 0) {
-            ineqs = ineqs.filter((x, i) => !removeConstraints.includes(i));
+            initialIneqs = initialIneqs.filter((x, i) => !removeConstraints.includes(i));
             ineqTextPlaces = ineqTextPlaces.filter((x, i) => !removeConstraints.includes(i));
         }
         if (addConstraints.length > 0) {
             for (const addConstr of addConstraints){
-                ineqs.push(addConstr[0]);
+                initialIneqs.push(addConstr[0]);
                 ineqTextPlaces.push(addConstr[1])
             }
         }
-        const allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
         const altFeasRegionTextPlace = args['altFeasRegionTextPlace']
         const showVertices = args['showVertices'] || false;
         const choosePoints = args['choosePoints'] || false;
@@ -156,11 +177,12 @@
             attrs['width'] = attrs['width'] || '15rem';
             attrs['font-size'] = attrs['font-size'] || '12pt';
             attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
+            attrs['z-index'] = 1;
             for (const [k, v] of Object.entries(attrs || {})){
                 forObj.setAttribute(k, v);
             }
             forObj.appendChild(mathEl);
-            svg.appendChild(forObj);
+            textsToAdd.push(forObj);
         }
         const drawIneqs = () => {
             style = 'stroke:#777;padding:5pt';
@@ -256,10 +278,10 @@
                 }
             }
         }
-        const isFeasible = (x, y, returnViolated=false) => {
+        const isFeasible = (x, y, returnViolated=false, altIneqs=undefined) => {
             let feasible = true;
             let violated = [];
-            for ([xCoef, yCoef, rhs, sense] of allIneqs) {
+            for ([xCoef, yCoef, rhs, sense] of (altIneqs || allIneqs)) {
                 if (!ineqSatisfied(x, y, xCoef, yCoef, rhs, sense)){
                     feasible = false;
                     if (returnViolated) {
@@ -384,6 +406,7 @@
             svg.appendChild(circ);
         }
         const plotVertices = () => {
+            const vertices = getVertices();
             for ([x, y] of vertices) {
                 placePoint(x, y);
             }
@@ -405,7 +428,7 @@
         }
         const labelIneqs = () => {
             for (i in ineqTextPlaces || []) {
-                ineq = ineqs[i];
+                ineq = initialIneqs[i];
                 ineqText = ''
                 ineqText += ineq[0] === 0 ? '' : (ineq[0] == 1 ? '' : ineq[0]) + 'x_1'
                 ineqText += ineq[1] === 0 ? '' : (ineqText === '' ? '' : ' + ') + (ineq[1] == 1 ? '' : ineq[1]) + 'x_2'
@@ -414,7 +437,7 @@
                 addMathText(ineqText, ...coordToPix(...ineqTextPlaces[i]), fontStyle);
             }
         }
-        const getIntersectionWithPoly = (xCoef, yCoef, rhs, points, checkFeas=true) => {
+        const getIntersectionWithPoly = (xCoef, yCoef, rhs, points, checkFeas=true, altIneqs=undefined) => {
             let intersections = [];
             let intersectionStrs = [];
             for (i=0; i<points.length; i++){
@@ -442,7 +465,7 @@
                 interStr = xIntersect + '---' + yIntersect;
                 p = [xIntersect, yIntersect]
                 if (!intersectionStrs.includes(interStr) && xIntersect === xIntersect && yIntersect === yIntersect) {
-                    if ((!checkFeas || isFeasible(...p)) && onPlot(...p)) {
+                    if ((!checkFeas || isFeasible(...p, false, altIneqs)) && onPlot(...p)) {
                         intersectionStrs.push(interStr);
                         intersections.push(p)
                     }
@@ -469,31 +492,7 @@
                 xVal += 1;
             }
         }
-
-        // logic
-        const vertices = getVertices();
-        const verticesAndPlotEdges = getVertices(true);
-        drawIneqs();
-        labelIneqs();
-        shadeFeasibleRegion();
-        drawTickMarks();
-        if (showVertices){
-            plotVertices(vertices);
-        }
-        drawAxes();
-        for (pt of extraPoints) {
-            placePoint(...pt);
-        }
-        for (ln of extraLines) {
-            lineBetweenCoords(...ln);
-        }
-        for (tx of extraText) {
-            addText(...tx);
-        }
-        for (tx of extraMathText) {
-            addMathText(...tx);
-        }
-        if (choosePoints) {
+        const choosePointsFunc = (allIneqs) => {
             const underDiv = document.createElement('div');
             underDiv.classList = ['underPlot']
             parentDiv.appendChild(underDiv);
@@ -535,7 +534,7 @@
                     if (!!pointEl) {
                         pointEl.remove();
                     }
-                    const [feas, violated] = isFeasible(x1, x2, returnViolated=true);
+                    const [feas, violated] = isFeasible(x1, x2, true, allIneqs);
                     const color = feas ? 'black' : 'red';
                     textDiv.innerHTML = '';
                     if (feas) {
@@ -565,7 +564,7 @@
                 pointChooseDiv.appendChild(el);
             }
         }
-        if (chooseObjVals) {
+        const chooseObjValsFunc = (allIneqs, verticesAndPlotEdges) => {
             const underDiv = document.createElement('div');
             underDiv.classList = ['underPlot']
             parentDiv.appendChild(underDiv);
@@ -603,7 +602,7 @@
                         eqnEl.remove();
                     }
                     plotEqn(...obj, z, {id: eqnId});
-                    const intersectPoints = getIntersectionWithPoly(...obj, z, verticesAndPlotEdges);
+                    const intersectPoints = getIntersectionWithPoly(...obj, z, verticesAndPlotEdges, true, allIneqs);
                     const intersectLineId = svgId + 'objLineIntersect';
                     intersectLine = document.getElementById(intersectLineId);
                     if (!!intersectLine) {
@@ -632,8 +631,9 @@
             for (el of [label, input]) {
                 pointChooseDiv.appendChild(el);
             }
+        
         }
-        if (simplexStart) {
+        const simplexStartFunc = () => {
             let nextPoint = simplexStart;
             let pointHistory = [];
             const underDiv = document.createElement('div');
@@ -680,6 +680,7 @@
                     `\\text{Current solution: }(${currentPoint[0]}, ${currentPoint[1]}),\\text{ objective }${getObjVal(...currentPoint)}`,
                     currentPlaceText
                 );
+                const vertices = getVertices();
                 const vertInd = vertices.map((x, i) => i).filter(i => {
                     return vertices[i][0] === currentPoint[0] && vertices[i][1] === currentPoint[1]
                 })[0];
@@ -792,9 +793,69 @@
                 changePoint();
             }
             changePoint();
+        
         }
-        if (plotIntegerFeasible) {
-            addIntegerFeasiblePoints();
+
+        // logic
+        allSystemNums = new Set();
+        textsToAdd = [];
+        for ([xCoef, yCoef, rhs, sense, systemNums] of initialIneqs) {
+            if (!!systemNums) {
+                for (sysNum of systemNums) {
+                    allSystemNums.add(sysNum);
+                }
+            }
+        }
+        if (allSystemNums.size === 0){
+            allSystemNums.add(0);
+        }
+        labelIneqs();
+        for (sysNum of allSystemNums) {
+            ((sysNum) => {
+                ineqs = initialIneqs.filter(ineq => {
+                    [xCoef, yCoef, rhs, sense, sysNums] = ineq;
+                    if (!sysNums) {
+                        return true
+                    }
+                    return sysNums.includes(sysNum)
+                })
+                allIneqs = ineqs.concat([[1, 0, 0, "g"], [0, 1, 0, "g"]]);
+                drawIneqs();
+                shadeFeasibleRegion();
+                drawTickMarks();
+                if (showVertices){
+                    plotVertices();
+                }
+                drawAxes();
+                for (pt of extraPoints) {
+                    placePoint(...pt);
+                }
+                for (ln of extraLines) {
+                    lineBetweenCoords(...ln);
+                }
+                for (tx of extraText) {
+                    addText(...tx);
+                }
+                for (tx of extraMathText) {
+                    addMathText(...tx);
+                }
+                if (choosePoints) {
+                    choosePointsFunc(allIneqs);
+                }
+                if (chooseObjVals) {
+                    const verticesAndPlotEdges = getVertices(true);
+                    chooseObjValsFunc(allIneqs, verticesAndPlotEdges);
+                }
+                if (simplexStart) {
+                    simplexStartFunc();
+                }
+                if (plotIntegerFeasible) {
+                    addIntegerFeasiblePoints();
+                }
+            })(sysNum)
+        }
+        for (textObj of textsToAdd) {
+            svg.appendChild(textObj);
         }
     }
     const drawAllSvgPlots = () => {

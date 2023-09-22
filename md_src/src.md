@@ -24,7 +24,7 @@
 
 {insertSection:sections/integer_programming/computational_complexity.md}
 
-<!-- {insertSection:sections/integer_programming/branch_and_bound.md} -->
+{insertSection:sections/integer_programming/branch_and_bound.md}
 
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
 
@@ -34,4 +34,14 @@
 
 <!-- {insertSection:sections/integer_programming/notes.md} -->
 
-{insertSection:sections/appendix.md}
+{insertSection:sections/appendix/appendix.md}
+
+{insertSection:sections/appendix/symbols.md}
+
+{insertSection:sections/appendix/linear_algebra.md}
+
+{insertSection:sections/appendix/colab_math.md}
+
+{insertSection:sections/appendix/bad_ip_models.md}
+
+{insertSection:sections/appendix/proofs.md}

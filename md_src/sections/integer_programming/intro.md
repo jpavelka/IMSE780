@@ -72,7 +72,7 @@ $$
 
 We've shown this 2-dimensional IP in a plot below. Shaded in gray is the feasible region to the problem's LP relaxation. The plotted points are all the feasible solutions to the IP, i.e. the points inside the LP relaxation's feasible region which are also integer. In this case, you can verify graphically that the optimal solution to the LP relaxation is $(x_1, x_2)=(2.5, 4.5)$ with an objective value of 75.
 
-<svg width=350 height=350 class="lpDraw" base="prototypeIp" altArgs='{"chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg>
+<svg width=350 height=350 class="lpDraw" base="roundingIp" altArgs='{"chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg>
 
 Say we'd like to find our integer solution by simply rounding the optimal LP relaxation solution. The first difficulty would be determining which way (up vs. down) to round the numbers. But another, more fundamental difficulty is that there is no guarantee that _any_ rounded solution will be feasible. Indeed, that is the case we find ourselves in here, as each of the rounded solutions $(2, 4), (2, 5), (3, 4)$, and $(3, 5)$ are infeasible[^areTheIntegersReallyInfeasible].
 
