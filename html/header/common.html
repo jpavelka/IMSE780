@@ -37,16 +37,18 @@
         for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
             chartId = 'plotyChart' + ind;
             el.id = chartId;
-            console.log(el.getAttribute('data-plot-layout') || {})
             plotData = JSON.parse(el.getAttribute('data-plot-data'));
             plotLayout = JSON.parse(el.getAttribute('data-plot-layout') || '{}');
             Plotly.newPlot(chartId, plotData, plotLayout)
         }
     }
     makeAssignmentLink = () => {
-        document.getElementById('toAssignments').setAttribute('href',
-            window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
-        )
+        toAssignmentsEl = document.getElementById('toAssignments');
+        if (!!toAssignmentsEl){
+            toAssignmentsEl.setAttribute('href',
+                window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
+            )
+        }
     }
     videoEmbeds = () => {
         for (el of document.getElementsByClassName('lectureVideoEmbed')) {
@@ -318,7 +320,10 @@
         }
         els = document.getElementById('main').getElementsByClassName('footnote-ref');
         addTooltips([...els], false);
-        document.getElementById('footnotes').remove();
+        footnotesEl = document.getElementById('footnotes');
+        if (!!footnotesEl) {
+            footnotesEl.remove();
+        }
         for (el of document.getElementsByClassName('eqnRef')) {
             const childEl = el.firstChild;
             if (childEl.tagName === 'SUP') {

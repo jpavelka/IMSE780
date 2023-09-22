@@ -49,7 +49,6 @@ def hw_pandoc_convert():
     os.system('rm hw_concat.md')
 
 
-
 def add_sections(text):
     text = text.split('\n')
     for i, s in enumerate(text):
