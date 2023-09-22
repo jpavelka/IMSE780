@@ -37,7 +37,11 @@ def pandoc_convert(fpath, dest_fpath):
 
 
 def hw_pandoc_convert():
-    os.system('cat md_src/macros.md md_src/hw.md > hw_concat.md')
+    hw_path = Path('md_src/hw')
+    hw_files = [fpath for fpath in hw_path.glob('*') if re.search('^hw\d*', fpath.stem)]
+    hw_files = sorted(hw_files, key=lambda f: int(f.stem[2:]))
+    cat_files = ['md_src/macros.md', hw_path / 'pre.md'] + hw_files + [hw_path / 'post.md']
+    os.system(f"cat {' '.join([str(f) for f in cat_files])} > hw_concat.md")
     hw_cmds = [
         'pandoc',
         '-s hw_concat.md',
