@@ -351,6 +351,8 @@ In the final formulation, we follow this logic for every flight in the table. La
 
 ### Model/data separation {#sec:ipModelDataSep}
 
+<div class='lectureVideoEmbed' video-id='ca5c6f5b711b4646ac87678cf72beac21d' video-date='2023-09-25'>Even ore IP modeling, this time with model/data separation.</div>
+
 The above ad-hoc modeling is useful, but in real applications we often have to solve different, but similarly structured models on some regular schedule. We'd prefer not to write a new model from scratch every time we need to solve one. As we discussed in +@sec:lpModelDataSep, the best practice is to write[^writeComputerCode] a base, general model which encodes all the logic for the problem, then inject the relevant problem data when an instance needs to be solved.
 
 [^writeComputerCode]: Ideally in computer code.
