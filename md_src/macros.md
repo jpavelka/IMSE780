@@ -17,3 +17,5 @@
 \newcommand{\identity}{\mat{I}}
 \newcommand{\P}{\mathcal{P}}
 \newcommand{\NP}{\mathcal{NP}}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}

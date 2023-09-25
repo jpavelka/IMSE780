@@ -2,7 +2,7 @@
 
 After a linear program has been solved, it is often the case that you'd like to consider separate, but similar scenarios for you problem of interest. In the case of our example LP +@eq:prototypeLp, the company might like to know how much the solution would change if they could add another hour of production time to one of their facilities. Additionally, often when a problem is formulated, the exact data ($\A, \b, \c$) that is used is only an estimate, or subject to decisions made by upper management. In these cases we might like to know something about how the objective could change with small updates to these values. These activities all fall under the heading of __post-optimality analysis__, and LP theory gives us some tools for dealing with them.
 
-### Re-optimization
+### Re-optimization {#sec:lpReopt}
 
 In the simplest and most general case, say that we've already solved a very large LP, and for whatever reason we need to make a few tweaks to the problem and see how the solution changes. One approach to this could be to re-run simplex from scratch on the new problem. But for very large LPs, a better approach may be __re-optimization__, which is essentially a way to "start where you left off" on the previous problem. The idea is to start from the previous optimal basis and deduce how changes in the data affect the simplex information from +@eq:simplexMatrixGeneralized.
 

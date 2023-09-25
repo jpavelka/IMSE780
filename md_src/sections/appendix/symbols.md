@@ -28,3 +28,5 @@
   0 & 0 & \cdots & 1 \\
   \end{bmatrix}
 - $\Leftrightarrow$: If and only if. It indicates the the statement to the left is logically equivalent to the statement on the right, e.g. $a > b \Leftrightarrow -a < -b$.
+- $\floor{x}$: The "floor" of the number $x\in\R$, i.e. the value resulting from rounding $x$ down to the nearest integer. So $\floor{1.3}=1$.
+- $\ceil{x}$: The "ceiling" of the number $x\in\R$, i.e. the value resulting from rounding $x$ up to the nearest integer. So $\ceil{1.3}=2$.

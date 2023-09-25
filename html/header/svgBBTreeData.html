@@ -1,0 +1,31 @@
+<script>
+    BBGraphData = {
+        bbTree1: {
+            'edges': [
+                ['P', 'P^1', 'x_1 \\leq 2'],
+                ['P', 'P^2', 'x_1 \\geq 3']
+            ],
+            'nodes': {
+                'P': {lp: '\\frac{59}{7}', state: 'branched'},
+                'P^1': {},
+                'P^2': {}
+            }
+        }
+    }
+    
+    BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
+    BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
+    BBGraphData.bbTree2.nodes['P^3'] = {};
+    BBGraphData.bbTree2.nodes['P^4'] = {};
+    BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
+    BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
+
+    BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
+    BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
+
+    BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
+    BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
+
+    BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
+    BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
+</script>

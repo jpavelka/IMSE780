@@ -32,6 +32,7 @@
         document.getElementById('main').onclick = closeNavIfSmall;
         makeAssignmentLink();
         drawPlotlyCharts();
+        drawBBTrees();
     }
     drawPlotlyCharts = () => {
         for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {

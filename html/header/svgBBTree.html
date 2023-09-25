@@ -1,0 +1,133 @@
+<script>
+    const drawBBTrees = () => {
+        for (svg of document.getElementsByClassName('bbTreeDraw')) {
+            graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
+            textsToAdd = [];
+            for (n of Object.keys(graphInfo['nodes'])) {
+                graphInfo['nodes'][n]['level'] = 0;
+                graphInfo['nodes'][n]['children'] = [];
+            }
+            for (e of graphInfo['edges']) {
+                graphInfo['nodes'][e[1]]['level'] = graphInfo['nodes'][e[0]]['level'] + 1;
+                graphInfo['nodes'][e[1]]['parent'] = e[0];
+            }
+            r = 25
+            const drawNode = (x, y, attrs) => {
+                circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circ.setAttribute('cx', x);
+                circ.setAttribute('cy', y);
+                circ.setAttribute('r', r);
+                circ.setAttribute('fill', 'lightgray');
+                circ.setAttribute('stroke-width', '2pt');
+                circ.setAttribute('stroke', 'gray');
+                for (const [k, v] of Object.entries(attrs || {})) {
+                    circ.setAttribute(k, v);
+                }
+                svg.appendChild(circ);
+            }
+            const addMathText = (math, x, y, attrs) => {
+                attrs = attrs || {};
+                forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+                mathEl = document.createElement('span');
+                katex.render(math, mathEl, {
+                    throwOnError: false
+                });
+                if (attrs['coordToPix'] || false) {
+                    [x, y] = coordToPix(x, y)
+                }
+                forObj.setAttribute('x', x);
+                forObj.setAttribute('y', y);
+                attrs['height'] = attrs['height'] || '1.2rem';
+                attrs['width'] = attrs['width'] || '15rem';
+                attrs['font-size'] = attrs['font-size'] || '12pt';
+                attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
+                for (const [k, v] of Object.entries(attrs || {})) {
+                    forObj.setAttribute(k, v);
+                }
+                forObj.appendChild(mathEl);
+                textsToAdd.push(forObj);
+            }
+            const drawLine = (x1, y1, x2, y2, attrs) => {
+                el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                el.setAttribute('x1', x1);
+                el.setAttribute('y1', y1);
+                el.setAttribute('x2', x2);
+                el.setAttribute('y2', y2);
+                attrs = attrs || {}
+                attrs['style'] = attrs['style'] || 'stroke:gray';
+                for (const [k, v] of Object.entries(attrs)) {
+                    el.setAttribute(k, v);
+                }
+                svg.appendChild(el);
+            }
+            incumbentVal = undefined;
+            for ([n, d] of Object.entries(graphInfo.nodes)) {
+                x = parseFloat(svg.getAttribute('width')) / 2;
+                if (d.parent) {
+                    parentInfo = graphInfo.nodes[d['parent']];
+                    d.childNum = parentInfo.children.length;
+                    side = d.childNum === 0 ? -1 : 1;
+                    dist = 2 * (3 - d.level) * r;
+                    x = parentInfo.x + side * dist;
+                    parentInfo.children.push(n);
+                }
+                y = (2 + 5 * d.level) * r;
+                graphInfo['nodes'][n]['level'] = d.level;
+                graphInfo['nodes'][n]['x'] = x;
+                graphInfo['nodes'][n]['y'] = y;
+                addMathText(n, x - 8, y - 10);
+                if (d.state === 'integer') {
+                    incumbentVal = incumbentVal === undefined ? d.lp : Math.max(incumbentVal, d.lp);
+                    d.lp += '^*';
+                }
+                if (!!d.lp) {
+                    addMathText(d.lp, x + 25, y - 30);
+                }
+            }
+            for (e of graphInfo.edges) {
+                coords = []
+                for (i of [0, 1]) {
+                    for (j of ['x', 'y']) {
+                        coords.push(graphInfo.nodes[e[i]][j]);
+                    }
+                }
+                drawLine(...coords);
+                textX = (coords[0] + coords[2]) / 2;
+                textY = (coords[1] + coords[3]) / 2 - 20;
+                if (graphInfo.nodes[e[1]].childNum === 0) {
+                    textX -= 55;
+                } else {
+                    textX += 0;
+                }
+                addMathText(e[2], textX, textY);
+            }
+            for (d of Object.values(graphInfo.nodes)) {
+                if (d.level === 0) {
+                    incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
+                    addMathText(incumbentText, d.x + 28, d.y + 5);
+                }
+                attrs = {}
+                if (d.state === 'branched') {
+                    attrs.stroke = 'blue';
+                    attrs.fill = 'lightblue';
+                }
+                if (d.state === 'infeasible') {
+                    attrs.stroke = 'red';
+                    attrs.fill = 'lightpink';
+                }
+                if (d.state === 'integer') {
+                    attrs.stroke = 'purple';
+                    attrs.fill = 'plum';
+                }
+                if (d.state === 'bounded') {
+                    attrs.stroke = 'darkorange';
+                    attrs.fill = 'peachpuff';
+                }
+                drawNode(d.x, d.y, attrs);
+            }
+            for (textObj of textsToAdd) {
+                svg.appendChild(textObj);
+            }
+        }
+    }
+</script>
