@@ -1,4 +1,4 @@
-## Intro to complexity
+## Intro to complexity {#sec:complexityIntro}
 
 I've mentioned already that IPs are much harder to solve than LPs, and in playing with some of the last notebooks you may have seen how solve times can increase with relatively small increases in the size of the random instances we solve. It turns out there is some deep theory that goes toward explaining why we have such difficulties. This theory is known as __computational complexity theory__, which is concerned with how much effort is required to solve problems of different types. We won't be able to do much more than scratch the surface of it here, but I thought it was important enough to explain a bit of the basics[^changedMyMindAboutComplexity].
 

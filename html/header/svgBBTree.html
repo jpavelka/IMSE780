@@ -2,6 +2,11 @@
     const drawBBTrees = () => {
         for (svg of document.getElementsByClassName('bbTreeDraw')) {
             graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
+            rootPlacement = graphInfo.rootPlacement || 0.5;
+            childSep = graphInfo.childSep || 5;
+            siblingSep = graphInfo.siblingSep || 2;
+            includeLb = graphInfo.includeLb;
+            includeLb = includeLb === undefined ? true : includeLb;
             textsToAdd = [];
             for (n of Object.keys(graphInfo['nodes'])) {
                 graphInfo['nodes'][n]['level'] = 0;
@@ -61,17 +66,21 @@
                 svg.appendChild(el);
             }
             incumbentVal = undefined;
+            maxLevel = Math.max(...Object.values(graphInfo.nodes).map(n => n.level));
             for ([n, d] of Object.entries(graphInfo.nodes)) {
-                x = parseFloat(svg.getAttribute('width')) / 2;
+                x = parseFloat(svg.getAttribute('width')) * rootPlacement;
                 if (d.parent) {
                     parentInfo = graphInfo.nodes[d['parent']];
                     d.childNum = parentInfo.children.length;
                     side = d.childNum === 0 ? -1 : 1;
-                    dist = 2 * (3 - d.level) * r;
+                    dist = siblingSep * (Math.max(3, maxLevel + 1) - d.level) * r;
+                    if (d['level'] == 1) {
+                        dist += 1.5 * r;
+                    }
                     x = parentInfo.x + side * dist;
                     parentInfo.children.push(n);
                 }
-                y = (2 + 5 * d.level) * r;
+                y = (2 + childSep * d.level) * r - 0.5 * r;
                 graphInfo['nodes'][n]['level'] = d.level;
                 graphInfo['nodes'][n]['x'] = x;
                 graphInfo['nodes'][n]['y'] = y;
@@ -102,7 +111,7 @@
                 addMathText(e[2], textX, textY);
             }
             for (d of Object.values(graphInfo.nodes)) {
-                if (d.level === 0) {
+                if (d.level === 0 && includeLb) {
                     incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
                     addMathText(incumbentText, d.x + 28, d.y + 5);
                 }
