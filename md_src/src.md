@@ -24,7 +24,7 @@
 
 {insertSection:sections/integer_programming/computational_complexity.md}
 
-<!-- {insertSection:sections/integer_programming/branch_and_bound.md} -->
+{insertSection:sections/integer_programming/branch_and_bound.md}
 
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
 
