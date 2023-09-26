@@ -181,6 +181,11 @@
       const drawBBTrees = () => {
           for (svg of document.getElementsByClassName('bbTreeDraw')) {
               graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
+              rootPlacement = graphInfo.rootPlacement || 0.5;
+              childSep = graphInfo.childSep || 5;
+              siblingSep = graphInfo.siblingSep || 2;
+              includeLb = graphInfo.includeLb;
+              includeLb = includeLb === undefined ? true : includeLb;
               textsToAdd = [];
               for (n of Object.keys(graphInfo['nodes'])) {
                   graphInfo['nodes'][n]['level'] = 0;
@@ -240,17 +245,21 @@
                   svg.appendChild(el);
               }
               incumbentVal = undefined;
+              maxLevel = Math.max(...Object.values(graphInfo.nodes).map(n => n.level));
               for ([n, d] of Object.entries(graphInfo.nodes)) {
-                  x = parseFloat(svg.getAttribute('width')) / 2;
+                  x = parseFloat(svg.getAttribute('width')) * rootPlacement;
                   if (d.parent) {
                       parentInfo = graphInfo.nodes[d['parent']];
                       d.childNum = parentInfo.children.length;
                       side = d.childNum === 0 ? -1 : 1;
-                      dist = 2 * (3 - d.level) * r;
+                      dist = siblingSep * (Math.max(3, maxLevel + 1) - d.level) * r;
+                      if (d['level'] == 1) {
+                          dist += 1.5 * r;
+                      }
                       x = parentInfo.x + side * dist;
                       parentInfo.children.push(n);
                   }
-                  y = (2 + 5 * d.level) * r;
+                  y = (2 + childSep * d.level) * r - 0.5 * r;
                   graphInfo['nodes'][n]['level'] = d.level;
                   graphInfo['nodes'][n]['x'] = x;
                   graphInfo['nodes'][n]['y'] = y;
@@ -281,7 +290,7 @@
                   addMathText(e[2], textX, textY);
               }
               for (d of Object.values(graphInfo.nodes)) {
-                  if (d.level === 0) {
+                  if (d.level === 0 && includeLb) {
                       incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
                       addMathText(incumbentText, d.x + 28, d.y + 5);
                   }
@@ -2151,6 +2160,89 @@
                   'P^1': {},
                   'P^2': {}
               }
+          },
+          depthFirstTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '20', state: 'branched'},
+                  'P^2': {},
+                  'P^3': {lp: '17', state: 'branched'},
+                  'P^4': {},
+                  'P^5': {lp: '16', state: 'branched'},
+                  'P^6': {},
+                  'P^7': {lp: '15', state: 'integer'},
+                  'P^8': {},
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^3', 'P^5', 'x_3 \\leq 0'],
+                  ['P^3', 'P^6', 'x_3 \\geq 1'],
+                  ['P^5', 'P^7', 'x_3 \\leq 0'],
+                  ['P^5', 'P^8', 'x_3 \\geq 1']
+              ],
+              rootPlacement: 0.67,
+              siblingSep: 1.4,
+              childSep: 3
+          },
+          bestNodeTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '19', state: 'branched'},
+                  'P^2': {lp: '20', state: 'branched'},
+                  'P^3': {},
+                  'P^4': {},
+                  'P^5': {},
+                  'P^6': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^2', 'P^5', 'x_3 \\leq 0'],
+                  ['P^2', 'P^6', 'x_3 \\geq 1']
+              ],
+          },
+          fullTree3d: {
+              nodes: {
+                  'P': {lp: '', state: 'branched'},
+                  'P^1': {lp: '', state: 'branched'},
+                  'P^2': {lp: '', state: 'branched'},
+                  'P^3': {lp: '', state: 'branched'},
+                  'P^4': {lp: '', state: 'branched'},
+                  'P^5': {lp: '', state: 'branched'},
+                  'P^6': {lp: '', state: 'branched'},
+                  'P^7': {},
+                  'P^8': {},
+                  'P^9': {},
+                  'P^{10}': {},
+                  'P^{11}': {},
+                  'P^{12}': {},
+                  'P^{13}': {},
+                  'P^{14}': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 = 0'],
+                  ['P', 'P^2', 'x_1 = 1'],
+                  ['P^1', 'P^3', 'x_2 = 0'],
+                  ['P^1', 'P^4', 'x_2 = 1'],
+                  ['P^2', 'P^5', 'x_2 = 0'],
+                  ['P^2', 'P^6', 'x_2 = 1'],
+                  ['P^3', 'P^7', 'x_3 = 0'],
+                  ['P^3', 'P^8', 'x_3 = 1'],
+                  ['P^4', 'P^9', 'x_3 = 0'],
+                  ['P^4', 'P^{10}', 'x_3 = 1'],
+                  ['P^5', 'P^{11}', 'x_3 = 0'],
+                  ['P^5', 'P^{12}', 'x_3 = 1'],
+                  ['P^6', 'P^{13}', 'x_3 = 0'],
+                  ['P^6', 'P^{14}', 'x_3 = 1']
+              ],
+              siblingSep: 1.7,
+              childSep: 3,
+              includeLb: false
           }
       }
       
@@ -2420,7 +2512,7 @@ class="toc-section-number">5.4.1</span> Solvers</a></li>
 id="toc-sec:solvingIpsWithPython"><span
 class="toc-section-number">5.4.2</span> Solving IPs with Python</a></li>
 </ul></li>
-<li><a href="#intro-to-complexity" id="toc-intro-to-complexity"><span
+<li><a href="#sec:complexityIntro" id="toc-sec:complexityIntro"><span
 class="toc-section-number">5.5</span> Intro to complexity</a>
 <ul>
 <li><a href="#combinatorial-explosion"
@@ -2444,6 +2536,30 @@ class="math inline">\mathcal{NP}</span>-hard problems</a></li>
 class="toc-section-number">5.5.5</span> What makes IPs hard</a></li>
 <li><a href="#all-hope-is-not-lost" id="toc-all-hope-is-not-lost"><span
 class="toc-section-number">5.5.6</span> All hope is not lost</a></li>
+</ul></li>
+<li><a href="#branch-and-bound" id="toc-branch-and-bound"><span
+class="toc-section-number">5.6</span> Branch and bound</a>
+<ul>
+<li><a href="#sec:divideAndConquer" id="toc-sec:divideAndConquer"><span
+class="toc-section-number">5.6.1</span> Divide and Conquer</a></li>
+<li><a href="#dropping-dead-weight" id="toc-dropping-dead-weight"><span
+class="toc-section-number">5.6.2</span> Dropping dead weight</a></li>
+<li><a href="#algorithm-basics" id="toc-algorithm-basics"><span
+class="toc-section-number">5.6.3</span> Algorithm basics</a></li>
+<li><a href="#sec:bnbExample" id="toc-sec:bnbExample"><span
+class="toc-section-number">5.6.4</span> A branch and bound
+example</a></li>
+<li><a href="#the-branch-and-bound-algorithm"
+id="toc-the-branch-and-bound-algorithm"><span
+class="toc-section-number">5.6.5</span> The branch and bound
+algorithm</a></li>
+<li><a href="#sec:choosingBNBNodes" id="toc-sec:choosingBNBNodes"><span
+class="toc-section-number">5.6.6</span> Next nodes and branching
+variables</a></li>
+<li><a href="#correctness-and-complexity"
+id="toc-correctness-and-complexity"><span
+class="toc-section-number">5.6.7</span> Correctness and
+complexity</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -6655,7 +6771,7 @@ how to set up several of the models explored above, with special
 attentions paid to the generalized models of section <a
 href="#sec:ipModelDataSep">5.3.4</a>.</p>
 <script src="https://gist.github.com/73f227dfef3ba217c11fe80db18d6b5f.js"></script>
-<h2 data-number="5.5" id="intro-to-complexity"><span
+<h2 data-number="5.5" id="sec:complexityIntro"><span
 class="header-section-number">5.5</span> Intro to complexity</h2>
 <p>I’ve mentioned already that IPs are much harder to solve than LPs,
 and in playing with some of the last notebooks you may have seen how
@@ -7104,7 +7220,635 @@ class="math inline">0</span> and “too big” can be substantial, and the
 number of useful instances within that gap is immense. Furthermore, a
 good knowledge of the usual solution techniques can help you model your
 problem in a way that is more likely to be solvable.</p>
-<!-- {insertSection:sections/integer_programming/branch_and_bound.md} -->
+<h2 data-number="5.6" id="branch-and-bound"><span
+class="header-section-number">5.6</span> Branch and bound</h2>
+<p>In this section, we’ll cover the common IP solution technique of
+branch and bound. This is a powerful tool deployed in all IP solvers,
+but the ideas behind are very simple.</p>
+<h3 data-number="5.6.1" id="sec:divideAndConquer"><span
+class="header-section-number">5.6.1</span> Divide and Conquer</h3>
+<p>Consider the following IP:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 10x_1 + 12x_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 + x_2 &amp; \leq \ \ 5  \\
+     &amp;&amp; 2x_1 + 4x_2 &amp; \leq 15 \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \ \mathbb{I}_+
+\end{align*}
+</span></p>
+<p>We’ve plotted this problem below. As we’ve seen before, the plotted
+points are the feasible integer solutions, while the gray-shaded area
+corresponds to the feasible region of the problem’s LP relaxation. We’d
+like to solve this problem, and while we don’t know how to solve IPs
+yet, we <em>can</em> solve the underlying LP relaxation. Furthermore, we
+know the following must hold<a href="#fn84" class="footnote-ref"
+id="fnref84" role="doc-noteref"><sup>84</sup></a>:</p>
+<div id="thm:integerLpOptimalSolution" class="theorem"
+data-thm-type="proposition">
+<p>Suppose <span class="math inline">P</span> is an integer program, and
+further suppose that <span class="math inline">P</span>’s LP relaxation
+has an optimal solution <span class="math inline">\mathbf{x}</span> that
+is also integer. Then <span class="math inline">\mathbf{x}</span> is an
+optimal solution to <span class="math inline">P</span> as well.</p>
+</div>
+<p>The proof for this one is pretty simple, following easily from the
+fact that any feasible (integer) solutions to <span
+class="math inline">P</span> are also feasible for <span
+class="math inline">P</span>’s LP relaxation.</p>
+<p>So let’s just use what we know, solve the LP relaxation, and maybe we
+can get lucky and the LP optimal solution will happen to be integer.
+Unfortunately, you can verify graphically that the optimal LP solution
+comes at <span class="math inline">(x_1, x_2) = (2.5, 2.5)</span> with
+an objective value of 55.</p>
+<svg width="350" height="350" class="lpDraw" base="bbExample1" altArgs="{&quot;chooseObjVals&quot;: true}">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>That didn’t work to find us an integer solution, so what can we do?
+We still only know how to solve LPs, so we’d like to keep using that
+knowledge. Suppose we do the following: Let’s create two different IPs
+by “branching” off our first IP. Let’s call the original IP <span
+class="math inline">P</span> and the two new IPs <span
+class="math inline">P^1</span> and <span class="math inline">P^2</span>.
+We’ll keep the new problems identical to <span
+class="math inline">P</span> except with the addition of one new
+constraint each. Consider these two formulations:</p>
+<p><span class="math display">
+\begin{align*}
+P^1: &amp;&amp;&amp;                        &amp;\quad  P^2: \\
+\text{max}&amp;&amp; 10x_1 + 12x_2
+&amp;         &amp;\quad  \text{max}&amp;&amp; 10x_1 + 12x_2 &amp; \\
+\text{s.t.}&amp;&amp; x_1 + x_2 &amp; \leq \ \
+5  &amp;\quad  \text{s.t.}&amp;&amp; x_1 + x_2 &amp; \leq \ \ 5  \\
+     &amp;&amp; 2x_1 + 4x_2 &amp; \leq 15   &amp;\quad       &amp;&amp;
+2x_1 + 4x_2 &amp; \leq 15 \\
+     &amp;&amp; x_1 &amp; \leq \ \ 2        &amp;\quad       &amp;&amp;
+x_1 &amp; \geq \ \ 3 \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \
+\mathbb{I}_+  &amp;\quad       &amp;&amp; x_1,x_2 &amp; \in \ \
+\mathbb{I}_+
+\end{align*}
+</span></p>
+<p>What have we done here? Let’s look at the image below, where we’ve
+plotted the LP relaxations and feasible integer points for both <span
+class="math inline">P^1</span> and <span class="math inline">P^2</span>.
+If you hit the “Toggle Plots” button, you can look back at the original
+problem <span class="math inline">P</span> and the optimal solution for
+that LP relaxation.</p>
+<div>
+<script>
+     bbExampleClickFunc = () => {
+          for (plotNum of [1, 2]){
+               plotEl = document.getElementById('bbExamplePlot' + plotNum);
+               plotEl.style.display = plotEl.style.display === 'none' ? 'block' : 'none';
+          }
+     }
+</script>
+<div id="bbExamplePlot1" style="display:block">
+<svg width="350" height="350" class="lpDraw" base="bbExample2">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<div id="bbExamplePlot2" style="display:none">
+<svg width="350" height="350" class="lpDraw" base="bbExample1" altArgs="{&quot;extraMathText&quot;: [[&quot;P&quot;, 130, 230]], &quot;extraPoints&quot;: [[2.5, 2.5, {&quot;fill&quot;: &quot;blue&quot;, &quot;r&quot;: 5}]], &quot;extraText&quot;: [[&quot;LP optimal&quot;, 160, 190, {&quot;font-size&quot;: &quot;0.7rem&quot;}]]}">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<button class="basicCenter" onClick="bbExampleClickFunc()" style="padding: 0.5rem">
+Toggle Plots
+</button>
+</div>
+<p>There are a few important items to note about this decomposition:</p>
+<ol type="1">
+<li>All the integer feasible solutions for <span
+class="math inline">P</span> are also feasible for either <span
+class="math inline">P^1</span> or <span
+class="math inline">P^2</span>.</li>
+<li>Conversely, any integer feasible solution for <span
+class="math inline">P^1</span> or <span class="math inline">P^2</span>
+is also feasible for <span class="math inline">P</span>.</li>
+<li>The optimal solution to <span class="math inline">P</span>’s LP
+relaxation is <em>not</em> feasible for either <span
+class="math inline">P^1</span> or <span
+class="math inline">P^2</span>.</li>
+</ol>
+<p>The first two items imply that we’re still dealing with the same set
+of integer feasible solutions when we go from <span
+class="math inline">P</span> to <span class="math inline">P^1</span> and
+<span class="math inline">P^2</span>. From the third item, we know that
+we’ll come up with a different solution if we solve either <span
+class="math inline">P^1</span> or <span class="math inline">P^2</span>’s
+LP relaxation, so we have hope again that we can solve an LP and return
+an integer feasible solution. This action of splitting the initial
+problem into two (or more) sub-problems, while also satisfying the above
+three conditions, is known as <strong>branching</strong>. Importantly,
+we have the following result relating to sub-problems of <span
+class="math inline">P</span> that satisfy conditions 1 and 2:</p>
+<div id="thm:subproblemsContainOpt" class="theorem"
+data-thm-type="proposition">
+<p>Suppose <span class="math inline">P</span>, <span
+class="math inline">P^1</span>, and <span class="math inline">P^2</span>
+are integer programs with identical objective functions satisfying
+conditions 1 and 2 from above. If <span
+class="math inline">\mathbf{x}^1</span>, <span
+class="math inline">\mathbf{x}^2</span> are optimal solutions to <span
+class="math inline">P^1</span> and <span class="math inline">P^2</span>
+respectively, then at least one of <span
+class="math inline">\mathbf{x}^1</span> or <span
+class="math inline">\mathbf{x}^2</span> is optimal for <span
+class="math inline">P</span>.</p>
+</div>
+<div class="proof" for="thm:subproblemsContainOpt">
+<p>Suppose for contradiction that neither <span
+class="math inline">\mathbf{x}^1</span> nor <span
+class="math inline">\mathbf{x}^2</span> are optimal for <span
+class="math inline">P</span>. By condition 2 we know both <span
+class="math inline">\mathbf{x}^1</span> and <span
+class="math inline">\mathbf{x}^2</span> are feasible for <span
+class="math inline">P</span>, so there must exist some <span
+class="math inline">\mathbf{x}</span> feasible for <span
+class="math inline">P</span> such that <span
+class="math inline">\mathbf{c}\mathbf{x}&gt;
+\mathbf{c}\mathbf{x}^1</span> and <span
+class="math inline">\mathbf{c}\mathbf{x}&gt;
+\mathbf{c}\mathbf{x}^2</span>. But by condition 1 <span
+class="math inline">\mathbf{x}</span> must be feasible for <span
+class="math inline">P^i</span> for some <span
+class="math inline">i</span>, and <span
+class="math inline">\mathbf{c}\mathbf{x}&gt;
+\mathbf{c}\mathbf{x}^i</span> contradicts the optimality of <span
+class="math inline">\mathbf{x}^i</span> for <span
+class="math inline">P^i</span>.</p>
+</div>
+<p>So by branching, we’ve reduced the process of solving <span
+class="math inline">P</span> (which didn’t work for us directly) to
+solving <span class="math inline">P^1</span> and <span
+class="math inline">P^2</span>.</p>
+<h3 data-number="5.6.2" id="dropping-dead-weight"><span
+class="header-section-number">5.6.2</span> Dropping dead weight</h3>
+<p>Let’s now go ahead and solve the LP relaxations of our two new
+sub-problems <span class="math inline">P^1</span> and <span
+class="math inline">P^2</span>. You can quickly verify that the for
+<span class="math inline">P^1</span> the LP optimal solution is <span
+class="math inline">(2, 2.75)</span> with and objective value of 53, and
+for <span class="math inline">P^2</span> the LP optimal solution is
+<span class="math inline">(3, 2)</span> with an objective value of 54.
+And hey, would you look at that! The LP optimal solution to <span
+class="math inline">P^2</span> was integer, so by <span class="thmRef"
+for="thm:integerLpOptimalSolution"></span> it must <span
+class="math inline">P^2</span>’s best integer solution as well!</p>
+<p>So <span class="math inline">P^2</span> is now solved, but
+unfortunately <span class="math inline">P^2</span> was only half of our
+original problem <span class="math inline">P</span>. When we subdivided
+<span class="math inline">P</span> we had no way of telling whether
+<span class="math inline">P</span>’s optimal solution lay on the <span
+class="math inline">P^1</span> side or the <span
+class="math inline">P^2</span> side. So we need to return our attention
+to <span class="math inline">P^1</span>. Its optimal solution was not
+integral, so we’ll need to branch again and create two new sub-problems
+for the already-a-sub-problem problem <span
+class="math inline">P^1</span>. Right?</p>
+<p>Actually, let’s think again about all the information we have. <span
+class="math inline">P^2</span> has an optimal integer solution with an
+objective value of 54, and by the construction of <span
+class="math inline">P^2</span> that same integer solution is feasible
+for <span class="math inline">P</span>. Thus we have a
+<strong>bound</strong> on an optimal solution to <span
+class="math inline">P</span>: it will have a value no lower than that
+same 54. We also know that the optimal solution to <span
+class="math inline">P^1</span>’s LP relaxation was only 53, so in
+particular no integer solutions to <span class="math inline">P^1</span>
+can have a value better then 53. So whatever solution we’d get by
+eventually solving <span class="math inline">P^1</span>, we know it
+won’t have a better objective value than the integer solution we’ve
+already found for <span class="math inline">P</span> (via <span
+class="math inline">P^2</span>).</p>
+<p>All this to say, there is no need to actually solve <span
+class="math inline">P^1</span>! The information we’ve already gained
+from the LP relaxation tells us that we can just ignore it now (a
+process that we will call <strong>pruning</strong> or
+<strong>fathoming</strong>), and the optimal solution to <span
+class="math inline">P</span> is also the optimal solution to <span
+class="math inline">P^2</span>: <span class="math inline">(x_1, x_2) =
+(3, 2)</span> with an objective value of 54.</p>
+<h3 data-number="5.6.3" id="algorithm-basics"><span
+class="header-section-number">5.6.3</span> Algorithm basics</h3>
+<p>The preceding sections displayed the essence of the branch and bound
+algorithm for solving integer programs. You initially solve the
+underlying LP relaxation. If the optimal solution <span
+class="math inline">\mathbf{x}^*</span> is not integer, you
+<em>branch</em> by selecting some variable <span
+class="math inline">x_i</span> such that <span
+class="math inline">x_i^*\not\in\mathbb{I}</span>, then creating two new
+IPs that are identical to the original, except to one problem you add a
+constraint <span class="math inline">x_i\leq\lfloor x^*_i \rfloor</span>
+and to the other you add <span class="math inline">x_i\geq\lceil x^*_i
+\rceil</span><a href="#fn85" class="footnote-ref" id="fnref85"
+role="doc-noteref"><sup>85</sup></a>. These new problems are called the
+<strong>child problems</strong> of the original problem, and any
+subsequent children of the child problems are called <strong>descendant
+problems</strong>.</p>
+<p>You keep recursively branching and solving sub-problems, making use
+of the <em>bounding</em> information available from the LP relaxations
+and any integer solutions you’ve already found. The optimal value of a
+problem’s LP relaxation is an <em>upper bound</em> on both its own
+optimal integer solution value and the values of its descendants. Any
+integer solutions found are a <em>lower bound</em> on the original
+problem’s optimal integer value. This bound information is used
+continually to decide which (if any) sub-problems cannot lead to an
+optimal solution for the original problem, and thus may be pruned.</p>
+<h3 data-number="5.6.4" id="sec:bnbExample"><span
+class="header-section-number">5.6.4</span> A branch and bound
+example</h3>
+<p>Let’s walk through a more involved branch and bound example (from
+<span class="citation" data-cites="wolsey2020">Wolsey (<a
+href="#ref-wolsey2020" role="doc-biblioref">2020</a>)</span>). It is a
+small example, but it will still highlight all the relevant decisions
+that need to be made, as well as make use of all possible node pruning
+criteria. Consider the following integer program, which we’ll name <span
+class="math inline">P</span>:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 4x_1 - x_2 &amp; \\
+\text{s.t.}&amp;&amp; 7x_1 - 2x_2 &amp; \leq 14  \\
+     &amp;&amp; x_2 &amp; \leq 3 \\
+     &amp;&amp; 2x_1 - 2x_2 &amp; \leq 3 \\
+     &amp;&amp; x_1,x_2 &amp; \in \ \mathbb{I}_+
+\end{align*}
+</span></p>
+<p>Our first step is the solve the LP relaxation. Doing so leads to a
+non-integer optimal solution <span class="math inline">(\frac{20}{7},
+3)</span> with objective value <span
+class="math inline">\frac{59}{7}</span>. Since this solution is not
+integral, we need to branch. While there are multiple ways one could
+create the branching sub-problems, for this class we’ll be creating them
+as we did in section <a href="#sec:divideAndConquer">5.6.1</a>:
+Considering the optimal LP relaxation solution <span
+class="math inline">x^*</span>, choose a variable whose value is
+fractional then create two sub-problems by adding the constraint <span
+class="math inline">x_i^*\leq\lfloor x_i^* \rfloor</span> to one problem
+and the constraint <span class="math inline">x_i^*\geq\lceil x_i^*
+\rceil</span> to the other. In this case, the only variable with a
+fractional value in the LP optimal solution is <span
+class="math inline">x_1</span><a href="#fn86" class="footnote-ref"
+id="fnref86" role="doc-noteref"><sup>86</sup></a>. So our new problems
+are <span class="math inline">P^1</span>, to which we add <span
+class="math inline">x_1\leq2</span>, and <span
+class="math inline">P^2</span>, to which we’ll add <span
+class="math inline">x_1\geq3</span>.</p>
+<p>As we continue to branch and add sub-problems, we’ll find it
+convenient to have a graphic to reference to help us keep our place. The
+below image displays our <strong>branch-and-bound tree</strong> for the
+problem so far.</p>
+<svg width="450" height="210" class="bbTreeDraw" base="bbTree1">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>In this graph, each node represents a sub-problem. The gray-colored
+nodes are sub-problems that have not yet been <strong>explored</strong>,
+meaning that we haven’t attempted to solve the sub-problem yet. If we’ve
+already branched on a sub-problem, then its node in the tree is colored
+blue. Branches are represented by edges emanating down from the node,
+with the text next to the edge describing the inequality added to
+achieve each child problem.</p>
+<p>If a node has already been explored, we display the sub-problem’s
+optimal LP relaxation value next to it. Additionally, next to the root
+(top) node, we also keep track of the value of the best <em>integer</em>
+solution found so far in the tree. This currently-best integer solution
+is known as the <strong>incumbent</strong> solution, and we’ll see how
+its objective value can be used to prune nodes whose LP relaxation value
+is low. For now we haven’t yet found any integer solutions, so we’ll use
+the value <span class="math inline">-\infty</span>.</p>
+<p>At this point we’ve explored one node and created two new, unexplored
+nodes. We must now choose which unexplored node to examine next. We’ll
+discuss later in section <a href="#sec:choosingBNBNodes">5.6.6</a> how
+this selection might be made in practice, but ultimately the selection
+does not make a difference in the correctness of the algorithm<a
+href="#fn87" class="footnote-ref" id="fnref87"
+role="doc-noteref"><sup>87</sup></a>. So let’s arbitrarily select <span
+class="math inline">P^1</span>.</p>
+<p>Now we must solve the LP relaxation for <span
+class="math inline">P^1</span><a href="#fn88" class="footnote-ref"
+id="fnref88" role="doc-noteref"><sup>88</sup></a>. Doing so gives us an
+optimal solution of <span class="math inline">(2, \frac{1}{2})</span>
+with an optimal value of <span class="math inline">\frac{15}{2}</span>.
+Since the solution is not integer, and we have no global lower bound to
+compare against, we must now branch again. Since <span
+class="math inline">x_2</span> is the only fractional variable, we will
+branch on it to create new sub-problems <span
+class="math inline">P^3</span> and <span
+class="math inline">P^4</span>.</p>
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree2">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Let’s continue on. Say we select <span class="math inline">P^2</span>
+as the next sub-problem to explore. We attempt to solve its LP
+relaxation but instead find that the problem is infeasible. This implies
+that the optimal solution to <span class="math inline">P</span> does not
+lie on this branch, so we no longer need to explore it. In this case, we
+say that <span class="math inline">P^2</span> was <strong>pruned by
+infeasibility</strong>. In our graph, we’ll color a node red if we prune
+it in this way. Hence our branch and bound tree now looks like:</p>
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree3">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>Let’s make our next node selection. Say we arbitrarily choose <span
+class="math inline">P^4</span>. The LP relaxation is solved and returns
+an optimal solution <span class="math inline">(2, 1)</span> with
+objective value <span class="math inline">7</span>. Since the optimal
+solution is also an integer solution, we no longer need to explore this
+portion of the graph, and so we will prune <span
+class="math inline">P^4</span>. The act of pruning a node after finding
+an integer solution is called <strong>pruning by optimality</strong>,
+but note that the word “optimality” here is local, as in we’ve found the
+optimal integer solution for <span class="math inline">P^4</span>. We do
+not know yet if this integer solution is also optimal for <span
+class="math inline">P</span>. Furthermore, since this is the first
+integer solution we’ve found, it’s also the new incumbent solution for
+the problem.</p>
+<p>Let’s have the color purple represent a node that is pruned by
+optimality, and to further distinguish the node as having an integer
+optimal solution, we’ll add an asterisk to the optimal relaxation value.
+Our latest version of the branch and bound tree looks like this:</p>
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree4">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>The only remaining unexplored node is <span
+class="math inline">P^3</span>. If we solve its LP relaxation, we obtain
+a solution <span class="math inline">(\frac{3}{2}, 0)</span> with
+objective value <span class="math inline">6</span>. Since the optimal LP
+value is 6, the best integer solution for <span
+class="math inline">P^3</span> is also no higher than 6. But since the
+incumbent solution has an objective value <span
+class="math inline">7\geq 6</span>, we have no hope of finding an
+improved solution for <span class="math inline">P</span> in this portion
+of the tree. So instead of branching on a fractional variable, we
+immediately prune <span class="math inline">P^3</span>. Pruning by this
+logic is termed <strong>pruning by bound</strong>. In our graph, we’ll
+use the color orange for nodes pruned by bound.</p>
+<p>Speaking of the graph, we have pruned every single node now with no
+remaining nodes to explore. You can see the final tree below, and can
+use the buttons under the plot to cycle through each iteration we
+completed.</p>
+<div>
+<script>
+     bbTreesClickFunc = (x) => {
+          for (plotNum of [1, 2, 3, 4, 5]){
+               plotEl = document.getElementById('bbTreePlot' + plotNum);
+               if (plotEl.style.display === 'block') {
+                    displayed = plotNum;
+               }
+          }
+          newDisplayed = displayed + parseInt(x);
+          newDisplayed = newDisplayed === 6 ? 1 : newDisplayed === 0 ? 5 : newDisplayed;
+          document.getElementById('bbTreePlot' + displayed).style.display = 'none';
+          document.getElementById('bbTreePlot' + newDisplayed).style.display = 'block';
+          document.getElementById('bbTreePlotLabel').textContent = 'Iteration ' + newDisplayed;
+     }
+</script>
+<div id="bbTreePlot5" style="display:block">
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree5">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<div id="bbTreePlot1" style="display:none">
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree1">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<div id="bbTreePlot2" style="display:none">
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree2">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<div id="bbTreePlot3" style="display:none">
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree3">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<div id="bbTreePlot4" style="display:none">
+<svg width="450" height="330" class="bbTreeDraw" base="bbTree4">
+Sorry, your browser does not support inline SVG.
+</svg>
+</div>
+<div id="bbTreePlotLabel" style="text-align: center">
+Iteration 5
+</div>
+<div style="display: flex; justify-content: center">
+<button class="forwardBackwardButton" id="bbTreePlotBackButton" onClick="bbTreesClickFunc(&quot;-1&quot;)">
+</button>
+<button class="forwardBackwardButton" id="bbTreePlotForwardButton" onClick="bbTreesClickFunc(&quot;1&quot;)">
+</button>
+</div>
+<script>
+     document.getElementById('bbTreePlotBackButton').textContent = '<<';
+     document.getElementById('bbTreePlotForwardButton').textContent = '>>';
+</script>
+</div>
+<p>With no further portions of the tree to explore, the incumbent
+solution <span class="math inline">(2, 1)</span> from sub-problem <span
+class="math inline">P^3</span> must be our optimal solution.</p>
+<h3 data-number="5.6.5" id="the-branch-and-bound-algorithm"><span
+class="header-section-number">5.6.5</span> The branch and bound
+algorithm</h3>
+<p>Let’s now write out a full treatment of the branch and bound
+algorithm. There are still several details missing from this treatment
+(e.g. selection of unexplored nodes, as discussed in section <a
+href="#sec:choosingBNBNodes">5.6.6</a>), and there are definitely
+alterations and improvements that could be made. The purpose of this
+exercise is merely to lay out the bulk of a fully-functional
+algorithm.</p>
+<p>The notation in what follows mostly mirrors what we’ve seen in our
+discussions above. We’ll let <span class="math inline">P=P^0</span>
+denote the original IP to be solved. <span
+class="math inline">x^*</span> is the current incumbent solution
+(i.e. the best-known integer solution). The bound and <span
+class="math inline">\underline Z</span> is the best-known lower bound on
+the optimal solution value for <span class="math inline">P</span>
+(i.e. the value of the incumbent solution), while <span
+class="math inline">\overline Z^i</span> is the optimal value of the LP
+relaxation of some sub-problem <span class="math inline">P^i</span>.
+We’ll let <span class="math inline">L</span> represent the list of
+unexplored sub-problems. The act of pruning a sub-problem includes
+removing it (and any of its descendants) from <span
+class="math inline">L</span>.</p>
+<ul>
+<li><em>Initialize</em>: Set <span class="math inline">\underline
+Z=-\infty</span>, <span class="math inline">L=[P^0]</span>, and <span
+class="math inline">x^*</span> undefined.</li>
+<li><em>Iterate</em>:
+<ul>
+<li>If <span class="math inline">L</span> is not empty:
+<ul>
+<li>Select some sub-problem <span class="math inline">P^i</span> in
+<span class="math inline">L</span>.</li>
+<li>Solve LP relaxation of <span class="math inline">P^i</span> to
+obtain optimal solution <span class="math inline">x^i</span>. Set <span
+class="math inline">\overline Z^i</span> to optimal value (or <span
+class="math inline">-\infty</span> if infeasible).</li>
+<li>If <span class="math inline">\overline Z^i=-\infty</span>:
+<ul>
+<li>Prune <span class="math inline">P^i</span> by infeasibility.</li>
+</ul></li>
+<li>Else if <span class="math inline">\overline Z^i\leq\underline
+Z</span>:
+<ul>
+<li>Prune <span class="math inline">P^i</span> by bound.</li>
+</ul></li>
+<li>Else if <span class="math inline">x^i</span> is integer:
+<ul>
+<li>Update <span class="math inline">\underline Z=\overline Z^i</span>
+and <span class="math inline">x^*=x^i</span>. Prune <span
+class="math inline">P^i</span> by optimality.</li>
+</ul></li>
+<li>Else:
+<ul>
+<li>Branch on a fractional value in <span class="math inline">x^i</span>
+and add the two new sub-problems to <span
+class="math inline">L</span>.</li>
+</ul></li>
+</ul></li>
+<li>Else:
+<ul>
+<li>If <span class="math inline">x^*</span> is undefined, <span
+class="math inline">P</span> is infeasible.</li>
+<li>Else, return <span class="math inline">x^*</span> as optimal
+solution.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 data-number="5.6.6" id="sec:choosingBNBNodes"><span
+class="header-section-number">5.6.6</span> Next nodes and branching
+variables</h3>
+<p>While working through our branch and bound examples, there were two
+places where we had to make decisions on how to proceed:</p>
+<ul>
+<li>When an LP relaxation solution is fractional, which variable do we
+select to create the next branching sub-problems?</li>
+<li>When we’ve finished processing a node in the branch and bound tree,
+which node do we select to process next?</li>
+</ul>
+<p>In each case, we made our decision arbitrarily among the available
+options. In this section we will talk about some strategies used in
+practice and arguments for using them.</p>
+<h4>
+Choosing the branching variable
+</h4>
+<p>When a sub-problem’s LP relaxation solution has fractional
+components, we must choose one of the fractional variables to branch on.
+One common tactic is to select the variable that is “most fractional”,
+i.e. the variable whose fractional part (i.e. <span
+class="math inline">x_i - \lfloor x_i \rfloor</span>) in the LP
+relaxation solution is closest to <span
+class="math inline">\frac{1}{2}</span>. The justification for this
+selection is that values closer to integer values are perhaps more
+likely to take the value they are closest to in an optimal solution,
+while values whose integer parts are close to <span
+class="math inline">\frac{1}{2}</span> could go either way. But this is
+really just a rule of thumb. The logic behind that justification is not
+guaranteed to hold true, and selecting variables in this way will not
+necessarily lead to faster algorithm run times.</p>
+<p>Another technique, which we will not cover in detail here, is called
+<strong>strong branching</strong>. The idea is to take each
+fractional-valued variable and see how much the LP relaxation’s
+objective will change if <span class="math inline">x_i</span> is rounded
+down versus if <span class="math inline">x_i</span> is rounded up. The
+idea is that choosing a branching variable that induces larger
+variations in bounds is more likely to lead to quicker pruning, and thus
+help to minimize the size of the branch and bound tree. The downside is
+that this determination requires solving (or at least running several
+simplex iterations on) a different LP for each fractional variable,
+which can take significant amounts of time. Most solvers will use some
+strong branching, but only apply it selectively when they think the
+extra work up front will be rewarded by significantly smaller search
+trees later.</p>
+<h4>
+Choosing the next sub-problem
+</h4>
+<p>If you’ve just finished processing some node in your branch and bound
+tree, and there are multiple unexplored nodes still in the tree, how do
+you choose which node to move to next? Two common approaches are the
+<strong>depth-first</strong> strategy and the <strong>best node</strong>
+strategy.</p>
+<p>In a depth-first strategy, you continually work on children of the
+last completed node until an integer solution is found. The hope is that
+this strategy has the best chance to quickly lead you to an integer
+feasible solution, and thus you’ll be able to start pruning other nodes
+with this bound. It may also potentially make the sub-problems easier to
+solve, since moving from one node to another involves only adding a
+single constraint at each point. You would have just computed the
+previous optimal basis at the last node, so re-optimization may be
+faster. A tree developed while executing a depth-first strategy might
+look like this:</p>
+<svg width="650" height="380" class="bbTreeDraw" base="depthFirstTree">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>In a best node strategy, you select the unexplored node with the
+highest upper bound, i.e. the a node whose parent had the highest LP
+relaxation value. Taking the following tree as an example, we would
+select one of <span class="math inline">P^5</span> or <span
+class="math inline">P^6</span> before <span
+class="math inline">P^3</span> or <span class="math inline">P^4</span>
+because the LP relaxation value for <span class="math inline">P^2</span>
+is higher than the LP relaxation value for <span
+class="math inline">P^3</span>.</p>
+<svg width="450" height="330" class="bbTreeDraw" base="bestNodeTree">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>The intuition here is to stay in the area of the tree with the best
+chance of having good integer feasible solutions. For the above tree
+(and using the bound information we have from the parent LP relaxations)
+<span class="math inline">P^3</span> and <span
+class="math inline">P^4</span>’s optimal integer solution can have a
+value of at most 19, whereas <span class="math inline">P^5</span> and
+<span class="math inline">P^6</span> have a <em>chance</em> for a value
+up to 20. This is far from a guarantee of where the best solution will
+be, but it’s nonetheless a defensible choice given the information
+available. Furthermore, attacking the highest-bounded problems lets you
+reduce the upper bounds quicker, potentially helping to prove the
+optimality of an incumbent solution.</p>
+<p>In practice, a mix of these two strategies is often used. Depth-first
+is a popular choice at the beginning of a solve in order to identify a
+feasible solution quickly. After that, a mix of the two notions can be
+deployed, in an attempt to balance out the need for better feasible
+solutions versus reduced upper bounds.</p>
+<h3 data-number="5.6.7" id="correctness-and-complexity"><span
+class="header-section-number">5.6.7</span> Correctness and
+complexity</h3>
+<p>So now you have your first IP solving algorithm, but is it guaranteed
+to work? The answer is yes, and the key to proving so doesn’t lie in any
+interesting theory like we saw for the simplex method.</p>
+<p>To start, let’s consider only binary integer programs. In a BIP, all
+variables must take a value of 0 or 1, so our branches will always set
+some <span class="math inline">x_i=0</span> or <span
+class="math inline">x_i=1</span>. In a worst case, the tree for a BIP
+with three variables might look like this:</p>
+<svg width="650" height="330" class="bbTreeDraw" base="fullTree3d">
+Sorry, your browser does not support inline SVG.
+</svg>
+<p>The tree cannot grow beyond this, because in the bottom row every
+variable has been fixed to some value or another<a href="#fn89"
+class="footnote-ref" id="fnref89" role="doc-noteref"><sup>89</sup></a>!
+For an IP with general integer variables (i.e. not just binary), we can
+argue something similar so long as the feasible region of the IP is
+bounded. A slightly more subtle argument is needed if the feasible
+region is not bounded, but we won’t bother with that here.</p>
+<p>But even if the algorithm is valid, another important question is how
+many nodes we might need to explore before finishing. And we’ve already
+outlined an answer to that above: That worst-case tree for the
+3-variable case had 15 nodes in it, and depending on the objective
+function and branching/node selection procedures it’s entirely possible
+that we’d need to visit each and every one of them before finding the
+optimal solution. In general, a BIP with <span
+class="math inline">n</span> variables will in the worst case generate a
+tree with <span class="math inline">2^n</span> nodes in the final row
+(<span class="math inline">n</span> variables, each with 2 choices of
+the value taken), and <span class="math inline">2^{n + 1} - 1</span>
+nodes in total. A general IP can have even more.</p>
+<p>So the number of nodes visited during branch and bound may be
+exponential in the number of variables in the problem. This is
+unfortunate, but we should have expected it after what we learned in
+section <a href="#sec:complexityIntro">5.5</a>. Integer programming is
+an <span class="math inline">\mathcal{NP}</span>-hard problem, so we
+don’t know any polynomial-time algorithms for it.</p>
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
 <!-- {insertSection:sections/integer_programming/easy_ips.md} -->
 <!-- {insertSection:sections/integer_programming/theory_to_practice.md} -->
@@ -8440,6 +9184,43 @@ techniques, but they don’t use the full model as we formulated. Later in
 class, I plan to show an example where we solve a TSP with Gurobi but
 without adding every subtour elimination constraint up front.<a
 href="#fnref83" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn84"><p>For the uninitiated, A <em>proposition</em> is again
+like a theorem, and the below statement could have been called a theorem
+just a well. But we tend to use the work “proposition” instead when the
+result is a little more obvious.<a href="#fnref84" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn85"><p>In case you haven’t seen this notation before, <span
+class="math inline">\lfloor x \rfloor</span> (said “floor of <span
+class="math inline">x</span>”) is value resulting from rounding <span
+class="math inline">x</span> <em>down</em> to the closest integer, while
+<span class="math inline">\lceil x \rceil</span> (“ceiling of <span
+class="math inline">x</span>”) is the value resulting from rounding
+<span class="math inline">x</span> <em>up</em> to the closest integer.
+For example, <span class="math inline">\lfloor 1.3 \rfloor=1</span> and
+<span class="math inline">\lceil 1.3 \rceil=2</span>.<a href="#fnref85"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn86"><p>If multiple variables had fractional values you could
+just select one of them arbitrarily and the algorithm will still work.
+We’ll talk about other ways to choose between multiple fractional
+variables in section <a href="#sec:choosingBNBNodes">5.6.6</a>.<a
+href="#fnref86" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn87"><p>While algorithm correctness is not affected by the
+selection criteria, the number of nodes explored by the end of the
+algorithm, and thus ultimately algorithm run time, certainly can be.<a
+href="#fnref87" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn88"><p>Note that the only difference between <span
+class="math inline">P^1</span>’s LP relaxation and that of the problem
+<span class="math inline">P</span> we just solved is the addition of a
+single constraint. So instead of solving <span
+class="math inline">P^1</span>’s LP relaxation from scratch, a
+well-written algorithm could use solution information from <span
+class="math inline">P</span> and use a re-optimization procedure as
+discussed in section <a href="#sec:lpReopt">4.8.1</a>.<a href="#fnref88"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn89"><p>For example, at <span class="math inline">P^{12}</span>
+we see by following the edges that we’ve fixed the three variables to
+<span class="math inline">x_1=1, x_2=0, x_3=1</span>.<a href="#fnref89"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
