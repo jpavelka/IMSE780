@@ -238,7 +238,7 @@ which serves to reduce the available production time when both products are bein
 
 ### Example word problems {#sec:ipWordProblems}
 
-<div class='lectureVideoEmbed' video-id='f24c71ae75c74c6ab8fe1f1146ccea831d' video-date='2023-09-22'>Even ore IP modeling. Tried to address the confusion from last lecture, then modeled a few more word problems.</div>
+<div class='lectureVideoEmbed' video-id='f24c71ae75c74c6ab8fe1f1146ccea831d' video-date='2023-09-22'>Even more IP modeling. Tried to address the confusion from last lecture, then modeled a few more word problems.</div>
 
 Here we present the sample scenarios in section 12.4 of @classText, and talk about how to model each scenario. Each formulation will require some tricks with binary variables.
 
@@ -351,7 +351,7 @@ In the final formulation, we follow this logic for every flight in the table. La
 
 ### Model/data separation {#sec:ipModelDataSep}
 
-<div class='lectureVideoEmbed' video-id='ca5c6f5b711b4646ac87678cf72beac21d' video-date='2023-09-25'>Even ore IP modeling, this time with model/data separation.</div>
+<div class='lectureVideoEmbed' video-id='ca5c6f5b711b4646ac87678cf72beac21d' video-date='2023-09-25'>Even more IP modeling, this time with model/data separation.</div>
 
 The above ad-hoc modeling is useful, but in real applications we often have to solve different, but similarly structured models on some regular schedule. We'd prefer not to write a new model from scratch every time we need to solve one. As we discussed in +@sec:lpModelDataSep, the best practice is to write[^writeComputerCode] a base, general model which encodes all the logic for the problem, then inject the relevant problem data when an instance needs to be solved.
 

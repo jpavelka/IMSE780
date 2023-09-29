@@ -19,6 +19,8 @@ License costs for this software can be expensive, but you don't always need to p
 
 ### Solving IPs with Python {#sec:solvingIpsWithPython}
 
+<div class='lectureVideoEmbed' video-id='10f182354fe7429ab62d9d1887008ac11d' video-date='2023-09-29'>Finish Python IPs, begin complexity theory.</div>
+
 Now that we've got some modeling down, let's see how we can implement the models using Python code. In the following notebook, we illustrate how to set up several of the models explored above, with special attentions paid to the generalized models of +@sec:ipModelDataSep.
 
 {colabGist:1txl3wJn-QAZi9XpC3z0kG8fqUO78td6b,73f227dfef3ba217c11fe80db18d6b5f}
