@@ -2,6 +2,8 @@
 
 \* : From Hillier & Lieberman, 2021.
 
+$^\text{\textdagger}$ : From Wolsey, 2020.
+
 <hr>
 
 <h1 id='pyInstructions'>Instructions for submitting Python assignments:</h1>
