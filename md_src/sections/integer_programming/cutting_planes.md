@@ -68,4 +68,3 @@ Why do we care about the integer hull? It is the convex hull of all the integer 
 
 given a formulation that is not the integer hull, how could we go about finding it? cutting planes! the inequalities we added were cutting planes
 
-### Tightening formulations
