@@ -1213,8 +1213,164 @@ below:</p>
 </ol>
 </div>
 </div>
+<div id="Homework 6" class="assignmentContainer"
+data-sub-name="IP Models and Complexity" data-due="2023-10-09">
+<div>
+<ol type="1">
+<li><p>(5pts) Consider the Wyndor <em>integer</em> programming problem
+(eq. 15 from the notes). Suppose the company is considering replacing
+the current manufacturing plants with newly-built facilities. Newer
+technologies would mean faster processing times for the various
+products, but updated regulations would mean the plants must be open for
+fewer hours per week. The relevant data for each plant is given in the
+below table:</p>
+<table>
+<tr>
+<th>
+</th>
+<th>
+<p>Product 1 hrs/batch</p>
+</th>
+<th>
+<p>Product 2 hrs/batch</p>
+</th>
+<th>
+<p>Available hrs/week</p>
+</th>
+</tr>
+<tr>
+<th class="rowHead" style="width:5rem">
+<p>Plant 1</p>
+</th>
+<td>
+<p>0.5</p>
+</td>
+<td>
+<p>0</p>
+</td>
+<td>
+<p>3</p>
+</td>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Plant 2</p>
+</th>
+<td>
+<p>0</p>
+</td>
+<td>
+<p>1.2</p>
+</td>
+<td>
+<p>8</p>
+</td>
+</tr>
+<tr>
+<th class="rowHead">
+<p>Plant 3</p>
+</th>
+<td>
+<p>2</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>13</p>
+</td>
+</tr>
+</table>
+<p>Ignoring the substantial upfront costs, they’d like to know whether
+or not the new plants would improve their weekly profitability. They are
+willing to build none, some, or all of the new plants if the data
+supports it. Using Python and whichever modeling library you prefer,
+model and solve a single integer program to determine which new plants
+they should open in order to maximize weekly profit.</p></li>
+<li><p>(5pts)<span class="math inline">^\text{\textdagger}</span> The
+assignment problem is a well-known OR problem that works like this:
+There are <span class="math inline">n</span> people available to carry
+out <span class="math inline">n</span> jobs. Each person is assigned to
+carry out exactly one job. Some individuals are better suited to
+particular jobs than others, so there is an estimated cost <span
+class="math inline">c_{ij}</span> if person <span
+class="math inline">i</span> is assigned to job <span
+class="math inline">j</span>. The problem is to find a minimum cost
+assignment.</p>
+<p>Using whichever modeling library you choose, create a Python function
+that takes as input the problem data, and prints out the optimal
+assignment. Problem data must be of the form returned by this Python
+function:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_random_assignment(n):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    people <span class="op">=</span> [<span class="ss">f&#39;person_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">&#39;</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n)]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    jobs <span class="op">=</span> [<span class="ss">f&#39;job_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">&#39;</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n)]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    costs <span class="op">=</span> {(p, j): random.randint(<span class="dv">1</span>, <span class="dv">10</span>) <span class="cf">for</span> p <span class="kw">in</span> people <span class="cf">for</span> j <span class="kw">in</span> jobs}</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;people&#39;</span>: people,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;jobs&#39;</span>: jobs,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;costs&#39;</span>: costs</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    }    </span></code></pre></div>
+<p>Then your function signature should look like this:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solve_assignment(people, jobs, costs):</span></code></pre></div>
+<p>So an instance can be run like this:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>instance <span class="op">=</span> generate_random_assignment(<span class="dv">5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>solve_assignment(<span class="op">**</span>instance)</span></code></pre></div></li>
+<li><p>(5pts) Suppose the Fly-Right Airplane Company continues to find
+themselves in the situation from homework 5, question 1c; They receive
+custom orders from several companies each week. Further, the number of
+custom orders they can accommodate varies from week to week. As the
+resident OR expert, you’d like to be able to solve these problems every
+week with minimum modeling effort.</p>
+<p>Using whichever modeling library you choose, create a Python function
+that takes as input the problem data, and prints out how many airplanes
+to produce for each customer (if any) to maximize the company’s total
+profit. Problem data must be of the form returned by this Python
+function:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_random_fly_right(num_customers):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    customers <span class="op">=</span> [<span class="ss">f&#39;order_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">&#39;</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_customers)]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;customers&#39;</span>: customers,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;start_costs&#39;</span>: {c: random.randint(<span class="dv">1</span>, <span class="dv">5</span>) <span class="cf">for</span> c <span class="kw">in</span> customers},</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;net_revenue&#39;</span>: {c: random.randint(<span class="dv">1</span>, <span class="dv">5</span>) <span class="cf">for</span> c <span class="kw">in</span> customers},</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;capacity_per_plane&#39;</span>: {c: random.randint(<span class="dv">1</span>, <span class="dv">5</span>) <span class="op">/</span> <span class="dv">10</span> <span class="cf">for</span> c <span class="kw">in</span> customers},</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;max_order&#39;</span>: {c: random.randint(<span class="dv">1</span>, <span class="dv">5</span>) <span class="cf">for</span> c <span class="kw">in</span> customers},</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;max_customers_accommodated&#39;</span>: random.randint(<span class="dv">1</span>, num_customers <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    }   </span></code></pre></div>
+<p>Then your function signature should look like this:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solve_fly_right(customers, start_costs, net_revenue, capacity_per_plane, max_order, max_customers_accommodated):</span></code></pre></div>
+<p>So an instance can be run like this:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>instance <span class="op">=</span> generate_random_fly_right(<span class="dv">5</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>solve_fly_right(<span class="op">**</span>instance)</span></code></pre></div></li>
+<li><p>(3pts) Below I give plain English descriptions of some complexity
+classes from the course notes. Please identify the class corresponding
+to each description:</p>
+<ul>
+<li>The class of decision problems that are easy to solve.</li>
+<li>The class of decision problems for which a “yes” answer is easy to
+verify.</li>
+<li>The class of the hardest decision problems for which it is still
+easy to verify a “yes” answer.</li>
+</ul></li>
+<li><p>(2pts) The knapsack problem is an optimization problem one might
+term as: “Given a set of items, each with a value and a weight, and a
+weight limit for your backpack, what is the maximum total value of items
+you can fit into your backpack?”. Please give a similar description, but
+this time for the decision version of the knapsack problem.</p></li>
+</ol>
+</div>
+</div>
 <hr>
 <p>* : From Hillier &amp; Lieberman, 2021.</p>
+<p><span class="math inline">^\text{\textdagger}</span> : From Wolsey,
+2020.</p>
 <hr>
 <h1 id="pyInstructions">
 Instructions for submitting Python assignments:
