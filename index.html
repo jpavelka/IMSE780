@@ -1317,6 +1317,9 @@
       }
       addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
           for ([i, el] of els.entries()) {
+              if ([...el.classList].includes('refNotFound')) {
+                  continue;
+              }
               ((el, i) => {
                   refId = el.getAttribute('href');
                   refEl = document.getElementById(refId.slice(1));
@@ -1529,7 +1532,11 @@
           for (ref of refEls) {
               ((ref) => {
                   thm = document.getElementById(ref.getAttribute('for'));
-                  ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                  if (!!thm) {
+                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                  } else {
+                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
+                  }
               })(ref)
           }
           addTooltips([...refEls].map(el => el.firstChild), true);
@@ -1717,6 +1724,9 @@
           position: relative;
           left: 50%;
           transform: translateX(-50%);
+      }
+      .refNotFound {
+          color: red;
       }
   </style>
   <script>
@@ -7113,6 +7123,11 @@ id="mathcalnp-complete-and-mathcalnp-hard-problems"><span
 class="header-section-number">5.5.4</span> <span
 class="math inline">\mathcal{NP}</span>-complete and <span
 class="math inline">\mathcal{NP}</span>-hard problems</h3>
+<div class="lectureVideoEmbed"
+data-video-id="d36704377e374854b910f55e6caf11721d"
+data-video-date="2023-10-02">
+Wrap up complexity, begin branch and bound
+</div>
 <p>While the main question in the field, <span
 class="math inline">\mathcal{P}\stackrel{?}{=}\mathcal{NP}</span>,
 remains unsolved, there are still interesting things to be said about
@@ -7861,7 +7876,7 @@ an <span class="math inline">\mathcal{NP}</span>-hard problem, so we
 don’t know any polynomial-time algorithms for it.</p>
 <!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
 <!-- {insertSection:sections/integer_programming/easy_ips.md} -->
-<!-- {insertSection:sections/integer_programming/theory_to_practice.md} -->
+<!-- {insertSection:sections/integer_programming/misc.md} -->
 <!-- {insertSection:sections/integer_programming/notes.md} -->
 <h1 data-number="6" id="appendix"><span
 class="header-section-number">6</span> Appendix</h1>
