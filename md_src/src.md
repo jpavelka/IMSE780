@@ -30,7 +30,7 @@
 
 <!-- {insertSection:sections/integer_programming/easy_ips.md} -->
 
-<!-- {insertSection:sections/integer_programming/theory_to_practice.md} -->
+<!-- {insertSection:sections/integer_programming/misc.md} -->
 
 <!-- {insertSection:sections/integer_programming/notes.md} -->
 
