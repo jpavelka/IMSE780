@@ -3,6 +3,8 @@
 Largely follows @wolsey2020
 Most of the modeling examples from @classText (and some from @wolsey2020)
 
+complexity popular article https://www.quantamagazine.org/complexity-theorys-50-year-journey-to-the-limits-of-knowledge-20230817/
+
 heuristics (wolsey chp 13)
 column generation (wolsey chp 11)
 special ordered sets

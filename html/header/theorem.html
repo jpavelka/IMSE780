@@ -65,7 +65,11 @@
         for (ref of refEls) {
             ((ref) => {
                 thm = document.getElementById(ref.getAttribute('for'));
-                ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                if (!!thm) {
+                    ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                } else {
+                    ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
+                }
             })(ref)
         }
         addTooltips([...refEls].map(el => el.firstChild), true);

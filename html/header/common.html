@@ -214,6 +214,9 @@
     }
     addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
         for ([i, el] of els.entries()) {
+            if ([...el.classList].includes('refNotFound')) {
+                continue;
+            }
             ((el, i) => {
                 refId = el.getAttribute('href');
                 refEl = document.getElementById(refId.slice(1));
