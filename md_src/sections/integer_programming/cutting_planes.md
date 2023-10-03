@@ -21,7 +21,7 @@ When plotted out, the result is:
 
 <svg width=350 height=350 class="lpDraw" base="bbExample1"> Sorry, your browser does not support inline SVG.</svg>
 
-Once again, the feasible region to the problem's LP relaxation is presented as the gray-shaded area, while the plotted points are the integer feasible solutions. Now suppose we were to re-formulate the problem, adding two new constraint like so:
+Once again, the feasible region to the problem's LP relaxation is presented as the gray-shaded area, while the plotted points are the integer feasible solutions. Now suppose we were to re-formulate the problem, adding two new constraints like so:
 
 $$
 \begin{align*}
@@ -36,7 +36,7 @@ $$
 
 {#eq:integerHullExample}
 
-Let's take a look at this new problem in the below plot. Using the "Toggle Plots" button allows you to switch back and forth between this new formulation +@eq:integerHullExample and +@eq:cuttingPlaneExample.
+Let's take a look at this new problem in the below plot. Using the "Toggle Plots" button allows you to switch back and forth between this new formulation +@eq:integerHullExample and the previous one +@eq:cuttingPlaneExample.
 
 <div>
 <script>
@@ -60,11 +60,11 @@ What do you see when comparing these plots? When moving from +@eq:cuttingPlaneEx
 
 To properly describe what's going on here, we need a few definitions. Given two points $\x^1,\x^2\in\R^n$, a **convex combination** of the two points is any point $\y$ of the form $\y = \lambda \x^1 + (1 - \lambda) \x^2$ for some $0\leq\lambda\leq1$. That definition may seem a little complicated, but it's really just saying that $\y$ falls on the line segment between $\x$ and $\y$.
 
-Now let's extend that definition a bit. Given a collection of points $\x^1,\x^2,\dots,\x^m\in\R^n$ the **convex hull** of these points is any point $\y$ of the form $\lambda_1\x^1+\lambda_2\x^2+\cdots+\lambda_m\x^m$ where $\sum_i\lambda_i=1$. Again, this seems a little complicated on first inspection, but the idea is pretty simple. For example take any three points $\x^1,\x^2,\x^3$ that don't lie on the same line. The convex hull of those tree points is any point inside the triangle that has $\x^1,\x^2$, and $\x^3$ as its corner points. Extending to larger sets $\x^1,\dots,\x^m$, the convex hull is the set of points with corners coming from $\x^1,\dots,\x^m$ and including anything "in the middle" of them.
+Now let's extend that definition a bit. Given a collection of points $\x^1,\x^2,\dots,\x^m\in\R^n$ the **convex hull** of these points is any point $\y$ of the form $\lambda_1\x^1+\lambda_2\x^2+\cdots+\lambda_m\x^m$ where $\sum_i\lambda_i=1$. Again, this seems a little complicated on first inspection, but the idea is pretty simple. For example take any three points $\x^1,\x^2,\x^3$ that don't lie on the same line. The convex hull of those three points is any point inside the triangle that has $\x^1,\x^2$, and $\x^3$ as its corner points. Extending to larger sets $\x^1,\dots,\x^m$, the convex hull is the set of points with corners coming from $\x^1,\dots,\x^m$ and including anything "in the middle" of them.
 
 Of particular importance to an integer program is the so-called _integer hull_ of the formulation. Given an IP, its **integer hull** is the convex hull of all its integer feasible solutions. Looking back now to our previous plots, we can see that +@eq:integerHullExample actually defines the integer hull of +@eq:cuttingPlaneExample!
 
-Why do we care about the integer hull? It is the convex hull of all the integer feasible solutions, so in particular all of the corner points are integer points. This means that if we have some IP and we do as we did in +@eq:integerHullExample and build a linear program whose feasible region is exactly the integer hull of the IP, then solving the IP becomes very easy. Why? Because <span class='thmRef' for='thm:cornerPointOpt'></span> told us that every linear program has an optimal corner point solution, and in particular the simplex method always returns a corner point solution. So running simplex on such a formulation is guaranteed to return an optimal integer point!
+Why do we care about the integer hull? It is the convex hull of all the integer feasible solutions, so in particular all of the corner points are integer points. This means that if we have some set of linear inequalities (like in +@eq:integerHullExample) whose feasible region is exactly its integer hull, then solving the associated IP becomes very easy. Why? Because <span class='thmRef' for='thm:cornerPointOpt'></span> told us that every linear program has an optimal corner point solution, and in particular the simplex method always returns a corner point solution. So running simplex on such a formulation is guaranteed to return an optimal integer point!
 
 ### Network flows - IP for free!
 
@@ -80,10 +80,10 @@ To model this problem, we'll use variables $x_{ij}$ to denote the amount of each
 
 $$
 \begin{align*}
-\min && \sum_{(i,j)\in A}c_{ij}x_{ij} & \\
+\min && \sum_{(i,j)\in E}c_{ij}x_{ij} & \\
 \st  && \sum_{k\in V^-(i)}x_{ki} - \sum_{k\in V^+(i)}x_{ik} & = b_i && \forall\ i\in V \\
-     && x_{ij} & \geq 0 && \forall\ (i,j) \in A \\
-     && x_{ij} & \leq h_{ij} && \forall\ (i,j) \in A \\
+     && x_{ij} & \geq 0 && \forall\ (i,j) \in E \\
+     && x_{ij} & \leq h_{ij} && \forall\ (i,j) \in E \\
 \end{align*}
 $$
 
@@ -97,11 +97,11 @@ If the demands $b_i$ and capacities $h_{ij}$ are all integral, then every corner
 
 In other words, the inequality system of +@eq:networkFlow describes its own integer hull. That's pretty remarkable, right? On the face of it, this problem doesn't appear (at least to me) to be any easier than any of the various $\NP$-complete problems we've seen in class. And yet if we use this formulation, we can use linear programming techniques to recover an optimal integer solution in polynomial time![^cornerPointNotFromSimplex] There are also several purpose-built algorithms for min-cost network flows that are known to run in polynomial time. The practical knowledge to take away from this - any time you can formulate a problem as a network flow, it is usually a good idea to do so!
 
-[^cornerPointNotFromSimplex]: We know that the simplex method always returns a corner-point solution, but we also don't have a version of simplex that is guaranteed to run in polynomial time. But don't worry, we won't cover it but there are other ways to recover a corner-point solution to an LP in polynomial time.
+[^cornerPointNotFromSimplex]: We know that the simplex method always returns a corner-point solution, but we also don't have a version of simplex that is guaranteed to run in polynomial time. But don't worry, we won't cover it but there are other ways to recover an optimal corner-point solution to an LP in polynomial time.
 
 ### Valid inequalities
 
-Unfortunately, we're not always so lucky as we were with the network flow problem. Most IPs we formulate will coincide with their integer hulls, meaning the LP relaxation is unlikely to give us an integer solution directly. But it turns out one can (eventually) recover a description of the integer hull from any IP via the addition of **cutting planes**, which are basically extra inequalities that are valid for the integer program but violate some of the non-integer region of the IP's LP relaxation.
+Unfortunately, we're not always so lucky as we were with the network flow problem. Most IPs we formulate will not coincide with their integer hulls, meaning the LP relaxation is unlikely to give us an integer solution directly. But it turns out one can (eventually) recover a description of the integer hull from any IP via the addition of **cutting planes**, which are basically extra inequalities that are valid for the integer program but violate some of the non-integer region of the IP's LP relaxation.
 
 A definition: An inequality $\bpi\x\leq\pi_0$ (for some vector $\bpi$ and number $\pi_0$) is a **valid inequality** for an IP if every integer feasible solution to the IP satisfies it. For example, in +@sec:integerHull we took the formulation +@eq:cuttingPlaneExample and added two valid inequalities $x_1 + 2x_2 \leq 7$ and $x_2 \leq 3$ to turn it into a new formulation +@eq:integerHullExample. We can tell the inequalities were valid from the subsequent plot, which we'll show again here:
 
@@ -132,11 +132,9 @@ x&\in\{0,1\}
 \end{align*}
 $$
 
-Due to the upper bound on $y$ and since $x$ is binary, the inequality $y\leq 5x$ is valid[^likeBigM].
+Due to the upper bound on $y$ and since $x$ is binary, the inequality $y\leq 5x$ is valid.
 
-[^likeBigM]: Note that $y\leq9999x$ looks like a big-$M$ style constraint where the value of $M$ is chosen far too large. The $y\leq 5x$ constraint is a much tighter constraint, in that the linear programming relaxation will be smaller if it is added, while still having the same set of feasible integer solutions.
-
-Lastly, lets consider an integer program with a single constraint:
+Lastly, lets consider an integer program with a single functional constraint:
 
 $$
 \begin{align*}
@@ -151,7 +149,7 @@ $$
 \frac{13}{11}x_1+\frac{20}{11}x_2+x_3+\frac{6}{11}x_4\geq 6\frac{6}{11}
 $$
 
-Since every $x_i$ has been constraint non-negative, if we round up the coefficients on the left-hand side we will still have a valid (but slightly weaker) inequality that every (even non-integer) solution to the original problem will satisfy:
+Since every $x_i$ has been constrained non-negative, if we round up the coefficients on the left-hand side we will still have a valid (but slightly weaker) inequality that every (even non-integer) solution to the original problem will satisfy:
 
 $$
 2x_1+2x_2+x_3+x_4\geq 6\frac{6}{11}
@@ -178,7 +176,7 @@ $$
 7x_1 + 2x_2 &\leq 14 \\
 x_2 &\leq 3 \\
 2x_1 - 2x_2 &\leq 3 \\
-x_1,x_2,x_3&\in\I
+x_1,x_2,x_3&\in\I_+
 \end{align*}
 $$
 
@@ -188,13 +186,13 @@ $$
 2x_1 + \frac{1}{63}x_2\leq\frac{121}{21}
 $$
 
-We know this is valid for the linear programming relaxation. From here, we can repeat the process of our previous example: Since it is a $\leq$ constraint, we may round down the coefficients on the left-hand side to get:
+We know this is valid for the linear programming relaxation. From here, we can repeat the process of our previous example: Since it is a $\leq$ constraint and each $x_i$ is non-negative, we may round down the coefficients on the left-hand side to get:
 
 $$
 2x_1 \leq\frac{121}{21}
 $$
 
-Then, since everything on the left-hand side is integral, rounding down the right-hand side will leave us an inequality that is still valid for all of the IP's _integer_ solutions. So 
+Then, since everything on the left-hand side is integral, rounding down the right-hand side will leave us an inequality that is still valid for all of the IP's _integer_ solutions. So
 
 $$
 2x_1\leq5
@@ -204,24 +202,148 @@ is valid for the integer program.
 
 ### The Chvátal–Gomory procedure
 
-It will turn out that, from a theory perspective, the procedure from that preceding is kinda all we need to know. Let's formalize what we did above by presenting the __Chvátal–Gomory (CG)__ procedure for generating valid inequalities.
+It will turn out that, from a theory perspective, the procedure from that preceding section is kind of all we need to know. Let's formalize what we did above by presenting the **Chvátal–Gomory (CG)** procedure for generating valid inequalities.
 
-Let $P=\{x:Ax\leq b\}$, with $A$ an $m\times n$ matrix with columns $(a_1,a_2,\dots,a_n)$ be the set of feasible solutions to a system of linear inequalities, and let $u\in\R_+^m$ be a non-negative vector. Then the inequality
+Let $P=\{x:Ax\leq b\}$, with $A$ an $m\times n$ matrix with columns $(a_1,a_2,\dots,a_n)$, be the set of feasible solutions to a system of linear inequalities, and let $u\in\R_+^m$ be a non-negative vector. Then the inequality
+
 $$
 \sum_{j=1}^n\floor{ua_j}x_j\leq\floor{ub}
 $$
-is called a __CG inequality__ for $P$. Furthermore, this inequality is valid for the set of integer solutions to $P$ (due to the same reasoning we went through in the preceding section).
 
-Basically, building a CG inequality consists of creating linear combinations of the constraints defining $P$, then rounding down each coefficient. The __CG procedure__ is the process of generating GC inequalities and adding them to the formulation for $P$. From there, you could build new cutting planes by taking linear combinations of the newly-added inequalities, which could also be added to the formulation for $P$. And it turns out that you can generate _any_ valid inequality by repeating this procedure (though once again, the proof is beyond the scope of this course):
+is called a **CG inequality** for $P$. Furthermore, this inequality is valid for the set of integer solutions to $P$ (due to the same reasoning we went through in the preceding section).
+
+Basically, building a CG inequality consists of creating linear combinations of the constraints defining $P$, then rounding down each coefficient. The **CG procedure** is the process of generating GC inequalities and adding them to the formulation for $P$. From there, you could build new cutting planes by taking linear combinations of the newly-added inequalities, which could also be added to the formulation for $P$. And it turns out that you can generate _any_ valid inequality by repeating this procedure (though once again, the proof is beyond the scope of this course):
 
 <div class='theorem' id='thm:CGFinite'>
 Every valid inequality for $P$'s integer hull can be obtained by applying the CG procedure a finite number of times.
 </div>
 
-This is a neat result, but how practical is it? While any inequality can be generated with finitely many rounds of the CG procedure, that finite can sometimes be (as you might have guessed) exponential in $n$ (the dimension of $P$). You may also require exponentially many of these inequalities to define the integer hull.
+This is a neat result, but how practical is it? While any inequality can be generated with finitely many rounds of the CG procedure, that finite number can sometimes be (as you might have guessed) exponentially large in $n$ (the dimension of $P$). You may also require exponentially many of these inequalities to define the integer hull.
 
 Furthermore, the definition isn't very prescriptive. Sure, there is some sequence of multiplier vectors $u$ that will yield any inequality that you want, but we don't have a very practical way of determining this sequence.
 
 ### Gomory's fractional cutting plane algorithm
 
-With that final critique in mind, let's see if we can do a little better and define an actual algorithm for solving IPs with cutting planes. 
+With that final critique in mind, let's see if we can do a little better and define an actual algorithm for solving IPs with cutting planes. As per usual, we'll start by solving the LP relaxation to our IP of interest. If the solution is not integral, we'd like to be able to add an inequality that is valid for the IP but also removes the previous LP optimal solution. Let's take the following IP as an example:
+
+$$
+\begin{align*}
+\max && 4x_1 -  x_2 \\
+\st  && 7x_1 - 2x_2 & \leq 14 \\
+     &&         x_2 & \leq 3 \\
+     && 2x_1 - 2x_2 & \leq 3 \\
+     &&  x_1,   x_2 &  \in \I
+\end{align*}
+$$
+
+{#eq:gomoryExampleInequalities}
+
+Let's add slack variables (which, since $x_1,x_2$ are integer and all the data is integer, will be integer at an optimal solution as well) and re-write the problem in matrix form suitable for the simplex method:
+
+$$
+\begin{bmatrix}
+1 & 4 & -1 & 0 & 0 & 0 \\
+0 & 7 & -2 & 1 & 0 & 0 \\
+0 & 0 &  1 & 0 & 1 & 0 \\
+0 & 2 & -2 & 0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 14 \\ 3 \\ 3
+\end{bmatrix}
+$$
+
+If we solve this with the simplex method, the system at the optimal basis would look like:
+
+$$
+\begin{bmatrix}
+1 & 0 &  0 & -4/7 & -1/7 & 0 \\
+0 & 1 &  0 &  1/7 &  2/7 & 0 \\
+0 & 0 &  1 &    0 &    1 & 0 \\
+0 & 0 &  0 & -2/7 & 10/7 & 1
+\end{bmatrix}
+\begin{bmatrix}
+Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+59/7 \\ 20/7 \\ 3 \\ 23/7
+\end{bmatrix}
+$$
+
+We see that the optimal basic solution is not integral. How can we add a cut that will be feasible for the IP but eliminate this basic solution? Let's take a look at the second row of the matrix, where $x_1$ is basic with a fractional value. That equation
+
+$$
+x_1 + \frac{1}{7}x_3 + \frac{2}{7}x_4 = \frac{20}{7}
+$$
+
+{#eq:gomoryEx1}
+
+is valid for the LP relaxation. We will continue to use the trick of rounding down coefficients to get new valid inequalities. Rounding down the left-hand side coefficients will give us an inequality that is valid for the LP relaxation:
+
+$$
+x_1 + 0x_3 + 0x_4 \leq \frac{20}{7}
+$$
+
+then (as before) since the entire left-hand side is integral, any integer solution to the IP will have to satisfy
+
+$$
+x_1 + 0x_3 + 0x_4 \leq 2
+$$
+
+or equivalently
+
+$$
+-x_1 \geq -2.
+$$
+
+{#eq:gomoryEx2}
+
+So with +@eq:gomoryEx2 valid for the IP and +@eq:gomoryEx1 valid for the LP relaxation (and thus also the IP), adding them together yields the following inequality which must also be valid for the IP:
+
+$$
+\frac{1}{7}x_3 + \frac{2}{7}x_4 \geq \frac{6}{7}.
+$$
+
+Not only is this valid, it is also violated by the prior basic solution, since the only variables remaining on the left-hand side are non-basic and thus take a value of 0 at the basic solution. We can even verify this graphically. The first step will be to write the new inequality in terms of the original variables, which we know how to do since $x_3$ and $x_4$ are the slack variables for the first and second constraints, respectively, of +@eq:gomoryExampleInequalities. So we can substitute $x_3=14-7x_1+2x_2$ and $x_4=3-x_2$ and cancel out terms to see that the inequality is equivalent to $x_1\leq2$. Below, you can see the plot of the original LP +@eq:gomoryExampleInequalities with the new cut $x_1\leq2$ added. Hit the "Toggle Plots" button to see the original formulation with the LP optimal point included. Notice how the new valid inequality cuts away the old LP solution while leaving all the integer points intact.
+
+<div>
+<script>
+     gomoryExampleClickFunc = () => {
+          for (plotNum of [1, 2]){
+               plotEl = document.getElementById('gomoryExamplePlot' + plotNum);
+               plotEl.style.display = plotEl.style.display === 'none' ? 'block' : 'none';
+          }
+     }
+</script>
+<div id='gomoryExamplePlot1' style="display:block">
+<svg width=350 height=350 class="lpDraw" base="gomoryExample1" altArgs='{"addConstraints": [[[1, 0, 2, "l"],[0.75, 4]]]}'> Sorry, your browser does not support inline SVG.</svg>
+</div>
+<div id='gomoryExamplePlot2' style="display:none">
+<svg width=350 height=350 class="lpDraw" base="gomoryExample1" altArgs='{"extraPoints": [[2.85714285714, 3, {"fill": "blue", "r": 5}]], "extraText": [["LP optimal", 240, 100, {"font-size": "0.7rem"}]]}'> Sorry, your browser does not support inline SVG.</svg>
+</div>
+<button class='basicCenter' onClick='gomoryExampleClickFunc()' style='padding: 0.5rem'>Toggle Plots</button>
+</div>
+
+To continue solving, we can add this new inequality to the problem formulation and re-solve with simplex. If the optimal basis has a fractional variable, we can add a new constraint in the way we just did above. Then we continue on like this until solving simplex yields an integral basic solution.
+
+The process we just outlined is called **Gomory's fractional cutting plane algorithm**. In general, the new inequalities are drawn from any row in the simplex system at the optimal basis with a fractional right-hand side value. We can write that row as
+
+$$
+x_{b} + \sum_{j\in N}a_jx_j = r
+$$
+
+where $N$ is the set of non-basic variables, and $b$ is the index of the basic variable in that row. Then the cut we add is given by:
+
+$$
+\sum_{j\in N}(a_j-\floor{a_j})x_j\geq r-\floor{r}
+$$
+
+Gomory's algorithm is guaranteed to terminate at an optimal solution in a finite number of steps. But once again, that finite number can still grow exponentially with respect to the size of the problem instance. In practice, it has not been found to be competitive with branch and bound.
+
+### Branch and cut
+
+So far it sounds like cutting planes are not the way forward for solving integer programs in practice. But that is not quite true. Even if no solver uses cutting plane algorithms exclusively to solve IPs, they still have a role to play. The state of the art in IP solvers is a style of algorithm known as **branch and cut**. We won't cover it any detail, but we have given the main ideas already. There is a branch and bound tree governing the search, but at various times during the algorithm cutting planes are derived and added to either the base problems or any of the sub-problems. Other techniques come into play as well, such as several pre-solve steps that take the original problem and attempt to reformulate it in some way to make it easier to solve, as well as running heuristics to find/improve integer feasible solutions.
