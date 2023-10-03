@@ -42,6 +42,17 @@
             plotIntegerFeasible: true,
             addFeasibleRegionText: false,
             extraMathText: [["P^1", 80, 230], ["P^2", 190, 265]]
+        },
+        gomoryExample1: {
+            xMin: -1,
+            xMax: 4.99,
+            yMin: -1,
+            yMax: 4.99,
+            obj: [4, -1],
+            ineqs: [[7, -2, 14, "l"], [0, 1, 3, "l"], [2, -2, 3, "l"]],
+            ineqTextPlaces: [[-5, -5], [-5, -5], [-5, -5]],
+            plotIntegerFeasible: true,
+            addFeasibleRegionText: false
         }
     }
     const drawPlot = (svg, svgId) => {
@@ -326,8 +337,15 @@
                         }
                         num = xCoef * rhs1 - xCoef1 * rhs;
                         yIntersect = num / denom;
-                        if (xCoef === 0) {
+                        if (xCoef === 0 && yCoef1 === 0 && rhs !== 0 && rhs1 !== 0){
+                            intersections.push([rhs1 / xCoef1, rhs / yCoef, i, j])
+                            continue
+                        }
+                        else if (xCoef === 0) {
                             xIntersect = rhs1 / xCoef1;
+                            if (rhs !== 0) {
+                                xIntersect = rhs * xIntersect;
+                            }
                         } else {
                             xIntersect = (rhs / xCoef) - (yCoef / xCoef) * num / denom;
                         }

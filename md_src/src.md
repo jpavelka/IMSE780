@@ -26,13 +26,11 @@
 
 {insertSection:sections/integer_programming/branch_and_bound.md}
 
-<!-- {insertSection:sections/integer_programming/cutting_planes.md} -->
+{insertSection:sections/integer_programming/cutting_planes.md}
 
-<!-- {insertSection:sections/integer_programming/easy_ips.md} -->
+{insertSection:sections/integer_programming/misc.md}
 
-<!-- {insertSection:sections/integer_programming/misc.md} -->
-
-<!-- {insertSection:sections/integer_programming/notes.md} -->
+{insertSection:sections/integer_programming/notes.md}
 
 {insertSection:sections/appendix/appendix.md}
 
