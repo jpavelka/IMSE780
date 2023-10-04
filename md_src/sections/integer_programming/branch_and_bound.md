@@ -90,6 +90,8 @@ All this to say, there is no need to actually solve $P^1$! The information we've
 
 ### Algorithm basics
 
+<div class='lectureVideoEmbed' video-id='98e6e074dd1e406b97eb870ce68ba08d1d' video-date='2023-10-04'>HW 5 review, branch and bound</div>
+
 The preceding sections displayed the essence of the branch and bound algorithm for solving integer programs. You initially solve the underlying LP relaxation. If the optimal solution $\x^*$ is not integer, you _branch_ by selecting some variable $x_i$ such that $x_i^*\not\in\I$, then creating two new IPs that are identical to the original, except to one problem you add a constraint $x_i\leq\floor{x^*_i}$ and to the other you add $x_i\geq\ceil{x^*_i}$[^newNotationFloorCeil]. These new problems are called the **child problems** of the original problem, and any subsequent children of the child problems are called **descendant problems**.
 
 [^newNotationFloorCeil]: In case you haven't seen this notation before, $\floor{x}$ (said "floor of $x$") is value resulting from rounding $x$ _down_ to the closest integer, while $\ceil{x}$ ("ceiling of $x$") is the value resulting from rounding $x$ _up_ to the closest integer. For example, $\floor{1.3}=1$ and $\ceil{1.3}=2$.

@@ -73,6 +73,8 @@ find a minimum cost assignment.
     solve_fly_right(**instance)
     ```
 
+    [Extra note 10/4: You can ignore that `max_customers_accommodated` value if you wish. When I first read the original problem (in HW 5) I read the "not be able to accept all three orders" line as meaning they could only make planes for up to two of the three customers. So this value was supposed to mean they could only make planes for up to `max_customers_accommodated` in your models. But I noticed in the last homework that nobody else interpreted it that way (and I think for good reason). So I'm ok with you don't have that value anywhere your model.]
+
 1. (3pts) Below I give plain English descriptions of some complexity classes from the course notes. Please identify the class corresponding to each description:
     - The class of decision problems that are easy to solve.
     - The class of decision problems for which a "yes" answer is easy to verify.
