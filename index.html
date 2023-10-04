@@ -1172,30 +1172,6 @@
               )
           }
       }
-      videoEmbeds = () => {
-          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
-              ((el) => {
-                  const descHTML = el.innerHTML;
-                  const dt = el.getAttribute('data-video-date');
-                  const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
-                  el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
-                  el.style.cursor = 'pointer';
-                  const embedIndentDiv = document.createElement('div');
-                  embedIndentDiv.classList = ['embedIndent'];
-                  el.appendChild(embedIndentDiv);
-                  el.onclick = () => {
-                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
-                  }
-                  const textDiv = document.createElement('div');
-                  textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
-                  embedIndentDiv.appendChild(textDiv);
-                  const vidIframe = document.createElement('iframe');
-                  vidIframe.classList = ['lectureEmbedIframe'];
-                  vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
-                  embedIndentDiv.appendChild(vidIframe);
-              })(el)
-          }
-      }
       getUrlParameter = (name) => {
           name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
           var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -1560,24 +1536,34 @@
           addTooltips([...refEls].map(el => el.firstChild), true);
       }
   </script>
-  <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+  <script>
+      videoEmbeds = () => {
+          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
+              ((el) => {
+                  const descHTML = el.innerHTML;
+                  const dt = el.getAttribute('data-video-date');
+                  const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
+                  el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
+                  el.style.cursor = 'pointer';
+                  const embedIndentDiv = document.createElement('div');
+                  embedIndentDiv.classList = ['embedIndent'];
+                  el.appendChild(embedIndentDiv);
+                  el.onclick = () => {
+                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
+                      if (!!!vidIframe.getAttribute('src')) {
+                          vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
+                          embedIndentDiv.appendChild(vidIframe);
+                      }
+                  }
+                  const textDiv = document.createElement('div');
+                  textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
+                  embedIndentDiv.appendChild(textDiv);
+                  const vidIframe = document.createElement('iframe');
+                  vidIframe.classList = ['lectureEmbedIframe'];
+              })(el)
+          }
       }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
+  </script>>
   <style>
       .eqnos {
           display: flex;
@@ -1861,6 +1847,24 @@
       BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
       BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
   </script>
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
+      }
+  </style>
   <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
   <style>
       nav#TOC:nth-child(2) {
@@ -7966,7 +7970,7 @@ new formulation eq. <a href="#eq:integerHullExample">17</a> and the
 previous one eq. <a href="#eq:cuttingPlaneExample">16</a>.</p>
 <div>
 <script>
-     bbExampleClickFunc = () => {
+     cpExampleClickFunc = () => {
           for (plotNum of [1, 2]){
                plotEl = document.getElementById('cutPlaneExamplePlot' + plotNum);
                plotEl.style.display = plotEl.style.display === 'none' ? 'block' : 'none';
@@ -7983,7 +7987,7 @@ Sorry, your browser does not support inline SVG.
 Sorry, your browser does not support inline SVG.
 </svg>
 </div>
-<button class="basicCenter" onClick="bbExampleClickFunc()" style="padding: 0.5rem">
+<button class="basicCenter" onClick="cpExampleClickFunc()" style="padding: 0.5rem">
 Toggle Plots
 </button>
 </div>
