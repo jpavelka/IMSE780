@@ -40,7 +40,7 @@ Let's take a look at this new problem in the below plot. Using the "Toggle Plots
 
 <div>
 <script>
-     bbExampleClickFunc = () => {
+     cpExampleClickFunc = () => {
           for (plotNum of [1, 2]){
                plotEl = document.getElementById('cutPlaneExamplePlot' + plotNum);
                plotEl.style.display = plotEl.style.display === 'none' ? 'block' : 'none';
@@ -53,7 +53,7 @@ Let's take a look at this new problem in the below plot. Using the "Toggle Plots
 <div id='cutPlaneExamplePlot2' style="display:none">
 <svg width=350 height=350 class="lpDraw" base="bbExample1"> Sorry, your browser does not support inline SVG.</svg>
 </div>
-<button class='basicCenter' onClick='bbExampleClickFunc()' style='padding: 0.5rem'>Toggle Plots</button>
+<button class='basicCenter' onClick='cpExampleClickFunc()' style='padding: 0.5rem'>Toggle Plots</button>
 </div>
 
 What do you see when comparing these plots? When moving from +@eq:cuttingPlaneExample to +@eq:integerHullExample the feasible region for the LP relaxation has shrunk. But notice that the set of feasible integer points has stayed exactly the same! In fact, +@eq:integerHullExample is in some sense the "tightest" formulation for an integer program with those points as its feasible solutions.
