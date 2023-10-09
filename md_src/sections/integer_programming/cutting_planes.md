@@ -116,7 +116,7 @@ Suppose the constraint[^knapsackOneConstraint] for a $\{0,1\}$ knapsack problem 
 [^knapsackOneConstraint]: Remember, the natural IP formulation for the knapsack problem has only one constraint aside from setting the variables to be binary.
 
 $$
-3x_1 - 4x_2 + 2x_3 - 3x_4 + 5 \leq -2.
+3x_1 - 4x_2 + 2x_3 - 3x_4 + 5x_5 \leq -2.
 $$
 
 If $x_2=x_4=0$, then every remaining coefficient on the left-hand side of the constraint is positive. Since each variable is binary, it would then be impossible to get the left-hand side value $\leq -2$ as required. So the inequality $x_2 + x_4 \geq 1$ is valid.
@@ -149,7 +149,13 @@ $$
 \frac{13}{11}x_1+\frac{20}{11}x_2+x_3+\frac{6}{11}x_4\geq 6\frac{6}{11}
 $$
 
-Since every $x_i$ has been constrained non-negative, if we round up the coefficients on the left-hand side we will still have a valid (but slightly weaker) inequality that every (even non-integer) solution to the original problem will satisfy:
+Since every $x_i$ has been constrained non-negative and the constraint is of $\geq$ type, we can increase coefficients on the left-hand side and still end up with a valid inequality. For example, the fact that $2x_1\geq\frac{13}{11}x_1$ combined with the above inequality means that the following is valid:
+
+$$
+2x_1+\frac{20}{11}x_2+x_3+\frac{6}{11}x_4\geq 6\frac{6}{11}
+$$
+
+Similarly, if we round up _all_ the coefficients on the left-hand side we will still have a valid (but slightly weaker) inequality that every (even non-integer) solution to the original problem will satisfy:
 
 $$
 2x_1+2x_2+x_3+x_4\geq 6\frac{6}{11}
