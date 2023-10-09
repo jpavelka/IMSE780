@@ -1,5 +1,7 @@
 ## Cutting planes
 
+<div class='lectureVideoEmbed' video-id='45565f4e661842a7b84de225dd8ed0a01d' video-date='2023-10-09'>Branch and bound wrap up, begin cutting planes.</div>
+
 We now turn our attention to cutting planes, another concept that is often used in conjunction with branch and bound in integer programming solvers.
 
 ### The integer hull {#sec:integerHull}
