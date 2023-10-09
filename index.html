@@ -8176,7 +8176,7 @@ role="doc-biblioref">2020</a>)</span>.</p>
 id="fnref91" role="doc-noteref"><sup>91</sup></a> for a <span
 class="math inline">\{0,1\}</span> knapsack problem is given by:</p>
 <p><span class="math display">
-3x_1 - 4x_2 + 2x_3 - 3x_4 + 5 \leq -2.
+3x_1 - 4x_2 + 2x_3 - 3x_4 + 5x_5 \leq -2.
 </span></p>
 <p>If <span class="math inline">x_2=x_4=0</span>, then every remaining
 coefficient on the left-hand side of the constraint is positive. Since
@@ -8210,9 +8210,19 @@ valid) inequality:</p>
 \frac{13}{11}x_1+\frac{20}{11}x_2+x_3+\frac{6}{11}x_4\geq 6\frac{6}{11}
 </span></p>
 <p>Since every <span class="math inline">x_i</span> has been constrained
-non-negative, if we round up the coefficients on the left-hand side we
-will still have a valid (but slightly weaker) inequality that every
-(even non-integer) solution to the original problem will satisfy:</p>
+non-negative and the constraint is of <span
+class="math inline">\geq</span> type, we can increase coefficients on
+the left-hand side and still end up with a valid inequality. For
+example, the fact that <span
+class="math inline">2x_1\geq\frac{13}{11}x_1</span> combined with the
+above inequality means that the following is valid:</p>
+<p><span class="math display">
+2x_1+\frac{20}{11}x_2+x_3+\frac{6}{11}x_4\geq 6\frac{6}{11}
+</span></p>
+<p>Similarly, if we round up <em>all</em> the coefficients on the
+left-hand side we will still have a valid (but slightly weaker)
+inequality that every (even non-integer) solution to the original
+problem will satisfy:</p>
 <p><span class="math display">
 2x_1+2x_2+x_3+x_4\geq 6\frac{6}{11}
 </span></p>
