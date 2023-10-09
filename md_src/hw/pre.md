@@ -291,6 +291,25 @@
                 'P^5': {},
                 'P^6': {}
             }
+        },
+        bbTreeExam: {
+            'edges': [
+                ['P', 'P^1', 'x_3 \\leq 2'],
+                ['P', 'P^2', 'x_3 \\geq 3'],
+                ['P^1', 'P^3', 'x_1 \\leq 0'],
+                ['P^1', 'P^4', 'x_1 \\geq 1'],
+                ['P^3', 'P^5', 'x_2 \\leq 0'],
+                ['P^3', 'P^6', 'x_2 \\geq 1']
+            ],
+            'nodes': {
+                'P': {lp: '10', state: 'branched'},
+                'P^1': {lp: '9', state: 'branched'},
+                'P^2': {},
+                'P^3': {lp: '7', state: 'branched'},
+                'P^4': {},
+                'P^5': {},
+                'P^6': {}
+            }
         }
     }
 </script>

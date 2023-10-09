@@ -19,7 +19,7 @@ Below we present some integer programming formulations, their partially finished
       \st  &&  x_1 + 2x_2 + 2x_3 & \leq 10 \\
            && 5x_1 +  x_2 + 3x_3 & \leq 20 \\
            &&  x_1 +  x_2 +  x_3 & \leq 8 \\
-           && x_1, x_2, x_3 & \in \I
+           && x_1, x_2, x_3 & \in \I_+
       \end{align*}
       $$
 
@@ -39,7 +39,7 @@ Below we present some integer programming formulations, their partially finished
       \st  && 3x_1 + 2x_2 + 3x_3 & \leq 11 \\
            && 2x_1 +  x_2 +  x_3 & \leq 9 \\
            &&  x_1 + 2x_2 + 3x_3 & \leq 8 \\
-           && x_1, x_2, x_3 & \in \I
+           && x_1, x_2, x_3 & \in \I_+
       \end{align*}
       $$
 
@@ -59,7 +59,7 @@ Below we present some integer programming formulations, their partially finished
       \st  && 3x_1 + 4x_2 + 2x_3 & \leq 18 \\
            && 3x_1 + 5x_2 + 4x_3 & \leq 21 \\
            && 2x_1 + 5x_2 + 3x_3 & \leq 18 \\
-           && x_1, x_2, x_3 & \in \I
+           && x_1, x_2, x_3 & \in \I_+
       \end{align*}
       $$
 
@@ -79,7 +79,7 @@ Below we present some integer programming formulations, their partially finished
       \st  &&   3x_1 + 4x_2 + 5x_3 & \leq 12 \\
            &&   2x_1 +  x_2 + 4x_3 & \leq 10 \\
            &&   2x_1 + 2x_2 + 3x_3 & \leq 8 \\
-           &&   x_1, x_2, x_3 & \in \I
+           &&   x_1, x_2, x_3 & \in \I_+
       \end{align*}
       $$
 
