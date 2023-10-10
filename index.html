@@ -7829,6 +7829,12 @@ class="math inline">\frac{1}{2}</span> could go either way. But this is
 really just a rule of thumb. The logic behind that justification is not
 guaranteed to hold true, and selecting variables in this way will not
 necessarily lead to faster algorithm run times.</p>
+<p>UPDATE: Just after presenting this in class, I happened upon the
+following podcast where the guest is the creator of the solver SCIP and
+currently heads R&amp;D for Gurobi. According to him, the “most
+fractional” rule is (maybe worse than?) useless.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/8bhIW27vCUQ?si=uVfwGTgca0xboEaT&amp;start=3378" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
 <p>Another technique, which we will not cover in detail here, is called
 <strong>strong branching</strong>. The idea is to take each
 fractional-valued variable and see how much the LP relaxation’s
