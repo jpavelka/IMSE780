@@ -1,4 +1,4 @@
-<div class='assignmentContainer' id='Homework 6' sub-name='IP Models and Complexity' due='2023-10-09'>
+<div class='assignmentContainer' id='Homework 6' sub-name='IP Models and Complexity' due='2023-10-09' grading-notes-link='https://colab.research.google.com/drive/19fV6KEsDaX656jcHkBX7ZI0YeSFJKmVI?usp=sharing'>
 <div>
 1. (5pts) Consider the Wyndor _integer_ programming problem (eq. 15 from the notes). Suppose the company is considering replacing the current manufacturing plants with newly-built facilities. Newer technologies would mean faster processing times for the various products, but updated regulations would mean the plants must be open for fewer hours per week. The relevant data for each plant is given in the below table:
 
