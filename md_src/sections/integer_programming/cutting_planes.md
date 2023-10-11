@@ -173,6 +173,8 @@ is a valid inequality for the original IP.
 
 ### A general procedure for generating cuts
 
+<div class='lectureVideoEmbed' video-id='5e94b1371d02464ebe8ff7e41dad70201d' video-date='2023-10-11'>HW 6 review, finish cutting planes.</div>
+
 By reasoning through the examples, hopefully you can see why each of the preceding inequalities were valid for their respective problems. But if we're looking for a general way to solve integer programs, this kind of ad-hoc searching is not going to take us very far. Although maybe there was something to that last one...
 
 Suppose we have in integer program defined by some set of linear constraints. We know from linear algebra that multiplying inequalities by a constant will yield valid inequalities, as will adding inequalities together (assuming the inequalities have the same sign). Indeed, any sequence of those operations will yield a valid inequality for the original linear system.
