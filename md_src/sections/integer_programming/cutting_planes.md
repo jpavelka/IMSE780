@@ -240,7 +240,7 @@ $$
 \st  && 7x_1 - 2x_2 & \leq 14 \\
      &&         x_2 & \leq 3 \\
      && 2x_1 - 2x_2 & \leq 3 \\
-     &&  x_1,   x_2 &  \in \I
+     &&  x_1,   x_2 &  \in \I_+
 \end{align*}
 $$
 
@@ -250,10 +250,10 @@ Let's add slack variables (which, since $x_1,x_2$ are integer and all the data i
 
 $$
 \begin{bmatrix}
-1 & 4 & -1 & 0 & 0 & 0 \\
-0 & 7 & -2 & 1 & 0 & 0 \\
-0 & 0 &  1 & 0 & 1 & 0 \\
-0 & 2 & -2 & 0 & 0 & 1
+1 & -4 &  1 & 0 & 0 & 0 \\
+0 &  7 & -2 & 1 & 0 & 0 \\
+0 &  0 &  1 & 0 & 1 & 0 \\
+0 &  2 & -2 & 0 & 0 & 1
 \end{bmatrix}
 \begin{bmatrix}
 Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
@@ -268,7 +268,7 @@ If we solve this with the simplex method, the system at the optimal basis would 
 
 $$
 \begin{bmatrix}
-1 & 0 &  0 & -4/7 & -1/7 & 0 \\
+1 & 0 &  0 &  4/7 &  1/7 & 0 \\
 0 & 1 &  0 &  1/7 &  2/7 & 0 \\
 0 & 0 &  1 &    0 &    1 & 0 \\
 0 & 0 &  0 & -2/7 & 10/7 & 1
