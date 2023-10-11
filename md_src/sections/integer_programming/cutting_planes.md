@@ -111,7 +111,7 @@ A definition: An inequality $\bpi\x\leq\pi_0$ (for some vector $\bpi$ and number
 
 Neither of the added inequalities violate any of the _integer_ feasible points for the original formulation. They do violate some _non-integer_ feasible points for the original problem's LP relaxation, but this is a fine and in fact desirable thing for a cutting plane to do.
 
-Let's now point out a few more valid inequalities for some IP formulations, taken from +@wolsey2020.
+Let's now point out a few more valid inequalities for some IP formulations, taken from @wolsey2020.
 
 Suppose the constraint[^knapsackOneConstraint] for a $\{0,1\}$ knapsack problem is given by:
 
