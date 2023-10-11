@@ -8358,7 +8358,7 @@ class="math display">
 \text{s.t.}&amp;&amp; 7x_1 - 2x_2 &amp; \leq 14 \\
      &amp;&amp;         x_2 &amp; \leq 3 \\
      &amp;&amp; 2x_1 - 2x_2 &amp; \leq 3 \\
-     &amp;&amp;  x_1,   x_2 &amp;  \in \mathbb{I}
+     &amp;&amp;  x_1,   x_2 &amp;  \in \mathbb{I}_+
 \end{align*}
 </span><span class="eqnos-number">(19)</span></span></p>
 <p>Let’s add slack variables (which, since <span
@@ -8367,10 +8367,10 @@ integer, will be integer at an optimal solution as well) and re-write
 the problem in matrix form suitable for the simplex method:</p>
 <p><span class="math display">
 \begin{bmatrix}
-1 &amp; 4 &amp; -1 &amp; 0 &amp; 0 &amp; 0 \\
-0 &amp; 7 &amp; -2 &amp; 1 &amp; 0 &amp; 0 \\
-0 &amp; 0 &amp;  1 &amp; 0 &amp; 1 &amp; 0 \\
-0 &amp; 2 &amp; -2 &amp; 0 &amp; 0 &amp; 1
+1 &amp; -4 &amp;  1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp;  7 &amp; -2 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp;  0 &amp;  1 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp;  2 &amp; -2 &amp; 0 &amp; 0 &amp; 1
 \end{bmatrix}
 \begin{bmatrix}
 Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
@@ -8384,7 +8384,7 @@ Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
 basis would look like:</p>
 <p><span class="math display">
 \begin{bmatrix}
-1 &amp; 0 &amp;  0 &amp; -4/7 &amp; -1/7 &amp; 0 \\
+1 &amp; 0 &amp;  0 &amp;  4/7 &amp;  1/7 &amp; 0 \\
 0 &amp; 1 &amp;  0 &amp;  1/7 &amp;  2/7 &amp; 0 \\
 0 &amp; 0 &amp;  1 &amp;    0 &amp;    1 &amp; 0 \\
 0 &amp; 0 &amp;  0 &amp; -2/7 &amp; 10/7 &amp; 1
