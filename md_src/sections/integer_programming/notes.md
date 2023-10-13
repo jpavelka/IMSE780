@@ -1,5 +1,7 @@
 ## Notes and further reading
 
+<div class='lectureVideoEmbed' video-id='754dad0e4ec244709ca99fc8dc1b956b1d' video-date='2023-10-13'>IP wrap, exam review.</div>
+
 While I've taken many of this section's modeling examples from chapter 12 in @classText, for the theory and algorithms I prefer the presentation in @wolsey2020. Much of the content here is due to that book's chapters 3, 6, 7, and 8.
 
 In fact, there's even more from @wolsey2020 that I would have liked to cover if I had the time:
