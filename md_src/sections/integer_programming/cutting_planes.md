@@ -214,10 +214,10 @@ is valid for the integer program.
 
 It will turn out that, from a theory perspective, the procedure from that preceding section is kind of all we need to know. Let's formalize what we did above by presenting the **Chvátal–Gomory (CG)** procedure for generating valid inequalities.
 
-Let $P=\{x:Ax\leq b\}$, with $A$ an $m\times n$ matrix with columns $(a_1,a_2,\dots,a_n)$, be the set of feasible solutions to a system of linear inequalities, and let $u\in\R_+^m$ be a non-negative vector. Then the inequality
+Let $P=\{\x:\A\x\leq \b\}$, with $\A$ an $m\times n$ matrix with columns $(\mathbf{a}_1,\mathbf{a}_2,\dots,\mathbf{a}_n)$, be the set of feasible solutions to a system of linear inequalities, and let $\mathbf{u}\in\R_+^m$ be a non-negative vector. Then the inequality
 
 $$
-\sum_{j=1}^n\floor{ua_j}x_j\leq\floor{ub}
+\sum_{j=1}^n\floor{\mathbf{u}\mathbf{a}_j}\x_j\leq\floor{\mathbf{u}\b}
 $$
 
 is called a **CG inequality** for $P$. Furthermore, this inequality is valid for the set of integer solutions to $P$ (due to the same reasoning we went through in the preceding section).

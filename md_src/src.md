@@ -32,6 +32,12 @@
 
 {insertSection:sections/integer_programming/notes.md}
 
+<!-- {insertSection:sections/nonlinear_programming/intro.md} -->
+
+<!-- {insertSection:sections/nonlinear_programming/univariate_unconstrained.md} -->
+
+<!-- {insertSection:sections/nonlinear_programming/multivariate_unconstrained.md} -->
+
 {insertSection:sections/appendix/appendix.md}
 
 {insertSection:sections/appendix/symbols.md}
