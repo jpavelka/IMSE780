@@ -8306,15 +8306,16 @@ procedure</h3>
 that preceding section is kind of all we need to know. Let’s formalize
 what we did above by presenting the <strong>Chvátal–Gomory (CG)</strong>
 procedure for generating valid inequalities.</p>
-<p>Let <span class="math inline">P=\{x:Ax\leq b\}</span>, with <span
-class="math inline">A</span> an <span class="math inline">m\times
-n</span> matrix with columns <span
-class="math inline">(a_1,a_2,\dots,a_n)</span>, be the set of feasible
-solutions to a system of linear inequalities, and let <span
-class="math inline">u\in\mathbb{R}_+^m</span> be a non-negative vector.
-Then the inequality</p>
+<p>Let <span class="math inline">P=\{\mathbf{x}:\mathbf{A}\mathbf{x}\leq
+\mathbf{b}\}</span>, with <span class="math inline">\mathbf{A}</span> an
+<span class="math inline">m\times n</span> matrix with columns <span
+class="math inline">(\mathbf{a}_1,\mathbf{a}_2,\dots,\mathbf{a}_n)</span>,
+be the set of feasible solutions to a system of linear inequalities, and
+let <span class="math inline">\mathbf{u}\in\mathbb{R}_+^m</span> be a
+non-negative vector. Then the inequality</p>
 <p><span class="math display">
-\sum_{j=1}^n\lfloor ua_j \rfloor x_j\leq\lfloor ub \rfloor
+\sum_{j=1}^n\lfloor \mathbf{u}\mathbf{a}_j
+\rfloor\mathbf{x}_j\leq\lfloor \mathbf{u}\mathbf{b} \rfloor
 </span></p>
 <p>is called a <strong>CG inequality</strong> for <span
 class="math inline">P</span>. Furthermore, this inequality is valid for
@@ -8570,6 +8571,9 @@ combinatorial optimization. Additionally, <a
 href="https://catalog.k-state.edu/content.php?catoid=58&amp;navoid=11444">IMSE
 882</a> covers network flows and graph theory and has some intersection
 with the topics we covered here as well.</p>
+<!-- {insertSection:sections/nonlinear_programming/intro.md} -->
+<!-- {insertSection:sections/nonlinear_programming/univariate_unconstrained.md} -->
+<!-- {insertSection:sections/nonlinear_programming/multivariate_unconstrained.md} -->
 <h1 data-number="6" id="appendix"><span
 class="header-section-number">6</span> Appendix</h1>
 <h2 data-number="6.1" id="sec:symbols"><span

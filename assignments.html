@@ -1700,6 +1700,45 @@ information you’ve gathered.</li>
 </ol>
 </div>
 </div>
+<div id="Homework 8" class="assignmentContainer"
+data-sub-name="Cutting planes" data-due="2023-10-23">
+<div>
+<ol type="1">
+<li>(6pts) Suppose the constraints for some integer program are given
+by: <span class="math display">
+\begin{align*}
+4x_1 + 5x_2 &amp;\leq 17 \\
+3x_1 + x_2  &amp;\leq 11 \\
+x_1, x_2 &amp; \in\mathbb{I}_+
+\end{align*}
+</span> For each of the following inequalities, determine whether or not
+it is valid for the IP.
+<ol type="a">
+<li><span class="math inline">x_2 \leq 3</span></li>
+<li><span class="math inline">x_1 + 2x_2 \leq 3</span></li>
+<li><span class="math inline">x_1 + x_2 \leq 5</span></li>
+</ol></li>
+<li>(4pts) Suppose you use simplex to solve the LP relaxation to some an
+integer program, and the system at the optimal basis looks like this:
+<span class="math display">
+\begin{bmatrix}
+     1 &amp; 0 &amp; 0 &amp;  9/4 &amp;  5/8 &amp; 0 \\
+     0 &amp; 1 &amp; 0 &amp;  3/4 &amp; -1/8 &amp; 0 \\
+     0 &amp; 0 &amp; 1 &amp; -1/2 &amp;  1/4 &amp; 0 \\
+     0 &amp; 0 &amp; 0 &amp; -3/2 &amp; -1/4 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+     Z \\ x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5
+\end{bmatrix}
+=
+\begin{bmatrix}
+     72/2 \\ 5/2 \\ 3 \\ 2
+\end{bmatrix}
+</span> If you were using the Gomory fractional cutting plane algorithm
+to solve this problem, what inequality would you generate?</li>
+</ol>
+</div>
+</div>
 <hr>
 <p>* : From Hillier &amp; Lieberman, 2021.</p>
 <p><span class="math inline">^\text{\textdagger}</span> : From Wolsey,
