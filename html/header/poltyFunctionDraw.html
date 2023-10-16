@@ -1,0 +1,101 @@
+<script>
+    const drawAllPlotlyFunctions = () => {
+        let plotNum = 0;
+        for (el of document.getElementsByClassName('plotlyFunctionPlot')) {
+            if (!!!el.id){
+                el.id = 'plotlyFunctionPlotNum' + plotNum;
+            }
+            drawPlotlyFunction(
+                el.getAttribute('data-expression'),
+                el.id,
+                JSON.parse(el.getAttribute('data-xRange')),
+                JSON.parse(el.getAttribute('data-extraPoints')),
+                el.getAttribute('data-lineBetweenPoints') === 'true',
+                el.getAttribute('data-arrowsOnLines') === 'true'
+            );
+            plotNum += 1;
+        }
+    }
+    const drawPlotlyFunction = (expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines) => {
+        // compile the expression once
+        const expr = math.compile(expression)
+
+        // evaluate the expression repeatedly for different values of x
+        const stepSize = (xRange[1] - xRange[0]) / 50
+        const xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+        const yValues = xValues.map(function (x) {
+            return expr.evaluate({x: x})
+        })
+
+        // render the plot using plotly
+        const trace1 = {
+            x: xValues,
+            y: yValues,
+            type: 'scatter',
+            mode: 'lines',
+            line: {color: 'black'}
+        }
+        let data = [trace1]
+        if (!!extraPoints) {
+            for (ep of extraPoints) {
+                try {
+                    x = math.compile(ep[0]).evaluate();
+                } catch {
+                    x = ep[0];
+                }
+                if (ep[1] === 'eval') {
+                    y = expr.evaluate({x: x})
+                } else {
+                    try {
+                        y = math.compile(ep[1]).evaluate();
+                    } catch {
+                        y = ep[1];
+                    }
+                }
+                color = ep.length >= 3 ? ep[2] : 'black';
+                size = ep.length >= 4 ? ep[3] : 10;
+                data.push({
+                    x: [x],
+                    y: [y],
+                    type: 'scatter',
+                    mode: 'markers',
+                    marker: {color: color, size: size}
+                })
+            }
+        }
+        if (lineBetweenPoints) {
+            let x = [];
+            let y = [];
+            let color = 'black';
+            for (i in data) {
+                if (i != 0) {     
+                    x.push(data[i].x[0]);
+                    y.push(data[i].y[0]);
+                    color = data[i].marker.color;
+                }
+            }
+            mode = 'lines';
+            marker = {};
+            if (arrowsOnLines) {
+                mode = 'lines+markers';
+                marker = {symbol: 'arrow-bar-up', angleref: "previous", size: 10}
+            }
+            data.push({
+                x: x,
+                y: y,
+                type: 'scatter',
+                mode: mode,
+                line: {color: color},
+                marker: marker
+            })
+        }
+        const layout = {
+            hovermode: false,
+            showlegend: false,
+            margin: {t: 25, b: 25, l: 25, r: 25},
+            xaxis: {fixedrange: true},
+            yaxis: {fixedrange: true}
+        }
+        Plotly.newPlot(elId, data, layout, {displayModeBar: false})
+    }
+</script>
