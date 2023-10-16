@@ -1,5 +1,7 @@
 # Nonlinear programming
 
+<div class='lectureVideoEmbed' video-id='a1bace97c5f1459bb76588dfdba3d4c11d' video-date='2023-10-16'>Discussed the class project, then jumped into nonlinear programming and calculus background.</div>
+
 We will now spend some time discussing the broad topic of nonlinear programming. This will mark a bit of a shift in the class, as up to this point our discussions have mostly been building upon previous topics. As we'll see, the functional forms we deal with for nonlinear programs break fairly distinctly from what we've already seen in the linear/integer programming domains.
 
 Stated most generally, a **nonlinear programming** problem is an optimization problem of the form

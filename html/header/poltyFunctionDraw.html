@@ -11,12 +11,13 @@
                 JSON.parse(el.getAttribute('data-xRange')),
                 JSON.parse(el.getAttribute('data-extraPoints')),
                 el.getAttribute('data-lineBetweenPoints') === 'true',
-                el.getAttribute('data-arrowsOnLines') === 'true'
+                el.getAttribute('data-arrowsOnLines') === 'true',
+                JSON.parse(el.getAttribute('data-layoutExtra') || '{}')
             );
             plotNum += 1;
         }
     }
-    const drawPlotlyFunction = (expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines) => {
+    const drawPlotlyFunction = (expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines, layoutExtra) => {
         // compile the expression once
         const expr = math.compile(expression)
 
@@ -89,12 +90,17 @@
                 marker: marker
             })
         }
-        const layout = {
+        let layout = {
             hovermode: false,
             showlegend: false,
             margin: {t: 25, b: 25, l: 25, r: 25},
             xaxis: {fixedrange: true},
             yaxis: {fixedrange: true}
+        }
+        if (Object.keys(layoutExtra).length > 0) {
+            for ([k, v] of Object.entries(layoutExtra)) {
+                layout[k] = v;
+            }
         }
         Plotly.newPlot(elId, data, layout, {displayModeBar: false})
     }
