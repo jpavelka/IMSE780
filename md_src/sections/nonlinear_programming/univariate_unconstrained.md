@@ -196,33 +196,34 @@ We'll let $\epsilon = 0.01$, and by inspection we can find that $0$ and $2$ are 
 
 The following table illustrates the how the values of $\underline x, \overline x$, and $x'$ change as we iterate through the bisection method.
 
-![Applying the bisection method [@classText]](images/bisection-example-table.png)
+![Applying the bisection method on $f(x)=12x - 3x^4 - 2x^6$ [@classText]](images/bisection-example-table.png)
 
 As another visual aid, consider the below plots that illustrate how $x'$ is updated from iteration to iteration.
 
 <div>
 <script>
      bisectExClickFunc = (x) => {
-          for (plotNum of [1, 2, 3, 4, 5, 6, 7]){
+          const plotNums = [1, 2, 3, 4, 5, 6, 7];
+          for (plotNum of plotNums){
                plotEl = document.getElementById('bisectEx' + plotNum);
                if (plotEl.style.display === 'block') {
                     displayed = plotNum;
                }
           }
           newDisplayed = displayed + parseInt(x);
-          newDisplayed = newDisplayed === 8 ? 1 : newDisplayed === 0 ? 7 : newDisplayed;
+          newDisplayed = newDisplayed === (plotNums.length + 1) ? 1 : newDisplayed === 0 ? plotNums.length : newDisplayed;
           document.getElementById('bisectEx' + displayed).style.display = 'none';
           document.getElementById('bisectEx' + newDisplayed).style.display = 'block';
           document.getElementById('bisectExPlotLabel').textContent = 'Iteration ' + newDisplayed;
      }
 </script>
-<div id=bisectEx1 style='width:350px;height:350px;display:block' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[1, "eval", "blue", 5], [0.5, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
-<div id=bisectEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.5, "eval", "blue", 5], [0.75, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
-<div id=bisectEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.75, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
-<div id=bisectEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.8125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
-<div id=bisectEx5 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.8125, "eval", "blue", 5], [0.84375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
-<div id=bisectEx6 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84375, "eval", "blue", 5], [0.828125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
-<div id=bisectEx7 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.828125, "eval", "blue", 5], [0.8359375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true'></div>
+<div id=bisectEx1 style='width:350px;height:350px;display:block' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[1, "eval", "blue", 5], [0.5, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.5, "eval", "blue", 5], [0.75, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.75, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.8125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx5 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.8125, "eval", "blue", 5], [0.84375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx6 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84375, "eval", "blue", 5], [0.828125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx7 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.828125, "eval", "blue", 5], [0.8359375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
 <div id='bisectExPlotLabel' style='text-align: center'>Iteration 1</div>
 <div style='display: flex; justify-content: center'>
 <button class='forwardBackwardButton' id='bisectExPlotBackButton' onClick='bisectExClickFunc("-1")'></button>
@@ -234,4 +235,120 @@ As another visual aid, consider the below plots that illustrate how $x'$ is upda
 </script>
 </div>
 
-<!-- ### Newton's method -->
+### Newton's method
+
+The bisection method is certainly a valid optimization algorithm and its simplicity makes it a good choice for an introduction to search procedures. But its main drawback is that it is relatively slow to converge. Recall that we started the algorithm with 0 and 2 as our lower and upper bounds and a trial solution of 1, so the distance from our trial solution to the true optimal solution was at most 1. Each iteration reduces the gap by a factor $\frac{1}{2}$, so to reduce it below our chosen tolerance of $\epsilon=0.01$ we are required to complete $\ceil{\log_2(1) - \log_2(0.01)}=7$ iterations of the algorithm.
+
+Without another method to compare to, it is hard to say whether or not this is good. But we will find that our next method, known as **Newton's method**[^newtonsMethodNamedForIsaac], will usually converge in fewer iterations. A key to the quicker convergence is that Newton's method will use more information about the function than the bisection method did. Namely, instead of considering just (the sign of) the first derivative of $f$, Newton's method considers both first and second derivative information in determining the next trial solution.
+
+[^newtonsMethodNamedForIsaac]: Yes, the method is named for Sir Isaac Newton, pioneer of calculus and gravitation.
+
+The motivation for how the derivative information is used comes from the Taylor series you learned about in calculus class. Assuming that $f$ is infinitely differentiable, the **Taylor series** of $f$ at some number $a\in\R$ is given by:
+
+$$
+f(a) + \frac{f'(a)}{1!}(x - a) + \frac{f''(a)}{2!}(x - a)^2 + \frac{f'''(a)}{3!}(x - a)^3 + \dots
+$$
+
+The nice thing about the Taylor series is that it gives us a way to approximate _any_ function by a polynomial, by evaluating at least the first few terms of the series. Indeed, for any $x$ that is "close to" $a$, the second-degree Taylor polynomial approximates the value of $f(x)$ quite well, i.e. we have
+
+$$
+f(x) \approx f(a) + \frac{f'(a)}{1!}(x - a) + \frac{f''(a)}{2!}(x - a)^2
+$$
+
+This is precisely what Newton's method uses to determine its next trial solution. Essentially, we will use the second-degree Taylor polynomial as a quadratic approximation to $f$ and quickly solve for $x$ that maximizes the approximation.
+
+How do we do this? Recall that $a$ is just some real number (in our algorithm, it will be the current trial solution), so that $f(a), f'(a)$, and $f''(a)$ are just constants. So the polynomial is really just a quadratic function of $x$, for which can we can easily take a derivative and say
+
+$$
+f'(x)\approx f'(a) + f''(a)(x - a)
+$$
+
+If we set that right-hand side to 0 and solve for $x$, we end up with:
+
+$$
+x = a - \frac{f'(a)}{f''(a)}.
+$$
+
+We won't prove it, but it is true that since we've assumed $f$ is concave, it is also true that the second-degree Taylor polynomial is concave. So that critical point $a - \frac{f'(a)}{f''(a)}$ we just found is a global maximum for the polynomial. Since the polynomial is a good estimate for $f$ (at least when near $a$) we might as well take that value as our next trial solution.
+
+This is precisely what we'll do in Newton's method. Let's use the notation $x_i$ for the trial solution in the $i$th iteration of the method. Then the trial solutions follow the relation:
+
+$$
+x_{i + 1} = x_i - \frac{f'(x_i)}{f''(x_i)}.
+$$
+
+We've determined how to update the trial solution, but how do we know when to stop? Two common stopping criteria are to stop either when two consecutive trial solutions are sufficiently close, i.e. $|x_{i + 1} - x_i|<\epsilon$ for some small $\epsilon>0$, or for the derivative at the trial solution to be sufficiently close to zero, i.e. $f'(x_i)<\epsilon$. For our presentation below, we'll adopt the first standard.
+
+Lastly, how should we determine the first trial solution? It ultimately does not matter - one could just start at $x=0$ or anywhere else you like. If you can plot out the function to find a good initial spot, or otherwise have a good idea where the optimum might be, you can just go with that as well.
+
+Bringing it all together, here are the steps for executing Newton's method:
+
+- _Initialize_: Select error tolerance $\epsilon$. Set $i=1$ and choose initial trial solution $x_1$.
+- _Iterate_:
+  - Set $x_{i+1}=x_i - \frac{f'(x_i)}{f''(x_i)}$.
+  - If $|x_{i+1}-x_i|<\epsilon$:
+    - Terminate and return $x_{i+1}$ as optimal within tolerance.
+  - Else:
+    - Set $i=i+1$.
+
+<h4>Example</h4>
+
+Let's go ahead and run Newton's method on the same example from last section, $f(x)=12x - 3x^4 - 2x^6$. We'll start from the same initial trial solution $x_1=1$, and decrease the error tolerance to $\epsilon=0.00001$. From here, the only information we need to complete the first iteration is $f'(1)$ and $f''(1)$. We have
+
+$$
+f'(x) = 12 - 12x^3 - 12x^5 = 12(1 - x^3 - x^5)
+$$
+
+and
+
+$$
+f''(x) = -12(3x^2 + 5x^4)
+$$
+
+meaning that the next trial solution should be
+
+$$
+x_2 = x_1 - \frac{12(1 - x_1^3 - x_1^5)}{-12(3x_1^2 + 5x_1^4)} = 1 - \frac{1}{8} = \frac{7}{8}.
+$$
+
+Since $|x_2-x_1|>\epsilon$ we must continue with another iteration. The results of subsequent iterations are given in the following table:
+
+![Applying Newton's method on $f(x)=12x - 3x^4 - 2x^6$ [@classText]](images/newton-example-table.png)
+
+Since $|x_4-x_3|\leq\epsilon$ we terminate after iteration 4 with $0.83762$ as our optimal (within tolerance) solution.
+
+Analogous to last section, here's a group of plots illustrating how the trial solution changes from iteration to iteration:
+
+<div>
+<script>
+     newtonExClickFunc = (x) => {
+          const plotNums = [1, 2, 3, 4];
+          for (plotNum of plotNums){
+               plotEl = document.getElementById('newtonEx' + plotNum);
+               if (plotEl.style.display === 'block') {
+                    displayed = plotNum;
+               }
+          }
+          newDisplayed = displayed + parseInt(x);
+          newDisplayed = newDisplayed === (plotNums.length + 1) ? 1 : newDisplayed === 0 ? plotNums.length : newDisplayed;
+          document.getElementById('newtonEx' + displayed).style.display = 'none';
+          document.getElementById('newtonEx' + newDisplayed).style.display = 'block';
+          document.getElementById('newtonExPlotLabel').textContent = 'Iteration ' + newDisplayed;
+     }
+</script>
+<div id=newtonEx1 style='width:350px;height:350px;display:block' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[1, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=newtonEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.84003, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=newtonEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84003, "eval", "blue", 5], [0.83763, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=newtonEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.83763, "eval", "blue", 5], [0.83762, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id='newtonExPlotLabel' style='text-align: center'>Iteration 1</div>
+<div style='display: flex; justify-content: center'>
+<button class='forwardBackwardButton' id='newtonExPlotBackButton' onClick='newtonExClickFunc("-1")'></button>
+<button class='forwardBackwardButton' id='newtonExPlotForwardButton' onClick='newtonExClickFunc("1")'></button>
+</div>
+<script>
+     document.getElementById('newtonExPlotBackButton').textContent = '<<';
+     document.getElementById('newtonExPlotForwardButton').textContent = '>>';
+</script>
+</div>
+
+It's only a single sample, but it's still pretty impressive to see the difference in convergence speed between Newton's method and the bisection method. It only took 4 iterations for Newton's method while bisection took 7 iterations, and that's even with the more forgiving error tolerance $\epsilon=0.01$ instead of $\epsilon=0.00001$. If we were to run the bisection method with the more stringent error tolerance we would have required $\ceil{\log_2(1) - \log_2(0.00001)}=17$ iterations!
