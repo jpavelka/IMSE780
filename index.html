@@ -1154,6 +1154,7 @@
           makeAssignmentLink();
           drawPlotlyCharts();
           drawBBTrees();
+          drawAllPlotlyFunctions();
       }
       drawPlotlyCharts = () => {
           for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
@@ -1562,6 +1563,107 @@
                   vidIframe.classList = ['lectureEmbedIframe'];
               })(el)
           }
+      }
+  </script>
+  <script>
+      const drawAllPlotlyFunctions = () => {
+          let plotNum = 0;
+          for (el of document.getElementsByClassName('plotlyFunctionPlot')) {
+              if (!!!el.id){
+                  el.id = 'plotlyFunctionPlotNum' + plotNum;
+              }
+              drawPlotlyFunction(
+                  el.getAttribute('data-expression'),
+                  el.id,
+                  JSON.parse(el.getAttribute('data-xRange')),
+                  JSON.parse(el.getAttribute('data-extraPoints')),
+                  el.getAttribute('data-lineBetweenPoints') === 'true',
+                  el.getAttribute('data-arrowsOnLines') === 'true'
+              );
+              plotNum += 1;
+          }
+      }
+      const drawPlotlyFunction = (expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines) => {
+          // compile the expression once
+          const expr = math.compile(expression)
+
+          // evaluate the expression repeatedly for different values of x
+          const stepSize = (xRange[1] - xRange[0]) / 50
+          const xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+          const yValues = xValues.map(function (x) {
+              return expr.evaluate({x: x})
+          })
+
+          // render the plot using plotly
+          const trace1 = {
+              x: xValues,
+              y: yValues,
+              type: 'scatter',
+              mode: 'lines',
+              line: {color: 'black'}
+          }
+          let data = [trace1]
+          if (!!extraPoints) {
+              for (ep of extraPoints) {
+                  try {
+                      x = math.compile(ep[0]).evaluate();
+                  } catch {
+                      x = ep[0];
+                  }
+                  if (ep[1] === 'eval') {
+                      y = expr.evaluate({x: x})
+                  } else {
+                      try {
+                          y = math.compile(ep[1]).evaluate();
+                      } catch {
+                          y = ep[1];
+                      }
+                  }
+                  color = ep.length >= 3 ? ep[2] : 'black';
+                  size = ep.length >= 4 ? ep[3] : 10;
+                  data.push({
+                      x: [x],
+                      y: [y],
+                      type: 'scatter',
+                      mode: 'markers',
+                      marker: {color: color, size: size}
+                  })
+              }
+          }
+          if (lineBetweenPoints) {
+              let x = [];
+              let y = [];
+              let color = 'black';
+              for (i in data) {
+                  if (i != 0) {     
+                      x.push(data[i].x[0]);
+                      y.push(data[i].y[0]);
+                      color = data[i].marker.color;
+                  }
+              }
+              mode = 'lines';
+              marker = {};
+              if (arrowsOnLines) {
+                  mode = 'lines+markers';
+                  marker = {symbol: 'arrow-bar-up', angleref: "previous", size: 10}
+              }
+              data.push({
+                  x: x,
+                  y: y,
+                  type: 'scatter',
+                  mode: mode,
+                  line: {color: color},
+                  marker: marker
+              })
+          }
+          const layout = {
+              hovermode: false,
+              showlegend: false,
+              margin: {t: 25, b: 25, l: 25, r: 25},
+              xaxis: {fixedrange: true},
+              yaxis: {fixedrange: true}
+          }
+          Plotly.newPlot(elId, data, layout, {displayModeBar: false})
       }
   </script>
   <style>
@@ -2318,6 +2420,7 @@
 </head>
 <body>
 <script src='https://cdn.plot.ly/plotly-2.26.0.min.js'></script>
+<script src="https://unpkg.com/mathjs@11.11.2/lib/browser/math.js"></script>
 <div class="navbar">
     <div onclick="openCloseNav()" style="padding-left: 1rem; cursor: pointer; color: blue">Contents</div>
     <div style="text-align: center">IMSE 780</div>
@@ -2625,43 +2728,74 @@ class="toc-section-number">5.8</span> Practical miscellany</a></li>
 id="toc-notes-and-further-reading-1"><span
 class="toc-section-number">5.9</span> Notes and further reading</a></li>
 </ul></li>
+<li><a href="#nonlinear-programming"
+id="toc-nonlinear-programming"><span class="toc-section-number">6</span>
+Nonlinear programming</a>
+<ul>
+<li><a href="#example-nonlinear-programs"
+id="toc-example-nonlinear-programs"><span
+class="toc-section-number">6.1</span> Example nonlinear programs</a>
+<ul>
+<li><a href="#price-elasticity" id="toc-price-elasticity"><span
+class="toc-section-number">6.1.1</span> Price elasticity</a></li>
+<li><a href="#investment-risk" id="toc-investment-risk"><span
+class="toc-section-number">6.1.2</span> Investment risk</a></li>
+</ul></li>
+<li><a href="#single-variable-unconstrained-optimization"
+id="toc-single-variable-unconstrained-optimization"><span
+class="toc-section-number">6.2</span> Single-variable unconstrained
+optimization</a>
+<ul>
+<li><a href="#calculus-review" id="toc-calculus-review"><span
+class="toc-section-number">6.2.1</span> Calculus review</a></li>
+<li><a href="#convexity-and-concavity"
+id="toc-convexity-and-concavity"><span
+class="toc-section-number">6.2.2</span> Convexity and concavity</a></li>
+<li><a href="#analytical-vs.-numerical-methods"
+id="toc-analytical-vs.-numerical-methods"><span
+class="toc-section-number">6.2.3</span> Analytical vs. numerical
+methods</a></li>
+<li><a href="#bisection-method" id="toc-bisection-method"><span
+class="toc-section-number">6.2.4</span> Bisection method</a></li>
+</ul></li>
+</ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
-class="toc-section-number">6</span> Appendix</a>
+class="toc-section-number">7</span> Appendix</a>
 <ul>
 <li><a href="#sec:symbols" id="toc-sec:symbols"><span
-class="toc-section-number">6.1</span> Special symbols</a></li>
+class="toc-section-number">7.1</span> Special symbols</a></li>
 <li><a href="#sec:linearAlgebra" id="toc-sec:linearAlgebra"><span
-class="toc-section-number">6.2</span> Linear algebra review</a>
+class="toc-section-number">7.2</span> Linear algebra review</a>
 <ul>
 <li><a href="#sec:matrixMath" id="toc-sec:matrixMath"><span
-class="toc-section-number">6.2.1</span> Matrix math</a></li>
+class="toc-section-number">7.2.1</span> Matrix math</a></li>
 <li><a href="#properties-of-matrix-operations"
 id="toc-properties-of-matrix-operations"><span
-class="toc-section-number">6.2.2</span> Properties of matrix
+class="toc-section-number">7.2.2</span> Properties of matrix
 operations</a></li>
 <li><a href="#special-matrices" id="toc-special-matrices"><span
-class="toc-section-number">6.2.3</span> Special matrices</a></li>
+class="toc-section-number">7.2.3</span> Special matrices</a></li>
 <li><a href="#rank-and-inverse" id="toc-rank-and-inverse"><span
-class="toc-section-number">6.2.4</span> Rank and inverse</a></li>
+class="toc-section-number">7.2.4</span> Rank and inverse</a></li>
 <li><a href="#systems-of-equations" id="toc-systems-of-equations"><span
-class="toc-section-number">6.2.5</span> Systems of equations</a></li>
+class="toc-section-number">7.2.5</span> Systems of equations</a></li>
 <li><a href="#sec:elementaryRowOperations"
 id="toc-sec:elementaryRowOperations"><span
-class="toc-section-number">6.2.6</span> Elementary operations</a></li>
+class="toc-section-number">7.2.6</span> Elementary operations</a></li>
 </ul></li>
 <li><a href="#writing-mathematics-in-a-colab-notebook"
 id="toc-writing-mathematics-in-a-colab-notebook"><span
-class="toc-section-number">6.3</span> Writing mathematics in a Colab
+class="toc-section-number">7.3</span> Writing mathematics in a Colab
 notebook</a></li>
 <li><a href="#sec:badIpModels" id="toc-sec:badIpModels"><span
-class="toc-section-number">6.4</span> Examples of bad IP modeling</a>
+class="toc-section-number">7.4</span> Examples of bad IP modeling</a>
 <ul>
 <li><a href="#boolean-algebra" id="toc-boolean-algebra"><span
-class="toc-section-number">6.4.1</span> Boolean algebra</a></li>
+class="toc-section-number">7.4.1</span> Boolean algebra</a></li>
 </ul></li>
 <li><a href="#sec:appendixSelectedProofs"
 id="toc-sec:appendixSelectedProofs"><span
-class="toc-section-number">6.5</span> Selected proofs</a></li>
+class="toc-section-number">7.5</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -3629,12 +3763,12 @@ class="math inline">\forall</span> in particular) may be new. And
 sometimes new is intimidating. But fear not! These things get clearer
 and clearer the more you see them, and I think the benefit is worth it.
 There is a section in the appendix (section <a
-href="#sec:symbols">6.1</a>) dedicated to special symbols. Beyond that,
+href="#sec:symbols">7.1</a>) dedicated to special symbols. Beyond that,
 if you’re ever confused about something, you can always ask me!</p>
 <p>We’ll see more notation like the above as we formulate more specific
 problems, but for much of the theory sections to come I actually much
 prefer matrix notation. You should already be familiar with linear
-algebra (section <a href="#sec:linearAlgebra">6.2</a> in the appendix
+algebra (section <a href="#sec:linearAlgebra">7.2</a> in the appendix
 gives a brief review), so you should be able to notice how matrix
 algebra fits nicely with the formulations we’ve already given. For some
 <span class="math inline">m\times n</span> matrix <span
@@ -4111,7 +4245,7 @@ was essentially an identity matrix, so we just needed to read the values
 off the right-hand side. Indeed, as we move from one BF solution to
 another, we will explicitly manipulate the matrix (using basic row
 operations, as in section <a
-href="#sec:elementaryRowOperations">6.2.6</a>) to yield an identity
+href="#sec:elementaryRowOperations">7.2.6</a>) to yield an identity
 structure in the basic columns.</p>
 <p>But we’re not there yet. We just have an initial BF solution, and
 need to figure out how to move to an adjacent one while improving the
@@ -6252,7 +6386,7 @@ class="math inline">1</span>:
 helpful to provide some <em>incorrect</em> formulations for these
 concepts, in order to illustrate what might go wrong while modeling. You
 can find this in the appendix, section <a
-href="#sec:badIpModels">6.4</a>)</p>
+href="#sec:badIpModels">7.4</a>)</p>
 <p>Note that these constraint sets wouldn’t normally constitute an IP on
 their own, but instead they would be just a subset of the constraints
 you’d find inside a larger, more complex problem. Let’s consider the
@@ -8576,13 +8710,639 @@ combinatorial optimization. Additionally, <a
 href="https://catalog.k-state.edu/content.php?catoid=58&amp;navoid=11444">IMSE
 882</a> covers network flows and graph theory and has some intersection
 with the topics we covered here as well.</p>
-<!-- {insertSection:sections/nonlinear_programming/intro.md} -->
-<!-- {insertSection:sections/nonlinear_programming/univariate_unconstrained.md} -->
+<h1 data-number="6" id="nonlinear-programming"><span
+class="header-section-number">6</span> Nonlinear programming</h1>
+<p>We will now spend some time discussing the broad topic of nonlinear
+programming. This will mark a bit of a shift in the class, as up to this
+point our discussions have mostly been building upon previous topics. As
+we’ll see, the functional forms we deal with for nonlinear programs
+break fairly distinctly from what we’ve already seen in the
+linear/integer programming domains.</p>
+<p>Stated most generally, a <strong>nonlinear programming</strong>
+problem is an optimization problem of the form</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; f(\mathbf{x}) \\
+\text{s.t.}&amp;&amp; g_i(\mathbf{x}) &amp; \leq b_i &amp; \forall \
+i\in\{1,\dots,m\} \\
+     &amp;&amp; \mathbf{x}&amp; \in \mathbb{R}^n
+\end{align*}
+</span></p>
+<p>for some <span class="math inline">n</span> (the number of variables)
+and <span class="math inline">m</span> (number of constraints). In this
+class we will generally assume that <span class="math inline">f</span>
+and <span class="math inline">g_i</span> are differentiable (and often
+twice differentiable) everywhere, but otherwise this is a fairly general
+formulation. We will split our exploration into several sections, with
+problem classes generally differing over the following specs:</p>
+<ul>
+<li>Number of variables</li>
+<li>Existence of constraints</li>
+<li>Qualities of the objective function <span
+class="math inline">f</span></li>
+<li>Qualities of the constraint functions <span
+class="math inline">g_i</span></li>
+</ul>
+<h2 data-number="6.1" id="example-nonlinear-programs"><span
+class="header-section-number">6.1</span> Example nonlinear programs</h2>
+<p>Turning away from the world of linear constraints and objectives, it
+is intuitively clear that the class of problems we can deal with now is
+much more broad. Here we give a few samples of where nonlinearities may
+naturally arise in optimization problems.</p>
+<h3 data-number="6.1.1" id="price-elasticity"><span
+class="header-section-number">6.1.1</span> Price elasticity</h3>
+<p>When we first modeled the Wyndor LP in section <a
+href="#sec:exampleLp">4.1</a>, we made an important assumption with
+regards to the revenue generated from the products. We assumed that we
+could sell as much as we could produce at one fixed cost. This is
+necessary for a linear objective function, and may be a fine assumption
+in some scenarios. But it’s not always going to match reality.</p>
+<p>If you’ve taken an economics class you’re probably familiar with the
+relationship between the supply of an item and the price people are
+willing to pay for it. In practice, a store might set a certain price
+for an item and sell some number of them at that price, but not sell out
+of everything until the last remaining items go on sale. The effect is
+that each marginal unit produced is expected to command a slightly lower
+price than the previous units, and the only way to model this
+relationship in a mathematical program is with nonlinear functions.</p>
+<h3 data-number="6.1.2" id="investment-risk"><span
+class="header-section-number">6.1.2</span> Investment risk</h3>
+<p>One application where nonlinear programming is often used is in
+portfolio management. Usually portfolio managers are worried about both
+the expected returns and the risk associated with their investments. As
+we’ll see, this risk factor is best modeled via nonlinear functions.</p>
+<p>Suppose that <span class="math inline">n</span> stocks are being
+considered for inclusion into some portfolio, with decision variables
+<span class="math inline">x_j</span>, <span
+class="math inline">j\in\{1,\dots,n\}</span> being the number of shares
+of stock <span class="math inline">j</span> to be included. Following
+the usual notation, we’ll let <span class="math inline">\mu_j</span>
+denote the expected return for investing in stock <span
+class="math inline">j</span> over some time horizon, and let <span
+class="math inline">\sigma_{jj}</span> represent the associated
+variance. Furthermore, there may be correlations between the risks of
+certain stocks, so it’s important to also consider the <a
+href="https://en.wikipedia.org/wiki/Covariance">covariance</a> <span
+class="math inline">\sigma_{ij}</span> of pairs of stocks <span
+class="math inline">i</span> and <span class="math inline">j</span>.</p>
+<p>If we let <span class="math inline">R(\mathbf{x})</span> denote the
+expected return of the portfolio defined by <span
+class="math inline">\mathbf{x}</span>, and let <span
+class="math inline">V(\mathbf{x})</span> denote the variance, then we
+have</p>
+<p><span class="math display">
+R(\mathbf{x}) = \sum_{j=1}^n\mu_jx_j \qquad\text{and}\qquad
+V(\mathbf{x}) = \sum_{i=1}^n\sum_{j=1}^n\sigma_{ij}x_ix_j.
+</span></p>
+<p>Now, <span class="math inline">R(\mathbf{x})</span> is a linear
+function in <span class="math inline">\mathbf{x}</span>, but <span
+class="math inline">V(\mathbf{x})</span> is nonlinear due to the
+quadratic terms <span class="math inline">x_ix_j</span>. One might
+select <span class="math inline">V(\mathbf{x})</span> to be the
+objective to be minimized while constraining that <span
+class="math inline">R(\mathbf{x})</span> is above some threshold, or
+perhaps <span class="math inline">R(\mathbf{x})</span> is the objective
+to be maximized while <span class="math inline">V(\mathbf{x})</span> is
+constrained. Either way, the nonlinearity introduced by <span
+class="math inline">V(\mathbf{x})</span> means that we need new
+approaches to find an optimal solution.</p>
+<h2 data-number="6.2"
+id="single-variable-unconstrained-optimization"><span
+class="header-section-number">6.2</span> Single-variable unconstrained
+optimization</h2>
+<p>Let’s now jump into our first class of nonlinear optimization
+problems. Naturally, we’ll start with a simple case, and one you already
+know something about from your calculus class: optimizing a function
+<span class="math inline">f(x)</span> with a single variable and no
+constraints.</p>
+<h3 data-number="6.2.1" id="calculus-review"><span
+class="header-section-number">6.2.1</span> Calculus review</h3>
+<p>Recall that for this course we’re assuming <span
+class="math inline">f</span> to be differentiable everywhere. That being
+the case, a necessary condition for some <span
+class="math inline">x&#39;</span> to be optimal for <span
+class="math inline">f</span> is that the derivative is equal to 0 at
+<span class="math inline">x&#39;</span>, i.e.:</p>
+<p><span class="math display">
+f&#39;(x&#39;) = 0.
+</span></p>
+<p>These points <span class="math inline">x&#39;</span> with <span
+class="math inline">f&#39;(x&#39;)=0</span> are called the
+<strong>critical points</strong> of <span class="math inline">f</span>.
+You probably remember this condition from calculus, but do you remember
+why it’s necessary? Let’s take a moment to recall the definition of a
+derivative:</p>
+<p><span class="math display">
+f&#39;(x) = \lim_{h\rightarrow0}\frac{f(x + h) - f(x)}{h}.
+</span></p>
+<p>Suppose now that we’d like minimize some function <span
+class="math inline">f</span>, and we know at some point <span
+class="math inline">x&#39;</span> that <span
+class="math inline">f&#39;(x&#39;)&lt;0</span>. Then by the above
+definition, there must be some <span class="math inline">h&gt;0</span>
+such that</p>
+<p><span class="math display">
+\begin{align*}
+\frac{f(x&#39; + h) - f(x&#39;)}{h} &lt; 0 &amp;\Leftrightarrow f(x&#39;
++ h) - f(x&#39;) &lt; 0 \\
+&amp;\Leftrightarrow f(x&#39; + h) &lt; f(x&#39;)
+\end{align*}
+</span></p>
+<p>and thus <span class="math inline">x&#39;</span> cannot minimize
+<span class="math inline">f</span>. Similar arguments hold for each
+combination of minimization/maximization and <span
+class="math inline">f&#39;(x&#39;)&gt;0</span> or <span
+class="math inline">f&#39;(x&#39;)&lt;0</span>.</p>
+<p>So <span class="math inline">f&#39;(x&#39;)=0</span> is a necessary
+condition for <span class="math inline">x&#39;</span> to be optimal, but
+as you’ll recall it is not sufficient. A common example is the function
+<span class="math inline">f(x)=x^3</span> (plotted below), where we have
+<span class="math inline">f&#39;(0)=0</span> but <span
+class="math inline">x&#39;=0</span> is not any kind of maximum or
+minimum for the function. For any <span
+class="math inline">h&gt;0</span>, no matter how small, you’ll have
+<span class="math inline">f(h) &gt; f(0)</span> and <span
+class="math inline">f(-h) &lt; f(0)</span>.</p>
+<div class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px" data-expression="x^3"
+data-xrange="[-1.5, 1.5]" data-extrapoints="[[0, 0]]">
+
+</div>
+<p>However, if <span class="math inline">f</span> has a second
+derivative there is more we can say. Suppose again we’d like to minimize
+<span class="math inline">f</span> and we have some point <span
+class="math inline">x&#39;</span> such that <span
+class="math inline">f&#39;(x&#39;)=0</span> and also <span
+class="math inline">f&#39;&#39;(x&#39;)&gt;0</span>. By definition of
+the derivative, we have:</p>
+<p><span class="math display">
+f&#39;&#39;(x&#39;)=\lim_{h\rightarrow0}\frac{f&#39;(x&#39; + h) -
+f&#39;(x&#39;)}{h}
+</span></p>
+<p>Since <span class="math inline">f&#39;(x&#39;) = 0</span>, we simply
+have</p>
+<p><span class="math display">
+f&#39;&#39;(x&#39;)=\lim_{h\rightarrow0}\frac{f&#39;(x&#39; + h)}{h}
+</span></p>
+<p>Since we’ve said that <span class="math inline">f&#39;&#39;(x&#39;)
+&gt; 0</span>, we must have</p>
+<p><span class="math display">
+\frac{f&#39;(x&#39; + h)}{h} &gt; 0
+</span></p>
+<p>for sufficiently small <span class="math inline">h</span><a
+href="#fn92" class="footnote-ref" id="fnref92"
+role="doc-noteref"><sup>92</sup></a>. When <span
+class="math inline">h</span> is sufficiently small and positive, we
+multiply each side by <span class="math inline">h</span> to see that</p>
+<p><span class="math display">
+f&#39;(x&#39; + h) &gt; 0
+</span></p>
+<p>i.e. <span class="math inline">f</span> is increasing in some small
+neighborhood to the right of <span class="math inline">x&#39;</span>.
+Similarly, if <span class="math inline">h</span> is sufficiently small
+and negative, multiplying by <span class="math inline">h</span> flips
+the sign and we get</p>
+<p><span class="math display">
+f&#39;(x&#39; + h) &lt; 0
+</span></p>
+<p>i.e. <span class="math inline">f</span> is decreasing in the small
+neighborhood to the left of <span class="math inline">x&#39;</span>.
+Putting it all together (and staying within a sufficiently small
+neighborhood of <span class="math inline">x&#39;</span>), as we approach
+<span class="math inline">x&#39;</span> from the left <span
+class="math inline">f</span> continues to decrease. Then we hit <span
+class="math inline">x&#39;</span>, and as we continue on to the right
+<span class="math inline">f</span> will start increasing. Thus <span
+class="math inline">x&#39;</span> must be the minimum of <span
+class="math inline">f</span> within that neighborhood.</p>
+<p>What we’ve described here is just the familiar <em>second derivative
+test</em> from calculus. Namely, if <span
+class="math inline">x&#39;</span> is a critical point of <span
+class="math inline">f</span> and <span
+class="math inline">f&#39;&#39;(x&#39;)&gt;0</span> then <span
+class="math inline">x&#39;</span> is a <strong>local minimum</strong> of
+<span class="math inline">f</span>. Similarly, if <span
+class="math inline">f&#39;&#39;(x&#39;)&lt;0</span> then <span
+class="math inline">x&#39;</span> is a <strong>local maximum</strong> of
+<span class="math inline">f</span>.</p>
+<p>Of course, the difficulty is in the word <em>local</em>. Being a
+local optimum means that you are the optimal solution within some
+portion of <span class="math inline">f</span>, but not necessarily
+optimal when looking at the entire domain of <span
+class="math inline">f</span>. As an example, the function <span
+class="math inline">f(x)=x^3 - x</span> (plotted below) has a local
+maximum at <span class="math inline">x=\frac{-1}{\sqrt{3}}</span> and a
+local minimum at <span class="math inline">x=\frac{1}{\sqrt{3}}</span>.
+But neither point is a true optimum. Indeed, there is no optimal value
+for this function at all, as the plot goes off to <span
+class="math inline">\infty</span> to the right and <span
+class="math inline">-\infty</span> to the left.</p>
+<div class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px" data-expression="x^3 - x"
+data-xrange="[-1.5, 1.5]"
+data-extrapoints="[[&quot;1 / sqrt(3)&quot;, &quot;eval&quot;], [&quot;-1 / sqrt(3)&quot;, &quot;eval&quot;]]">
+
+</div>
+<p>What we’d usually like to find is a <strong>global minimum</strong>
+(or <strong>global maximum</strong>) of the function, i.e. the point
+<span class="math inline">x^*</span> at which <span
+class="math inline">f(x^*) \leq f(x)</span> (or <span
+class="math inline">f(x^*) \geq f(x)</span> for a maximum) for
+<em>any</em> <span class="math inline">x</span> in the domain of <span
+class="math inline">f</span>. For an arbitrary function <span
+class="math inline">f</span> it can be difficult to ascertain whether a
+given local optimum is also globally optimal. But there are certain
+types of functions for which we can make this determination easily.</p>
+<h3 data-number="6.2.2" id="convexity-and-concavity"><span
+class="header-section-number">6.2.2</span> Convexity and concavity</h3>
+<p>Nonlinear programming can be challenging. Tell an OR practitioner to
+solve a nonlinear optimization problem and they may get a little
+nervous. But if you tell them the objective function is convex, they’ll
+breathe a sigh of relief. Convexity makes everything better in OR
+land.</p>
+<p>A function of a single variable <span class="math inline">f</span> is
+said to be a <strong>convex function</strong> if, for each pair of
+values <span class="math inline">x&#39;,x&#39;&#39;</span> and any <span
+class="math inline">\lambda</span> with <span
+class="math inline">0&lt;\lambda&lt;1</span>, we have</p>
+<p><span id="eq:convexDefinition1d" class="eqnos"><span
+class="math display">
+f(\lambda x&#39;&#39; + (1-\lambda)x&#39;)\leq \lambda f(x&#39;&#39;) +
+(1 - \lambda)f(x&#39;)
+</span><span class="eqnos-number">(22)</span></span></p>
+<p>If the <span class="math inline">\leq</span> can be replaced by a
+<span class="math inline">&lt;</span>, then the we say that function is
+a <strong>strictly convex function</strong>.</p>
+<p>That is an admittedly symbol-heavy definition, so let’s try to unpack
+it. On the left-hand side we’ve taken a combination of <span
+class="math inline">x&#39;</span> and <span
+class="math inline">x&#39;&#39;</span> then evaluated <span
+class="math inline">f</span> at that combination. On the right-hand side
+we evaluated <span class="math inline">f</span> at each point <span
+class="math inline">x&#39;</span> and <span
+class="math inline">x&#39;&#39;</span> and then taken a combination of
+those values. So the difference is only in the order in which we apply
+the function and the combination.</p>
+<p>But it’s easier to see on a plot, so let’s look at some. Below, I’ve
+plotted three functions: <span class="math inline">f(x)=x^2 -
+\frac{1}{2}</span> on the left, <span class="math inline">f(x)=x^3 -
+x</span> in the middle, and <span class="math inline">f(x)=-x^2 +
+\frac{1}{2}</span> on the right. For each one let’s consider <span
+class="math inline">x&#39;=-1</span> and <span
+class="math inline">x&#39;&#39;=1</span>. The red dots represent the
+points <span class="math inline">(x&#39;, f(x&#39;))</span> and <span
+class="math inline">(x&#39;&#39;, f(x&#39;&#39;))</span>.</p>
+<div style="display:flex;justify-content:space-around">
+<div class="plotlyFunctionPlot" style="width:200px;height:200px"
+data-expression="x^2 - 0.5" data-xrange="[-1.5, 1.5]"
+data-extrapoints="[[-1, &quot;eval&quot;, &quot;red&quot;, 8], [1, &quot;eval&quot;, &quot;red&quot;, 8]]"
+data-linebetweenpoints="true">
+
+</div>
+<div class="plotlyFunctionPlot" style="width:200px;height:200px"
+data-expression="x^3 - x" data-xrange="[-1.5, 1.5]"
+data-extrapoints="[[-1, &quot;eval&quot;, &quot;red&quot;, 8], [1, &quot;eval&quot;, &quot;red&quot;, 8]]"
+data-linebetweenpoints="true">
+
+</div>
+<div class="plotlyFunctionPlot" style="width:200px;height:200px"
+data-expression="-x^2 + 0.5" data-xrange="[-1.5, 1.5]"
+data-extrapoints="[[-1, &quot;eval&quot;, &quot;red&quot;, 8], [1, &quot;eval&quot;, &quot;red&quot;, 8]]"
+data-linebetweenpoints="true">
+
+</div>
+</div>
+<p>For any <span class="math inline">\lambda</span>, the right-hand side
+of eq. <a href="#eq:convexDefinition1d">22</a> <span
+class="math inline">\lambda f(x&#39;&#39;) + (1 -
+\lambda)f(x&#39;)</span> will equate to some point on the red line
+segment. Meanwhile, the left-hand <span class="math inline">f(\lambda
+x&#39;&#39; + (1-\lambda)x&#39;)</span> side refers to a value on the
+function curve in the same vertical line. Hence the eq. <a
+href="#eq:convexDefinition1d">22</a> will be satisfied for every lambda
+exactly when the red line segment is always above the corresponding
+segment of the curve. Given this, the second and third of our plots
+clearly do not correspond to convex functions.</p>
+<p>What about the first plot? Unfortunately we can’t prove convexity
+with just one line segment. The definition stipulates that <em>any</em>
+such line segment is always above the curve <em>no matter where you put
+the end points</em>. But I think you can imagine that this is true for
+the first plot. Indeed, the first function <span
+class="math inline">f(x)=x^2 + \frac{1}{2}</span> <em>is</em>
+convex.</p>
+<p>The appeal of working with convex functions is due to the following
+result:</p>
+<div id="thm:convexLocalOptIsGlobalOpt" class="theorem">
+<p>Suppose <span class="math inline">f</span> is a convex function and
+<span class="math inline">x^*</span> is a local minimum for <span
+class="math inline">f</span>. Then <span class="math inline">x^*</span>
+is also a global minimum for <span class="math inline">f</span>.</p>
+</div>
+<div class="proof" for="thm:convexLocalOptIsGlobalOpt"
+data-placement="appendix">
+<p>For this proof we’ll assume that <span class="math inline">f</span>
+is a function of a single variable, but you should know that both the
+definition for convexity and this theorem are still valid when <span
+class="math inline">f</span> is a multivariate function.</p>
+<p>Since <span class="math inline">x^*</span> is a local minimum, there
+exists some number <span class="math inline">p\in \mathbb{R}</span> such
+that for any <span class="math inline">y</span> with <span
+class="math inline">|x^* - y| &lt; p</span> (i.e. any point within a
+distance of <span class="math inline">p</span> from <span
+class="math inline">x^*</span>) we have <span class="math inline">f(y)
+\geq f(x^*)</span>. Our proof will go by contradiction, so for
+contradiction assume that <span class="math inline">x^*</span> is not a
+global minimum and hence there exists some <span
+class="math inline">x&#39;</span> that satisfies <span
+class="math inline">f(x&#39;) &lt; f(x^*)</span>.</p>
+<p>However, by the definition of convexity, for any <span
+class="math inline">0&lt;\lambda&lt;1</span> we have</p>
+<p><span class="math display">
+\begin{align*}
+f(\lambda x&#39; + (1-\lambda)x^*)&amp;\leq\lambda f(x&#39;) +
+(1-\lambda)f(x^*) \\
+&amp;&lt;\lambda f(x^*) + (1-\lambda)f(x^*) \\
+&amp;=f(x^*)
+\end{align*}
+</span></p>
+<p>But if we choose <span class="math inline">\lambda</span> small
+enough then we will have <span class="math inline">|x^*-(\lambda x&#39;
++ (1-\lambda)x^*)|&lt;p</span>, contradicting that <span
+class="math inline">x^*</span> was a local minimum.</p>
+</div>
+<p>Luckily, we do not need to go about drawing graphs and line segments
+whenever we want to prove convexity, so long as <span
+class="math inline">f</span> has a second derivative. If this is the
+case, then <span class="math inline">f</span> is convex if and only if
+<span class="math inline">f&#39;&#39;(x)\geq0</span> for every <span
+class="math inline">x</span>. Similarly, <span
+class="math inline">f</span> is strictly convex if and only if <span
+class="math inline">f&#39;&#39;(x)&gt;0</span> for every <span
+class="math inline">x</span>. In your calculus class, you may have
+called this a “concave up” function. Geometrically, this is interpreted
+as a function that is always “curving upward”, which meshes well with
+our “curve below the line segment” definition above.</p>
+<p>Furthermore, as you might suspect, there is a similar notion for
+maximization problem, which we obtain by flipping all the related
+inequalities. This time, we use the term <strong>concave
+function</strong> for any function <span class="math inline">f</span>
+that satisfies</p>
+<p><span class="math display">
+f(\lambda x&#39;&#39; + (1-\lambda)x&#39;)\geq \lambda f(x&#39;&#39;) +
+(1 - \lambda)f(x&#39;)
+</span></p>
+<p>If the above is satisfied when replacing <span
+class="math inline">\geq</span> with <span
+class="math inline">&gt;</span> then we have a <strong>strictly concave
+function</strong>. This time the interpretation is flipped, so that the
+line segment must lie <em>below</em> the the function plot, as in the
+third plot in our above figure. Functions with a second derivative are
+concave if and only if <span class="math inline">f&#39;&#39;(x)\leq
+0</span> for every <span class="math inline">x</span>, with strictness
+achieved if <span class="math inline">f&#39;&#39;(x)&lt;0</span>. This
+type of function is also described as being “concave down”<a
+href="#fn93" class="footnote-ref" id="fnref93"
+role="doc-noteref"><sup>93</sup></a>, and is characterized by its
+“curving downward” nature.</p>
+<p>Regardless if we’re working on a minimization problem over a convex
+function or a maximization problem over a concave function, we know that
+once we’ve found a critical point we have what we’re looking for (no
+need to worry about the point only being a local optimum).</p>
+<h3 data-number="6.2.3" id="analytical-vs.-numerical-methods"><span
+class="header-section-number">6.2.3</span> Analytical vs. numerical
+methods</h3>
+<p>At this point, it may seem that we’ve covered everything we need to
+know about minimizing/maximizing convex/concave functions of single
+variables. For example, the previous section tells us that in order to
+find the maximum of <span class="math inline">f(x)=-x^2</span> it
+suffices to show</p>
+<p><span class="math display">
+f&#39;(x) = 0 \Leftrightarrow -2x = 0 \Leftrightarrow x=0
+</span></p>
+<p>This is true, but sometimes we are not so lucky that we can
+analytically solve for <span class="math inline">f&#39;(x)=0</span> as
+we did here, and in fact it comes up often in practice that an
+analytical solution is not practical. This motivates the need for
+<strong>numerical methods</strong> for solving such problems. In the
+next few sections, we’ll show examples of <strong>search
+procedures</strong> for finding the optimal points for univariate
+functions. In each case, the approach will be to find a sequence of
+<strong>trial solutions</strong>. Each iteration begins at the current
+trial solution, then via some systematic search leads to a new and
+improved trial solution. The procedure continues until the trial
+solutions have converged to an optimal solution, should one exist.</p>
+<h3 data-number="6.2.4" id="bisection-method"><span
+class="header-section-number">6.2.4</span> Bisection method</h3>
+<p>Our first search procedure is the bisection method. While no one
+would suggest you implement this technique to solve problems in
+practice, it is a relatively intuitive algorithm that is great for
+learning the tenor of these search techniques in general. For what
+follows, we will assume that we are trying to maximize some concave
+function.</p>
+<p>Actually, concavity is not strictly required for this method.
+Technically, using <span class="math inline">x^*</span> to denote the
+maximum of <span class="math inline">f</span>, the only requirements for
+the method to work are:</p>
+<p><span class="math display">
+\begin{align*}
+f&#39;(x^*) &amp; = 0 \\
+f&#39;(x) &amp; &gt; 0 &amp; \forall \ x&lt;x^* \\
+f&#39;(x) &amp; &lt; 0 &amp; \forall \ x&gt;x^*
+\end{align*}
+</span></p>
+<p>Of course, concavity is the most natural condition for which these
+criteria hold.</p>
+<p>As with most numerical optimization procedures, we will not be
+guaranteed to find the true optimal solution. Instead, before we begin
+we’ll need to select our <strong>error tolerance</strong>, which is how
+close we’ll need to get to an optimal solution before we decide our
+answer is “good enough” and we terminate the algorithm. We’ll denote
+this term by <span class="math inline">\epsilon</span>.</p>
+<p>To begin the algorithm, we’ll need to know both an upper bound and a
+lower bound on <span class="math inline">x^*</span>. One could write out
+a principled algorithm for finding these bounds, but for the purposes of
+this class we’ll just find these by inspection. We’ll denote these upper
+and lower bounds as <span class="math inline">\overline x</span> and
+<span class="math inline">\underline x</span>, respectively.</p>
+<p>At each iteration, these upper and lower bounds will essentially give
+the edges of our search space, since we know by concavity that the
+optimal solution must be between them. The purpose of each iteration is
+to select our next trial solution <span
+class="math inline">x&#39;</span> such that we can reduce the size of
+our search space at the next iteration. One could go about determining
+this next trial solution in several different ways, but our selection in
+the bisection method is (fittingly for the name) to select the midpoint
+between <span class="math inline">\underline x</span> and <span
+class="math inline">\overline x</span>. So we set <span
+class="math inline">x&#39;=\frac{\underline x + \overline
+x}{2}</span>.</p>
+<p>At this point, we may have gotten lucky and have <span
+class="math inline">f&#39;(x&#39;)=0</span>. In that case, we would have
+found the optimal solution (due to concavity of <span
+class="math inline">f</span>). But otherwise we can use the sign of
+<span class="math inline">f&#39;(x&#39;)</span> to tighten our bounds.
+In particular, if <span class="math inline">f&#39;(x&#39;)&lt;0</span>
+then we must have <span class="math inline">x^*&lt;x&#39;</span> and so
+<span class="math inline">x&#39;</span> can be the upper bound in our
+next iteration. Otherwise, <span
+class="math inline">f&#39;(x&#39;)&gt;0</span> and so <span
+class="math inline">x^*&gt;x&#39;</span> and <span
+class="math inline">x&#39;</span> is the lower bound in the next
+iteration.</p>
+<p>Brining it all together, the bisection method works like this:</p>
+<ul>
+<li><em>Initialize</em>: Select error tolerance <span
+class="math inline">\epsilon</span> and find initial bounds <span
+class="math inline">\underline x</span>, <span
+class="math inline">\overline x</span> by inspection. Select the initial
+trial solution as <span class="math inline">x&#39;=\frac{\underline x +
+\overline x}{2}</span>.</li>
+<li><em>Iterate</em>:
+<ul>
+<li>Evaluate (the sign of) <span
+class="math inline">f&#39;(x&#39;)</span>:</li>
+<li>If <span class="math inline">f&#39;(x&#39;)\geq 0</span>:
+<ul>
+<li>Set <span class="math inline">\underline x=x&#39;</span>.</li>
+</ul></li>
+<li>Else:
+<ul>
+<li>Set <span class="math inline">\overline x=x&#39;</span>.</li>
+</ul></li>
+<li>Set <span class="math inline">x&#39;=\frac{\underline x + \overline
+x}{2}</span>.</li>
+<li>If <span class="math inline">\overline x - \underline x &lt;=
+2\epsilon</span>:
+<ul>
+<li><span class="math inline">x&#39;</span> must be within <span
+class="math inline">\epsilon</span> of <span
+class="math inline">x^*</span>, so terminate and return <span
+class="math inline">x&#39;</span> as optimal within tolerance.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4>
+Example
+</h4>
+<p>Let’s run the bisection method now using the function <span
+class="math inline">f(x) = 12x - 3x^4 - 2x^6</span>, which we’ve plotted
+below. We can verify that <span class="math inline">f&#39;&#39;(x) = -
+36x^2 - 60 x^4</span>, and so <span
+class="math inline">f&#39;&#39;(x)\leq0</span> for all <span
+class="math inline">x</span> meaning <span class="math inline">f</span>
+is concave and hence suitable for the method.</p>
+<div class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px" data-expression="12x - 3x^4 - 2x^6"
+data-xrange="[-0.22, 1.3]">
+
+</div>
+<p>We’ll let <span class="math inline">\epsilon = 0.01</span>, and by
+inspection we can find that <span class="math inline">0</span> and <span
+class="math inline">2</span> are respectively lower and upper bounds on
+the maximum. So for our first iteration we’ll have <span
+class="math inline">\underline x=0</span>, <span
+class="math inline">\overline x=2</span>, and <span
+class="math inline">x&#39;=\frac{0 + 2}{2}=1</span>.</p>
+<p>The following table illustrates the how the values of <span
+class="math inline">\underline x, \overline x</span>, and <span
+class="math inline">x&#39;</span> change as we iterate through the
+bisection method.</p>
+<figure>
+<img src="images/bisection-example-table.png"
+alt="Applying the bisection method (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Applying the bisection method <span
+class="citation" data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<p>As another visual aid, consider the below plots that illustrate how
+<span class="math inline">x&#39;</span> is updated from iteration to
+iteration.</p>
+<div>
+<script>
+     bisectExClickFunc = (x) => {
+          for (plotNum of [1, 2, 3, 4, 5, 6, 7]){
+               plotEl = document.getElementById('bisectEx' + plotNum);
+               if (plotEl.style.display === 'block') {
+                    displayed = plotNum;
+               }
+          }
+          newDisplayed = displayed + parseInt(x);
+          newDisplayed = newDisplayed === 8 ? 1 : newDisplayed === 0 ? 7 : newDisplayed;
+          document.getElementById('bisectEx' + displayed).style.display = 'none';
+          document.getElementById('bisectEx' + newDisplayed).style.display = 'block';
+          document.getElementById('bisectExPlotLabel').textContent = 'Iteration ' + newDisplayed;
+     }
+</script>
+<div id="bisectEx1" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:block"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[1, &quot;eval&quot;, &quot;blue&quot;, 5], [0.5, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectEx2" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:none"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[0.5, &quot;eval&quot;, &quot;blue&quot;, 5], [0.75, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectEx3" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:none"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[0.75, &quot;eval&quot;, &quot;blue&quot;, 5], [0.875, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectEx4" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:none"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[0.875, &quot;eval&quot;, &quot;blue&quot;, 5], [0.8125, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectEx5" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:none"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[0.8125, &quot;eval&quot;, &quot;blue&quot;, 5], [0.84375, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectEx6" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:none"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[0.84375, &quot;eval&quot;, &quot;blue&quot;, 5], [0.828125, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectEx7" class="plotlyFunctionPlot basicCenter"
+style="width:350px;height:350px;display:none"
+data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
+data-extrapoints="[[0.828125, &quot;eval&quot;, &quot;blue&quot;, 5], [0.8359375, &quot;eval&quot;, &quot;blue&quot;, 5]]"
+data-linebetweenpoints="true" data-arrowsonlines="true">
+
+</div>
+<div id="bisectExPlotLabel" style="text-align: center">
+Iteration 1
+</div>
+<div style="display: flex; justify-content: center">
+<button class="forwardBackwardButton" id="bisectExPlotBackButton" onClick="bisectExClickFunc(&quot;-1&quot;)">
+</button>
+<button class="forwardBackwardButton" id="bisectExPlotForwardButton" onClick="bisectExClickFunc(&quot;1&quot;)">
+</button>
+</div>
+<script>
+     document.getElementById('bisectExPlotBackButton').textContent = '<<';
+     document.getElementById('bisectExPlotForwardButton').textContent = '>>';
+</script>
+</div>
+<!-- ### Newton's method -->
 <!-- {insertSection:sections/nonlinear_programming/multivariate_unconstrained.md} -->
-<h1 data-number="6" id="appendix"><span
-class="header-section-number">6</span> Appendix</h1>
-<h2 data-number="6.1" id="sec:symbols"><span
-class="header-section-number">6.1</span> Special symbols</h2>
+<!-- {insertSection:sections/nonlinear_programming/notes.md} -->
+<h1 data-number="7" id="appendix"><span
+class="header-section-number">7</span> Appendix</h1>
+<h2 data-number="7.1" id="sec:symbols"><span
+class="header-section-number">7.1</span> Special symbols</h2>
 <ul>
 <li><span class="math inline">\mathbb{R}</span>: The set of real
 numbers, i.e. anything on the number line between (though not
@@ -8679,8 +9439,8 @@ value resulting from rounding <span class="math inline">x</span> up to
 the nearest integer. So <span class="math inline">\lceil 1.3
 \rceil=2</span>.</li>
 </ul>
-<h2 data-number="6.2" id="sec:linearAlgebra"><span
-class="header-section-number">6.2</span> Linear algebra review</h2>
+<h2 data-number="7.2" id="sec:linearAlgebra"><span
+class="header-section-number">7.2</span> Linear algebra review</h2>
 <p>Linear algebra is the study of math involving matrices, vectors, and
 linear transformations. A <strong>matrix</strong> (the basic object of
 linear algebra) is a rectangular array of numbers. For example,</p>
@@ -8693,8 +9453,8 @@ said to be <strong>square</strong> if it has the same number of rows and
 columns.</p>
 <p>In these notes, we will usually denote matrices with boldface,
 uppercase letters.</p>
-<h3 data-number="6.2.1" id="sec:matrixMath"><span
-class="header-section-number">6.2.1</span> Matrix math</h3>
+<h3 data-number="7.2.1" id="sec:matrixMath"><span
+class="header-section-number">7.2.1</span> Matrix math</h3>
 <p>We say Matrices <span class="math inline">\mathbf{A}</span>, <span
 class="math inline">\mathbf{B}</span> are <strong>equal</strong> if
 <em>all</em> of their elements are equal. First off, that means <span
@@ -8710,7 +9470,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(22)</span></span></p>
+</span><span class="eqnos-number">(23)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -8782,8 +9542,8 @@ sa_{21} &amp; sa_{22} &amp; \cdots &amp; sa_{2n} \\
 sa_{m1} &amp; sa_{m2} &amp; \cdots &amp; sa_{mn} \\
 \end{bmatrix}
 </span></p>
-<h3 data-number="6.2.2" id="properties-of-matrix-operations"><span
-class="header-section-number">6.2.2</span> Properties of matrix
+<h3 data-number="7.2.2" id="properties-of-matrix-operations"><span
+class="header-section-number">7.2.2</span> Properties of matrix
 operations</h3>
 <p>The above matrix operations satisfy the following properties:</p>
 <ul>
@@ -8809,8 +9569,8 @@ class="math inline">\mathbf{B}\mathbf{A}</span> is not even defined if
 <span class="math inline">m\neq s</span>. Even if <span
 class="math inline">m=s</span> and the product is defined, the result
 needs not be the same.</p>
-<h3 data-number="6.2.3" id="special-matrices"><span
-class="header-section-number">6.2.3</span> Special matrices</h3>
+<h3 data-number="7.2.3" id="special-matrices"><span
+class="header-section-number">7.2.3</span> Special matrices</h3>
 <p>A <strong>vector</strong> is a special type of matrix with either a
 single column or a single row, e.g.</p>
 <p><span class="math display">
@@ -8855,8 +9615,8 @@ zero matrix satisfies:</p>
 <p>Note that <span class="math inline">\mathbf{I}</span> and <span
 class="math inline">\mathbf{0}</span> play roles in matrix operations
 similar to the roles of 1 and 0 (respectively) in arithmetic.</p>
-<h3 data-number="6.2.4" id="rank-and-inverse"><span
-class="header-section-number">6.2.4</span> Rank and inverse</h3>
+<h3 data-number="7.2.4" id="rank-and-inverse"><span
+class="header-section-number">7.2.4</span> Rank and inverse</h3>
 <p>A set of vectors <span class="math inline">\mathbf{x}_1,
 \mathbf{x}_2, \dots, \mathbf{x}_m</span> is said to be <strong>linearly
 dependent</strong> if there exists <span class="math inline">m</span>
@@ -8910,8 +9670,8 @@ such that</p>
 the <strong>inverse</strong> of <span
 class="math inline">\mathbf{A}</span>. Furthermore, singular matrices do
 not have inverses.</p>
-<h3 data-number="6.2.5" id="systems-of-equations"><span
-class="header-section-number">6.2.5</span> Systems of equations</h3>
+<h3 data-number="7.2.5" id="systems-of-equations"><span
+class="header-section-number">7.2.5</span> Systems of equations</h3>
 <p>Matrices are great for concisely stating systems of linear equations,
 linear equations in some set of variables you’d like to hold true
 simultaneously. For example, the set of equations</p>
@@ -8933,8 +9693,8 @@ x_1 \\ x_2
 7 \\ 6
 \end{bmatrix}
 </span></p>
-<h3 data-number="6.2.6" id="sec:elementaryRowOperations"><span
-class="header-section-number">6.2.6</span> Elementary operations</h3>
+<h3 data-number="7.2.6" id="sec:elementaryRowOperations"><span
+class="header-section-number">7.2.6</span> Elementary operations</h3>
 <p>There are certain elementary operations one can perform on a system
 of linear equations that don’t have an effect on the solution of the
 system. I’ll state these operations in terms of rows, but similar
@@ -9018,8 +9778,8 @@ x_1 \\ x_2
 \end{bmatrix}
 </span></li>
 </ul>
-<h2 data-number="6.3" id="writing-mathematics-in-a-colab-notebook"><span
-class="header-section-number">6.3</span> Writing mathematics in a Colab
+<h2 data-number="7.3" id="writing-mathematics-in-a-colab-notebook"><span
+class="header-section-number">7.3</span> Writing mathematics in a Colab
 notebook</h2>
 <p>Besides writing Python code, another useful feature of a Colab
 notebook is the ability to use “text” cells to write Markdown. <a
@@ -9037,8 +9797,8 @@ guide, sticking to items I think might be useful for the class. I came
 across a more extensive guide you may want to check out <a
 href="https://ashki23.github.io/markdown-latex.html">here</a>.</p>
 <script src="https://gist.github.com/eea93b3fac7b6040bcb074e95b4e5076.js"></script>
-<h2 data-number="6.4" id="sec:badIpModels"><span
-class="header-section-number">6.4</span> Examples of bad IP
+<h2 data-number="7.4" id="sec:badIpModels"><span
+class="header-section-number">7.4</span> Examples of bad IP
 modeling</h2>
 <p>When modeling problems as integer programs, and especially when using
 binary variables to encode some type of logic, it can be very easy to
@@ -9047,8 +9807,8 @@ the problem and get an answer that you weren’t expecting due to some bad
 constraints. In this section, I’ll give some sample “bad” IP models that
 do not properly enforce the logic they were meant to, and discuss how
 things went wrong.</p>
-<h3 data-number="6.4.1" id="boolean-algebra"><span
-class="header-section-number">6.4.1</span> Boolean algebra</h3>
+<h3 data-number="7.4.1" id="boolean-algebra"><span
+class="header-section-number">7.4.1</span> Boolean algebra</h3>
 <p>Let’s consider the Boolean algebra operations we modeled in
 section <a href="#sec:binVarTricks">5.3.2</a>. We’ll show wrong ways to
 model each of AND, OR, and XOR, and explain why they don’t work as
@@ -9336,8 +10096,8 @@ this as part of the constraint set could never return a solution with
 <span class="math inline">x_1=0, x_2=1</span>, incorrectly cutting off
 an entire segment of the problem’s feasible region.</p></li>
 </ul>
-<h2 data-number="6.5" id="sec:appendixSelectedProofs"><span
-class="header-section-number">6.5</span> Selected proofs</h2>
+<h2 data-number="7.5" id="sec:appendixSelectedProofs"><span
+class="header-section-number">7.5</span> Selected proofs</h2>
 <p>This section contains proofs to selected statements in the main
 text.</p>
 <h1 id="References">References</h1>
@@ -9373,6 +10133,11 @@ href="https://api.semanticscholar.org/CorpusID:117965841">https://api.semanticsc
 <div id="ref-solverBenchmarks" class="csl-entry" role="doc-biblioentry">
 <span>“Mittelmann Benchmarks.”</span> n.d. <a
 href="https://plato.asu.edu/bench.html">https://plato.asu.edu/bench.html</a>.
+</div>
+<div id="ref-spivakCalculus" class="csl-entry" role="doc-biblioentry">
+Spivak, M. 2006. <em>Calculus</em>. Calculus. Cambridge University
+Press. <a
+href="https://books.google.com/books?id=7JKVu_9InRUC">https://books.google.com/books?id=7JKVu_9InRUC</a>.
 </div>
 <div id="ref-tspPic" class="csl-entry" role="doc-biblioentry">
 <span>“Waterloo TSP.”</span> n.d. <a
@@ -9637,7 +10402,7 @@ other texts, know that these are likely the same as what we’re calling
 IP, MIP, and BIP.<a href="#fnref45" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn46"><p>New notation alert: as mentioned in section <a
-href="#sec:symbols">6.1</a>, the symbol <span
+href="#sec:symbols">7.1</a>, the symbol <span
 class="math inline">\mathbb{I}</span> stands for the set of integer
 numbers. The <span class="math inline">+</span> in the subscript means
 that we are considering non-negative integers (though this is just a
@@ -9709,7 +10474,7 @@ set covering problem.<a href="#fnref55" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn56"><p>Note the new notation in the second summation, <span
 class="math inline">\{j:i\in S_j\}</span>. We call this the “conditional
-set” notation in section <a href="#sec:symbols">6.1</a>. It means the
+set” notation in section <a href="#sec:symbols">7.1</a>. It means the
 set of all <span class="math inline">j</span> such that the condition
 <span class="math inline">i\in S_j</span> is true.<a href="#fnref56"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -9957,6 +10722,15 @@ role="doc-backlink">↩︎</a></p></li>
 problem has only one constraint aside from setting the variables to be
 binary.<a href="#fnref91" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
+<li id="fn92"><p>This is the usual trick when working with limits. When
+some condition is true in the limit, it just means that there is
+<em>some</em> area (perhaps incredibly small) around the point of
+interest where the condition is always true.<a href="#fnref92"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn93"><p>Yes, I agree it’s confusing that a concave function in
+our new sense only corresponds to a “concave down” function, while a
+“concave up” function is convex and not at all concave. Sorry.<a
+href="#fnref93" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
