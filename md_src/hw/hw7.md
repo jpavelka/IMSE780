@@ -1,4 +1,4 @@
-<div class='assignmentContainer' id='Homework 7' sub-name='Branch and bound' due='2023-10-16'>
+<div class='assignmentContainer' id='Homework 7' sub-name='Branch and bound' due='2023-10-16' grading-notes-link='https://colab.research.google.com/drive/1i4uq3Vntn-R6QBtFBlOlztbFi_HHc_n4?usp=sharing'>
 <div>
 
 Below we present some integer programming formulations, their partially finished branch and bound trees, and the next sub-problem to be explored from the tree. In each instance, please do the following:
