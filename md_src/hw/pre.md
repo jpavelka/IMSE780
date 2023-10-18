@@ -56,10 +56,15 @@
     window.onload = () => {
         for (el of document.getElementsByClassName('assignmentContainer')) {
             dt = el.getAttribute('data-due');
+            dtSpl = dt.split(',');
+            if (dtSpl.length > 1) {
+                dt = dtSpl[dtSpl.length - 1]
+            }
+            dtStrs = dtSpl.map(d => `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}`)
             gradingNotesLink = el.getAttribute('data-grading-notes-link') || '';
             el.innerHTML = `
                 <h1 id="assignment${el.id}Header" onclick="headerClick('${el.id}')">
-                    ${el.id} (due ${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))})
+                    ${el.id} (due ${dtStrs.join(', ')})
                     <span id="assignment${el.id}HeaderArrow" class="headerArrow">&#9654;</span>
                 </h1>
                 <div id="assignment${el.id}Content" class="assignmentContent">
