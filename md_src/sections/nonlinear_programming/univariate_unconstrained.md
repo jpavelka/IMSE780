@@ -317,7 +317,7 @@ Since $|x_2-x_1|>\epsilon$ we must continue with another iteration. The results 
 
 Since $|x_4-x_3|\leq\epsilon$ we terminate after iteration 4 with $0.83762$ as our optimal (within tolerance) solution.
 
-Analogous to last section, here's a group of plots illustrating how the trial solution changes from iteration to iteration:
+Analogous to last section, here's a group of plots illustrating how the trial solution changes from iteration to iteration. There is one change though, this time in light red I've plotted the curve of the second-degree Taylor polynomial constructed from the trial solution. With this in place, you can see how the polynomial closely mirrors the original function near the trial solution, though it can deviate quite a bit when you get outside that nearby neighborhood.
 
 <div>
 <script>
@@ -336,10 +336,10 @@ Analogous to last section, here's a group of plots illustrating how the trial so
           document.getElementById('newtonExPlotLabel').textContent = 'Iteration ' + newDisplayed;
      }
 </script>
-<div id=newtonEx1 style='width:350px;height:350px;display:block' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[1, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=newtonEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.84003, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=newtonEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84003, "eval", "blue", 5], [0.83763, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=newtonEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.83763, "eval", "blue", 5], [0.83762, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=newtonEx1 style='width:350px;height:350px;display:block' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[1, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["19 - 12x - 48(x - 1)^2"]'></div>
+<div id=newtonEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.84003, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["9.76358795166016 - 2.1939697265625x - 31.36669921875(x - 0.875)^2"]'></div>
+<div id=newtonEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84003, "eval", "blue", 5], [0.83763, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["7.99521555948513 - 0.132649616478645x - 27.6399818649099(x - 0.84003)^2"]'></div>
+<div id=newtonEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.83763, "eval", "blue", 5], [0.83762, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["7.88441482712907 - 0.000560278242124437x - 27.3975201369267(x - 0.83763)^2"]'></div>
 <div id='newtonExPlotLabel' style='text-align: center'>Iteration 1</div>
 <div style='display: flex; justify-content: center'>
 <button class='forwardBackwardButton' id='newtonExPlotBackButton' onClick='newtonExClickFunc("-1")'></button>
