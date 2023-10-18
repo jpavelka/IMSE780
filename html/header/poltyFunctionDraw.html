@@ -12,12 +12,15 @@
                 JSON.parse(el.getAttribute('data-extraPoints')),
                 el.getAttribute('data-lineBetweenPoints') === 'true',
                 el.getAttribute('data-arrowsOnLines') === 'true',
-                JSON.parse(el.getAttribute('data-layoutExtra') || '{}')
+                JSON.parse(el.getAttribute('data-layoutExtra') || '{}'),
+                JSON.parse(el.getAttribute('data-extraExpressions') || '[]')
             );
             plotNum += 1;
         }
     }
-    const drawPlotlyFunction = (expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines, layoutExtra) => {
+    const drawPlotlyFunction = (
+        expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines, layoutExtra, extraExpressions
+    ) => {
         // compile the expression once
         const expr = math.compile(expression)
 
@@ -89,6 +92,28 @@
                 line: {color: color},
                 marker: marker
             })
+        }
+        yMax = Math.max(...yValues);
+        yMin = Math.min(...yValues);
+        for (extraExpression of extraExpressions) {
+            const extraExpr = math.compile(extraExpression)
+            const stepSize = (xRange[1] - xRange[0]) / 50
+            let xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+            let yValues = xValues.map(function (x) {
+                return extraExpr.evaluate({x: x})
+            })
+            const goodInds = yValues.map((y, i) => {
+                return (y <= yMax && y >= yMin) ? i : -1
+            }).filter(i => i >= 0);
+            xValues = goodInds.map(i => xValues[i]);
+            yValues = goodInds.map(i => yValues[i]);
+            data = [data[0]].concat({
+                x: xValues,
+                y: yValues,
+                type: 'scatter',
+                mode: 'lines',
+                line: {color: '#ffaabb'}
+            }).concat(data.slice(1,data.length))
         }
         let layout = {
             hovermode: false,
