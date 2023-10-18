@@ -178,6 +178,157 @@
     }
   </style>
   <script>
+      const drawAllPlotlyFunctions = () => {
+          let plotNum = 0;
+          for (el of document.getElementsByClassName('plotlyFunctionPlot')) {
+              if (!!!el.id){
+                  el.id = 'plotlyFunctionPlotNum' + plotNum;
+              }
+              drawPlotlyFunction(
+                  el.getAttribute('data-expression'),
+                  el.id,
+                  JSON.parse(el.getAttribute('data-xRange')),
+                  JSON.parse(el.getAttribute('data-extraPoints')),
+                  el.getAttribute('data-lineBetweenPoints') === 'true',
+                  el.getAttribute('data-arrowsOnLines') === 'true',
+                  JSON.parse(el.getAttribute('data-layoutExtra') || '{}'),
+                  JSON.parse(el.getAttribute('data-extraExpressions') || '[]')
+              );
+              plotNum += 1;
+          }
+      }
+      const drawPlotlyFunction = (
+          expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines, layoutExtra, extraExpressions
+      ) => {
+          // compile the expression once
+          const expr = math.compile(expression)
+
+          // evaluate the expression repeatedly for different values of x
+          const stepSize = (xRange[1] - xRange[0]) / 50
+          const xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+          const yValues = xValues.map(function (x) {
+              return expr.evaluate({x: x})
+          })
+
+          // render the plot using plotly
+          const trace1 = {
+              x: xValues,
+              y: yValues,
+              type: 'scatter',
+              mode: 'lines',
+              line: {color: 'black'}
+          }
+          let data = [trace1]
+          if (!!extraPoints) {
+              for (ep of extraPoints) {
+                  try {
+                      x = math.compile(ep[0]).evaluate();
+                  } catch {
+                      x = ep[0];
+                  }
+                  if (ep[1] === 'eval') {
+                      y = expr.evaluate({x: x})
+                  } else {
+                      try {
+                          y = math.compile(ep[1]).evaluate();
+                      } catch {
+                          y = ep[1];
+                      }
+                  }
+                  color = ep.length >= 3 ? ep[2] : 'black';
+                  size = ep.length >= 4 ? ep[3] : 10;
+                  data.push({
+                      x: [x],
+                      y: [y],
+                      type: 'scatter',
+                      mode: 'markers',
+                      marker: {color: color, size: size}
+                  })
+              }
+          }
+          if (lineBetweenPoints) {
+              let x = [];
+              let y = [];
+              let color = 'black';
+              for (i in data) {
+                  if (i != 0) {     
+                      x.push(data[i].x[0]);
+                      y.push(data[i].y[0]);
+                      color = data[i].marker.color;
+                  }
+              }
+              mode = 'lines';
+              marker = {};
+              if (arrowsOnLines) {
+                  mode = 'lines+markers';
+                  marker = {symbol: 'arrow-bar-up', angleref: "previous", size: 10}
+              }
+              data.push({
+                  x: x,
+                  y: y,
+                  type: 'scatter',
+                  mode: mode,
+                  line: {color: color},
+                  marker: marker
+              })
+          }
+          yMax = Math.max(...yValues);
+          yMin = Math.min(...yValues);
+          for (extraExpression of extraExpressions) {
+              const extraExpr = math.compile(extraExpression)
+              const stepSize = (xRange[1] - xRange[0]) / 50
+              let xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+              let yValues = xValues.map(function (x) {
+                  return extraExpr.evaluate({x: x})
+              })
+              const goodInds = yValues.map((y, i) => {
+                  return (y <= yMax && y >= yMin) ? i : -1
+              }).filter(i => i >= 0);
+              xValues = goodInds.map(i => xValues[i]);
+              yValues = goodInds.map(i => yValues[i]);
+              data = [data[0]].concat({
+                  x: xValues,
+                  y: yValues,
+                  type: 'scatter',
+                  mode: 'lines',
+                  line: {color: '#ffaabb'}
+              }).concat(data.slice(1,data.length))
+          }
+          let layout = {
+              hovermode: false,
+              showlegend: false,
+              margin: {t: 25, b: 25, l: 25, r: 25},
+              xaxis: {fixedrange: true},
+              yaxis: {fixedrange: true}
+          }
+          if (Object.keys(layoutExtra).length > 0) {
+              for ([k, v] of Object.entries(layoutExtra)) {
+                  layout[k] = v;
+              }
+          }
+          Plotly.newPlot(elId, data, layout, {displayModeBar: false})
+      }
+  </script>
+  <style>
+      .eqnos {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          overflow-x: auto;
+      }
+      .eqnos br {
+          display: none;
+      }
+      .eqnos-number {
+          margin-left: auto;
+          padding-left: 1rem;
+      }
+      .katexContainer {
+          flex-grow: 1;
+          overflow-x: auto;
+      }
+  </style>
+  <script>
       let baseLps = {
           prototypeLp: {
               xMin: -1,
@@ -1063,62 +1214,6 @@
           }
       }
   </script>
-  <style>   
-      #classModeDiv {
-          position: fixed;
-          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
-          padding: 30pt;
-          top: 200px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 2pt solid;
-          border-radius: 10pt;
-          padding: 10px;
-          box-shadow: 5px 5px rgb(200, 200, 200);
-          visibility: hidden;
-      }
-  </style>
-  <script>
-      const classModeSetup = () => {
-          const classMode = document.getElementById('classModeDiv');
-          let noClassModeHref = window.location.href.split('#')[0];
-          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
-              noClassModeHref += '/';
-          }
-          noClassModeHref += '?classmode=false';
-          classMode.onclick = closeClassMode;
-          classMode.innerHTML = `
-              <div>
-                  Welcome to class mode! This is your friendly reminder to check that:
-                  <ul>
-                      <li>The mics are on.</li>
-                      <li>The camera is pointed at the whiteboard.</li>
-                      <li>PIP is off.</li>
-                  </ul>
-                  Click anywhere to close this window.
-                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-              </div>
-          `
-      }
-      const closeClassMode = () => {
-          const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
-          const minutesBetweenReminders = 30;
-          if (classMode.style.visibility === "visible") {
-              classMode.style.visibility = "hidden";
-              classMode.innerHTML = `
-                  <div>
-                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
-                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
-                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
-                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-                  </div>
-              `
-              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
-          }
-      }
-  </script>
   <script>
       document.onreadystatechange = () => {
           if (document.readyState !== "complete") {
@@ -1436,262 +1531,6 @@
       }
   </script>
   <style>
-      .theorem p {
-          display: inline;
-      }
-      .theorem {
-          border: 1pt solid gray;
-          padding: 1rem;
-          background-color: #eee;
-          font-style: italic;
-          margin: 0;
-      }
-      .theoremLabel {
-          font-weight: bold;
-          font-style: normal;
-      }
-      .proof::after {
-          display: block;
-          content: '\00220E';
-          margin-top: -1.25rem;
-          margin-bottom: 1rem;
-      }
-      .theorem .backRefElement {
-          float: right;
-      }
-  </style>
-  <script>
-      const theoremHelpers = () => {
-          let theoremObj = {};
-          for (thm of document.getElementsByClassName('theorem')) {
-              ((thm) => {
-                  let headerEl = thm.previousSibling;
-                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
-                      headerEl = headerEl.previousSibling;
-                  }
-                  section = headerEl.getAttribute('data-number').split('.')[0];
-                  theoremObj[thm.id] = {
-                      'theorem': thm,
-                      'proof': undefined,
-                      'section': section
-                  };
-              })(thm)
-          }
-          for (prf of document.getElementsByClassName('proof')) {
-              ((prf) => {
-                  theoremObj[prf.getAttribute('for')].proof = prf;
-                  firstP = prf.getElementsByTagName('p')[0];
-                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
-              })(prf)
-          }
-          secNumThms = {};
-          for ([thmId, thmObj] of Object.entries(theoremObj)) {
-              ((thmId, thmObj) => {
-                  thm = document.getElementById(thmId);
-                  sec = thmObj.section;
-                  el = thmObj.theorem;
-                  proof = thmObj.proof;
-                  if (!Object.keys(secNumThms).includes(sec)) {
-                      secNumThms[sec] = 0;
-                  }
-                  secNumThms[sec] += 1;
-                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
-                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
-                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
-                  labelSpan = document.createElement('span');
-                  labelSpan.classList = ['theoremLabel'];
-                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
-                  if (!!thm.getAttribute('data-display-name')) {
-                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
-                  }
-                  labelSpan.textContent = preTheoremStr + ': ';
-                  el.insertBefore(labelSpan, el.firstChild);
-                  const main = document.getElementById('main');
-                  if (!!proof) {
-                      if (proof.getAttribute('data-placement') === 'appendix') {
-                          const appLink = document.createElement('p');
-                          const thmClone = thm.cloneNode(true);
-                          thmClone.id = thm.id + 'AppendixVersionWithProof';
-                          thmCloneLabel = thmClone.firstChild;
-                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
-                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
-                          main.insertBefore(appLink, thm.nextSibling);
-                          const refs = document.getElementById('References');
-                          main.insertBefore(thmClone, refs);
-                          main.insertBefore(proof, refs);
-                      }
-                  }
-              })(thmId, thmObj)
-          }
-          const refEls = document.getElementsByClassName('thmRef');
-          for (ref of refEls) {
-              ((ref) => {
-                  thm = document.getElementById(ref.getAttribute('for'));
-                  if (!!thm) {
-                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
-                  } else {
-                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
-                  }
-              })(ref)
-          }
-          addTooltips([...refEls].map(el => el.firstChild), true);
-      }
-  </script>
-  <script>
-      videoEmbeds = () => {
-          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
-              ((el) => {
-                  const descHTML = el.innerHTML;
-                  const dt = el.getAttribute('data-video-date');
-                  const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
-                  el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
-                  el.style.cursor = 'pointer';
-                  const embedIndentDiv = document.createElement('div');
-                  embedIndentDiv.classList = ['embedIndent'];
-                  el.appendChild(embedIndentDiv);
-                  el.onclick = () => {
-                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
-                      if (!!!vidIframe.getAttribute('src')) {
-                          vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
-                          embedIndentDiv.appendChild(vidIframe);
-                      }
-                  }
-                  const textDiv = document.createElement('div');
-                  textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
-                  embedIndentDiv.appendChild(textDiv);
-                  const vidIframe = document.createElement('iframe');
-                  vidIframe.classList = ['lectureEmbedIframe'];
-              })(el)
-          }
-      }
-  </script>
-  <script>
-      const drawAllPlotlyFunctions = () => {
-          let plotNum = 0;
-          for (el of document.getElementsByClassName('plotlyFunctionPlot')) {
-              if (!!!el.id){
-                  el.id = 'plotlyFunctionPlotNum' + plotNum;
-              }
-              drawPlotlyFunction(
-                  el.getAttribute('data-expression'),
-                  el.id,
-                  JSON.parse(el.getAttribute('data-xRange')),
-                  JSON.parse(el.getAttribute('data-extraPoints')),
-                  el.getAttribute('data-lineBetweenPoints') === 'true',
-                  el.getAttribute('data-arrowsOnLines') === 'true',
-                  JSON.parse(el.getAttribute('data-layoutExtra') || '{}')
-              );
-              plotNum += 1;
-          }
-      }
-      const drawPlotlyFunction = (expression, elId, xRange, extraPoints, lineBetweenPoints, arrowsOnLines, layoutExtra) => {
-          // compile the expression once
-          const expr = math.compile(expression)
-
-          // evaluate the expression repeatedly for different values of x
-          const stepSize = (xRange[1] - xRange[0]) / 50
-          const xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
-          const yValues = xValues.map(function (x) {
-              return expr.evaluate({x: x})
-          })
-
-          // render the plot using plotly
-          const trace1 = {
-              x: xValues,
-              y: yValues,
-              type: 'scatter',
-              mode: 'lines',
-              line: {color: 'black'}
-          }
-          let data = [trace1]
-          if (!!extraPoints) {
-              for (ep of extraPoints) {
-                  try {
-                      x = math.compile(ep[0]).evaluate();
-                  } catch {
-                      x = ep[0];
-                  }
-                  if (ep[1] === 'eval') {
-                      y = expr.evaluate({x: x})
-                  } else {
-                      try {
-                          y = math.compile(ep[1]).evaluate();
-                      } catch {
-                          y = ep[1];
-                      }
-                  }
-                  color = ep.length >= 3 ? ep[2] : 'black';
-                  size = ep.length >= 4 ? ep[3] : 10;
-                  data.push({
-                      x: [x],
-                      y: [y],
-                      type: 'scatter',
-                      mode: 'markers',
-                      marker: {color: color, size: size}
-                  })
-              }
-          }
-          if (lineBetweenPoints) {
-              let x = [];
-              let y = [];
-              let color = 'black';
-              for (i in data) {
-                  if (i != 0) {     
-                      x.push(data[i].x[0]);
-                      y.push(data[i].y[0]);
-                      color = data[i].marker.color;
-                  }
-              }
-              mode = 'lines';
-              marker = {};
-              if (arrowsOnLines) {
-                  mode = 'lines+markers';
-                  marker = {symbol: 'arrow-bar-up', angleref: "previous", size: 10}
-              }
-              data.push({
-                  x: x,
-                  y: y,
-                  type: 'scatter',
-                  mode: mode,
-                  line: {color: color},
-                  marker: marker
-              })
-          }
-          let layout = {
-              hovermode: false,
-              showlegend: false,
-              margin: {t: 25, b: 25, l: 25, r: 25},
-              xaxis: {fixedrange: true},
-              yaxis: {fixedrange: true}
-          }
-          if (Object.keys(layoutExtra).length > 0) {
-              for ([k, v] of Object.entries(layoutExtra)) {
-                  layout[k] = v;
-              }
-          }
-          Plotly.newPlot(elId, data, layout, {displayModeBar: false})
-      }
-  </script>
-  <style>
-      .eqnos {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          overflow-x: auto;
-      }
-      .eqnos br {
-          display: none;
-      }
-      .eqnos-number {
-          margin-left: auto;
-          padding-left: 1rem;
-      }
-      .katexContainer {
-          flex-grow: 1;
-          overflow-x: auto;
-      }
-  </style>
-  <style>
       #main {
           font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
           width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
@@ -1841,260 +1680,6 @@
           color: red;
       }
   </style>
-  <script>
-      BBGraphData = {
-          bbTree1: {
-              'edges': [
-                  ['P', 'P^1', 'x_1 \\leq 2'],
-                  ['P', 'P^2', 'x_1 \\geq 3']
-              ],
-              'nodes': {
-                  'P': {lp: '\\frac{59}{7}', state: 'branched'},
-                  'P^1': {},
-                  'P^2': {}
-              }
-          },
-          depthFirstTree: {
-              nodes: {
-                  'P': {lp: '22', state: 'branched'},
-                  'P^1': {lp: '20', state: 'branched'},
-                  'P^2': {},
-                  'P^3': {lp: '17', state: 'branched'},
-                  'P^4': {},
-                  'P^5': {lp: '16', state: 'branched'},
-                  'P^6': {},
-                  'P^7': {lp: '15', state: 'integer'},
-                  'P^8': {},
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 \\leq 0'],
-                  ['P', 'P^2', 'x_1 \\geq 1'],
-                  ['P^1', 'P^3', 'x_2 \\leq 0'],
-                  ['P^1', 'P^4', 'x_2 \\geq 1'],
-                  ['P^3', 'P^5', 'x_3 \\leq 0'],
-                  ['P^3', 'P^6', 'x_3 \\geq 1'],
-                  ['P^5', 'P^7', 'x_3 \\leq 0'],
-                  ['P^5', 'P^8', 'x_3 \\geq 1']
-              ],
-              rootPlacement: 0.67,
-              siblingSep: 1.4,
-              childSep: 3
-          },
-          bestNodeTree: {
-              nodes: {
-                  'P': {lp: '22', state: 'branched'},
-                  'P^1': {lp: '19', state: 'branched'},
-                  'P^2': {lp: '20', state: 'branched'},
-                  'P^3': {},
-                  'P^4': {},
-                  'P^5': {},
-                  'P^6': {}
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 \\leq 0'],
-                  ['P', 'P^2', 'x_1 \\geq 1'],
-                  ['P^1', 'P^3', 'x_2 \\leq 0'],
-                  ['P^1', 'P^4', 'x_2 \\geq 1'],
-                  ['P^2', 'P^5', 'x_3 \\leq 0'],
-                  ['P^2', 'P^6', 'x_3 \\geq 1']
-              ],
-          },
-          fullTree3d: {
-              nodes: {
-                  'P': {lp: '', state: 'branched'},
-                  'P^1': {lp: '', state: 'branched'},
-                  'P^2': {lp: '', state: 'branched'},
-                  'P^3': {lp: '', state: 'branched'},
-                  'P^4': {lp: '', state: 'branched'},
-                  'P^5': {lp: '', state: 'branched'},
-                  'P^6': {lp: '', state: 'branched'},
-                  'P^7': {},
-                  'P^8': {},
-                  'P^9': {},
-                  'P^{10}': {},
-                  'P^{11}': {},
-                  'P^{12}': {},
-                  'P^{13}': {},
-                  'P^{14}': {}
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 = 0'],
-                  ['P', 'P^2', 'x_1 = 1'],
-                  ['P^1', 'P^3', 'x_2 = 0'],
-                  ['P^1', 'P^4', 'x_2 = 1'],
-                  ['P^2', 'P^5', 'x_2 = 0'],
-                  ['P^2', 'P^6', 'x_2 = 1'],
-                  ['P^3', 'P^7', 'x_3 = 0'],
-                  ['P^3', 'P^8', 'x_3 = 1'],
-                  ['P^4', 'P^9', 'x_3 = 0'],
-                  ['P^4', 'P^{10}', 'x_3 = 1'],
-                  ['P^5', 'P^{11}', 'x_3 = 0'],
-                  ['P^5', 'P^{12}', 'x_3 = 1'],
-                  ['P^6', 'P^{13}', 'x_3 = 0'],
-                  ['P^6', 'P^{14}', 'x_3 = 1']
-              ],
-              siblingSep: 1.7,
-              childSep: 3,
-              includeLb: false
-          }
-      }
-      
-      BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
-      BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
-      BBGraphData.bbTree2.nodes['P^3'] = {};
-      BBGraphData.bbTree2.nodes['P^4'] = {};
-      BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
-      BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
-
-      BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
-      BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
-
-      BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
-      BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
-
-      BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
-      BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
-  </script>
-  <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-      }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
-  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-  <style>
-      nav#TOC:nth-child(2) {
-          margin-top: 0.6rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
-      }
-      nav#TOC li {
-          list-style-type: none;
-      }
-      nav#TOC > ul {
-          margin-bottom: 1.5rem;
-          margin-top: 2rem;
-          line-height: 1.9rem;
-      }
-      #TOC ul {
-          padding-left: 0;
-      }
-      nav#TOC {
-          height: 100%;
-          width: 0;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #ebebeb;
-          overflow-x: hidden;
-          padding-top: 1rem;
-          transition: 0.5s;
-          overflow-y: scroll;
-      }
-      nav#TOC a {
-          text-decoration: none;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-          color: #000;
-          display: block;
-          transition: 0.3s;
-          padding-top: 0.2rem;
-          padding-bottom: 0.3rem;
-          border-bottom: 1pt solid lightgray;
-      }
-      nav#TOC a:hover {
-          color: #888;
-      }
-      #TOC .toc-section-number::after {
-          content: ':\00a0'
-      }
-      #tocTop {
-          height: 1.5em;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 0.5rem;
-          padding-bottom: 0.65rem;
-          position: fixed;
-          top: 0;
-          visibility: hidden;
-          background-color: #ebebeb;
-          z-index: 1;
-          border-bottom: 1pt solid gray;
-      }
-      .tocHidden {
-          display: none     
-      }
-      .tocExpand {
-          margin-left: auto;
-          font-size: 30pt !important;
-          font-family: 'Courier New', Courier, monospace;
-      }
-      .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          font-size: 1.1rem;
-          background-color: #ebebeb;
-          width: 100%;
-          border-bottom: 1pt solid gray;
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          display: flex;
-          justify-content: space-between;
-          z-index: 2;
-      }
-      @media screen and (max-height: 450px) {
-          .sidenav {
-              padding-top: 15px;
-          }
-
-          .sidenav a {
-              font-size: 18px;
-          }
-      }
-  </style>
-  <script>
-      function openCloseNav() {
-          const tocTop = document.getElementById("tocTop")
-          if (tocTop.style.visibility == "visible") {
-              closeNav();
-              return
-          }
-          const screenWidth = window.innerWidth;
-          const tocWidth = Math.min(0.75 * screenWidth, 350);
-          const leftoverWidth = screenWidth - tocWidth;
-          const main = document.getElementById("main");
-          const mainWidth = main.offsetWidth;
-          document.getElementById("TOC").style.width = tocWidth + 'px';
-          tocTop.style.width = tocWidth + 'px';
-          tocTop.style.visibility = "visible";
-          if (leftoverWidth >= mainWidth) {
-              main.style.marginLeft = tocWidth / 2 + 'px';
-          }
-      }
-      function closeNav() {
-          document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = null;
-          document.getElementById("tocTop").style.visibility = "hidden";
-      }
-      function closeNavIfSmall() {
-          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
-              closeNav()
-          }
-      }
-  </script>
   <style>
       .lpDraw {
           position: relative;
@@ -2173,6 +1758,31 @@
           font-size: 0.8rem;
           padding: 0.5rem;
           margin: 0 0.1rem;
+      }
+  </style>
+  <style>
+      .theorem p {
+          display: inline;
+      }
+      .theorem {
+          border: 1pt solid gray;
+          padding: 1rem;
+          background-color: #eee;
+          font-style: italic;
+          margin: 0;
+      }
+      .theoremLabel {
+          font-weight: bold;
+          font-style: normal;
+      }
+      .proof::after {
+          display: block;
+          content: '\00220E';
+          margin-top: -1.25rem;
+          margin-bottom: 1rem;
+      }
+      .theorem .backRefElement {
+          float: right;
       }
   </style>
   <script>
@@ -2314,6 +1924,421 @@
               for (textObj of textsToAdd) {
                   svg.appendChild(textObj);
               }
+          }
+      }
+  </script>
+  <script>
+      BBGraphData = {
+          bbTree1: {
+              'edges': [
+                  ['P', 'P^1', 'x_1 \\leq 2'],
+                  ['P', 'P^2', 'x_1 \\geq 3']
+              ],
+              'nodes': {
+                  'P': {lp: '\\frac{59}{7}', state: 'branched'},
+                  'P^1': {},
+                  'P^2': {}
+              }
+          },
+          depthFirstTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '20', state: 'branched'},
+                  'P^2': {},
+                  'P^3': {lp: '17', state: 'branched'},
+                  'P^4': {},
+                  'P^5': {lp: '16', state: 'branched'},
+                  'P^6': {},
+                  'P^7': {lp: '15', state: 'integer'},
+                  'P^8': {},
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^3', 'P^5', 'x_3 \\leq 0'],
+                  ['P^3', 'P^6', 'x_3 \\geq 1'],
+                  ['P^5', 'P^7', 'x_3 \\leq 0'],
+                  ['P^5', 'P^8', 'x_3 \\geq 1']
+              ],
+              rootPlacement: 0.67,
+              siblingSep: 1.4,
+              childSep: 3
+          },
+          bestNodeTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '19', state: 'branched'},
+                  'P^2': {lp: '20', state: 'branched'},
+                  'P^3': {},
+                  'P^4': {},
+                  'P^5': {},
+                  'P^6': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^2', 'P^5', 'x_3 \\leq 0'],
+                  ['P^2', 'P^6', 'x_3 \\geq 1']
+              ],
+          },
+          fullTree3d: {
+              nodes: {
+                  'P': {lp: '', state: 'branched'},
+                  'P^1': {lp: '', state: 'branched'},
+                  'P^2': {lp: '', state: 'branched'},
+                  'P^3': {lp: '', state: 'branched'},
+                  'P^4': {lp: '', state: 'branched'},
+                  'P^5': {lp: '', state: 'branched'},
+                  'P^6': {lp: '', state: 'branched'},
+                  'P^7': {},
+                  'P^8': {},
+                  'P^9': {},
+                  'P^{10}': {},
+                  'P^{11}': {},
+                  'P^{12}': {},
+                  'P^{13}': {},
+                  'P^{14}': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 = 0'],
+                  ['P', 'P^2', 'x_1 = 1'],
+                  ['P^1', 'P^3', 'x_2 = 0'],
+                  ['P^1', 'P^4', 'x_2 = 1'],
+                  ['P^2', 'P^5', 'x_2 = 0'],
+                  ['P^2', 'P^6', 'x_2 = 1'],
+                  ['P^3', 'P^7', 'x_3 = 0'],
+                  ['P^3', 'P^8', 'x_3 = 1'],
+                  ['P^4', 'P^9', 'x_3 = 0'],
+                  ['P^4', 'P^{10}', 'x_3 = 1'],
+                  ['P^5', 'P^{11}', 'x_3 = 0'],
+                  ['P^5', 'P^{12}', 'x_3 = 1'],
+                  ['P^6', 'P^{13}', 'x_3 = 0'],
+                  ['P^6', 'P^{14}', 'x_3 = 1']
+              ],
+              siblingSep: 1.7,
+              childSep: 3,
+              includeLb: false
+          }
+      }
+      
+      BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
+      BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
+      BBGraphData.bbTree2.nodes['P^3'] = {};
+      BBGraphData.bbTree2.nodes['P^4'] = {};
+      BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
+      BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
+
+      BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
+      BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
+
+      BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
+      BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
+
+      BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
+      BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
+  </script>
+  <script>
+      const theoremHelpers = () => {
+          let theoremObj = {};
+          for (thm of document.getElementsByClassName('theorem')) {
+              ((thm) => {
+                  let headerEl = thm.previousSibling;
+                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
+                      headerEl = headerEl.previousSibling;
+                  }
+                  section = headerEl.getAttribute('data-number').split('.')[0];
+                  theoremObj[thm.id] = {
+                      'theorem': thm,
+                      'proof': undefined,
+                      'section': section
+                  };
+              })(thm)
+          }
+          for (prf of document.getElementsByClassName('proof')) {
+              ((prf) => {
+                  theoremObj[prf.getAttribute('for')].proof = prf;
+                  firstP = prf.getElementsByTagName('p')[0];
+                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
+              })(prf)
+          }
+          secNumThms = {};
+          for ([thmId, thmObj] of Object.entries(theoremObj)) {
+              ((thmId, thmObj) => {
+                  thm = document.getElementById(thmId);
+                  sec = thmObj.section;
+                  el = thmObj.theorem;
+                  proof = thmObj.proof;
+                  if (!Object.keys(secNumThms).includes(sec)) {
+                      secNumThms[sec] = 0;
+                  }
+                  secNumThms[sec] += 1;
+                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
+                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
+                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
+                  labelSpan = document.createElement('span');
+                  labelSpan.classList = ['theoremLabel'];
+                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
+                  if (!!thm.getAttribute('data-display-name')) {
+                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
+                  }
+                  labelSpan.textContent = preTheoremStr + ': ';
+                  el.insertBefore(labelSpan, el.firstChild);
+                  const main = document.getElementById('main');
+                  if (!!proof) {
+                      if (proof.getAttribute('data-placement') === 'appendix') {
+                          const appLink = document.createElement('p');
+                          const thmClone = thm.cloneNode(true);
+                          thmClone.id = thm.id + 'AppendixVersionWithProof';
+                          thmCloneLabel = thmClone.firstChild;
+                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                          main.insertBefore(appLink, thm.nextSibling);
+                          const refs = document.getElementById('References');
+                          main.insertBefore(thmClone, refs);
+                          main.insertBefore(proof, refs);
+                      }
+                  }
+              })(thmId, thmObj)
+          }
+          const refEls = document.getElementsByClassName('thmRef');
+          for (ref of refEls) {
+              ((ref) => {
+                  thm = document.getElementById(ref.getAttribute('for'));
+                  if (!!thm) {
+                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                  } else {
+                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
+                  }
+              })(ref)
+          }
+          addTooltips([...refEls].map(el => el.firstChild), true);
+      }
+  </script>
+  <style>   
+      #classModeDiv {
+          position: fixed;
+          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+          padding: 30pt;
+          top: 200px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          border: 2pt solid;
+          border-radius: 10pt;
+          padding: 10px;
+          box-shadow: 5px 5px rgb(200, 200, 200);
+          visibility: hidden;
+      }
+  </style>
+  <script>
+      const classModeSetup = () => {
+          const classMode = document.getElementById('classModeDiv');
+          let noClassModeHref = window.location.href.split('#')[0];
+          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
+              noClassModeHref += '/';
+          }
+          noClassModeHref += '?classmode=false';
+          classMode.onclick = closeClassMode;
+          classMode.innerHTML = `
+              <div>
+                  Welcome to class mode! This is your friendly reminder to check that:
+                  <ul>
+                      <li>The mics are on.</li>
+                      <li>The camera is pointed at the whiteboard.</li>
+                      <li>PIP is off.</li>
+                  </ul>
+                  Click anywhere to close this window.
+                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+              </div>
+          `
+      }
+      const closeClassMode = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+          const minutesBetweenReminders = 30;
+          if (classMode.style.visibility === "visible") {
+              classMode.style.visibility = "hidden";
+              classMode.innerHTML = `
+                  <div>
+                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                  </div>
+              `
+              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+          }
+      }
+  </script>
+  <script>
+      videoEmbeds = () => {
+          for (el of document.getElementsByClassName('lectureVideoEmbed')) {
+              ((el) => {
+                  const descHTML = el.innerHTML;
+                  const dt = el.getAttribute('data-video-date');
+                  const dtStr = `${parseInt(dt.slice(5, 7))}/${parseInt(dt.slice(8, 10))}`
+                  el.innerHTML = `&#127909;<small class="tinyText">Lecture video ${dtStr}</small>`;
+                  el.style.cursor = 'pointer';
+                  const embedIndentDiv = document.createElement('div');
+                  embedIndentDiv.classList = ['embedIndent'];
+                  el.appendChild(embedIndentDiv);
+                  el.onclick = () => {
+                      embedIndentDiv.style.display = embedIndentDiv.style.display == 'block' ? 'none' : 'block';
+                      if (!!!vidIframe.getAttribute('src')) {
+                          vidIframe.setAttribute('src', `https://mediasite.k-state.edu/mediasite/Play/${el.getAttribute('data-video-id')}?player=NextGenSystemPlayer&amp;cover=true&amp;lockControls=false&amp;coverTitle=false&amp;autoStart=false&amp;useExtensions=false&amp;disableXR=false&amp;quizzes=false&amp;hotspots=false&amp;clickToPlay=true&amp;playfrom=0`);
+                          embedIndentDiv.appendChild(vidIframe);
+                      }
+                  }
+                  const textDiv = document.createElement('div');
+                  textDiv.innerHTML = `<b>Class lecture ${dtStr}: </b>` + descHTML;
+                  embedIndentDiv.appendChild(textDiv);
+                  const vidIframe = document.createElement('iframe');
+                  vidIframe.classList = ['lectureEmbedIframe'];
+              })(el)
+          }
+      }
+  </script>
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
+      }
+  </style>
+  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+  <style>
+      nav#TOC:nth-child(2) {
+          margin-top: 0.6rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+      }
+      nav#TOC li {
+          list-style-type: none;
+      }
+      nav#TOC > ul {
+          margin-bottom: 1.5rem;
+          margin-top: 2rem;
+          line-height: 1.9rem;
+      }
+      #TOC ul {
+          padding-left: 0;
+      }
+      nav#TOC {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #ebebeb;
+          overflow-x: hidden;
+          padding-top: 1rem;
+          transition: 0.5s;
+          overflow-y: scroll;
+      }
+      nav#TOC a {
+          text-decoration: none;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+          color: #000;
+          display: block;
+          transition: 0.3s;
+          padding-top: 0.2rem;
+          padding-bottom: 0.3rem;
+          border-bottom: 1pt solid lightgray;
+      }
+      nav#TOC a:hover {
+          color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
+      }
+      #tocTop {
+          height: 1.5em;
+          display: flex;
+          justify-content: space-between;
+          padding-top: 0.5rem;
+          padding-bottom: 0.65rem;
+          position: fixed;
+          top: 0;
+          visibility: hidden;
+          background-color: #ebebeb;
+          z-index: 1;
+          border-bottom: 1pt solid gray;
+      }
+      .tocHidden {
+          display: none     
+      }
+      .tocExpand {
+          margin-left: auto;
+          font-size: 30pt !important;
+          font-family: 'Courier New', Courier, monospace;
+      }
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-size: 1.1rem;
+          background-color: #ebebeb;
+          width: 100%;
+          border-bottom: 1pt solid gray;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          z-index: 2;
+      }
+      @media screen and (max-height: 450px) {
+          .sidenav {
+              padding-top: 15px;
+          }
+
+          .sidenav a {
+              font-size: 18px;
+          }
+      }
+  </style>
+  <script>
+      function openCloseNav() {
+          const tocTop = document.getElementById("tocTop")
+          if (tocTop.style.visibility == "visible") {
+              closeNav();
+              return
+          }
+          const screenWidth = window.innerWidth;
+          const tocWidth = Math.min(0.75 * screenWidth, 350);
+          const leftoverWidth = screenWidth - tocWidth;
+          const main = document.getElementById("main");
+          const mainWidth = main.offsetWidth;
+          document.getElementById("TOC").style.width = tocWidth + 'px';
+          tocTop.style.width = tocWidth + 'px';
+          tocTop.style.visibility = "visible";
+          if (leftoverWidth >= mainWidth) {
+              main.style.marginLeft = tocWidth / 2 + 'px';
+          }
+      }
+      function closeNav() {
+          document.getElementById("TOC").style.width = "0";
+          document.getElementById("main").style.marginLeft = null;
+          document.getElementById("tocTop").style.visibility = "hidden";
+      }
+      function closeNavIfSmall() {
+          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
+              closeNav()
           }
       }
   </script>
@@ -9512,7 +9537,12 @@ terminate after iteration 4 with <span
 class="math inline">0.83762</span> as our optimal (within tolerance)
 solution.</p>
 <p>Analogous to last section, here’s a group of plots illustrating how
-the trial solution changes from iteration to iteration:</p>
+the trial solution changes from iteration to iteration. There is one
+change though, this time in light red I’ve plotted the curve of the
+second-degree Taylor polynomial constructed from the trial solution.
+With this in place, you can see how the polynomial closely mirrors the
+original function near the trial solution, though it can deviate quite a
+bit when you get outside that nearby neighborhood.</p>
 <div>
 <script>
      newtonExClickFunc = (x) => {
@@ -9535,7 +9565,8 @@ style="width:350px;height:350px;display:block"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[1, &quot;eval&quot;, &quot;blue&quot;, 5], [0.875, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;19 - 12x - 48(x - 1)^2&quot;]">
 
 </div>
 <div id="newtonEx2" class="plotlyFunctionPlot basicCenter"
@@ -9543,7 +9574,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.875, &quot;eval&quot;, &quot;blue&quot;, 5], [0.84003, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;9.76358795166016 - 2.1939697265625x - 31.36669921875(x - 0.875)^2&quot;]">
 
 </div>
 <div id="newtonEx3" class="plotlyFunctionPlot basicCenter"
@@ -9551,7 +9583,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.84003, &quot;eval&quot;, &quot;blue&quot;, 5], [0.83763, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;7.99521555948513 - 0.132649616478645x - 27.6399818649099(x - 0.84003)^2&quot;]">
 
 </div>
 <div id="newtonEx4" class="plotlyFunctionPlot basicCenter"
@@ -9559,7 +9592,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.83763, &quot;eval&quot;, &quot;blue&quot;, 5], [0.83762, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;7.88441482712907 - 0.000560278242124437x - 27.3975201369267(x - 0.83763)^2&quot;]">
 
 </div>
 <div id="newtonExPlotLabel" style="text-align: center">
