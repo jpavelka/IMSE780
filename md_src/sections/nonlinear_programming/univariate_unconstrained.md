@@ -151,6 +151,8 @@ This is true, but sometimes we are not so lucky that we can analytically solve f
 
 ### Bisection method
 
+<div class='lectureVideoEmbed' video-id='09799d31222943ccad1d47bf87fdf5b31d' video-date='2023-10-18'>HW 7 review, Bisection method, begin Newton's method.</div>
+
 Our first search procedure is the bisection method. While no one would suggest you implement this technique to solve problems in practice, it is a relatively intuitive algorithm that is great for learning the tenor of these search techniques in general. For what follows, we will assume that we are trying to maximize some concave function.
 
 Actually, concavity is not strictly required for this method. Technically, using $x^*$ to denote the maximum of $f$, the only requirements for the method to work are:

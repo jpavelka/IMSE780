@@ -19,7 +19,7 @@ $$
 \end{align*}
 $$
 
-to find that $\x=(-9/4, 3/2)$ minimizes $f$.
+to find that $\x=(\frac{-9}{4}, \frac{3}{2})$ minimizes $f$.
 
 ### Gradient search
 
@@ -31,10 +31,14 @@ $$
 \x' + t\nabla f(\x').
 $$
 
+So those are the basics of the gradient search method. Before we get too much further into details, maybe we should pause a second to try to build a bit of intuition? I'd like to display some graphs to try to help you visualize the gradient search process, but we really need 3d plots for that, and that's not my strength. So I went out and found this short Youtube video instead. Note that the video uses the term __gradient descent__ for this procedure and they are solving a minimization problem. Don't worry though, the intuitions are the same.
+
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/qg4PchTECck" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+some better lead in...
+
 That sounds good, but there's one problem - exactly what value should we choose for $t$? There are several ways somewhat might choose $t$ in practice, but for our purposes we'll just use the best $t$...
 
 ...Ok, maybe that's not a great explanation, let's try again. We're going to end up at some point of the form $x' + t\nabla f(x')$, and ideally the value of $f$ evaluated at that point will be as large as possible. So why don't we just go ahead and find $t^*$ such that $f(\x' + t^*\nabla f(\x')) = \max_{t\geq0} f(\x' + t\nabla f(\x'))$? How would we even do that?
 
 The answer is that determining $t^*$ is itself an optimization problem! But luckily it is an easier optimization problem than the one we started out with: $\x'$ is a known vector at this point, so the only variable to maximize over is $t$. And since we're still assuming $f$ is concave, the search for $t^*$ is an maximization problem on a convex function of a single variable. Thus we can find $t^*$ via some method we covered in +@sec:univariateUnconstrained.
-
-go back and also call it gradient descent? add a note about gradient descent name
