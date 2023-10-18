@@ -1,4 +1,4 @@
-## Single-variable unconstrained optimization
+## Single-variable unconstrained optimization {#sec:univariateUnconstrained}
 
 Let's now jump into our first class of nonlinear optimization problems. Naturally, we'll start with a simple case, and one you already know something about from your calculus class: optimizing a function $f(x)$ with a single variable and no constraints.
 
