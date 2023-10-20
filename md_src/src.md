@@ -36,7 +36,7 @@
 
 {insertSection:sections/nonlinear_programming/univariate_unconstrained.md}
 
-<!-- {insertSection:sections/nonlinear_programming/multivariate_unconstrained.md} -->
+{insertSection:sections/nonlinear_programming/multivariate_unconstrained.md}
 
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 

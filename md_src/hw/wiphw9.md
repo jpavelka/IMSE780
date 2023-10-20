@@ -1,7 +1,13 @@
-
-- (2pts) walk through local max + concave = global max proof
-- (2pts) are these functions concave? why? 3x - 2x^4, (1/6)x^3 - (1/6)x^4
-- (4pts) another bisection search (13.4.2a, but make them determine the bounds)
-- (4pts) bisection search example (book 13.4.1, pdf p606)
-- (4pts) newton's method example  (same as above)
-- (4pts) find point where gradients equal zero, are they local/global optima? (13.5.2, 13.5.4)
+<div class='assignmentContainer' id='Homework 8' sub-name='Cutting planes' due='2023-10-23'>
+<div>
+1. (4pts) Determine whether the following functions are concave. Be sure to explain why.
+    a. $f(x)=3x - 2x^4$
+    a. $f(x)=\frac{x^3 - x^4}{6}$
+1. (4pts) (Approximately) maximize the function $f(x)=6x - x^2$ using the bisection method with $\epsilon=0.04$ and initial bounds $\underline x=0$, $\overline x=4.8$.
+1. (4pts) (Approximately) maximize the function $f(x)=x^3 + 2x - 2x^2 - 0.25x^4$ using the bisection method with $\epsilon=0.04$ and initial bounds $\underline x=0$, $\overline x=2.4$.
+1. (4pts) (Approximately) maximize the function $f(x)=x^3 + 2x - 2x^2 - 0.25x^4$ using Newton's method with $\epsilon=0.001$ and $x_1=1.2$.
+1. (4pts) For each of the following concave functions, determine the exact maximum point analytically by finding where $\nabla f(\x)=\zeros$.
+    a. $f(x_1,x_2) = 4x_1x_2 - 2x_1^2 - 3x_2^2$
+    a. $f(x_1,x_2) = 6x_1 + 2x_1x_2 - 2x_2 - 2x_1^2 - x_2^2$
+</div>
+</div>
