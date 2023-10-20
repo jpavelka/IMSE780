@@ -30,6 +30,9 @@
 - $\Leftrightarrow$: If and only if. It indicates the the statement to the left is logically equivalent to the statement on the right, e.g. $a > b \Leftrightarrow -a < -b$.
 - $\floor{x}$: The "floor" of the number $x\in\R$, i.e. the value resulting from rounding $x$ down to the nearest integer. So $\floor{1.3}=1$.
 - $\ceil{x}$: The "ceiling" of the number $x\in\R$, i.e. the value resulting from rounding $x$ up to the nearest integer. So $\ceil{1.3}=2$.
+- $f'$: The derivative of some single-variable function $f$.
+- $f''$: The second derivative of some single-variable function $f$.
+- $f'_{x_j}$: The partial derivative of some multi-variable function $f$ with respect to the variable $x_j$.
 - $\nabla f$: The gradient of some multivariate function $f$, i.e. the vector of partial derivatives. So we have:
   $$
   \nabla f(\x) = \begin{bmatrix}

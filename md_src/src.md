@@ -38,6 +38,8 @@
 
 {insertSection:sections/nonlinear_programming/multivariate_unconstrained.md}
 
+<!-- {insertSection:sections/nonlinear_programming/optimality_conditions.md} -->
+
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 
 {insertSection:sections/appendix/appendix.md}
