@@ -200,7 +200,7 @@ The following table illustrates the how the values of $\underline x, \overline x
 
 ![Applying the bisection method on $f(x)=12x - 3x^4 - 2x^6$ [@classText]](images/bisection-example-table.png)
 
-As another visual aid, consider the below plots that illustrate how $x'$ is updated from iteration to iteration.
+As another visual aid, consider the below plots that illustrate how $x'$ is updated from iteration to iteration. The bounds at the start of each iteration are shown are light red lines.
 
 <div>
 <script>
@@ -220,12 +220,12 @@ As another visual aid, consider the below plots that illustrate how $x'$ is upda
      }
 </script>
 <div id=bisectEx1 style='width:350px;height:350px;display:block' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[1, "eval", "blue", 5], [0.5, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=bisectEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.5, "eval", "blue", 5], [0.75, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=bisectEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.75, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=bisectEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.8125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=bisectEx5 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.8125, "eval", "blue", 5], [0.84375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=bisectEx6 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84375, "eval", "blue", 5], [0.828125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
-<div id=bisectEx7 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.828125, "eval", "blue", 5], [0.8359375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}'></div>
+<div id=bisectEx2 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.5, "eval", "blue", 5], [0.75, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["1"]'></div>
+<div id=bisectEx3 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.75, "eval", "blue", 5], [0.875, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["1", "0.5"]'></div>
+<div id=bisectEx4 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.875, "eval", "blue", 5], [0.8125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["1", "0.75"]'></div>
+<div id=bisectEx5 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.8125, "eval", "blue", 5], [0.84375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["0.875", "0.75"]'></div>
+<div id=bisectEx6 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.84375, "eval", "blue", 5], [0.828125, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["0.875", "0.8125"]'></div>
+<div id=bisectEx7 style='width:350px;height:350px;display:none' class='plotlyFunctionPlot basicCenter' expression='12x - 3x^4 - 2x^6' xRange='[0.4, 1.1]' extraPoints='[[0.828125, "eval", "blue", 5], [0.8359375, "eval", "blue", 5]]' lineBetweenPoints='true' arrowsOnLines='true' layoutExtra='{"yaxis": {"range": [null, 8]}}' extraExpressions='["0.84375", "0.8125"]'></div>
 <div id='bisectExPlotLabel' style='text-align: center'>Iteration 1</div>
 <div style='display: flex; justify-content: center'>
 <button class='forwardBackwardButton' id='bisectExPlotBackButton' onClick='bisectExClickFunc("-1")'></button>
@@ -237,7 +237,7 @@ As another visual aid, consider the below plots that illustrate how $x'$ is upda
 </script>
 </div>
 
-### Newton's method
+### Newton's method {#sec:newton1d}
 
 The bisection method is certainly a valid optimization algorithm and its simplicity makes it a good choice for an introduction to search procedures. But its main drawback is that it is relatively slow to converge. Recall that we started the algorithm with 0 and 2 as our lower and upper bounds and a trial solution of 1, so the distance from our trial solution to the true optimal solution was at most 1. Each iteration reduces the gap by a factor $\frac{1}{2}$, so to reduce it below our chosen tolerance of $\epsilon=0.01$ we are required to complete $\ceil{\log_2(1) - \log_2(0.01)}=7$ iterations of the algorithm.
 
@@ -354,3 +354,9 @@ Analogous to last section, here's a group of plots illustrating how the trial so
 </div>
 
 It's only a single sample, but it's still pretty impressive to see the difference in convergence speed between Newton's method and the bisection method. It only took 4 iterations for Newton's method while bisection took 7 iterations, and that's even with the more forgiving error tolerance $\epsilon=0.01$ instead of $\epsilon=0.00001$. If we were to run the bisection method with the more stringent error tolerance we would have required $\ceil{\log_2(1) - \log_2(0.00001)}=17$ iterations!
+
+### A helpful Python library
+
+As you're working through these examples and any class assignments, you may find it useful to have some software you can use to check your work. In the following notebook, I'll show you how to use the Python library `sympy` to evaluate functions and take derivatives.
+
+{colabGist:15gc-yndmSb7l7mYU6FXF6ZQuy2Hq7H79,0203322233ae66678390be9daed02ea8}

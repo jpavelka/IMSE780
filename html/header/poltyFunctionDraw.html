@@ -96,20 +96,27 @@
         yMax = Math.max(...yValues);
         yMin = Math.min(...yValues);
         for (extraExpression of extraExpressions) {
-            const extraExpr = math.compile(extraExpression)
-            const stepSize = (xRange[1] - xRange[0]) / 50
-            let xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
-            let yValues = xValues.map(function (x) {
-                return extraExpr.evaluate({x: x})
-            })
-            const goodInds = yValues.map((y, i) => {
-                return (y <= yMax && y >= yMin) ? i : -1
-            }).filter(i => i >= 0);
-            xValues = goodInds.map(i => xValues[i]);
-            yValues = goodInds.map(i => yValues[i]);
+            let xValuesExtra
+            let yValuesExtra
+            if (`${parseFloat(extraExpression)}`.length == extraExpression.length) {
+                xValuesExtra = [parseFloat(extraExpression), parseFloat(extraExpression)];
+                yValuesExtra = [yMin, yMax];
+            } else {
+                const extraExpr = math.compile(extraExpression)
+                const stepSize = (xRange[1] - xRange[0]) / 50
+                xValuesExtra = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+                yValuesExtra = xValuesExtra.map(function (x) {
+                    return extraExpr.evaluate({x: x})
+                })
+                const goodInds = yValuesExtra.map((y, i) => {
+                    return (y <= yMax && y >= yMin) ? i : -1
+                }).filter(i => i >= 0);
+                xValuesExtra = goodInds.map(i => xValuesExtra[i]);
+                yValuesExtra = goodInds.map(i => yValuesExtra[i]);
+            }
             data = [data[0]].concat({
-                x: xValues,
-                y: yValues,
+                x: xValuesExtra,
+                y: yValuesExtra,
                 type: 'scatter',
                 mode: 'lines',
                 line: {color: '#ffaabb'}
