@@ -275,20 +275,27 @@
           yMax = Math.max(...yValues);
           yMin = Math.min(...yValues);
           for (extraExpression of extraExpressions) {
-              const extraExpr = math.compile(extraExpression)
-              const stepSize = (xRange[1] - xRange[0]) / 50
-              let xValues = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
-              let yValues = xValues.map(function (x) {
-                  return extraExpr.evaluate({x: x})
-              })
-              const goodInds = yValues.map((y, i) => {
-                  return (y <= yMax && y >= yMin) ? i : -1
-              }).filter(i => i >= 0);
-              xValues = goodInds.map(i => xValues[i]);
-              yValues = goodInds.map(i => yValues[i]);
+              let xValuesExtra
+              let yValuesExtra
+              if (`${parseFloat(extraExpression)}`.length == extraExpression.length) {
+                  xValuesExtra = [parseFloat(extraExpression), parseFloat(extraExpression)];
+                  yValuesExtra = [yMin, yMax];
+              } else {
+                  const extraExpr = math.compile(extraExpression)
+                  const stepSize = (xRange[1] - xRange[0]) / 50
+                  xValuesExtra = math.range(xRange[0], xRange[1] + stepSize, stepSize).toArray()
+                  yValuesExtra = xValuesExtra.map(function (x) {
+                      return extraExpr.evaluate({x: x})
+                  })
+                  const goodInds = yValuesExtra.map((y, i) => {
+                      return (y <= yMax && y >= yMin) ? i : -1
+                  }).filter(i => i >= 0);
+                  xValuesExtra = goodInds.map(i => xValuesExtra[i]);
+                  yValuesExtra = goodInds.map(i => yValuesExtra[i]);
+              }
               data = [data[0]].concat({
-                  x: xValues,
-                  y: yValues,
+                  x: xValuesExtra,
+                  y: yValuesExtra,
                   type: 'scatter',
                   mode: 'lines',
                   line: {color: '#ffaabb'}
@@ -2788,8 +2795,26 @@ class="toc-section-number">6.2.3</span> Analytical vs. numerical
 methods</a></li>
 <li><a href="#bisection-method" id="toc-bisection-method"><span
 class="toc-section-number">6.2.4</span> Bisection method</a></li>
-<li><a href="#newtons-method" id="toc-newtons-method"><span
+<li><a href="#sec:newton1d" id="toc-sec:newton1d"><span
 class="toc-section-number">6.2.5</span> Newton’s method</a></li>
+<li><a href="#a-helpful-python-library"
+id="toc-a-helpful-python-library"><span
+class="toc-section-number">6.2.6</span> A helpful Python
+library</a></li>
+</ul></li>
+<li><a href="#multi-variable-unconstrained-optimization"
+id="toc-multi-variable-unconstrained-optimization"><span
+class="toc-section-number">6.3</span> Multi-variable unconstrained
+optimization</a>
+<ul>
+<li><a href="#gradients" id="toc-gradients"><span
+class="toc-section-number">6.3.1</span> Gradients</a></li>
+<li><a href="#gradient-search" id="toc-gradient-search"><span
+class="toc-section-number">6.3.2</span> Gradient search</a></li>
+<li><a href="#newtons-method-revisited"
+id="toc-newtons-method-revisited"><span
+class="toc-section-number">6.3.3</span> Newton’s method
+revisited</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -9300,7 +9325,8 @@ role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
 </figure>
 <p>As another visual aid, consider the below plots that illustrate how
 <span class="math inline">x&#39;</span> is updated from iteration to
-iteration.</p>
+iteration. The bounds at the start of each iteration are shown are light
+red lines.</p>
 <div>
 <script>
      bisectExClickFunc = (x) => {
@@ -9331,7 +9357,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.5, &quot;eval&quot;, &quot;blue&quot;, 5], [0.75, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;1&quot;]">
 
 </div>
 <div id="bisectEx3" class="plotlyFunctionPlot basicCenter"
@@ -9339,7 +9366,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.75, &quot;eval&quot;, &quot;blue&quot;, 5], [0.875, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;1&quot;, &quot;0.5&quot;]">
 
 </div>
 <div id="bisectEx4" class="plotlyFunctionPlot basicCenter"
@@ -9347,7 +9375,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.875, &quot;eval&quot;, &quot;blue&quot;, 5], [0.8125, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;1&quot;, &quot;0.75&quot;]">
 
 </div>
 <div id="bisectEx5" class="plotlyFunctionPlot basicCenter"
@@ -9355,7 +9384,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.8125, &quot;eval&quot;, &quot;blue&quot;, 5], [0.84375, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;0.875&quot;, &quot;0.75&quot;]">
 
 </div>
 <div id="bisectEx6" class="plotlyFunctionPlot basicCenter"
@@ -9363,7 +9393,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.84375, &quot;eval&quot;, &quot;blue&quot;, 5], [0.828125, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;0.875&quot;, &quot;0.8125&quot;]">
 
 </div>
 <div id="bisectEx7" class="plotlyFunctionPlot basicCenter"
@@ -9371,7 +9402,8 @@ style="width:350px;height:350px;display:none"
 data-expression="12x - 3x^4 - 2x^6" data-xrange="[0.4, 1.1]"
 data-extrapoints="[[0.828125, &quot;eval&quot;, &quot;blue&quot;, 5], [0.8359375, &quot;eval&quot;, &quot;blue&quot;, 5]]"
 data-linebetweenpoints="true" data-arrowsonlines="true"
-data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}">
+data-layoutextra="{&quot;yaxis&quot;: {&quot;range&quot;: [null, 8]}}"
+data-extraexpressions="[&quot;0.84375&quot;, &quot;0.8125&quot;]">
 
 </div>
 <div id="bisectExPlotLabel" style="text-align: center">
@@ -9388,7 +9420,7 @@ Iteration 1
      document.getElementById('bisectExPlotForwardButton').textContent = '>>';
 </script>
 </div>
-<h3 data-number="6.2.5" id="newtons-method"><span
+<h3 data-number="6.2.5" id="sec:newton1d"><span
 class="header-section-number">6.2.5</span> Newton’s method</h3>
 <p>The bisection method is certainly a valid optimization algorithm and
 its simplicity makes it a good choice for an introduction to search
@@ -9624,7 +9656,306 @@ of <span class="math inline">\epsilon=0.00001</span>. If we were to run
 the bisection method with the more stringent error tolerance we would
 have required <span class="math inline">\lceil \log_2(1) -
 \log_2(0.00001) \rceil=17</span> iterations!</p>
-<!-- {insertSection:sections/nonlinear_programming/multivariate_unconstrained.md} -->
+<h3 data-number="6.2.6" id="a-helpful-python-library"><span
+class="header-section-number">6.2.6</span> A helpful Python library</h3>
+<p>As you’re working through these examples and any class assignments,
+you may find it useful to have some software you can use to check your
+work. In the following notebook, I’ll show you how to use the Python
+library <code>sympy</code> to evaluate functions and take
+derivatives.</p>
+<script src="https://gist.github.com/0203322233ae66678390be9daed02ea8.js"></script>
+<h2 data-number="6.3"
+id="multi-variable-unconstrained-optimization"><span
+class="header-section-number">6.3</span> Multi-variable unconstrained
+optimization</h2>
+<p>Let’s now add a bit to the complexity of the problems we’re solving.
+Instead of our objective <span class="math inline">f</span> being a
+function of a single variable <span class="math inline">x</span>, we’ll
+instead let it be a multi-variable function. We’ll write an evaluation
+of <span class="math inline">f</span> as <span
+class="math inline">f(\mathbf{x})</span> with <span
+class="math inline">\mathbf{x}\in\mathbb{R}^n</span>. Otherwise, we’re
+still dealing with unconstrained maximization of a concave function.</p>
+<h3 data-number="6.3.1" id="gradients"><span
+class="header-section-number">6.3.1</span> Gradients</h3>
+<p>An important concept in multi-variable optimization is the gradient.
+For a given multi-variable function <span class="math inline">f</span>,
+the <strong>gradient</strong> of <span class="math inline">f</span>,
+denoted <span class="math inline">\nabla f</span>, is the vector of
+partial derivatives of <span class="math inline">f</span> with respect
+to the individual variables. So for example, if we have <span
+class="math inline">f(x_1,x_2)=2x_1^2+3x_2^2+4x_1x_2+3x_1</span>, then
+we’d have:</p>
+<p><span class="math display">
+\nabla f(x_1,x_2) =
+\begin{bmatrix}f&#39;_{x_1}(x_1,x_2)\\f&#39;_{x_2}(x_1,x_2)\end{bmatrix}=
+\begin{bmatrix}4x_1+4x_2+3\\4x_1+6x_2\end{bmatrix}
+</span></p>
+<p>Many of the important properties of the derivative in single-variable
+calculus carry through to the gradient. For example, one can show the
+above function is a convex function. So to minimize it, we only need to
+find where <span class="math inline">\nabla
+f(x_1,x_2)=\mathbf{0}</span>, i.e. we solve simultaneously for</p>
+<p><span class="math display">
+\begin{align*}
+4x_1 + 4x_2 +3 &amp;= 0 \\
+4x_1 + 6x_2 &amp;= 0
+\end{align*}
+</span></p>
+<p>to find that <span class="math inline">\mathbf{x}=(\frac{-9}{4},
+\frac{3}{2})</span> minimizes <span class="math inline">f</span>.</p>
+<p>As a follow-up to the notebook in the last section, the following
+notebook shows you how to deal with gradients in <code>sympy</code>.</p>
+<script src="https://gist.github.com/c1dabe8fec7f737628ab56a34f1225fa.js"></script>
+<h3 data-number="6.3.2" id="gradient-search"><span
+class="header-section-number">6.3.2</span> Gradient search</h3>
+<p>Unfortunately, just like in the single variable case, many times we
+will not be able to use analytical methods to find the optimum of our
+function. Thus we’ll need to explore multi-variable search procedures,
+of which the most common is the <strong>gradient search
+procedure</strong>. The key thing to remember is that the gradient of
+<span class="math inline">f</span> at some point <span
+class="math inline">\mathbf{x}&#39;</span> tells us the direction (with
+respect to <span class="math inline">\mathbf{x}&#39;</span>) in which
+the function is increasing fastest. In the single variable case, if
+<span class="math inline">f&#39;(x&#39;)&gt;0</span> then the slope of
+<span class="math inline">f</span> near <span
+class="math inline">x&#39;</span> is increasing, thus moving to the
+right with lead us to points with higher objective values. Similarly, if
+<span class="math inline">f&#39;(x&#39;)&lt;0</span> then moving to the
+left will lead us to points with higher objective values.</p>
+<p>So it is with the gradient as well. Remember that <span
+class="math inline">\nabla f(\mathbf{x}&#39;)</span> is a vector, i.e. a
+direction in which one could travel. Not only that, but for at least
+some neighborhood around <span
+class="math inline">\mathbf{x}&#39;</span> we know that a move from
+<span class="math inline">\mathbf{x}&#39;</span> to a point in the
+direction of the gradient will increase the objective value. So this is
+precisely what we will do in the gradient search procedure. Given a
+trial solution <span class="math inline">\mathbf{x}&#39;</span>, we will
+calculate the gradient <span class="math inline">\nabla
+f(\mathbf{x}&#39;)</span> and choose a distance <span
+class="math inline">t</span> (called the <strong>step size</strong>) to
+travel in the direction of the gradient to our next trial solution. That
+is, we will update our trial solution to</p>
+<p><span class="math display">
+\mathbf{x}&#39; + t\nabla f(\mathbf{x}&#39;).
+</span></p>
+<p>So those are the basics of the gradient search method. Before we get
+too much further into details, maybe we should pause a second to try to
+build a bit of intuition? I’d like to display some graphs to try to help
+you visualize the gradient search process, but we really need 3d plots
+for that, and that’s not my strength. So I went out and found this short
+Youtube video instead. Note that the video uses the term
+<strong>gradient descent</strong> for this procedure and they are
+solving a minimization problem. Don’t worry though, it’s basically the
+same algorithm and the intuitions are the same.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/qg4PchTECck" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<p>In the video, he talks about a few different ways to decide the step
+size <span class="math inline">t</span> (<span
+class="math inline">\eta</span> in the video). As he said, there are
+many different flavors of gradient descent, and the selection of <span
+class="math inline">t</span> is a big differentiator. And the choice of
+<span class="math inline">t</span> can have a big effect on how many
+iterations are required before converging.</p>
+<p>How will we choose <span class="math inline">t</span> in this class?
+We’ll be following the lead of <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>: choose the best one!</p>
+<p>Ok, I suppose I should explain a little more. Remember that the next
+trial solution will take the form <span
+class="math inline">\mathbf{x}&#39; + t\nabla f(\mathbf{x}&#39;)</span>,
+and at that point the objective value is clearly <span
+class="math inline">f(\mathbf{x}&#39; + t\nabla
+f(\mathbf{x}&#39;))</span>. Suppose we had two choices for <span
+class="math inline">t</span>, call them <span
+class="math inline">t&#39;</span> and <span
+class="math inline">t&#39;&#39;</span>, and further suppose that <span
+class="math inline">f(\mathbf{x}&#39; + t&#39;\nabla
+f(\mathbf{x}&#39;))&lt;f(\mathbf{x}&#39; + t&#39;&#39;\nabla
+f(\mathbf{x}&#39;))</span>. Since we’re maximizing, it would make
+intuitive sense that we’d prefer <span
+class="math inline">t&#39;&#39;</span> to <span
+class="math inline">t&#39;</span>. But could we do better?</p>
+<p>Well, notice that since <span
+class="math inline">\mathbf{x}&#39;</span> is a known (vector) value,
+the function <span class="math inline">f(\mathbf{x}&#39; + t\nabla
+f(\mathbf{x}&#39;))</span> is a function of just the single variable
+<span class="math inline">t</span>. And we already saw how to maximize a
+function of a single variable in section <a
+href="#sec:univariateUnconstrained">6.2</a> (or, if <span
+class="math inline">f</span> were simple enough, we may be able to find
+the best <span class="math inline">t</span> analytically). So we could
+use e.g. the bisection method or Newton’s method to find the value of
+<span class="math inline">t</span> that maximizes <span
+class="math inline">f(\mathbf{x}&#39; + t\nabla
+f(\mathbf{x}&#39;))</span>, and use that as our step size.</p>
+<p>So that is what we’ll do<a href="#fn95" class="footnote-ref"
+id="fnref95" role="doc-noteref"><sup>95</sup></a>. At each iteration,
+we’ll find the value <span class="math inline">t^*</span> that maximizes
+<span class="math inline">\text{max}_{t&gt;0}f(\mathbf{x}&#39; + t\nabla
+f(\mathbf{x}&#39;))</span>, then use that to update our trial solution
+to <span class="math inline">\mathbf{x}&#39; + t^*\nabla
+f(\mathbf{x}&#39;)</span>.</p>
+<p>The final item to consider is the stopping criteria. For this
+algorithm we’ll decide to stop if we are sufficiently close to having
+<span class="math inline">\nabla f(\mathbf{x}&#39;)=\mathbf{0}</span>,
+which we’ll define as having each entry of the vector <span
+class="math inline">\nabla f(\mathbf{x}&#39;)</span> less than some
+pre-selected error tolerance <span class="math inline">\epsilon</span>.
+Putting it all together, the algorithm looks like this:</p>
+<ul>
+<li><em>Initialize</em>: Select error tolerance <span
+class="math inline">\epsilon</span> and initial trial solution <span
+class="math inline">\mathbf{x}&#39;</span>.</li>
+<li><em>Iterate</em>:
+<ul>
+<li>Compute <span class="math inline">\nabla
+f(\mathbf{x}&#39;)</span>.</li>
+<li>Use a single-variable optimization method to find <span
+class="math inline">t^*</span>, a maximizer for <span
+class="math inline">\text{max}_{t&gt;0}f(\mathbf{x}&#39; + t\nabla
+f(\mathbf{x}&#39;))</span>.</li>
+<li>Update <span class="math inline">\mathbf{x}&#39;</span> to <span
+class="math inline">\mathbf{x}&#39; + t^*\nabla
+f(\mathbf{x}&#39;)</span>.</li>
+<li>If <span class="math inline">\nabla f(\mathbf{x}&#39;)&lt;[\epsilon,
+\epsilon, \dots, \epsilon]</span>:
+<ul>
+<li>Terminate and return <span class="math inline">x&#39;</span> as
+optimal within tolerance.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4>
+Example
+</h4>
+<p>For this example, let’s have <span
+class="math inline">f(\mathbf{x})=2x_1x_2 + 2x_2 - x_1^2 - 2x_2^2</span>
+be the concave function to maximize, and let’s start with trial solution
+<span class="math inline">\mathbf{x}&#39;=(0, 0)</span>. We’ll set <span
+class="math inline">\epsilon=0.01</span>, though really we’ll just run
+through a few iterations in this example, so we won’t really need it.
+For the given function <span class="math inline">f</span>, the gradient
+is given by:</p>
+<p><span class="math display">
+\nabla f = (-2x_1 + 2x_2, 2x_1 - 4x_2 + 2)
+</span></p>
+<p>Now we need to find our step size <span
+class="math inline">t^*</span> by maximizing <span
+class="math inline">f(\mathbf{x}&#39; + t\nabla
+f(\mathbf{x}&#39;))</span>. We have <span
+class="math inline">\mathbf{x}&#39;=(0, 0)</span> and</p>
+<p><span class="math display">
+\nabla f(\mathbf{x}&#39;)=(-2(0) + 2(0), 2(0) - 4(0) + 2) = (0, 2)
+</span></p>
+<p>so <span class="math inline">t\nabla f(\mathbf{x}&#39;)=(0,
+2t)</span>, and hence</p>
+<p><span class="math display">
+\begin{align*}
+f(\mathbf{x}&#39; + t\nabla f(\mathbf{x}&#39;))&amp;=f(0, 2t)\\
+&amp;=2(0)(2t) + 2(2t) - (0)^2 - 2(2t)^2\\
+&amp;=4t-8t^2
+\end{align*}
+</span></p>
+<p>We will maximize this analytically by setting the derivative equal to
+0, i.e. solving</p>
+<p><span class="math display">
+4 - 16t = 0
+</span></p>
+<p>which is maximized at <span
+class="math inline">t^*=\frac{1}{4}</span>. Then we update our trial
+solution to:</p>
+<p><span class="math display">
+\mathbf{x}&#39; + t^*\nabla f(\mathbf{x}&#39;) = (0, 0) + \frac{1}{4}(0,
+2) = (0, 0.5).
+</span></p>
+<p>So we now have now <span class="math inline">\mathbf{x}&#39;=(0,
+\frac{1}{2})</span>. Our stopping criteria is whether or not each entry
+of <span class="math inline">\nabla f(\mathbf{x}&#39;)</span> is less
+than <span class="math inline">\epsilon</span>. So we find</p>
+<p><span class="math display">
+\nabla f(\mathbf{x}&#39;)=(-2(0) + 2(0.5), 2(0) - 4(0.5) + 2) = (1, 0)
+</span></p>
+<p>and notice <span class="math inline">1 &gt; \epsilon = 0.01</span> so
+we need to continue with another iteration. Then let’s continue on the
+find our next <span class="math inline">t^*</span>. We have</p>
+<p><span class="math display">
+x&#39; + t\nabla f(\mathbf{x}&#39;) = (t,0.5)
+</span></p>
+<p>so we must also have</p>
+<p><span class="math display">
+\begin{align*}
+f(\mathbf{x}&#39; + t^*\nabla f(\mathbf{x}&#39;)) &amp;= f(t,0.5) \\
+&amp;= 2(t)(0.5) + 2(0.5) - t^2 - 2(0.5)^2 \\
+&amp;= t - t^2 + 0.5
+\end{align*}
+</span></p>
+<p>To maximize over <span class="math inline">t</span> we should take
+the derivative of the above and set to <span
+class="math inline">0</span>:</p>
+<p><span class="math display">
+1 - t2 = 0
+</span></p>
+<p>so <span class="math inline">t^*=\frac{1}{2}</span>. Thus our next
+trial solution will be</p>
+<p><span class="math display">
+(0, 0.5) + 0.5(1, 0) = (0.5, 0.5).
+</span></p>
+<p>The gradient at this point is <span class="math inline">(0,
+1)</span>, and <span class="math inline">1&gt;\epsilon</span> hence we’d
+need to keep iterating. But I think the last two iterations give you the
+idea, so we won’t explicitly show any more. The following table recaps
+the information from the two iterations we just completed:</p>
+<figure>
+<img src="images/gradient-example-table.png"
+alt="Applying gradient search on f(\mathbf{x})=2x_1x_2 + 2x_2 - x_1^2 - 2x_2^2 (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Applying gradient search on <span
+class="math inline">f(\mathbf{x})=2x_1x_2 + 2x_2 - x_1^2 - 2x_2^2</span>
+<span class="citation" data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<p>We can find analytically that the actual maximum occurs at <span
+class="math inline">(1, 1)</span>. The figure below shows what solutions
+we would obtain if we kept running the algorithm for a few more
+iterations:</p>
+<figure>
+<img src="images/gradient-example-image.png"
+alt="Trial solutions from gradient search on f(\mathbf{x})=2x_1x_2 + 2x_2 - x_1^2 - 2x_2^2 (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Trial solutions from gradient search on
+<span class="math inline">f(\mathbf{x})=2x_1x_2 + 2x_2 - x_1^2 -
+2x_2^2</span> <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<p>Notice how the steps from iteration to iteration keep zig-zagging
+from one direction to the orthogonal direction. This actually makes
+sense for our selection of step sizes. Take the first two iterations as
+an example. In the first iteration we moved from <span
+class="math inline">(0, 0)</span> in the direction of <span
+class="math inline">(0, 1)</span>, stopping at <span
+class="math inline">(0, 0.5)</span> because moving any further would not
+improve the objective value. So it makes sense that the gradient was
+<span class="math inline">0</span> in the <span
+class="math inline">x_2</span> direction in the next iteration, because
+moving that way would not help increase the objective.</p>
+<h3 data-number="6.3.3" id="newtons-method-revisited"><span
+class="header-section-number">6.3.3</span> Newton’s method
+revisited</h3>
+<p>We won’t go over it here, but I’d like to mention that Newton’s
+method generalizes to multi-variable functions as well. Just as in the
+single-variable case of section <a href="#sec:newton1d">6.2.5</a>, the
+advantage of Newton’s method will be that it makes use of curvature
+information from the second derivative.</p>
+<p>The challenge is that, in <span class="math inline">n</span>
+dimensions, the second derivative information comes in the form of an
+<span class="math inline">n\times n</span> matrix of partial second
+derivatives (one matrix entry for each pair of variables), and to do the
+method right one then needs to invert this matrix. That’s a lot of
+computation, so in practice people use so-called <strong>quasi-Newton
+methods</strong> which approximate the second derivative information in
+different ways.</p>
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 <h1 data-number="7" id="appendix"><span
 class="header-section-number">7</span> Appendix</h1>
@@ -9725,6 +10056,17 @@ the number <span class="math inline">x\in\mathbb{R}</span>, i.e. the
 value resulting from rounding <span class="math inline">x</span> up to
 the nearest integer. So <span class="math inline">\lceil 1.3
 \rceil=2</span>.</li>
+<li><span class="math inline">\nabla f</span>: The gradient of some
+multivariate function <span class="math inline">f</span>, i.e. the
+vector of partial derivatives. So we have: <span class="math display">
+\nabla f(\mathbf{x}) = \begin{bmatrix}
+f&#39;_{x_1}(\mathbf{x}) \\
+f&#39;_{x_2}(\mathbf{x}) \\
+\vdots \\
+f&#39;_{x_n}(\mathbf{x})
+\end{bmatrix}
+</span> The symbol <span class="math inline">\nabla</span> is called the
+“nabla” symbol.</li>
 </ul>
 <h2 data-number="7.2" id="sec:linearAlgebra"><span
 class="header-section-number">7.2</span> Linear algebra review</h2>
@@ -11020,6 +11362,12 @@ our new sense only corresponds to a “concave down” function, while a
 href="#fnref93" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn94"><p>Yes, the method is named for Sir Isaac Newton, pioneer
 of calculus and gravitation.<a href="#fnref94" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn95"><p>This is not my favorite choice for step size, and you
+almost never see it done in practice because it can take a lot of work
+to find the exact maximizer <span class="math inline">t^*</span> at
+every iteration. Nonetheless, it’s the method shown in the book, so
+that’s what we’ll go with too.<a href="#fnref95" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
