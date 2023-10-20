@@ -59,7 +59,7 @@ The final item to consider is the stopping criteria. For this algorithm we'll de
   - Use a single-variable optimization method to find $t^*$, a maximizer for $\max_{t>0}f(\x' + t\nabla f(\x'))$.
   - Update $\x'$ to $\x' + t^*\nabla f(\x')$.
   - If $\nabla f(\x')<[\epsilon, \epsilon, \dots, \epsilon]$:
-    - Terminate and return $x'$ as optimal within tolerance.
+    - Terminate and return $\x'$ as optimal within tolerance.
 
 <h4>Example</h4>
 

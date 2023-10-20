@@ -239,6 +239,8 @@ As another visual aid, consider the below plots that illustrate how $x'$ is upda
 
 ### Newton's method {#sec:newton1d}
 
+<div class='lectureVideoEmbed' video-id='3714e949db2d431b8223a68477279b601d' video-date='2023-10-20'>Finish Newton's method, begin gradient method.</div>
+
 The bisection method is certainly a valid optimization algorithm and its simplicity makes it a good choice for an introduction to search procedures. But its main drawback is that it is relatively slow to converge. Recall that we started the algorithm with 0 and 2 as our lower and upper bounds and a trial solution of 1, so the distance from our trial solution to the true optimal solution was at most 1. Each iteration reduces the gap by a factor $\frac{1}{2}$, so to reduce it below our chosen tolerance of $\epsilon=0.01$ we are required to complete $\ceil{\log_2(1) - \log_2(0.01)}=7$ iterations of the algorithm.
 
 Without another method to compare to, it is hard to say whether or not this is good. But we will find that our next method, known as **Newton's method**[^newtonsMethodNamedForIsaac], will usually converge in fewer iterations. A key to the quicker convergence is that Newton's method will use more information about the function than the bisection method did. Namely, instead of considering just (the sign of) the first derivative of $f$, Newton's method considers both first and second derivative information in determining the next trial solution.
