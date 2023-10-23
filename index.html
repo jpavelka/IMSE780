@@ -2816,6 +2816,17 @@ id="toc-newtons-method-revisited"><span
 class="toc-section-number">6.3.3</span> Newton’s method
 revisited</a></li>
 </ul></li>
+<li><a href="#optimality-conditions"
+id="toc-optimality-conditions"><span
+class="toc-section-number">6.4</span> Optimality conditions</a>
+<ul>
+<li><a href="#lagrange-multipliers" id="toc-lagrange-multipliers"><span
+class="toc-section-number">6.4.1</span> Lagrange multipliers</a></li>
+<li><a href="#kkt-conditions" id="toc-kkt-conditions"><span
+class="toc-section-number">6.4.2</span> KKT conditions</a></li>
+<li><a href="#kkt-and-duality" id="toc-kkt-and-duality"><span
+class="toc-section-number">6.4.3</span> KKT and duality</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">7</span> Appendix</a>
@@ -9962,7 +9973,375 @@ method right one then needs to invert this matrix. That’s a lot of
 computation, so in practice people use so-called <strong>quasi-Newton
 methods</strong> which approximate the second derivative information in
 different ways.</p>
-<!-- {insertSection:sections/nonlinear_programming/optimality_conditions.md} -->
+<h2 data-number="6.4" id="optimality-conditions"><span
+class="header-section-number">6.4</span> Optimality conditions</h2>
+<p>During our exploration of unconstrained optimization in the previous
+sections, we already knew some conditions for recognizing optimal
+solutions from your calculus classes. For example, for <span
+class="math inline">x</span> to be an optimizer for some function
+single-variable function <span class="math inline">f</span>, we need
+<span class="math inline">f&#39;(x)=0</span> (or <span
+class="math inline">\nabla f(\mathbf{x})=\mathbf{0}</span> in the
+multivariate case). With further assumptions on the character of <span
+class="math inline">f</span> (e.g. convexity or concavity) we could go
+from necessary conditions to sufficient conditions.</p>
+<p>These same conditions will not necessarily hold in the case of
+constrained optimization, however. Say we’d like to maximize <span
+class="math inline">f(x)=-x^2</span> but add the constraint <span
+class="math inline">x\geq1</span>. Now the function’s only critical
+point <span class="math inline">x=0</span> is no longer feasible, and
+the constrained optimizer <span class="math inline">x=1</span> does not
+satisfy <span class="math inline">f&#39;(x)=0</span>.</p>
+<p>So clearly the conditions for optimal solutions are not the same when
+constraints are added. Luckily we <em>do</em> know of similar conditions
+in the constrained case. They are not always practical for helping us
+<em>find</em> an optimal solution directly, but they can at least
+provide a sanity check when verifying that a solution found by other
+means is indeed optimal. Further, we’ll discuss how the theory can be
+used to build optimization algorithms that <em>are</em> useful in
+practice.</p>
+<h3 data-number="6.4.1" id="lagrange-multipliers"><span
+class="header-section-number">6.4.1</span> Lagrange multipliers</h3>
+<p>But before we get to the general optimality conditions, it will be
+helpful to recall a technique you may have seen in your calculus
+classes. For now, let’s suppose our optimization problem has only
+equality constraints. That is, let <span class="math inline">f</span> be
+a function of <span class="math inline">n</span> variables that we’d
+like to optimize, while also satisfying the <span
+class="math inline">m</span> constraints:</p>
+<p><span class="math display">
+\begin{align*}
+g_1(\mathbf{x}) &amp;= b_1 \\
+g_2(\mathbf{x}) &amp;= b_2 \\
+&amp; \vdots \\
+g_m(\mathbf{x}) &amp;= b_m \\
+\end{align*}
+</span></p>
+<p>One way to deal with this problem is the <strong>method of Lagrange
+multipliers</strong>. For this method, you construct the so-called
+<strong>Lagrangian function</strong> <span class="math inline">h</span>,
+which is a function of both <span
+class="math inline">\mathbf{x}\in\mathbb{R}^n</span> and a new vector of
+variables <span
+class="math inline">\boldsymbol\lambda\in\mathbb{R}^m</span> (known as
+the <strong>Lagrange multipliers</strong>):</p>
+<p><span id="eq:lagrangainFunction" class="eqnos"><span
+class="math display">
+h(\mathbf{x},\boldsymbol\lambda) = f(\mathbf{x}) -
+\sum_{i=1}^m\lambda_i(g_i(x) - b_i)
+</span><span class="eqnos-number">(23)</span></span></p>
+<p>Now <span class="math inline">h</span> is just an ordinary function
+of <span class="math inline">n + m</span> variables. If we wanted to
+optimize the unconstrained function <span class="math inline">h</span>
+we could determine its gradient and set it equal to zero. The resulting
+system of equations (writing the partial derivative first for the <span
+class="math inline">\mathbf{x}</span> variables then the <span
+class="math inline">\boldsymbol\lambda</span> variables) is:</p>
+<p><span class="math display">
+f&#39;_{x_1}(\mathbf{x})-\sum_{i=1}^m\lambda_ig&#39;_{x_i}(\mathbf{x}) =
+0\\
+\vdots \\
+f&#39;_{x_n}(\mathbf{x})-\sum_{i=1}^m\lambda_ig&#39;_{x_n}(\mathbf{x}) =
+0\\
+b_1-g_1(\mathbf{x}) = 0\\
+\vdots \\
+b_m-g_m(\mathbf{x}) = 0\\
+</span></p>
+<p>The key thing to notice is that when this system is satisfied, by the
+final <span class="math inline">m</span> equations we have <span
+class="math inline">g_i(\mathbf{x})=b_i</span> for all <span
+class="math inline">i</span>, i.e. every critical point of <span
+class="math inline">h</span> must satisfy the constraints to the
+original problem! Furthermore, this implies that <span
+class="math inline">h(\mathbf{x},\boldsymbol\lambda)=f(\mathbf{x})</span>
+for every critical point of <span class="math inline">h</span>, so if
+one of these points <span
+class="math inline">(\mathbf{x}^*,\boldsymbol\lambda^*)</span> is an
+optimizer for <span class="math inline">h</span> then <span
+class="math inline">\mathbf{x}^*</span> must be an optimizer for the
+constrained problem.</p>
+<h4>
+Example
+</h4>
+<p>Suppose that we’d like to optimize the function <span
+class="math inline">f(x_1, x_2)=x_1^2+2x_2</span> subject to the
+constraint <span class="math inline">x_1^2+x_2^2=1</span>. Then the
+Lagrangian function <span class="math inline">h</span> (eq. <a
+href="#eq:lagrangainFunction">23</a>) is given by:</p>
+<p><span class="math display">
+h(x_1,x_2,\lambda_1)=x_1^2+2x_2-\lambda_1(x_1^2+x_2^2-1).
+</span></p>
+<p>Setting the partial derivatives equal to zero leaves us with the
+system:</p>
+<p><span class="math display">
+\begin{align*}
+2x_1 - 2\lambda_1x_1 &amp; = 0 &amp;&amp; \qquad(x_1\text{ partial
+derivative})\\
+2 - 2\lambda_1x_2 &amp; = 0 &amp;&amp; \qquad(x_2\text{ partial
+derivative})\\
+-(x_1^2 + x_2^2 - 1) &amp; = 0 &amp;&amp; \qquad(\lambda_1\text{ partial
+derivative})
+\end{align*}
+</span></p>
+<p>Solving these systems is not always straightforward. But we can
+manage it here with a little logical reasoning. The first equation can
+only be satisfied by <span class="math inline">\lambda = 1</span> or
+<span class="math inline">x_1=0</span>. So let’s examine each of the
+possibilities in turn and see what they might imply for the other
+equations.</p>
+<p>If <span class="math inline">\lambda=1</span>, then the second
+equation would require <span class="math inline">x_2=1</span>, and
+subsequently the third equation requires <span
+class="math inline">x_1=0</span>. If <span
+class="math inline">x_1=0</span>, then the third equation would require
+either <span class="math inline">x_2=1</span> or <span
+class="math inline">x_2=-1</span>, and either of those solutions can be
+accommodated in the second equation with a properly chosen <span
+class="math inline">\lambda</span>. So in terms of the original
+variables <span class="math inline">x_1,x_2</span>, the potential
+optimal solutions are either <span class="math inline">(0, 1)</span> or
+<span class="math inline">(0, -1)</span>.</p>
+<h3 data-number="6.4.2" id="kkt-conditions"><span
+class="header-section-number">6.4.2</span> KKT conditions</h3>
+<p>The Lagrange multiplier method is a good lead-in to the general
+optimality conditions for nonlinear programming, known as the
+<strong>Karush-Kuhn-Tucker conditions</strong> (or <strong>KKT
+conditions</strong> for short)<a href="#fn96" class="footnote-ref"
+id="fnref96" role="doc-noteref"><sup>96</sup></a>. These extend the work
+in the previous section by including the case of inequality constraints.
+So for completeness, the (very general) form of the problems we’ll be
+dealing with here is:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; f(\mathbf{x}) \\
+\text{s.t.}&amp;&amp; g_i(\mathbf{x}) &amp; \leq b_i &amp; \forall \
+i\in\{1,\dots,m\} \\
+     &amp;&amp; \mathbf{x}&amp; \in \mathbb{R}^n_+
+\end{align*}
+</span></p>
+<p>Notice that we’re now requiring non-negative variables <span
+class="math inline">\mathbf{x}\in\mathbb{R}^n_+</span>, in contrast to
+the definition I gave at the start of the non-linear programming
+section.</p>
+<p>As usual, we will assume that all of our functions <span
+class="math inline">f, g_1, \dots, g_m</span> are differentiable.
+Furthermore, for the following result to hold we need the functions to
+satisfy certain other so-called <em>regularity conditions</em>, though
+we will not be covering these conditions in this class. Suffice it to
+say, you can assume that the conditions hold for any problem I give you
+in this class.</p>
+<p>With that out of the way, let’s present the main result</p>
+<div class='theorem' id='thm:kktConditions'>
+<p>Assume <span class="math inline">f,g_1,\dots,g_m</span> are
+differentiable functions satisfying certain regularity conditions. Then
+<span class="math inline">\mathbf{x}^*\in\mathbb{R}^n</span> can be an
+optimal solution for the nonlinear program only if there exists <span
+class="math inline">\mathbf{u}\in\mathbb{R}^m</span> such that all the
+following conditions are satisfied:</p>
+<ol type="1">
+<li><p><span
+class="math inline">\mathbf{x}^*\geq\mathbf{0}</span></p></li>
+<li><p><span
+class="math inline">\mathbf{u}\geq\mathbf{0}</span></p></li>
+<li><p><span class="math inline">g_i(\mathbf{x}^*) - b_i\leq 0 \quad
+\forall i\in\{1,2,...,m\}</span></p></li>
+<li><p>If <span class="math inline">u_i &gt; 0</span> then <span
+class="math display">
+    g_i(\mathbf{x}^*) - b_i = 0
+</span> for all <span
+class="math inline">i\in\{1,2,...,m\}</span></p></li>
+<li><p><span class="math inline">f&#39;_{x_j}(\mathbf{x}^*) -
+\sum_{i=1}^mu_ig&#39;_{x_j}(\mathbf{x}^*)\leq0 \quad \forall
+j\in\{1,2,\dots,n\}</span></p></li>
+<li><p>If <span class="math inline">x^*_j &gt; 0</span> then <span
+class="math display">
+f&#39;_{x_j}(\mathbf{x}^*) - \sum_{i=1}^mu_ig&#39;_{x_j}(\mathbf{x}^*) =
+0 \quad
+</span> for all <span class="math inline">j\in\{1,2,\dots,n\}</span></p>
+</div></li>
+</ol>
+<p>There is a lot here, but some of this should look familiar. Items to
+note:</p>
+<ul>
+<li>Conditions 1 and 3 are simply the conditions for a feasible
+solution.</li>
+<li>We’ve seen the left-hand side of condition 5 when studying Lagrange
+multipliers in the previous section. It’s what you get when you take the
+partial derivative of the Lagrangian function with respect to <span
+class="math inline">x_j</span> (with <span
+class="math inline">u_i</span> taking the place of our Lagrange
+multiplier <span class="math inline">\lambda_i</span>). Previously we
+set it equal to zero to find candidate solutions, but here we have <span
+class="math inline">\leq0</span>.</li>
+<li>Condition 2 seems natural when you consider the <span
+class="math inline">u_i</span> variables in the context of the
+Lagrangian method, where you use it to multiply the equations. Since the
+constraints are now inequalities, it makes sense to keep them
+non-negative to preserve the direction of the inequality.</li>
+<li>Condition 4 looks a little foreign, but we can draw an analogy
+between <span class="math inline">u_i</span> and the dual variables
+(section <a href="#sec:lpDuality">4.7</a>) and shadow prices (section <a
+href="#sec:shadowPrices">4.8.2</a>) of linear programming. There, if
+some resource was used up completely at the optimal solution (so the
+associated resource constraint has <span
+class="math inline">\mathbf{a}_i\mathbf{x}^*=b_i</span>) then the
+corresponding shadow price for that resource (i.e. the dual variable
+associate with the constraint) had a positive value, since likely
+procuring more of it would improve the objective value.</li>
+<li>Condition 6 is… well, I don’t have a simple intuition for that
+one.</li>
+</ul>
+<p>I’ll note again that these are <em>necessary</em> conditions for an
+optimal solution, not <em>sufficient</em> ones. So even if some <span
+class="math inline">\mathbf{x}&#39;</span> satisfies these conditions,
+it does not necessarily mean that <span
+class="math inline">\mathbf{x}&#39;</span> is an optimal solution. But
+there are conditions under which the above KKT conditions do guarantee
+optimality (maybe you can guess what they are…)</p>
+<div id="thm:kktConditionsConcaveConvex" class="theorem">
+<p>Consider the setup of <span class="thmRef"
+for="thm:kktConditions"></span> and futher assume that <span
+class="math inline">f</span> is a concave function and that <span
+class="math inline">g_1,g_2,\dots,g_m</span> are each convex functions.
+Then <span class="math inline">\mathbf{x}^*</span> is an optimal
+solution for the nonlinear program if and only if the KKT conditions of
+<span class="thmRef" for="thm:kktConditions"></span> hold.</p>
+</div>
+<h4>
+Example
+</h4>
+<p>Consider the following nonlinear program:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \ln(x_1 + 1) + x_2 \\
+\text{s.t.}&amp;&amp; 2x_1 + x_2 &amp; \leq 3 \\
+     &amp;&amp; x_1,x_2 &amp; \geq0
+\end{align*}
+</span></p>
+<p>(<span class="math inline">\ln</span> denotes the natural logarithm).
+One can verify that the objective <span
+class="math inline">f(x_1,x_2)=\ln(x_1 + 1) + x_2</span> is concave and
+the lone constraint <span class="math inline">g_1(x_1,x_2)=2x_1 +
+x_2</span> is convex, so in this case the KKT conditions are both
+necessary and sufficient for optimality. Since there is only one
+constraint, there is only one corresponding multiplier <span
+class="math inline">u_1</span> to contend with. Let’s list out all of
+the KKT requirements for the given problem:</p>
+<ol type="1">
+<li>Non-negativity of <span class="math inline">\mathbf{x}</span>: <span
+class="math display">
+x_1, x_2 \geq 0:
+</span></li>
+<li>Non-negativity of <span class="math inline">\mathbf{u}</span>: <span
+class="math display">
+u_1 \geq 0
+</span></li>
+<li>All constraints are satisfied. There is only one constraint, so this
+is just <span class="math inline">g_1(x_1,x_2) - b_1 \leq 0</span>, i.e.
+<span class="math display">
+2x_1 + x_2 - 3 \leq 0
+</span></li>
+<li>If <span class="math inline">u_1 &gt; 0</span> then <span
+class="math inline">g_1(\mathbf{x}) - b_1 = 0</span>, which we can state
+equivalently as <span class="math display">
+u_1(2x_1 + x_2 - 3) = 0
+</span></li>
+<li><span class="math inline">f&#39;_{x_j}(\mathbf{x}^*) -
+\sum_{i=1}^mu_ig&#39;_{x_j}(\mathbf{x}^*)\leq0</span> for <span
+class="math inline">j\in\{1,2\}</span>
+<ol type="a">
+<li>(<span class="math inline">j=1</span>) <span class="math display">
+\frac{1}{x_1 + 1} - 2u_1 \leq 0
+</span></li>
+<li>(<span class="math inline">j=2</span>) <span class="math display">
+1 - u_1 \leq 0
+</span></li>
+</ol></li>
+<li>If <span class="math inline">x^*_j &gt; 0</span> then <span
+class="math inline">f&#39;_{x_j}(\mathbf{x}^*) -
+\sum_{i=1}^mu_ig&#39;_{x_j}(\mathbf{x}^*) = 0</span> for <span
+class="math inline">j\in\{1,2\}</span>, which we can state equivalently
+as:
+<ol type="a">
+<li>(<span class="math inline">j=1</span>) <span class="math display">
+x_1\left(\frac{1}{x_1 + 1} - 2u_1\right) = 0
+</span></li>
+<li>(<span class="math inline">j=2</span>) <span class="math display">
+x_2(1 - u_1) = 0
+</span></li>
+</ol></li>
+</ol>
+<p>Once again, there is not necessarily a good way to simultaneously
+solve for all the conditions in general. But we can reason our way to a
+solution in this case. Note:</p>
+<ul>
+<li>From 5b we know <span class="math inline">u_1\geq 1</span>.</li>
+<li>From 1 we know <span class="math inline">x_1\geq0</span>.</li>
+<li>Therefore, the <span class="math inline">\frac{1}{x_1+1}</span> term
+from 5a must be between 0 and 1, while the <span
+class="math inline">-2u_1</span> term is at most -2. Thus we have <span
+class="math display">
+\frac{1}{x_1 + 1} - 2u_1 &lt; 0
+</span></li>
+<li>So then by 6a we must have <span
+class="math inline">x_1=0</span>.</li>
+<li>Since we already found <span class="math inline">u_1\geq1</span>
+from 5b, condition 4 tells us that <span class="math display">
+2x_1 + x_2 - 3 = 0
+</span></li>
+<li>That equation (along with <span class="math inline">x_1=0</span>)
+implies <span class="math inline">x_2=3</span>.</li>
+<li>Since <span class="math inline">x_2\neq0</span>, condition 6b
+implies <span class="math inline">u_1=1</span>.</li>
+</ul>
+<p>So the only solution that can simultaneously satisfy all the
+conditions is <span class="math inline">x_1=0,x_2=3,u_1=1</span>.
+Indeed, if you plug those numbers into all of the conditions, you’ll see
+that they are valid for all of them. Thus by <span class="thmRef"
+for="thm:kktConditionsConcaveConvex"></span>, <span
+class="math inline">\mathbf{x}^*=(0, 3)</span> is optimal for the
+problem.</p>
+<h3 data-number="6.4.3" id="kkt-and-duality"><span
+class="header-section-number">6.4.3</span> KKT and duality</h3>
+<p>While determining the KKT conditions is not usually directly
+applicable to solving nonlinear optimization problems, as a theoretical
+tool they are often used indirectly. One application is a generalized
+duality theory that exists for nonlinear programming. To wrap up this
+section, I’ll quote a passage from <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> talking about nonlinear
+duality:</p>
+<blockquote>
+<p>[A theory of duality] has been developed for nonlinear programming to
+parallel the duality theory for linear programming presented in Chap. 6.
+In particular, for any given constrained maximization problem (call it
+the primal problem), the KKT conditions can be used to define a closely
+associated dual problem that is a constrained minimization problem. The
+variables in the dual problem consist of both the Lagrange multipliers
+<span class="math inline">u_i</span> <span class="math inline">(i = 1,
+2, . . . , m)</span> and the primal variables <span
+class="math inline">x_j</span> <span class="math inline">(j = 1, 2, . .
+. , n)</span>.</p>
+<p>In the special case where the primal problem is a linear programming
+problem, the <span class="math inline">x_j</span> variables drop out of
+the dual problem and it becomes the familiar dual problem of linear
+programming (where the <span class="math inline">u_i</span> variables
+here correspond to the <span class="math inline">y_i</span> variables in
+Chap. 6). When the primal problem is a convex programming problem, it is
+possible to establish relationships between the primal problem and the
+dual problem that are similar to those for linear programming. For
+example, the strong duality property of Sec. 6.1, which states that the
+optimal objective function values of the two problems are equal, also
+holds here. Furthermore, the values of the <span
+class="math inline">u_i</span> variables in an optimal solution for the
+dual problem can again be interpreted as shadow prices (see Secs. 4.7
+and 6.2); i.e., they give the rate at which the optimal objective
+function value for the primal problem could be increased by (slightly)
+increasing the right-hand side of the corresponding constraint. Because
+duality theory for nonlinear programming is a relatively advanced topic,
+the interested reader is referred elsewhere for further information.</p>
+</blockquote>
+<!-- {insertSection:sections/nonlinear_programming/quadratic_programming.md} -->
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 <h1 data-number="7" id="appendix"><span
 class="header-section-number">7</span> Appendix</h1>
@@ -10115,7 +10494,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(23)</span></span></p>
+</span><span class="eqnos-number">(24)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -11385,6 +11764,11 @@ to find the exact maximizer <span class="math inline">t^*</span> at
 every iteration. Nonetheless, it’s the method shown in the book, so
 that’s what we’ll go with too.<a href="#fnref95" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
+<li id="fn96"><p>The conditions were first broadly known as the
+Kuhn-Tucker conditions due to a 1951 paper by two mathematicians named
+Kuhn and Tucker. Later, someone noticed that Karush had developed the
+same theory a dozen years earlier in his Masters thesis!<a
+href="#fnref96" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
