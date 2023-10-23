@@ -2827,6 +2827,18 @@ class="toc-section-number">6.4.2</span> KKT conditions</a></li>
 <li><a href="#kkt-and-duality" id="toc-kkt-and-duality"><span
 class="toc-section-number">6.4.3</span> KKT and duality</a></li>
 </ul></li>
+<li><a href="#quadratic-programming"
+id="toc-quadratic-programming"><span
+class="toc-section-number">6.5</span> Quadratic programming</a>
+<ul>
+<li><a href="#kkt-conditions-for-quadratic-programming"
+id="toc-kkt-conditions-for-quadratic-programming"><span
+class="toc-section-number">6.5.1</span> KKT conditions for quadratic
+programming</a></li>
+<li><a href="#modified-simplex-method"
+id="toc-modified-simplex-method"><span
+class="toc-section-number">6.5.2</span> Modified simplex method</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">7</span> Appendix</a>
@@ -9904,7 +9916,7 @@ than <span class="math inline">\epsilon</span>. So we find</p>
 we need to continue with another iteration. Then let’s continue on the
 find our next <span class="math inline">t^*</span>. We have</p>
 <p><span class="math display">
-x&#39; + t\nabla f(\mathbf{x}&#39;) = (t,0.5)
+\mathbf{x}&#39; + t\nabla f(\mathbf{x}&#39;) = (t,0.5)
 </span></p>
 <p>so we must also have</p>
 <p><span class="math display">
@@ -10347,7 +10359,371 @@ increasing the right-hand side of the corresponding constraint. Because
 duality theory for nonlinear programming is a relatively advanced topic,
 the interested reader is referred elsewhere for further information.</p>
 </blockquote>
-<!-- {insertSection:sections/nonlinear_programming/quadratic_programming.md} -->
+<h2 data-number="6.5" id="quadratic-programming"><span
+class="header-section-number">6.5</span> Quadratic programming</h2>
+<p>After spending the last few sections getting more and more general,
+we will now reverse that trend and talk about a very particular type of
+model called quadratic programming. This type of problem would arise in
+e.g. the portfolio optimization problem of section <a
+href="#sec:portfolioOptimization">6.1.2</a> in the case that we’re
+minimizing the amount of risk taken on for a given expected return.</p>
+<p>Quadratic programs are nearly identical to linear programs except
+that now we allow for quadratic terms (i.e. <span
+class="math inline">x_i^2</span> or <span
+class="math inline">x_ix_j</span>) in the objective function (but not
+the constraints). Written in matrix form, a <strong>quadratic
+program</strong> is an optimization problem of the form:</p>
+<p><span id="eq:quadraticProgram" class="eqnos"><span
+class="math display">
+\begin{align*}
+\text{max}&amp;&amp; f(\mathbf{x})=\mathbf{c}\mathbf{x}-
+\frac{1}{2}\mathbf{x}^\intercal\mathbf{Q}\mathbf{x}&amp; \\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp; \leq\mathbf{b}\\
+     &amp;&amp; \mathbf{x}&amp; \geq\mathbf{0}
+\end{align*}
+</span><span class="eqnos-number">(24)</span></span></p>
+<p>(The superscript <span class="math inline">^\intercal</span> denotes
+the transpose of a matrix/vector.) For this class, we will require that
+the objective function be concave. By convention, the matrix <span
+class="math inline">\mathbf{Q}</span> should be symmetric, so that <span
+class="math inline">q_{ij}</span> (the entry of <span
+class="math inline">\mathbf{Q}</span> in its <span
+class="math inline">i</span>th row and <span
+class="math inline">j</span>th column) is the same as <span
+class="math inline">q_{ji}</span> (<span class="math inline">j</span>th
+row and <span class="math inline">i</span>th column).</p>
+<p>Let’s take a second to unpack that quadratic term <span
+class="math inline">\frac{1}{2}\mathbf{x}^\intercal\mathbf{Q}\mathbf{x}</span>.
+Let’s suppose that we have two variables in our problem. Then we’d
+have</p>
+<p><span class="math display">
+\begin{align*}
+\mathbf{x}^\intercal\mathbf{Q}\mathbf{x}&amp;=
+\begin{bmatrix}x_1 &amp; x_2\end{bmatrix}
+\begin{bmatrix}q_{11} &amp; q_{12} \\ q_{21} &amp; q_{22}\end{bmatrix}
+\begin{bmatrix}x_1 \\ x_2\end{bmatrix}
+\\&amp;=
+\begin{bmatrix}x_1 &amp; x_2\end{bmatrix}
+\begin{bmatrix}
+q_{11}x_1 + q_{12}x_2 \\ q_{21}x_1 + q_{22}x_2
+\end{bmatrix}
+\\&amp;=
+q_{11}x_1^2 + q_{12}x_1x_2 + q_{21}x_2x_1 + q_{22}x_2^2
+\end{align*}
+</span></p>
+<p>Since <span class="math inline">q_{12}=q_{21}</span>, this could also
+be written as</p>
+<p><span class="math display">
+2q_{12}x_1x_2 + q_{11}x_1^2 + q_{22}x_2^2.
+</span></p>
+<p>Then after we multiply by <span
+class="math inline">-\frac{1}{2}</span> we get:</p>
+<p><span class="math display">
+-q_{12}x_1x_2 - \frac{1}{2}q_{11}x_1^2 - \frac{1}{2}q_{22}x_2^2
+</span></p>
+<p>So to create the matrix <span class="math inline">Q</span>, on the
+off-diagonal elements (<span class="math inline">i</span> and <span
+class="math inline">j</span> with <span class="math inline">i\neq
+j</span>) <span class="math inline">q_{ij}</span> will be the negative
+of the coefficient in front of the <span
+class="math inline">x_ix_j</span> term after multiplying, while on the
+diagonal we’ll have <span class="math inline">q_{ii}</span> as
+<em>double</em> the negative of the coefficient on the <span
+class="math inline">x_i^2</span> term.</p>
+<p>As an example, let’s take the problem</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 15x_1 + 30x_2 + 4x_1x_2 - 2x_1^2 - 4x_2^2 \\
+\text{s.t.}&amp;&amp; x_1 + 2x_2 &amp;\leq 30 \\
+     &amp;&amp; x_1, x_2 &amp;\geq 0
+\end{align*}
+</span></p>
+<p>To put this in matrix form like eq. <a
+href="#eq:quadraticProgram">24</a>, we need:</p>
+<p><span class="math display">
+\begin{align*}
+&amp;\mathbf{x}=\begin{bmatrix}x_1 \\ x_2\end{bmatrix}, \qquad
+\mathbf{c}=\begin{bmatrix}15 &amp; 30\end{bmatrix}, \qquad
+\mathbf{Q}=\begin{bmatrix}4 &amp; -4 \\ -4 &amp; 8\end{bmatrix}, \\
+&amp;\mathbf{A}=\begin{bmatrix}1 &amp; 2\end{bmatrix}, \qquad
+\mathbf{b}=\begin{bmatrix}30\end{bmatrix}
+\end{align*}
+</span></p>
+<p>In this case, it is true that the objective is concave. A good way to
+verify concavity comes from linear algebra theory: the objective is
+concave if and only if <span class="math inline">\mathbf{Q}</span> is
+<strong>positive semi-definite</strong> (<strong>PSD</strong>), which
+means that <span
+class="math inline">\mathbf{x}^\intercal\mathbf{Q}\mathbf{x}\geq\mathbf{0}</span>
+for <em>any</em> <span class="math inline">\mathbf{x}</span>. For this
+class, I’d use the following notebook to verify whether or not a matrix
+is PSD.</p>
+<script src="https://gist.github.com/143dea2532ecffbc56b5557d22ce4197.js"></script>
+<h3 data-number="6.5.1"
+id="kkt-conditions-for-quadratic-programming"><span
+class="header-section-number">6.5.1</span> KKT conditions for quadratic
+programming</h3>
+<p>When discussing KKT conditions in section <a
+href="#sec:optConditions">6.4</a>, we mentioned how using the conditions
+directly for your problem will not always be useful, but sometimes
+examining the conditions for a class problems can lead you to an
+algorithm for that class. This will be the case for quadratic
+programming, as we’ll soon see.</p>
+<p>For a concrete example, let’s take the sample quadratic program we
+just introduced above, and write out the conditions implied by <span
+class="thmRef" for="thm:kktConditions"></span>. Recall that the
+objective function for this problem is concave, thus by <span
+class="thmRef" for="thm:kktConditionsConcaveConvex"></span> these
+conditions are both necessary and sufficient for optimality:</p>
+<ol type="1">
+<li><span class="math inline">\quad x_1,x_2\geq 0</span></li>
+<li><span class="math inline">\quad u_1\geq 0</span></li>
+<li><span class="math inline">\quad x_1 + 2x_2 - 30 \leq 0</span></li>
+<li><span class="math inline">\quad u_1(x_1 + 2x_2 - 30) = 0</span></li>
+<li><ol type="a">
+<li><span class="math inline">\quad 15 + 4x_2 - 4x_1 - u_1 \leq
+0</span></li>
+<li><span class="math inline">\quad 30 + 4x_1 - 8x_2 - 2u_1 \leq
+0</span></li>
+</ol></li>
+<li><ol type="a">
+<li><span class="math inline">\quad x_1(15 + 4x_2 - 4x_1 - u_1) =
+0</span></li>
+<li><span class="math inline">\quad x_2(30 + 4x_1 - 8x_2 - 2u_1) =
+0</span></li>
+</ol></li>
+</ol>
+<p>We will now re-express these in a more convenient form (you will see
+why soon). Let’s take the inequalities from conditions 3 and 5 and
+re-write them as equality constraints with non-negative slack
+variables:</p>
+<p><span class="math display">
+\begin{align*}
+x_1 + 2x_2 + v_1 &amp;= 30 \\
+-4x_1 + 4x_2 - u_1 + y_1 &amp;= -15 \\
+4x_1 - 8x_2 - 2u_1 + y_2 &amp;= -30 \\
+\end{align*}
+</span></p>
+<p>These new slack variables will let us simplify some of the other
+conditions. Notice that this first new condition implies</p>
+<p><span class="math display">
+-v_1 = x_1 + 2x_2 - 30
+</span></p>
+<p>and so we may re-write condition 4 as</p>
+<p><span class="math display">
+u_1(-v_1) = 0
+</span></p>
+<p>and further, since <span
+class="math inline">v_1=0\Leftrightarrow-v_1=0</span> we could instead
+write:</p>
+<p><span class="math display">
+u_1v_1 = 0
+</span></p>
+<p>Similarly, by rearranging for <span class="math inline">y_1</span>
+and <span class="math inline">y_2</span> we can replace condition 6
+with:</p>
+<p><span class="math display">
+\begin{align*}
+x_1y_1&amp;=0\\
+x_2y_2&amp;=0
+\end{align*}
+</span></p>
+<p>We call these pairs of variables <span
+class="math inline">(x_1,y_1),(x_2,y_2),(u_1,v_1)</span>
+<strong>complementary variables</strong> since only one of any pair may
+take a non-zero value. Furthermore, since each of the variables
+considered is non-negative, the set of conditions</p>
+<p><span class="math display">
+\begin{align*}
+x_1y_1&amp;=0\\
+x_2y_2&amp;=0\\
+u_1v_1&amp;=0
+\end{align*}
+</span></p>
+<p>can be replaced by the single condition, the so-called
+<strong>complementarity constraint</strong>:</p>
+<p><span class="math display">
+x_1y_1 + x_2y_2 + u_1v_1 = 0
+</span></p>
+<p>Bringing it all together, our revised KKT conditions are:</p>
+<p><span id="eq:quadraticKKTExample" class="eqnos"><span
+class="math display">
+\begin{align*}
+x_1 + 2x_2 + v_1 &amp;= 30 \\
+-4x_1 + 4x_2 - u_1 + y_1 &amp;= -15 \\
+4x_1 - 8x_2 - 2u_1 + y_2 &amp;= -30 \\
+x_1y_1 + x_2y_2 + u_1v_1 &amp;= 0 \\
+x_1,x_2,y_1,y_2,u_1,v_1 &amp;\geq 0
+\end{align*}
+</span><span class="eqnos-number">(25)</span></span></p>
+<p>Notice that, with the exception of the complementarity constraint,
+these conditions are nothing but linear programming constraints!</p>
+<p>More generally, for any quadratic programming problem, its KKT
+conditions can be modified in this manner and reduce to what amounts to
+a linear program, plus the single complementarity constraint:</p>
+<p><span id="eq:quadraticKKT" class="eqnos"><span class="math display">
+\begin{align*}
+\mathbf{Q}\mathbf{x}+ \mathbf{A}^\intercal\mathbf{u} - \mathbf{y}&amp;=
+\mathbf{c}^\intercal\\
+\mathbf{A}\mathbf{x}+ \mathbf{v} &amp;= \mathbf{b}\\
+\mathbf{x},\mathbf{y},\mathbf{u},\mathbf{v} &amp;\geq \mathbf{0}\\
+\mathbf{x}^\intercal\mathbf{y}+ \mathbf{u}^\intercal\mathbf{v} &amp;= 0
+\end{align*}
+</span><span class="eqnos-number">(26)</span></span></p>
+<p>Recall that when the constraints are convex (which they are, since
+linearity implies convexity) and the original objective <span
+class="math inline">\mathbf{c}\mathbf{x}-
+\frac{1}{2}\mathbf{x}^\intercal\mathbf{Q}\mathbf{x}</span> is concave,
+due to <span class="thmRef" for="thm:kktConditionsConcaveConvex"></span>
+if there is some <span
+class="math inline">\mathbf{x},\mathbf{y},\mathbf{u},\mathbf{v}</span>
+that satisfies the KKT conditions then <span
+class="math inline">\mathbf{x}</span> must be an optimal solution for
+the quadratic program. So an algorithm that finds a <em>feasible</em>
+solution to eq. <a href="#eq:quadraticKKT">26</a> will also determine an
+<em>optimal</em> solution for the quadratic program.</p>
+<h3 data-number="6.5.2" id="modified-simplex-method"><span
+class="header-section-number">6.5.2</span> Modified simplex method</h3>
+<p>As it turns out, since eq. <a href="#eq:quadraticKKT">26</a> is
+<em>almost</em> a set of linear programming constraints, we will be able
+to solve any quadratic program (with concave objective<a href="#fn98"
+class="footnote-ref" id="fnref98" role="doc-noteref"><sup>98</sup></a>)
+via a slight modification to our dear old simplex method for linear
+programming.</p>
+<p>But let’s step back a bit. We said that we only need a feasible
+solution to eq. <a href="#eq:quadraticKKT">26</a> in order to optimize
+the original quadratic problem. How hard can that be? We just added some
+slack variables, so can’t we just use them as our initial basis and be
+done?</p>
+<p>Actually, in general this will not work. Look back at eq. <a
+href="#eq:quadraticKKTExample">25</a>. Those right-hand sides are
+negative, which means the basis <span class="math inline">[y_1, y_2,
+v_1]</span> isn’t feasible. In fact, the right-hand side to these
+equations is defined by <span class="math inline">-c</span> (the
+coefficients for the linear portion of the objective function), which
+are unlikely to be <span class="math inline">\leq0</span> in a real
+application. So in most cases, using the slack variables as the a basis
+will not work.</p>
+<p>But that’s ok! We know how to deal with a system that doesn’t have a
+convenient initial basis - the artificial variable method we learned
+back in section <a href="#sec:lpOtherConsiderations">4.6.7</a>. So let’s
+add artificial variables <span class="math inline">z_j</span> where
+necessary. In section <a href="#sec:lpOtherConsiderations">4.6.7</a> we
+gave them some large negative objective coefficient <span
+class="math inline">-M</span> in order to make sure they would leave the
+basis if possible. But in this case, our objective function might as
+well have just been 0, since we’re just looking for a feasible solution.
+So it will suffice to let the <span class="math inline">z_j</span>
+variables have an objective coefficient of -1, i.e. we will maximize
+<span class="math inline">\sum_j-z_j</span>.</p>
+<p>There’s just one more thing to consider: how to deal with the
+complementarity constraint. In our modified simplex algorithm, we’ll
+simply alter the selection of our entering variable so that we never
+choose a variable to enter the basis if its complementary variable is
+already basic. Since the basic variables are the only ones with a value
+<span class="math inline">&gt;0</span>, making sure one of each
+complementary pair is non-basic suffices to satisfy the complementarity
+constraint.<a href="#fn99" class="footnote-ref" id="fnref99"
+role="doc-noteref"><sup>99</sup></a></p>
+<h4>
+Example
+</h4>
+<p>We now have what we need to run the modified simplex algorithm on our
+sample problem. Recall that the problem was</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 15x_1 + 30x_2 + 4x_1x_2 - 2x_1^2 - 4x_2^2 \\
+\text{s.t.}&amp;&amp; x_1 + 2x_2 &amp;\leq 30 \\
+     &amp;&amp; x_1, x_2 &amp;\geq 0
+\end{align*}
+</span></p>
+<p>and by applying the KKT conditions and adding slack variables we
+reduced the above optimization problem to the problem of finding a
+feasible solution to:</p>
+<p><span class="math display">
+\begin{align*}
+x_1 + 2x_2 + v_1 &amp;= 30 \\
+-4x_1 + 4x_2 - u_1 + y_1 &amp;= -15 \\
+4x_1 - 8x_2 - 2u_1 + y_2 &amp;= -30 \\
+x_1y_1 + x_2y_2 + u_1v_1 &amp;= 0 \\
+x_1,x_2,y_1,y_2,u_1,v_1 &amp;\geq 0
+\end{align*}
+</span></p>
+<p>Let’s now do what we outlined above - add artificial variables <span
+class="math inline">z_j</span> as required to the above system and
+optimize the linear program that maximizes <span
+class="math inline">\sum_j -z_j</span> subject to all the above
+constraints except complementarity:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; -z_1 - z_2 \\
+\text{s.t.}&amp;&amp; 4x_1 - 4x_2 + u_1 - y_1 + z_1 &amp; = 15 \\
+     &amp;&amp; -4x_1 + 8x_2 + 2u_1 - y_2 + z_2 &amp; = 30 \\
+     &amp;&amp; x_1 + 2x_2 + v_1 &amp;= 30 \\
+     &amp;&amp; x_1, x_2, y_1, y_2, z_1, z_2, u_1, v_1 \geq 0
+\end{align*}
+</span></p>
+<p>Now let’s write out the relevant matrix system:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp;  0 &amp;  0 &amp; 0 &amp;  0 &amp;  0 &amp; 0 &amp; 1 &amp; 1 \\
+0 &amp;  4 &amp; -4 &amp; 1 &amp; -1 &amp;  0 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; -4 &amp;  8 &amp; 2 &amp;  0 &amp; -1 &amp; 0 &amp; 0 &amp; 1 \\
+0 &amp;  1 &amp;  2 &amp; 0 &amp;  0 &amp;  0 &amp; 1 &amp; 0 &amp; 0
+\end{bmatrix}
+\begin{bmatrix}Z \\ x_1 \\ x_2 \\ u_1 \\ y_1 \\ y_2 \\ v_1 \\ z_1 \\
+z_2\end{bmatrix}
+= \begin{bmatrix}0 \\ 15 \\ 30 \\ 30\end{bmatrix}
+</span></p>
+<p>We’d like <span class="math inline">z_1</span> and <span
+class="math inline">z_2</span> to be part of our basis, so we’ll need to
+eliminate the top row coefficients in their respective columns to
+obtain:</p>
+<p><span class="math display">
+\begin{bmatrix}
+1 &amp;  0 &amp; -4 &amp; -3 &amp;  1 &amp;  1 &amp; 0 &amp; 0 &amp; 0
+\\
+0 &amp;  4 &amp; -4 &amp;  1 &amp; -1 &amp;  0 &amp; 0 &amp; 1 &amp; 0
+\\
+0 &amp; -4 &amp;  8 &amp;  2 &amp;  0 &amp; -1 &amp; 0 &amp; 0 &amp; 1
+\\
+0 &amp;  1 &amp;  2 &amp;  0 &amp;  0 &amp;  0 &amp; 1 &amp; 0 &amp; 0
+\end{bmatrix}
+\begin{bmatrix}Z \\ x_1 \\ x_2 \\ u_1 \\ y_1 \\ y_2 \\ v_1 \\ z_1 \\
+z_2\end{bmatrix}
+= \begin{bmatrix}-45 \\ 15 \\ 30 \\ 30\end{bmatrix}
+</span></p>
+<p>Now we’re ready for simplex, with our basic variables being <span
+class="math inline">z_1, z_2</span> and <span
+class="math inline">v_1</span>. Variables <span
+class="math inline">x_2</span> and <span class="math inline">u_1</span>
+have negative objective row coefficients, so ordinarily they would both
+be eligible for inclusion in the next basis. But in our modified
+simplex, we will not choose <span class="math inline">u_1</span> since
+its complementary variable <span class="math inline">v_1</span> is
+already in the basis. So our entering variable should be <span
+class="math inline">x_2</span>, and by the usual ratio test we need to
+have <span class="math inline">z_2</span> exit the basis.</p>
+<p>The following table shows how the simplex method would then progress
+to solve the problem<a href="#fn100" class="footnote-ref" id="fnref100"
+role="doc-noteref"><sup>100</sup></a>:</p>
+<figure>
+<img src="images/modified-simplex-example.png"
+alt="Applying the modified simplex method to an example quadratic programming problem (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Applying the modified simplex method to
+an example quadratic programming problem <span class="citation"
+data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<p>As we see in the table, in the next iteration both <span
+class="math inline">x_1</span> and <span class="math inline">u_1</span>
+have negative coefficients in the objective row, but <span
+class="math inline">v_1</span> is still in the basis so we are not
+permitted to select <span class="math inline">u_1</span> by
+complementarity. But since <span class="math inline">v_1</span> exits at
+the same time <span class="math inline">x_1</span> enters, in the next
+iteration <span class="math inline">u_1</span> <em>is</em> eligible to
+be added to the basis.</p>
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 <h1 data-number="7" id="appendix"><span
 class="header-section-number">7</span> Appendix</h1>
@@ -10500,7 +10876,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(24)</span></span></p>
+</span><span class="eqnos-number">(27)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -11778,6 +12154,25 @@ href="#fnref96" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn97"><p>One simple condition is for all the constraints to be
 linear functions, which will apply quite often in this class.<a
 href="#fnref97" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn98"><p>Actually, the condition for the following algorithm is
+a little more complicated than than. The algorithm we show assumes that
+either <span class="math inline">\mathbf{c}=\mathbf{0}</span> or the
+objective is <em>strictly</em> concave, which would require <span
+class="math inline">\mathbf{Q}</span> to be positive definite instead of
+just positive semi-definite.<a href="#fnref98" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn99"><p>What happens if the only variables eligible to enter
+the basis are complementary with respect to another basic variable? In
+that case, it is possible that the problem is infeasible (though I’m not
+sure that <em>has</em> to be the case… I need to read up on this a bit
+more.)<a href="#fnref99" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn100"><p>Don’t be thrown off that the coefficient at the top of
+<span class="math inline">Z</span> column in the table is <span
+class="math inline">-1</span> vs. the one in my system being <span
+class="math inline">1</span>. The book used a slightly different setup
+going from minimization to maximization.<a href="#fnref100"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
