@@ -108,7 +108,7 @@ $$
 and notice $1 > \epsilon = 0.01$ so we need to continue with another iteration. Then let's continue on the find our next $t^*$. We have
 
 $$
-x' + t\nabla f(\x') = (t,0.5)
+\x' + t\nabla f(\x') = (t,0.5)
 $$
 
 so we must also have
