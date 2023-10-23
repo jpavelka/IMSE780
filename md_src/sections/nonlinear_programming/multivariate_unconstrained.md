@@ -27,6 +27,8 @@ As a follow-up to the notebook in the last section, the following notebook shows
 
 ### Gradient search
 
+<div class='lectureVideoEmbed' video-id='b30426e0e1434106b7310fd399a90a421d' video-date='2023-10-23'>Gradient search and Lagrangian multipliers</div>
+
 Unfortunately, just like in the single variable case, many times we will not be able to use analytical methods to find the optimum of our function. Thus we'll need to explore multi-variable search procedures, of which the most common is the **gradient search procedure**. The key thing to remember is that the gradient of $f$ at some point $\x'$ tells us the direction (with respect to $\x'$) in which the function is increasing fastest. In the single variable case, if $f'(x')>0$ then the slope of $f$ near $x'$ is increasing, thus moving to the right with lead us to points with higher objective values. Similarly, if $f'(x')<0$ then moving to the left will lead us to points with higher objective values.
 
 So it is with the gradient as well. Remember that $\nabla f(\x')$ is a vector, i.e. a direction in which one could travel. Not only that, but for at least some neighborhood around $\x'$ we know that a move from $\x'$ to a point in the direction of the gradient will increase the objective value. So this is precisely what we will do in the gradient search procedure. Given a trial solution $\x'$, we will calculate the gradient $\nabla f(\x')$ and choose a distance $t$ (called the **step size**) to travel in the direction of the gradient to our next trial solution. That is, we will update our trial solution to

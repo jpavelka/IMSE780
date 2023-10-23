@@ -31,7 +31,7 @@ When we first modeled the Wyndor LP in +@sec:exampleLp, we made an important ass
 
 If you've taken an economics class you're probably familiar with the relationship between the supply of an item and the price people are willing to pay for it. In practice, a store might set a certain price for an item and sell some number of them at that price, but not sell out of everything until the last remaining items go on sale. The effect is that each marginal unit produced is expected to command a slightly lower price than the previous units, and the only way to model this relationship in a mathematical program is with nonlinear functions.
 
-### Investment risk
+### Investment risk {#sec:portfolioOptimization}
 
 One application where nonlinear programming is often used is in portfolio management. Usually portfolio managers are worried about both the expected returns and the risk associated with their investments. As we'll see, this risk factor is best modeled via nonlinear functions.
 

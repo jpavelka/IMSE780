@@ -1,4 +1,4 @@
-## Optimality conditions
+## Optimality conditions {#sec:optConditions}
 
 During our exploration of unconstrained optimization in the previous sections, we already knew some conditions for recognizing optimal solutions from your calculus classes. For example, for $x$ to be an optimizer for some function single-variable function $f$, we need $f'(x)=0$ (or $\nabla f(\x)=\zeros$ in the multivariate case). With further assumptions on the character of $f$ (e.g. convexity or concavity) we could go from necessary conditions to sufficient conditions.
 
@@ -78,7 +78,9 @@ $$
 
 Notice that we're now requiring non-negative variables $\x\in\R^n_+$, in contrast to the definition I gave at the start of the non-linear programming section.
 
-As usual, we will assume that all of our functions $f, g_1, \dots, g_m$ are differentiable. Furthermore, for the following result to hold we need the functions to satisfy certain other so-called _regularity conditions_, though we will not be covering these conditions in this class. Suffice it to say, you can assume that the conditions hold for any problem I give you in this class.
+As usual, we will assume that all of our functions $f, g_1, \dots, g_m$ are differentiable. Furthermore, for the following result to hold we need the functions to satisfy certain other so-called _regularity conditions_[^easyRegularity], though we will not be covering these conditions in this class. Suffice it to say, you can assume that the conditions hold for any problem I give you in this class.
+
+[^easyRegularity]: One simple condition is for all the constraints to be linear functions, which will apply quite often in this class.
 
 With that out of the way, let's present the main result
 

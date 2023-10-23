@@ -20,3 +20,4 @@
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 \newcommand{\bpi}{\mathbb{\pi}}
+\newcommand{\Q}{\mathbf{Q}}
