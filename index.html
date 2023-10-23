@@ -2776,7 +2776,8 @@ class="toc-section-number">6.1</span> Example nonlinear programs</a>
 <ul>
 <li><a href="#price-elasticity" id="toc-price-elasticity"><span
 class="toc-section-number">6.1.1</span> Price elasticity</a></li>
-<li><a href="#investment-risk" id="toc-investment-risk"><span
+<li><a href="#sec:portfolioOptimization"
+id="toc-sec:portfolioOptimization"><span
 class="toc-section-number">6.1.2</span> Investment risk</a></li>
 </ul></li>
 <li><a href="#sec:univariateUnconstrained"
@@ -2816,8 +2817,7 @@ id="toc-newtons-method-revisited"><span
 class="toc-section-number">6.3.3</span> Newton’s method
 revisited</a></li>
 </ul></li>
-<li><a href="#optimality-conditions"
-id="toc-optimality-conditions"><span
+<li><a href="#sec:optConditions" id="toc-sec:optConditions"><span
 class="toc-section-number">6.4</span> Optimality conditions</a>
 <ul>
 <li><a href="#lagrange-multipliers" id="toc-lagrange-multipliers"><span
@@ -8840,7 +8840,7 @@ of everything until the last remaining items go on sale. The effect is
 that each marginal unit produced is expected to command a slightly lower
 price than the previous units, and the only way to model this
 relationship in a mathematical program is with nonlinear functions.</p>
-<h3 data-number="6.1.2" id="investment-risk"><span
+<h3 data-number="6.1.2" id="sec:portfolioOptimization"><span
 class="header-section-number">6.1.2</span> Investment risk</h3>
 <p>One application where nonlinear programming is often used is in
 portfolio management. Usually portfolio managers are worried about both
@@ -9725,6 +9725,11 @@ notebook shows you how to deal with gradients in <code>sympy</code>.</p>
 <script src="https://gist.github.com/c1dabe8fec7f737628ab56a34f1225fa.js"></script>
 <h3 data-number="6.3.2" id="gradient-search"><span
 class="header-section-number">6.3.2</span> Gradient search</h3>
+<div class="lectureVideoEmbed"
+data-video-id="b30426e0e1434106b7310fd399a90a421d"
+data-video-date="2023-10-23">
+Gradient search and Lagrangian multipliers
+</div>
 <p>Unfortunately, just like in the single variable case, many times we
 will not be able to use analytical methods to find the optimum of our
 function. Thus we’ll need to explore multi-variable search procedures,
@@ -9973,7 +9978,7 @@ method right one then needs to invert this matrix. That’s a lot of
 computation, so in practice people use so-called <strong>quasi-Newton
 methods</strong> which approximate the second derivative information in
 different ways.</p>
-<h2 data-number="6.4" id="optimality-conditions"><span
+<h2 data-number="6.4" id="sec:optConditions"><span
 class="header-section-number">6.4</span> Optimality conditions</h2>
 <p>During our exploration of unconstrained optimization in the previous
 sections, we already knew some conditions for recognizing optimal
@@ -10126,10 +10131,11 @@ section.</p>
 <p>As usual, we will assume that all of our functions <span
 class="math inline">f, g_1, \dots, g_m</span> are differentiable.
 Furthermore, for the following result to hold we need the functions to
-satisfy certain other so-called <em>regularity conditions</em>, though
-we will not be covering these conditions in this class. Suffice it to
-say, you can assume that the conditions hold for any problem I give you
-in this class.</p>
+satisfy certain other so-called <em>regularity conditions</em><a
+href="#fn97" class="footnote-ref" id="fnref97"
+role="doc-noteref"><sup>97</sup></a>, though we will not be covering
+these conditions in this class. Suffice it to say, you can assume that
+the conditions hold for any problem I give you in this class.</p>
 <p>With that out of the way, let’s present the main result</p>
 <div class='theorem' id='thm:kktConditions'>
 <p>Assume <span class="math inline">f,g_1,\dots,g_m</span> are
@@ -11769,6 +11775,9 @@ Kuhn-Tucker conditions due to a 1951 paper by two mathematicians named
 Kuhn and Tucker. Later, someone noticed that Karush had developed the
 same theory a dozen years earlier in his Masters thesis!<a
 href="#fnref96" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn97"><p>One simple condition is for all the constraints to be
+linear functions, which will apply quite often in this class.<a
+href="#fnref97" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
