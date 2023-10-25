@@ -42,6 +42,10 @@
 
 {insertSection:sections/nonlinear_programming/quadratic_programming.md}
 
+<!-- {insertSection:sections/nonlinear_programming/convex_programming.md} -->
+
+<!-- {insertSection:sections/nonlinear_programming/software.md} -->
+
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 
 {insertSection:sections/appendix/appendix.md}
