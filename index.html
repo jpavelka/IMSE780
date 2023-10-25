@@ -2526,7 +2526,7 @@ class="toc-section-number">3.3.1</span> Local development</a></li>
 class="toc-section-number">3.3.2</span> Cloud hosted</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#linear-programming" id="toc-linear-programming"><span
+<li><a href="#sec:lp" id="toc-sec:lp"><span
 class="toc-section-number">4</span> Linear programming</a>
 <ul>
 <li><a href="#sec:exampleLp" id="toc-sec:exampleLp"><span
@@ -2810,7 +2810,7 @@ optimization</a>
 <ul>
 <li><a href="#gradients" id="toc-gradients"><span
 class="toc-section-number">6.3.1</span> Gradients</a></li>
-<li><a href="#gradient-search" id="toc-gradient-search"><span
+<li><a href="#sec:gradientSearch" id="toc-sec:gradientSearch"><span
 class="toc-section-number">6.3.2</span> Gradient search</a></li>
 <li><a href="#newtons-method-revisited"
 id="toc-newtons-method-revisited"><span
@@ -2838,6 +2838,15 @@ programming</a></li>
 <li><a href="#modified-simplex-method"
 id="toc-modified-simplex-method"><span
 class="toc-section-number">6.5.2</span> Modified simplex method</a></li>
+</ul></li>
+<li><a href="#convex-programming" id="toc-convex-programming"><span
+class="toc-section-number">6.6</span> Convex programming</a>
+<ul>
+<li><a href="#sumt" id="toc-sumt"><span
+class="toc-section-number">6.6.1</span> SUMT</a></li>
+<li><a href="#frank-wolfe-algorithm"
+id="toc-frank-wolfe-algorithm"><span
+class="toc-section-number">6.6.2</span> Frank-Wolfe algorithm</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -3248,7 +3257,7 @@ href="https://github.com/">GitHub</a>). So I wouldn’t start here, but
 for the right use-case it is a nice service. Their free plan gets you up
 to 50 hours per month.</li>
 </ul>
-<h1 data-number="4" id="linear-programming"><span
+<h1 data-number="4" id="sec:lp"><span
 class="header-section-number">4</span> Linear programming</h1>
 <div class="lectureVideoEmbed"
 data-video-id="0b552ccb31c34eab8f6f6d658afd32c61d"
@@ -9735,7 +9744,7 @@ f(x_1,x_2)=\mathbf{0}</span>, i.e. we solve simultaneously for</p>
 <p>As a follow-up to the notebook in the last section, the following
 notebook shows you how to deal with gradients in <code>sympy</code>.</p>
 <script src="https://gist.github.com/c1dabe8fec7f737628ab56a34f1225fa.js"></script>
-<h3 data-number="6.3.2" id="gradient-search"><span
+<h3 data-number="6.3.2" id="sec:gradientSearch"><span
 class="header-section-number">6.3.2</span> Gradient search</h3>
 <div class="lectureVideoEmbed"
 data-video-id="b30426e0e1434106b7310fd399a90a421d"
@@ -10724,6 +10733,305 @@ complementarity. But since <span class="math inline">v_1</span> exits at
 the same time <span class="math inline">x_1</span> enters, in the next
 iteration <span class="math inline">u_1</span> <em>is</em> eligible to
 be added to the basis.</p>
+<h2 data-number="6.6" id="convex-programming"><span
+class="header-section-number">6.6</span> Convex programming</h2>
+<p>We’ll now get a little more general again and explore a form of
+nonlinear programming called <strong>convex programming</strong>, which
+is an optimization problem of the form</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; f(\mathbf{x}) \\
+\text{s.t.}&amp;&amp; g_i(\mathbf{x}) &amp; \leq b_i &amp; \forall \
+i\in\{1,\dots,m\} \\
+     &amp;&amp; \mathbf{x}&amp; \in \mathbb{R}^n_+
+\end{align*}
+</span></p>
+<p>where the objective function <span class="math inline">f</span> is
+concave and the constraint functions <span
+class="math inline">g_i</span> are convex. The quadratic programs we
+studied in the previous section are a special type of convex
+program.</p>
+<p>There are several general methods for solving convex programs. We
+will cover two of them here.</p>
+<h3 data-number="6.6.1" id="sumt"><span
+class="header-section-number">6.6.1</span> SUMT</h3>
+<p>The first method we’ll explore is a <strong>sequential unconstrained
+minimization technique</strong> (<strong>SUMT</strong>). As you might
+guess, instead of attacking the original problem directly, a SUMT will
+instead solve a <em>sequence</em> of <em>unconstrained</em> optimization
+problems related to the original, such that the sequence of solutions
+converges to a solution to the original problem.</p>
+<p>In each iteration of the method, some scalar value <span
+class="math inline">r</span> is chosen and the following unconstrained
+optimization problem is solved:</p>
+<p><span class="math display">
+\text{max}\quad P(\mathbf{x}, r) = f(\mathbf{x}) - rB(\mathbf{x})
+</span></p>
+<p>The function <span class="math inline">B</span> should be selected to
+satisfy the following:</p>
+<ol type="1">
+<li><span class="math inline">B(\mathbf{x})</span> is small when <span
+class="math inline">\mathbf{x}</span> is far from the boundary of the
+original problem’s feasible region.</li>
+<li><span class="math inline">B(\mathbf{x})</span> is large when <span
+class="math inline">\mathbf{x}</span> is close to the boundary of the
+original problem’s feasible region.</li>
+<li><span class="math inline">B(\mathbf{x})\rightarrow\infty</span> as
+the distance to the boundary of the feasible region <span
+class="math inline">\rightarrow 0</span>.</li>
+</ol>
+<p>Such a function is known as a <strong>barrier function</strong>, and
+a common choice for <span class="math inline">B(\mathbf{x})</span>
+is</p>
+<p><span class="math display">
+B(\mathbf{x}) = \sum_{i=1}^m\frac{1}{b_i - g_i(\mathbf{x})} +
+\sum_{j=1}^n\frac{1}{x_j}
+</span></p>
+<p>Each term in this function becomes large when the denominator is
+small, and each denominator gives the distance from <span
+class="math inline">\mathbf{x}</span> to the edge of one of the
+problem’s (functional or non-negativity) constraints. Thus by
+subtracting <span class="math inline">rB(\mathbf{x})</span> from the
+original problem’s objective value <span
+class="math inline">f(\mathbf{x})</span>, an optimization algorithm is
+dissuaded from crossing (or even touching) the boundary of the original
+problem’s feasible region. It is also worth noting that with this
+selection of <span class="math inline">B</span>, <span
+class="math inline">P(\mathbf{x}, r)</span> will also be concave.</p>
+<p>But there is a potential problem - if the barrier function keeps us
+away from the boundary of the feasible region, how can we ever find an
+optimal solution that happens to lay <em>on</em> the boundary? The
+answer is right in the name of the method: we do not solve just one of
+these unconstrained problems but rather a sequence of them. We decrease
+the value of <span class="math inline">r</span> from iteration to
+iteration so as to allow solutions closer and closer to the boundary (in
+practice, we will pick a multiplier <span
+class="math inline">\theta&lt;1</span> such that at each iteration,
+<span class="math inline">r</span> is reset to the value <span
+class="math inline">\theta r</span>). None of the individual problems
+will solve to a solution on the border, but potentially we can recognize
+if the sequence of solutions approaches a boundary solution.</p>
+<p>How do we know when to stop iterating? Like we’ve done before, we’d
+like to continue until we know we’re “close to” the optimal solution
+<span class="math inline">\mathbf{x}^*</span>. Furthermore, one can show
+that if <span class="math inline">\mathbf{x}&#39;</span> is an maximizer
+for <span class="math inline">P(\mathbf{x}, r)</span> then</p>
+<p><span class="math display">
+f(\mathbf{x}&#39;)\leq f(\mathbf{x}^*) \leq f(\mathbf{x}&#39;) +
+rB(\mathbf{x}&#39;)
+</span></p>
+<p>So <span class="math inline">rB(\mathbf{x}&#39;)</span> gives us a
+convenient bound on how far away each trial solution is from optimal.
+Thus one can select some small error tolerance <span
+class="math inline">\epsilon &gt; 0</span> and stop once <span
+class="math inline">rB(\mathbf{x}&#39;)&lt;\epsilon</span>.</p>
+<p>One final note - the presentation here assumes that all constraints
+are inequality constraints, so that there is an “interior” to the
+feasible region. One can alter the selection of <span
+class="math inline">B(\mathbf{x})</span> to account for equality
+constraints, but we will not cover that here. With that out of the way,
+let’s write out the algorithm:</p>
+<ul>
+<li><em>Initialize</em>: Identify a feasible initial trial solution
+<span class="math inline">\mathbf{x}^{(0)}</span> that is not on the
+boundary of the feasible region. Set <span class="math inline">k =
+1</span> and choose appropriate positive values for <span
+class="math inline">r</span>, <span class="math inline">\theta</span>
+and <span class="math inline">\epsilon</span>.</li>
+<li><em>Iterate</em>:
+<ul>
+<li>Starting from <span class="math inline">\mathbf{x}^{(k-1)}</span>,
+use a multi-variable unconstrained optimization procedure (like gradient
+search from section <a href="#sec:gradientSearch">6.3.2</a>) to find a
+solution <span class="math inline">\mathbf{x}^{(k)}</span> that
+(approximately) maximizes <span class="math inline">P(\mathbf{x},
+r)=f(\mathbf{x}) - rB(\mathbf{x})</span>.</li>
+<li>If <span class="math inline">B(\mathbf{x})&lt;\epsilon</span>:
+<ul>
+<li>Stop with <span class="math inline">\mathbf{x}^{(k)}</span> as the
+(approximate) optimal solution.</li>
+</ul></li>
+<li>Else:
+<ul>
+<li>Reset <span class="math inline">k = k + 1</span>, <span
+class="math inline">r = \theta r</span> and continue iterating.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>It is worth noting that instead of returning the final <span
+class="math inline">\mathbf{x}^{(k)}</span> as the optimal solution, you
+may decide to examine the sequence of trial solutions <span
+class="math inline">\mathbf{x}^{(0)}, \mathbf{x}^{(1)}, \dots,
+\mathbf{x}^{(k)}</span> and see if it seems to be converging to
+somewhere. Your textbook <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> includes an example where the
+sequence of trial solutions is given by <span class="math inline">(1,
+1)</span>, <span class="math inline">(0.9, 1.36)</span>, <span
+class="math inline">(0.987, 1.925)</span>, <span
+class="math inline">(0.998, 1.993)</span>. This sequence appears to be
+converging on <span class="math inline">(1, 2)</span>, which is indeed
+the optimal value for the problem<a href="#fn101" class="footnote-ref"
+id="fnref101" role="doc-noteref"><sup>101</sup></a>.</p>
+<h3 data-number="6.6.2" id="frank-wolfe-algorithm"><span
+class="header-section-number">6.6.2</span> Frank-Wolfe algorithm</h3>
+<p>In contrast to the sequential unconstrained method SUMT, our next
+method will instead sequentially solve constrained problems over a
+sequence of approximations to the real problem’s objective function. In
+particular, the <strong>Frank-Wolfe algorithm</strong> is an algorithm
+for <em>linearly</em> constrained convex programs, i.e. problems of the
+form:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; f(\mathbf{x}) \\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
+     &amp;&amp;   \mathbf{x}&amp;\geq\mathbf{0}
+\end{align*}
+</span></p>
+<p>where <span class="math inline">f</span> is a concave function.</p>
+<p>The idea is to approximate this more difficult problem with a problem
+we already know how to solve. In particular, we’d like to approximate
+this as a linear program. Like usual, each iteration will begin with
+some trial solution <span class="math inline">\mathbf{x}&#39;</span>.
+We’d like to create an objective function that estimates <span
+class="math inline">f</span> decently in some neighborhood around <span
+class="math inline">\mathbf{x}&#39;</span>. This is something we’ve
+already done before: in Newton’s method (section <a
+href="#sec:newton1d">6.2.5</a>) we approximated the objective function
+at each trial solution via the second-degree Taylor polynomial. We’ll do
+something similar here, except since we’re trying to solve an
+approximate <em>linear</em> program, we’ll only be able to use the
+linear term from the Taylor polynomial. So the quantity to be maximized
+at each iteration is:</p>
+<p><span class="math display">
+\begin{align*}
+&amp;f(\mathbf{x}&#39;) + \nabla f(\mathbf{x}&#39;)(\mathbf{x}-
+\mathbf{x}&#39;) \\
+=&amp;f(\mathbf{x}&#39;) + \nabla f(\mathbf{x}&#39;)\mathbf{x}- \nabla
+f(\mathbf{x}&#39;)\mathbf{x}&#39;
+\end{align*}
+</span></p>
+<p>Furthermore, since <span class="math inline">\mathbf{x}&#39;</span>
+is a known value, both the <span
+class="math inline">f(\mathbf{x}&#39;)</span> and <span
+class="math inline">\nabla f(\mathbf{x}&#39;)\mathbf{x}&#39;</span>
+terms are just constants. Since they will never change, we can leave
+them out of the approximate objective altogether and maximize only
+over</p>
+<p><span class="math display">
+\nabla f(\mathbf{x}&#39;)\mathbf{x}
+</span></p>
+<p>So we maximize <span class="math inline">\nabla
+f(\mathbf{x}&#39;)\mathbf{x}</span><a href="#fn102" class="footnote-ref"
+id="fnref102" role="doc-noteref"><sup>102</sup></a> subject to <span
+class="math inline">\mathbf{A}\mathbf{x}\leq\mathbf{b},\mathbf{x}\geq\mathbf{0}</span>
+using linear programming techniques, leading to some solution <span
+class="math inline">\mathbf{x}_{\text{LP}}</span>. One could decide to
+use <span class="math inline">\mathbf{x}_{\text{LP}}</span> as the trial
+solution for the next iteration, but actually we’ll add one more step -
+we’ll instead use a single-variable optimization technique to find the
+point on the line between <span
+class="math inline">\mathbf{x}&#39;</span> and <span
+class="math inline">\mathbf{x}_{\text{LP}}</span> that maximizes <span
+class="math inline">f</span> (analogous to how we determined <span
+class="math inline">t^*</span> in the iterations for the gradient method
+of section <a href="#sec:gradientSearch">6.3.2</a>). We then continue
+this process like usual, stopping when the difference between successive
+trial solutions is small.</p>
+<p>We now know everything we need to write out the algorithm:</p>
+<ul>
+<li><em>Initialize</em>: Find an initial trial solution <span
+class="math inline">\mathbf{x}^{(0)}</span> (since the problem has
+linear constraints, you could do this by using LP techniques to find an
+initial basic feasible solution). Set <span
+class="math inline">k=1</span>.</li>
+<li><em>Iterate</em>:
+<ul>
+<li>Use LP techniques to find an optimal solution <span
+class="math inline">\mathbf{x}_{\text{LP}}^{(k)}</span> to the
+approximation linear program: <span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; \nabla f(\mathbf{x}^{(k-1)})\mathbf{x}\\
+\text{s.t.}&amp;&amp; \mathbf{A}\mathbf{x}&amp;\leq\mathbf{b}\\
+     &amp;&amp;   \mathbf{x}&amp;\geq0
+\end{align*}
+</span></li>
+<li>Use a single-variable optimization technique to find the point
+between <span class="math inline">\mathbf{x}^{(k-1)}</span> and <span
+class="math inline">\mathbf{x}_{\text{LP}}^{(k)}</span> that maximizes
+<span class="math inline">f</span>. Let this point be <span
+class="math inline">\mathbf{x}^{(k)}</span></li>
+<li>If <span class="math inline">\mathbf{x}^{(k)}</span> is sufficiently
+close to <span class="math inline">\mathbf{x}^{(k-1)}</span>:
+<ul>
+<li>Stop with <span class="math inline">\mathbf{x}^{(k)}</span> as the
+(approximate) optimal solution.</li>
+</ul></li>
+<li>Else:
+<ul>
+<li>Reset <span class="math inline">k = k + 1</span> and continue
+iterating.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4>
+Example
+</h4>
+<p>Consider the following example problem:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; f(\mathbf{x}) = 5x_1 - x_1^2 + 8x_2 - 2x_2^2 \\
+\text{s.t.}&amp;&amp; 3x_1 + 2x_2 &amp;\leq 6 \\
+     &amp;&amp; x_1, x_2 &amp;\geq 0
+\end{align*}
+</span></p>
+<p>Let’s set up the Frank-Wolfe method and run through one iteration.
+We’ll initialize with trial solution <span
+class="math inline">\mathbf{x}^{(0)}=(0,0)</span> which is clearly
+feasible. The gradient of <span class="math inline">f</span> is:</p>
+<p><span class="math display">
+\nabla f(x_1, x_2) = (5 - 2x_1, 8 - 4x_2)
+</span></p>
+<p>and thus the gradient at the trial solution is given by <span
+class="math inline">\nabla f(0, 0) = (5, 8)</span>. So the approximation
+LP is given by:</p>
+<p><span class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 5x_1 + 8x_2 \\
+\text{s.t.}&amp;&amp; 3x_1 + 2x_2 &amp;\leq 6 \\
+     &amp;&amp; x_1, x_2 &amp;\geq 0
+\end{align*}
+</span></p>
+<p>Using the LP techniques we learned in section <a href="#sec:lp">4</a>
+we would find the optimal solution for this LP is <span
+class="math inline">\mathbf{x}_{\text{LP}}^{(1)}=(0,3)</span>. That will
+not be our next trial solution, though. To find that, we want to find
+the point on the line segment between <span
+class="math inline">\mathbf{x}^{(0)}</span> and <span
+class="math inline">\mathbf{x}_{\text{LP}}^{(1)}</span> that maximizes
+<span class="math inline">f</span>, i.e. we want to find the value <span
+class="math inline">t</span> that maximizes</p>
+<p><span class="math display">
+f((0, 0) + t((0, 3) - (0, 0))) = f(0, 3t) = 24t - 18t^2
+</span></p>
+<p>Taking the derivative with respect to <span
+class="math inline">t</span> and setting equal to zero, we get <span
+class="math inline">t=\frac{2}{3}</span>. Thus the next trial solution
+will be</p>
+<p><span class="math display">
+\mathbf{x}^{(1)} = (0, 0) + \frac{2}{3}((0, 3) - (0, 0)) = (0, 2)
+</span></p>
+<p>We’ll stop here, but the following image shows how the trial
+solutions would update should you continue iterating.</p>
+<figure>
+<img src="images/frank-wolfe-example.png"
+alt="Trial solutions from the Frank-Wolfe example problem (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Trial solutions from the Frank-Wolfe
+example problem <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<!-- {insertSection:sections/nonlinear_programming/software.md} -->
 <!-- {insertSection:sections/nonlinear_programming/notes.md} -->
 <h1 data-number="7" id="appendix"><span
 class="header-section-number">7</span> Appendix</h1>
@@ -12173,6 +12481,20 @@ class="math inline">-1</span> vs. the one in my system being <span
 class="math inline">1</span>. The book used a slightly different setup
 going from minimization to maximization.<a href="#fnref100"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn101"><p>We will not be stepping through an example here (and
+the book doesn’t really either). The algorithm would use the gradient
+method as a sub-algorithm, which itself uses a single-variable
+optimization method as a sub-algorithm, and I felt like a full
+presentation would just be more confusing than it’s worth. But I think
+the main idea isn’t confusing at all, and wanted you all to know about
+it.<a href="#fnref101" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn102"><p>It’s probably worth noting explicitly again that <span
+class="math inline">\nabla f(\mathbf{x}&#39;)</span> is nothing but a
+constant vector, so this does fit the usual form of a linear programming
+objective <span class="math inline">\mathbf{c}\mathbf{x}</span>.<a
+href="#fnref102" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <script>
