@@ -1,6 +1,6 @@
 ## Convex programming
 
-We'll now turn to a more general form of nonlinear programming called **convex programming**, which is an optimization problem of the form
+We'll now get a little more general again and explore a form of nonlinear programming called **convex programming**, which is an optimization problem of the form
 
 $$
 \begin{align*}
@@ -10,7 +10,7 @@ $$
 \end{align*}
 $$
 
-where the objective $f$ is a concave function and the constraint functions $g_i$ are convex functions. The quadratic programs we studied in the previous section are a special type of convex program.
+where the objective function $f$ is concave and the constraint functions $g_i$ are convex. The quadratic programs we studied in the previous section are a special type of convex program.
 
 There are several general methods for solving convex programs. We will cover two of them here.
 
@@ -18,7 +18,7 @@ There are several general methods for solving convex programs. We will cover two
 
 The first method we'll explore is a **sequential unconstrained minimization technique** (**SUMT**). As you might guess, instead of attacking the original problem directly, a SUMT will instead solve a _sequence_ of _unconstrained_ optimization problems related to the original, such that the sequence of solutions converges to a solution to the original problem.
 
-In each iteration of the method, some scalar value $r$ is chosen and the following unconstrained optimization is solved:
+In each iteration of the method, some scalar value $r$ is chosen and the following unconstrained optimization problem is solved:
 
 $$
 \max \quad P(\x, r) = f(\x) - rB(\x)
@@ -38,9 +38,9 @@ $$
 
 Each term in this function becomes large when the denominator is small, and each denominator gives the distance from $\x$ to the edge of one of the problem's (functional or non-negativity) constraints. Thus by subtracting $rB(\x)$ from the original problem's objective value $f(\x)$, an optimization algorithm is dissuaded from crossing (or even touching) the boundary of the original problem's feasible region. It is also worth noting that with this selection of $B$, $P(\x, r)$ will also be concave.
 
-But there is a potential problem - if the barrier function keeps us away from the boundary of the feasible region, how can we ever find an optimal solution that happens to lay _on_ the boundary? The answer is right in the name of the method: we do not solve just one of these unconstrained problems but rather a sequence of them. In each subsequent iteration, we decrease $r$ so as to allow solutions closer and closer to the boundary (in practice, we will pick a multiplier $\theta<1$ such that at each iteration, $r$ is reset to the value $\theta r$). None of the individual problems will solve to a solution on the border, but potentially we can recognize if the sequence of solutions approaches a boundary solution.
+But there is a potential problem - if the barrier function keeps us away from the boundary of the feasible region, how can we ever find an optimal solution that happens to lay _on_ the boundary? The answer is right in the name of the method: we do not solve just one of these unconstrained problems but rather a sequence of them. We decrease the value of $r$ from iteration to iteration so as to allow solutions closer and closer to the boundary (in practice, we will pick a multiplier $\theta<1$ such that at each iteration, $r$ is reset to the value $\theta r$). None of the individual problems will solve to a solution on the border, but potentially we can recognize if the sequence of solutions approaches a boundary solution.
 
-How do we know when to stop iterating? Like we've done before, we'd like to continue until we know we're "close to" the optimal solution $x^*$. Furthermore, one can show that if $\x'$ is an maximizer for $P(\x, r)$ then
+How do we know when to stop iterating? Like we've done before, we'd like to continue until we know we're "close to" the optimal solution $\x^*$. Furthermore, one can show that if $\x'$ is an maximizer for $P(\x, r)$ then
 
 $$
 f(\x')\leq f(\x^*) \leq f(\x') + rB(\x')
@@ -52,17 +52,19 @@ One final note - the presentation here assumes that all constraints are inequali
 
 - _Initialize_: Identify a feasible initial trial solution $\x^{(0)}$ that is not on the boundary of the feasible region. Set $k = 1$ and choose appropriate positive values for $r$, $\theta$ and $\epsilon$.
 - _Iterate_:
-  - Starting from $x^{(k-1)}$, use a multi-variable unconstrained optimization procedure (like gradient search from +@sec:gradientSearch) to find a solution $x^{(k)}$ that (approximately) maximizes $P(\x, r)=f(\x) - rB(\x)$.
+  - Starting from $\x^{(k-1)}$, use a multi-variable unconstrained optimization procedure (like gradient search from +@sec:gradientSearch) to find a solution $\x^{(k)}$ that (approximately) maximizes $P(\x, r)=f(\x) - rB(\x)$.
   - If $B(\x)<\epsilon$:
-    - Stop with $x^{(k)}$ as the (approximate) optimal solution.
+    - Stop with $\x^{(k)}$ as the (approximate) optimal solution.
   - Else:
     - Reset $k = k + 1$, $r = \theta r$ and continue iterating.
 
-It is worth noting that instead of returning the final $x^{(k)}$ as the optimal solution, you may decide to examine the sequence of trial solutions $x^{(0)}, x^{(1)}, \dots, x^{(k)}$ and see if it seems to be converging to somewhere. Your textbook @classText includes an example where the sequence of trial solutions is given by $(1, 1), (0.9, 1.36), (0.987, 1.925), (0.998, 1.993)$. This sequence appears to be converging on $(1, 2)$, which is indeed the optimal value for the problem.
+It is worth noting that instead of returning the final $\x^{(k)}$ as the optimal solution, you may decide to examine the sequence of trial solutions $\x^{(0)}, \x^{(1)}, \dots, \x^{(k)}$ and see if it seems to be converging to somewhere. Your textbook @classText includes an example where the sequence of trial solutions is given by $(1, 1)$, $(0.9, 1.36)$, $(0.987, 1.925)$, $(0.998, 1.993)$. This sequence appears to be converging on $(1, 2)$, which is indeed the optimal value for the problem[^noSUMTExample].
+
+[^noSUMTExample]: We will not be stepping through an example here (and the book doesn't really either). The algorithm would use the gradient method as a sub-algorithm, which itself uses a single-variable optimization method as a sub-algorithm, and I felt like a full presentation would just be more confusing than it's worth. But I think the main idea isn't confusing at all, and wanted you all to know about it.
 
 ### Frank-Wolfe algorithm
 
-In contrast to the sequential unconstrained method SUMT, our next method will instead solve a sequence of _approximations_ to the problem of interest. In particular, the **Frank-Wolfe algorithm** is an algorithm for _linearly_ constrained convex programs, i.e. problems of the form:
+In contrast to the sequential unconstrained method SUMT, our next method will instead sequentially solve constrained problems over a sequence of approximations to the real problem's objective function. In particular, the **Frank-Wolfe algorithm** is an algorithm for _linearly_ constrained convex programs, i.e. problems of the form:
 
 $$
 \begin{align*}
@@ -74,23 +76,28 @@ $$
 
 where $f$ is a concave function.
 
-The idea is to approximate this more difficult problem with a problem we already know how to solve. In particular, we'd like to approximate this as a linear program. Like usual, each iteration will begin with some trial solution $\x'$. We'd like to create an objective function that estimates $f$ decently in some neighborhood around $\x'$. This is something we've already done before: in Newton's method (+@sec:newton1d) we approximated the objective function at each trial solution via the second-degree Taylor polynomial. We'll do something here, except since we're trying to solve an approximate _linear_ program, we'll only be able to use the linear term from the Taylor polynomial. So the quantity to be maximized at each iteration is:
+The idea is to approximate this more difficult problem with a problem we already know how to solve. In particular, we'd like to approximate this as a linear program. Like usual, each iteration will begin with some trial solution $\x'$. We'd like to create an objective function that estimates $f$ decently in some neighborhood around $\x'$. This is something we've already done before: in Newton's method (+@sec:newton1d) we approximated the objective function at each trial solution via the second-degree Taylor polynomial. We'll do something similar here, except since we're trying to solve an approximate _linear_ program, we'll only be able to use the linear term from the Taylor polynomial. So the quantity to be maximized at each iteration is:
 
 $$
-f(\x') + \nabla f(\x')(\x - \x') = f(\x') + \nabla f(\x')\x - \nabla f(\x')\x'
+\begin{align*}
+&f(\x') + \nabla f(\x')(\x - \x') \\
+=&f(\x') + \nabla f(\x')\x - \nabla f(\x')\x'
+\end{align*}
 $$
 
-Furthermore, since $\x'$ is a known value, both the $f(\x')$ and $\nabla f(\x')\x'$ terms are just constants. Since they will never change, we can leave them out of the approximate objective altogether an maximize only over
+Furthermore, since $\x'$ is a known value, both the $f(\x')$ and $\nabla f(\x')\x'$ terms are just constants. Since they will never change, we can leave them out of the approximate objective altogether and maximize only over
 
 $$
 \nabla f(\x')\x
 $$
 
-So we maximize $\nabla f(\x')\x$ subject to $\A\x\leq\b,\x\geq\zeros$ using linear programming techniques, leading to some solution $\x_{\text{LP}}$. One could decide to use $\x_{\text{LP}}$ as the trial solution for the next iteration, but actually we'll add one more step - we'll instead use a single-variable optimization technique to find the point on the line between $\x'$ and $\x_{\text{LP}}$ that maximizes $f$ (analogous to how we determined $t^*$ in the iterations for the gradient method of +@sec:gradientSearch). We then continue this process like usual, stopping when the difference between successive trial solutions is small.
+So we maximize $\nabla f(\x')\x$[^thisIsALinearObjective] subject to $\A\x\leq\b,\x\geq\zeros$ using linear programming techniques, leading to some solution $\x_{\text{LP}}$. One could decide to use $\x_{\text{LP}}$ as the trial solution for the next iteration, but actually we'll add one more step - we'll instead use a single-variable optimization technique to find the point on the line between $\x'$ and $\x_{\text{LP}}$ that maximizes $f$ (analogous to how we determined $t^*$ in the iterations for the gradient method of +@sec:gradientSearch). We then continue this process like usual, stopping when the difference between successive trial solutions is small.
+
+[^thisIsALinearObjective]: It's probably worth noting explicitly again that $\nabla f(\x')$ is nothing but a constant vector, so this does fit the usual form of a linear programming objective $\c\x$.
 
 We now know everything we need to write out the algorithm:
 
-- _Initialize_: Find an initial trial solution $\x^{(0)}$ (since the problem has linear constraints, you could do this by using LP techniques to find an initial basic feasible solution). Set k=1.
+- _Initialize_: Find an initial trial solution $\x^{(0)}$ (since the problem has linear constraints, you could do this by using LP techniques to find an initial basic feasible solution). Set $k=1$.
 - _Iterate_:
   - Use LP techniques to find an optimal solution $\x_{\text{LP}}^{(k)}$ to the approximation linear program:
     $$
@@ -100,15 +107,15 @@ We now know everything we need to write out the algorithm:
          &&   \x&\geq0
     \end{align*}
     $$
-  - Use a single-variable optimization technique to find the point between $\x^{(k-1)}$ and $x_{\text{LP}}^{(k)}$ that maximizes $f$. Let this point be $\x^{(k)}$
+  - Use a single-variable optimization technique to find the point between $\x^{(k-1)}$ and $\x_{\text{LP}}^{(k)}$ that maximizes $f$. Let this point be $\x^{(k)}$
   - If $\x^{(k)}$ is sufficiently close to $\x^{(k-1)}$:
-    - Stop with $x^{(k)}$ as the (approximate) optimal solution.
+    - Stop with $\x^{(k)}$ as the (approximate) optimal solution.
   - Else:
     - Reset $k = k + 1$ and continue iterating.
 
 <h4>Example</h4>
 
-Let's take the example problem:
+Consider the following example problem:
 
 $$
 \begin{align*}
@@ -124,7 +131,7 @@ $$
 \nabla f(x_1, x_2) = (5 - 2x_1, 8 - 4x_2)
 $$
 
-and thus the gradient at the trial solution is given by $\nabla f(0, 0) = (5, 8)$. So the approximation LP is give by:
+and thus the gradient at the trial solution is given by $\nabla f(0, 0) = (5, 8)$. So the approximation LP is given by:
 
 $$
 \begin{align*}
