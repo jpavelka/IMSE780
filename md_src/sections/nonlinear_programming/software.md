@@ -1,0 +1,1 @@
+ipopt? cvxopt? baron? knitro? cvx?

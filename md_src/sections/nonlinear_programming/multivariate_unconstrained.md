@@ -25,7 +25,7 @@ As a follow-up to the notebook in the last section, the following notebook shows
 
 {colabGist:1kDibRJTufI2-gLd86I8tmEFt3nt3sk5g,c1dabe8fec7f737628ab56a34f1225fa}
 
-### Gradient search
+### Gradient search {#sec:gradientSearch}
 
 <div class='lectureVideoEmbed' video-id='b30426e0e1434106b7310fd399a90a421d' video-date='2023-10-23'>Gradient search and Lagrangian multipliers</div>
 

@@ -1,4 +1,4 @@
-# Linear programming
+# Linear programming {#sec:lp}
 
 <div class='lectureVideoEmbed' video-id='0b552ccb31c34eab8f6f6d658afd32c61d' video-date='2023-08-28'>Intro to linear programming (sections 4.1-4.3)</div>
 
