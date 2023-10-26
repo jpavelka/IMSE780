@@ -2848,6 +2848,13 @@ class="toc-section-number">6.6.1</span> SUMT</a></li>
 id="toc-frank-wolfe-algorithm"><span
 class="toc-section-number">6.6.2</span> Frank-Wolfe algorithm</a></li>
 </ul></li>
+<li><a href="#software-for-nonlinear-programs"
+id="toc-software-for-nonlinear-programs"><span
+class="toc-section-number">6.7</span> Software for nonlinear
+programs</a></li>
+<li><a href="#notes-and-further-reading-2"
+id="toc-notes-and-further-reading-2"><span
+class="toc-section-number">6.8</span> Notes and further reading</a></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">7</span> Appendix</a>
@@ -11036,8 +11043,62 @@ example problem <span class="citation" data-cites="classText">(<a
 href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
 2021</a>)</span></figcaption>
 </figure>
-<!-- {insertSection:sections/nonlinear_programming/software.md} -->
-<!-- {insertSection:sections/nonlinear_programming/notes.md} -->
+<h2 data-number="6.7" id="software-for-nonlinear-programs"><span
+class="header-section-number">6.7</span> Software for nonlinear
+programs</h2>
+<p>In this section we’ll explore some options for solving nonlinear
+programs with Python. We’ll highlight different libraries in each of the
+following notebooks, using the example problems from class as ways to
+explore each library’s capabilities. I should stress that the state of
+software for nonlinear programs is a little less robust than the
+comparable worlds of linear and integer programming, and you may find
+that solution techniques do not scale as well. I should also stress that
+I don’t know these solvers as well as I know linear and integer
+programming software, so you can take my recommendations as a starting
+point but don’t assume that these options will always be your best
+choice.</p>
+<p>We’ll start with a notebook focused on our old friend,
+<code>gurobipy</code>.</p>
+<script src="https://gist.github.com/24e356a02d828b955899aff42615507e.js"></script>
+<p>Next up is is <a
+href="https://www.cvxpy.org/index.html"><code>cvxpy</code></a>, which is
+an open-source convex optimization solver.</p>
+<script src="https://gist.github.com/5a336251ddc52b76c8af338a071976f9.js"></script>
+<p>Lastly, we’ll show samples using the (commercial) modeling language
+<a href="https://ampl.com/">AMPL</a> to build models, then solve them
+with the open-source solver <a
+href="https://coin-or.github.io/Ipopt/">IPOPT</a>.</p>
+<script src="https://gist.github.com/31c2b6a2f8209be8e9eee6ec9913434a.js"></script>
+<p>Another (commercial) solver worth mentioning is <a
+href="https://minlp.com/baron-solver">BARON</a>. I would have included
+some examples for it too, but I couldn’t find a good way to run it on
+Colab.</p>
+<h2 data-number="6.8" id="notes-and-further-reading-2"><span
+class="header-section-number">6.8</span> Notes and further reading</h2>
+<p>This section of the notes borrowed very heavily from <span
+class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span> chapter 13,
+as well as sections of appendices 2 and 3. Writing the calculus review
+gave me good reason to glance again at the excellent <span
+class="citation" data-cites="spivakCalculus">Spivak (<a
+href="#ref-spivakCalculus" role="doc-biblioref">2006</a>)</span>, which
+is the first math book I remember ever reading for fun (really, it’s
+beautifully written).</p>
+<p>Of course, nonlinear programming is a broad subject, so any unit of
+the length given here will be missing some interesting content. I would
+have liked to talk a bit more about gradient descent methods,
+potentially tying it more explicitly to the training of neural networks
+and introducing stochastic gradient descent. But there was no way we’d
+have time for that. With even more time, I would have liked to talk more
+about <a
+href="https://en.wikipedia.org/wiki/Quasi-Newton_method">quasi-Newton</a>
+and <a
+href="https://en.wikipedia.org/wiki/Conjugate_gradient_method">conjugate
+gradient</a> methods.</p>
+<p>The K-State IMSE department offers <a
+href="https://catalog.k-state.edu/content.php?catoid=58&amp;navoid=11444">IMSE
+982</a>, a full semester course on nonlinear programming theory and
+algorithms.</p>
 <h1 data-number="7" id="appendix"><span
 class="header-section-number">7</span> Appendix</h1>
 <h2 data-number="7.1" id="sec:symbols"><span
