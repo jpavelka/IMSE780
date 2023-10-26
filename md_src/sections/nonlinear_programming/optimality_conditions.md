@@ -64,6 +64,8 @@ If $\lambda=1$, then the second equation would require $x_2=1$, and subsequently
 
 ### KKT conditions
 
+<div class='lectureVideoEmbed' video-id='6b1d770946814b518815c3d8c4944e071d' video-date='2023-10-25'>KKT conditions, quadratic programming</div>
+
 The Lagrange multiplier method is a good lead-in to the general optimality conditions for nonlinear programming, known as the **Karush-Kuhn-Tucker conditions** (or **KKT conditions** for short)[^KandKT]. These extend the work in the previous section by including the case of inequality constraints. So for completeness, the (very general) form of the problems we'll be dealing with here is:
 
 $$
