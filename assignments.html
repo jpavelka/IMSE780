@@ -1786,6 +1786,51 @@ class="math inline">\nabla f(\mathbf{x})=\mathbf{0}</span>.
 </ol>
 </div>
 </div>
+<div id="Homework 10" class="assignmentContainer"
+data-sub-name="Gradients, KKT, and quadratic programming"
+data-due="2023-11-06">
+<div>
+<ol type="1">
+<li>(5pts) Starting from the initial trial solution <span
+class="math inline">(x_1, x_2) = (1, 1)</span> work through two
+iterations of the gradient search procedure for the problem <span
+class="math display">
+\text{max}\quad f(\mathbf{x}) = 4x_1x_2 - 2x_1^2 - 3x_2^2
+</span> While completing the iterations, fill in a table like we did in
+the class notes.</li>
+<li>(5pts) Starting from the initial trial solution <span
+class="math inline">(x_1, x_2) = (0, 0)</span>, apply <em>one</em>
+iteration of the gradient search procedure to the following problem:
+<span class="math display">
+\text{max}f(x) = 4x_1 + 2x_2 + x_1^2 - x_1^4 - 2x_1x_2 - x_2^2
+</span> To complete this iteration, approximately solve for <span
+class="math inline">t^*</span> by applying <em>two</em> iterations of
+the bisection method with initial bounds <span
+class="math inline">\underline t=0</span>, <span
+class="math inline">\overline t=1</span>. Fill out tables for both
+methods.</li>
+<li>(5pts) Consider the following convex programming problem: <span
+class="math display">
+\begin{align*}
+\text{max}&amp;&amp; -x^4 - x^2 + 4x \\
+\text{s.t.}&amp;&amp; x&amp;\leq 2 \\
+  &amp;&amp; x&amp;\geq 0
+\end{align*}
+</span> Use the KKT conditions to find an optimal solution for this
+model.</li>
+<li>(5pts) Consider the following quadratic program: <span
+class="math display">
+\begin{align*}
+\text{max}&amp;&amp; 8x_1 - x_1^2 + 4x_2 - x_2^2 \\
+\text{s.t.}&amp;&amp; x_1 + x_2 &amp;\leq 2 \\
+  &amp;&amp; x_1, x_2 &amp;\geq 0
+\end{align*}
+</span> Set up and solve the problem via the modified simplex method. Be
+sure to mention explicitly which variables enter and exit the basis in
+each iteration.</li>
+</ol>
+</div>
+</div>
 <div id="Midterm" class="assignmentContainer"
 data-sub-name="Linear and integer programming" data-due="2023-10-22"
 data-grading-notes-link="https://colab.research.google.com/drive/1DrCzHCUY0XSLWrtcnLH9D-K26R4BDE07?usp=sharing">
