@@ -172,6 +172,8 @@ Recall that when the constraints are convex (which they are, since linearity imp
 
 ### Modified simplex method
 
+<div class='lectureVideoEmbed' video-id='6421867f57ab4330854917add35d6eb91d' video-date='2023-10-27'>Going over the midterm and hw8, then modified simplex for quadratic programming</div>
+
 As it turns out, since +@eq:quadraticKKT is _almost_ a set of linear programming constraints, we will be able to solve any quadratic program (with concave objective[^c0OrStrictlyConvex]) via a slight modification to our dear old simplex method for linear programming.
 
 [^c0OrStrictlyConvex]: Actually, the condition for the following algorithm is a little more complicated than than. The algorithm we show assumes that either $\c=\zeros$ or the objective is _strictly_ concave, which would require $\Q$ to be positive definite instead of just positive semi-definite.
