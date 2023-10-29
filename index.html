@@ -2856,43 +2856,70 @@ programs</a></li>
 id="toc-notes-and-further-reading-2"><span
 class="toc-section-number">6.8</span> Notes and further reading</a></li>
 </ul></li>
+<li><a href="#stochastic-processes" id="toc-stochastic-processes"><span
+class="toc-section-number">7</span> Stochastic processes</a>
+<ul>
+<li><a href="#probability-basics" id="toc-probability-basics"><span
+class="toc-section-number">7.1</span> Probability basics</a>
+<ul>
+<li><a href="#sample-space" id="toc-sample-space"><span
+class="toc-section-number">7.1.1</span> Sample space</a></li>
+<li><a href="#events" id="toc-events"><span
+class="toc-section-number">7.1.2</span> Events</a></li>
+<li><a href="#random-variables" id="toc-random-variables"><span
+class="toc-section-number">7.1.3</span> Random variables</a></li>
+<li><a href="#probability" id="toc-probability"><span
+class="toc-section-number">7.1.4</span> Probability</a></li>
+<li><a href="#probability-distributions"
+id="toc-probability-distributions"><span
+class="toc-section-number">7.1.5</span> Probability
+distributions</a></li>
+<li><a href="#expectation-and-variance"
+id="toc-expectation-and-variance"><span
+class="toc-section-number">7.1.6</span> Expectation and
+Variance</a></li>
+<li><a href="#conditional-probability"
+id="toc-conditional-probability"><span
+class="toc-section-number">7.1.7</span> Conditional probability</a></li>
+</ul></li>
+</ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
-class="toc-section-number">7</span> Appendix</a>
+class="toc-section-number">8</span> Appendix</a>
 <ul>
 <li><a href="#sec:symbols" id="toc-sec:symbols"><span
-class="toc-section-number">7.1</span> Special symbols</a></li>
+class="toc-section-number">8.1</span> Special symbols</a></li>
 <li><a href="#sec:linearAlgebra" id="toc-sec:linearAlgebra"><span
-class="toc-section-number">7.2</span> Linear algebra review</a>
+class="toc-section-number">8.2</span> Linear algebra review</a>
 <ul>
 <li><a href="#sec:matrixMath" id="toc-sec:matrixMath"><span
-class="toc-section-number">7.2.1</span> Matrix math</a></li>
+class="toc-section-number">8.2.1</span> Matrix math</a></li>
 <li><a href="#properties-of-matrix-operations"
 id="toc-properties-of-matrix-operations"><span
-class="toc-section-number">7.2.2</span> Properties of matrix
+class="toc-section-number">8.2.2</span> Properties of matrix
 operations</a></li>
 <li><a href="#special-matrices" id="toc-special-matrices"><span
-class="toc-section-number">7.2.3</span> Special matrices</a></li>
+class="toc-section-number">8.2.3</span> Special matrices</a></li>
 <li><a href="#rank-and-inverse" id="toc-rank-and-inverse"><span
-class="toc-section-number">7.2.4</span> Rank and inverse</a></li>
+class="toc-section-number">8.2.4</span> Rank and inverse</a></li>
 <li><a href="#systems-of-equations" id="toc-systems-of-equations"><span
-class="toc-section-number">7.2.5</span> Systems of equations</a></li>
+class="toc-section-number">8.2.5</span> Systems of equations</a></li>
 <li><a href="#sec:elementaryRowOperations"
 id="toc-sec:elementaryRowOperations"><span
-class="toc-section-number">7.2.6</span> Elementary operations</a></li>
+class="toc-section-number">8.2.6</span> Elementary operations</a></li>
 </ul></li>
 <li><a href="#writing-mathematics-in-a-colab-notebook"
 id="toc-writing-mathematics-in-a-colab-notebook"><span
-class="toc-section-number">7.3</span> Writing mathematics in a Colab
+class="toc-section-number">8.3</span> Writing mathematics in a Colab
 notebook</a></li>
 <li><a href="#sec:badIpModels" id="toc-sec:badIpModels"><span
-class="toc-section-number">7.4</span> Examples of bad IP modeling</a>
+class="toc-section-number">8.4</span> Examples of bad IP modeling</a>
 <ul>
 <li><a href="#boolean-algebra" id="toc-boolean-algebra"><span
-class="toc-section-number">7.4.1</span> Boolean algebra</a></li>
+class="toc-section-number">8.4.1</span> Boolean algebra</a></li>
 </ul></li>
 <li><a href="#sec:appendixSelectedProofs"
 id="toc-sec:appendixSelectedProofs"><span
-class="toc-section-number">7.5</span> Selected proofs</a></li>
+class="toc-section-number">8.5</span> Selected proofs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -3860,12 +3887,12 @@ class="math inline">\forall</span> in particular) may be new. And
 sometimes new is intimidating. But fear not! These things get clearer
 and clearer the more you see them, and I think the benefit is worth it.
 There is a section in the appendix (section <a
-href="#sec:symbols">7.1</a>) dedicated to special symbols. Beyond that,
+href="#sec:symbols">8.1</a>) dedicated to special symbols. Beyond that,
 if you’re ever confused about something, you can always ask me!</p>
 <p>We’ll see more notation like the above as we formulate more specific
 problems, but for much of the theory sections to come I actually much
 prefer matrix notation. You should already be familiar with linear
-algebra (section <a href="#sec:linearAlgebra">7.2</a> in the appendix
+algebra (section <a href="#sec:linearAlgebra">8.2</a> in the appendix
 gives a brief review), so you should be able to notice how matrix
 algebra fits nicely with the formulations we’ve already given. For some
 <span class="math inline">m\times n</span> matrix <span
@@ -4342,7 +4369,7 @@ was essentially an identity matrix, so we just needed to read the values
 off the right-hand side. Indeed, as we move from one BF solution to
 another, we will explicitly manipulate the matrix (using basic row
 operations, as in section <a
-href="#sec:elementaryRowOperations">7.2.6</a>) to yield an identity
+href="#sec:elementaryRowOperations">8.2.6</a>) to yield an identity
 structure in the basic columns.</p>
 <p>But we’re not there yet. We just have an initial BF solution, and
 need to figure out how to move to an adjacent one while improving the
@@ -6483,7 +6510,7 @@ class="math inline">1</span>:
 helpful to provide some <em>incorrect</em> formulations for these
 concepts, in order to illustrate what might go wrong while modeling. You
 can find this in the appendix, section <a
-href="#sec:badIpModels">7.4</a>)</p>
+href="#sec:badIpModels">8.4</a>)</p>
 <p>Note that these constraint sets wouldn’t normally constitute an IP on
 their own, but instead they would be just a subset of the constraints
 you’d find inside a larger, more complex problem. Let’s consider the
@@ -11105,10 +11132,473 @@ gradient</a> methods.</p>
 href="https://catalog.k-state.edu/content.php?catoid=58&amp;navoid=11444">IMSE
 982</a>, a full semester course on nonlinear programming theory and
 algorithms.</p>
-<h1 data-number="7" id="appendix"><span
-class="header-section-number">7</span> Appendix</h1>
-<h2 data-number="7.1" id="sec:symbols"><span
-class="header-section-number">7.1</span> Special symbols</h2>
+<h1 data-number="7" id="stochastic-processes"><span
+class="header-section-number">7</span> Stochastic processes</h1>
+<p>We’re going to change gears a bit now to talk about stochastic
+processes. The word <strong>stochastic</strong> is just a fancy way to
+say “random”, so we can say colloquially that a stochastic process is
+just a system that evolves according to the outcome of some random
+process. The nature of the work we do in this section is different from
+what we’ve done so far - we won’t always be <em>optimizing</em>
+anything, but instead only describing and analyzing the evolution of
+some system. One could say that the nature of the techniques will be
+more <em>descriptive</em> as opposed to <em>prescriptive</em>.</p>
+<p>We will start this section with a review of the basics of probability
+and random variables. Then we’ll be diving into two important classes of
+stochastic processes, Markov chains and queues. This background will be
+useful when we move on to Markov decision processes at the end of the
+course.</p>
+<h2 data-number="7.1" id="probability-basics"><span
+class="header-section-number">7.1</span> Probability basics</h2>
+<p>We’ll now use some time to review the basics of elementary
+probability. This material should be familiar to you from past
+probability or statistics courses. The idea is to be able to formalize
+ideas and set notation so that we have a base for developing the new
+material later in the section. I assume that you are at least somewhat
+familiar with the ideas presented here, so think of the following as
+more of a review/reminder than a thorough treatment.</p>
+<p>Much of this content comes from a web supplement to your textbook
+<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span>, which can
+be accessed <a
+href="https://highered.mheducation.com/sites/dl/free/1259872998/1126268/Hillier_IOR_11e_Ch024_WebChapter.pdf">here</a>.</p>
+<h3 data-number="7.1.1" id="sample-space"><span
+class="header-section-number">7.1.1</span> Sample space</h3>
+<p>The first thing to know when faced with a random process is the
+possible outcomes of the process. For example, if you were to roll a
+standard six-sided die, the possibilities are that you roll either a 1,
+2, 3, 4, 5, or 6<a href="#fn103" class="footnote-ref" id="fnref103"
+role="doc-noteref"><sup>103</sup></a>. The set of all possible outcomes
+of some random process is called the <strong>sample space</strong>, and
+is usually denoted by <span class="math inline">\Omega</span><a
+href="#fn104" class="footnote-ref" id="fnref104"
+role="doc-noteref"><sup>104</sup></a>. So for rolling a six-sided die,
+we might denote the sample space as</p>
+<p><span class="math display">
+\Omega=\{1, 2, 3, 4, 5, 6\}
+</span></p>
+<p>The sample space in the above case was just a finite, discrete set,
+but that need not always be the case. Suppose the event of interest is
+knowing how many times you need to try rolling a die before you roll a
+<span class="math inline">1</span>. You could get lucky and get it on
+your first try. Or it might take a little longer, like 5 or 6 tries. But
+to fully encapsulate the sample space, we need an infinite set. For any
+<span class="math inline">n\in\mathbb{I}</span>, it is possible (if
+exceedingly unlikely for large <span class="math inline">n</span>) that
+you never roll a <span class="math inline">1</span> in your first <span
+class="math inline">n</span> attempts. So the sample space for this
+event is</p>
+<p><span class="math display">
+\Omega = \{1, 2, ...\}
+</span></p>
+<p>Or, suppose it’s been announced that your favorite musical artist
+will release a new song this week, though the exact time has not been
+specified. You would like to know the number of days until the song is
+released. In this case we’re no longer dealing with integers, since they
+could theoretically release the song in the next few hours, so the
+number would be something less than <span class="math inline">1</span>.
+All we know is that it will be sometime in the next seven days, so the
+sample space in this case would be</p>
+<p><span class="math display">
+\Omega = \{\omega:0\leq\omega\leq7\}
+</span></p>
+<p>All of these samples have been numerical, but there is nothing
+requiring that. If you’re going to a (very small) zoo today and would
+like to know the first animal you see that is not asleep, perhaps your
+sample space is</p>
+<p><span class="math display">
+\begin{align*}
+\Omega = \{&amp;\text{Lion}, \text{Gorilla}, \text{Otter},
+\text{Turtle}, \text{Giraffe}, \\
+&amp;\text{Anteater}, \text{Snake}, \text{Parrot}\}
+\end{align*}
+</span></p>
+<p>in fact, it’s possible that <em>all</em> the animals are sleeping
+while you visit, so maybe we should include an entry in <span
+class="math inline">\Omega</span> for that too:</p>
+<p><span class="math display">
+\begin{align*}
+\Omega = \{&amp;\text{Lion}, \text{Gorilla}, \text{Otter},
+\text{Turtle}, \text{Giraffe}, \\
+&amp;\text{Anteater}, \text{Snake}, \text{Parrot}, \text{none}\}
+\end{align*}
+</span></p>
+<h3 data-number="7.1.2" id="events"><span
+class="header-section-number">7.1.2</span> Events</h3>
+<p>Given some random experiment, an <strong>event</strong> is any
+(sub)set of possible outcomes to the experiment. We will write these as
+subsets of the sample space. Considering the zoo example from above, the
+event that the first awake animal we see is a reptile (denote it <span
+class="math inline">E_{\text{reptile}}</span>) is</p>
+<p><span class="math display">
+E_{\text{reptile}} = \{\text{Turtle}, \text{Snake}\}
+</span></p>
+<p>Similarly, maybe your favorite animals are the turtle and giraffe. We
+could create a new event for event that you see one of your favorites
+first:</p>
+<p><span class="math display">
+E_{\text{favorite}} = \{\text{Turtle}, \text{Giraffe}\}
+</span></p>
+<p>We are often interested in combinations of individual events as well.
+We will describe these using the union (<span
+class="math inline">\cup</span>) and intersection(<span
+class="math inline">\cap</span>) operators. The <strong>union</strong>
+of two events <span class="math inline">E_1,E_2</span> is the event
+consisting of all elements in either <span
+class="math inline">E_1</span> or <span class="math inline">E_2</span>.
+So the union of the two events we defined above would be</p>
+<p><span class="math display">
+E_{\text{reptile}} \cup E_{\text{favorite}} = \{\text{Turtle},
+\text{Snake}, \text{Giraffe}\}
+</span></p>
+<p>representing the event that you see <em>either</em> a reptile
+<em>or</em> one of your favorites first. The intersection of these
+events is</p>
+<p><span class="math display">
+E_{\text{reptile}} \cap E_{\text{favorite}} = \{\text{Turtle}\}
+</span></p>
+<p>which is the event that the first animal you see is both a reptile
+<em>and</em> one of your favorites.</p>
+<p>Events <span class="math inline">E_1, E_2</span> are said to be
+<strong>mutually exclusive</strong> or <strong>disjoint</strong> if
+their intersection contains no elements, i.e. if</p>
+<p><span class="math display">
+E_1\cap E_2=\emptyset
+</span></p>
+<p>If we create a new event <span
+class="math inline">E_{\text{bird}}=\{\text{Parrot}\}</span> for when
+the first animal you see is a bird, then <span
+class="math inline">E_{\text{favorite}}</span> and <span
+class="math inline">E_{\text{bird}}</span> are disjoint events.</p>
+<h3 data-number="7.1.3" id="random-variables"><span
+class="header-section-number">7.1.3</span> Random variables</h3>
+<p>Many times, our ultimate interest lays not in the result of an
+experiment per se, but instead on some other quantities that nonetheless
+depend on the results. Suppose you own a store and are interested to
+know how long it takes (in minutes) for the first customer to arrive
+after opening the store. If this is tracked for five days, the sample
+space would look something like</p>
+<p><span class="math display">
+\{(x_1,x_2,x_3,x_4,x_5):x_i\in\mathbb{R}_+\}
+</span></p>
+<p>But probably you’re not interested in the exact numbers themselves,
+but instead some statistics related to the outcome. For example, let
+<span class="math inline">\bar X</span> represent the mean of those five
+numbers. If that mean is relatively large, maybe you’ll decide to open
+your store later. <span class="math inline">\bar X</span> would be an
+example of a <strong>random variable</strong>, which is just some
+numerically-valued function defined over the sample space.</p>
+<p>Following notation standards, we will generally represent random
+variables via capital letters, e.g. <span class="math inline">X</span>,
+<span class="math inline">Y</span>, or <span
+class="math inline">Z</span>. In fact, since it technically is a
+function, a more precise way to denote the realization of a random
+variable is <span class="math inline">X(\omega)</span>, where <span
+class="math inline">\omega\in\Omega</span> is some element of the sample
+space. So, using <span class="math inline">\bar X</span> from above as
+an example, we could write</p>
+<p><span class="math display">
+\bar X(\omega) = \bar X(x_1, x_2, x_3, x_4, x_5) = \frac{x_1 + x_2 + x_3
++ x_4 + x_5}{5}.
+</span></p>
+<p>Generally though (both here and in most texts on introductory
+probability) we will suppress the functional notation and use only the
+capital letter, i.e. we’ll ignore the more precise <span
+class="math inline">\bar X(\omega)</span> and just write the simpler
+<span class="math inline">\bar X</span>, leaving the dependence on <span
+class="math inline">\omega</span> as implicit.</p>
+<p>With the above definition, <span class="math inline">\bar X</span> is
+a <strong>continuous random variable</strong>, i.e. a random variable
+whose values could be any number on some continuum (in this case, <span
+class="math inline">\mathbb{R}_+</span>). In contrast, we will also see
+examples of <strong>discrete random variables</strong>, whose possible
+values belong to some (possibly infinite) discrete set (often the set of
+integers or some subset of it).</p>
+<p>A sample discrete random variable may be the number of times the
+first arrival came within one hour of the store opening. Introducing
+some new notation, we could write this as:</p>
+<p><span class="math display">
+\sum_{i=1}^5\boldsymbol{1}_{\{x_i&lt;60\}}
+</span></p>
+<p>where <span
+class="math inline">\boldsymbol{1}_{\{\text{condition}\}}</span> is
+itself a random variable that is equal to <span
+class="math inline">1</span> if the condition in the subscript is true,
+and otherwise equal to <span class="math inline">0</span>.</p>
+<h3 data-number="7.1.4" id="probability"><span
+class="header-section-number">7.1.4</span> Probability</h3>
+<p>Every event <span class="math inline">E</span> has a number <span
+class="math inline">P\!\left( E \right)</span> associated with it,
+called the <strong>probability</strong> of <span
+class="math inline">E</span> occurring. Probabilities have the following
+properties:</p>
+<ul>
+<li>For any <span class="math inline">E</span>, <span
+class="math inline">0\leq P\!\left( E \right)\leq1</span>.</li>
+<li>If <span class="math inline">E_0</span> is an event that cannot
+occur in the sample space, then <span class="math inline">P\!\left( E_0
+\right)=0</span>.</li>
+<li><span class="math inline">P\!\left( \Omega \right)</span> (the
+probability of the entire sample space) equals <span
+class="math inline">1</span>.</li>
+<li>For any two mutually exclusive events <span
+class="math inline">E_1</span> and <span class="math inline">E_2</span>,
+it must hold that <span class="math inline">P\!\left( E_1\cup E_2
+\right)=P\!\left( E_1 \right)+P\!\left( E_2 \right)</span>.</li>
+</ul>
+<p>You probably already have some intuitions about probability, where
+<span class="math inline">P\!\left( E \right)</span> corresponds to the
+likelihood that an event <span class="math inline">E</span> occurs. From
+a frequentist perspective, you can interpret <span
+class="math inline">P\!\left( E \right)</span> as the proportion of time
+the event occurs if the experiment is repeated many times. This
+intuition suffices for our purposes, and while there are more rigorous
+formulations for probability, we will not be exploring these in this
+class<a href="#fn105" class="footnote-ref" id="fnref105"
+role="doc-noteref"><sup>105</sup></a>.</p>
+<p>Since an event <span class="math inline">E</span> is a subset of the
+sample space, technically the operand inside the <span
+class="math inline">P\!\left( \cdot \right)</span> function should be a
+set. So if we want to talk about the probability that some random
+variable <span class="math inline">X</span> is equal to some value <span
+class="math inline">k</span>, we should technically write that quantity
+as</p>
+<p><span class="math display">
+P\!\left( \{\omega\in\Omega:X(\omega)=k\} \right)
+</span></p>
+<p>But generally we will not be so precise, and instead write the
+probability of the event of interest as</p>
+<p><span class="math display">
+P\!\left( X=k \right)
+</span></p>
+<h3 data-number="7.1.5" id="probability-distributions"><span
+class="header-section-number">7.1.5</span> Probability
+distributions</h3>
+<p>Associated with every random variable is a <strong>cumulative
+distribution function</strong> (<strong>CDF</strong>). For a random
+variable <span class="math inline">X</span>, we generally represent this
+function as <span class="math inline">F_X</span> (though sometimes we
+may suppress the <span class="math inline">X</span> in the subscript if
+there is no ambiguity). This function is defined for every real number
+<span class="math inline">b</span> as</p>
+<p><span class="math display">
+F_X(b)=P\!\left( X\leq b \right)
+</span></p>
+<p>Given that definition, it should be clear that the following are true
+for any CDF:</p>
+<ol type="1">
+<li><span class="math inline">F_X</span> is a non-decreasing function,
+i.e. if <span class="math inline">b_1\leq b_2</span> then <span
+class="math inline">F_X(b_1)\leq F_X(b_2)</span>.</li>
+<li><span class="math inline">\lim_{b\rightarrow
+-\infty}F_X(b)=0</span>.</li>
+<li><span class="math inline">\lim_{b\rightarrow
+\infty}F_X(b)=1</span>.</li>
+</ol>
+<p>Every random variable, no matter the form, will have an associated
+CDF. In the case of discrete random variables, there is a second
+important function called the <strong>probability mass function</strong>
+(PMF). We will denote the PMF of some random variable <span
+class="math inline">X</span> by <span class="math inline">p_X</span>,
+and it is defined by:</p>
+<p><span class="math display">
+p_X(k)=P\!\left( X=k \right)
+</span></p>
+<p>The CDF and PMF are clearly related by the following:</p>
+<p><span class="math display">
+F_X(b)=\sum_{k\leq b}p_X(k)
+</span></p>
+<p>In the case of continuous random variables, the other important
+function is known as the <strong>probability density function</strong>
+(<strong>PDF</strong>). We denote this function by <span
+class="math inline">f_X</span> and it satisfies the relation</p>
+<p><span class="math display">
+F_X(b)=\int_{-\infty}^bf_X(x)\ dx
+</span></p>
+<p>The relation between continuous CDFs and PDFs is clearly quite
+similar to the relation between discrete CDFs and PMFs, except that we
+swap summation for integration.</p>
+<p>From the definition, it should also be evident that for a continuous
+random variable <span class="math inline">X</span> we have</p>
+<p><span class="math display">
+P\!\left( a\leq X\leq b \right) = \int_{a}^{b}f_X(x)\ dx
+</span></p>
+<p>so that probabilities for <span class="math inline">X</span> are
+related to areas under the curve of <span
+class="math inline">f_X</span>. Due to this, it is also evident that for
+a continuous random variable, we must have</p>
+<p><span class="math display">
+P\!\left( X=b \right)=P\!\left( b\leq X\leq b \right)=\int_{b}^b f_X(x)\
+dx=0
+</span></p>
+<p>for any value <span class="math inline">b</span>.</p>
+<h3 data-number="7.1.6" id="expectation-and-variance"><span
+class="header-section-number">7.1.6</span> Expectation and Variance</h3>
+<p>Knowing the full distribution of a random variable gives you a lot of
+information, but sometimes it is more convenient to have just a few
+numbers that can describe a good bit of the behavior of the distribution
+(to e.g. make comparisons of different distributions more tractable).
+One such statistic is known as the <strong>expected value</strong> of a
+random variable <span class="math inline">X</span>, denoted <span
+class="math inline">E\!\left( X \right)</span>, which is defined as</p>
+<p><span class="math display">
+E\!\left( X \right)=\sum_{k: P\!\left( X=k \right)&gt;0}k\cdot P\!\left(
+X=k \right)
+</span></p>
+<p>for a discrete random variable, or</p>
+<p><span class="math display">
+E\!\left( x \right)=\int_{-\infty}^{\infty}x\cdot f_X(x)\ dx
+</span></p>
+<p>for a continuous random variable. This is essentially a weighted
+average of the possible values that <span class="math inline">X</span>
+can take, weighted by the relative likelihood that <span
+class="math inline">X</span> can take that value. A frequentist
+interpretation of <span class="math inline">E\!\left( X \right)</span>
+is that if the same experiment is done over and over again, <span
+class="math inline">E\!\left( X \right)</span> will be the average value
+of <span class="math inline">X</span> over all the trials. A useful
+property is the <em>linearity of expectation</em>, which states that for
+any two random variables <span class="math inline">X</span> and <span
+class="math inline">Y</span>, we have that</p>
+<p><span class="math display">
+E\!\left( X + Y \right)=E\!\left( X \right) + E\!\left( Y \right)
+</span></p>
+<p>and further, for any <em>constant</em> value <span
+class="math inline">a</span>, we have</p>
+<p><span class="math display">
+E\!\left( aX \right) = aE\!\left( X \right)
+</span></p>
+<p>So the expected value gives you a sense of the “average value” of a
+random variable, which can be useful to know. But two random variables
+can have identical expectations while still behaving very differently.
+Suppose <span class="math inline">X</span> and <span
+class="math inline">Y</span> are two discrete random variables, such
+that</p>
+<p><span class="math display">
+\begin{align*}
+P\!\left( X=3 \right)&amp;=0.5\\
+P\!\left( X=-1 \right)&amp;=0.5\\
+P\!\left( Y=1,\!000,\!000 \right)&amp;=0.001\\
+P\!\left( Y=-1,\!000 \right)&amp;=0.999
+\end{align*}
+</span></p>
+<p>In this case, we have</p>
+<p><span class="math display">
+\begin{align*}
+E\!\left( X \right)&amp;=3(0.5) - 1(0.5) = 1\\
+E\!\left( Y \right)&amp;=1,\!000,\!000(0.001)-1,\!000(0.999) =1
+\end{align*}
+</span></p>
+<p>so their expected values are the same. But it is clear these two
+random variables behave quite differently. Suppose they represented the
+potential gains/losses to you should you take some kind of bet. Even
+though they have the same (positive!) expectation, I would guess that
+your willingness to take each of these bets would be very different.</p>
+<p>But there are other measures of probability distributions that can
+help us capture the differences here. In particular, the
+<strong>variance</strong> of a random variable <span
+class="math inline">X</span>, denoted <span
+class="math inline">\text{Var}\!\left( X \right)</span>, is defined
+as</p>
+<p><span class="math display">
+\text{Var}\!\left( X \right)=E\!\left( (X-E\!\left( X \right))^2 \right)
+</span></p>
+<p>The variance of a random variable <span class="math inline">X</span>
+measures (the square of) how far away from its mean a particular
+realization of <span class="math inline">X</span> will tend to be. Thus
+it is a measure of the “spread” of a probability distribution. Through
+an application of the linearity of expectation, an equivalent definition
+of variance is:</p>
+<p><span class="math display">
+\text{Var}\!\left( X \right)=E\!\left( X^2 \right) - (E\!\left( X
+\right))^2
+</span></p>
+<p>In the case of <span class="math inline">X</span> and <span
+class="math inline">Y</span> as we defined above, we can find that</p>
+<p><span class="math display">
+\begin{align*}
+\text{Var}\!\left( X \right)&amp;=4\\
+\text{Var}\!\left( Y \right)&amp;\approx10^9
+\end{align*}
+</span></p>
+<p>thus the spread of the two distributions is wildly different.</p>
+<h3 data-number="7.1.7" id="conditional-probability"><span
+class="header-section-number">7.1.7</span> Conditional probability</h3>
+<p>Sometimes the outcomes of different random events are related, such
+that knowing something about the first gives you information about what
+might happen for the second. For example, say you roll two dice and are
+interested in the sum of the value of the two rolls. Suppose the first
+die shows a six, but the second one rolls away and you cannot see how it
+turned out. Even without knowing both the values, you now have more
+information about what the sum could be: it is no longer possible for
+the sum to be less than seven, and a sum of 12 is much more likely now
+than it was before you saw the outcome of the first roll.</p>
+<p>In general, suppose <span class="math inline">A</span> and <span
+class="math inline">B</span> are two events. Perhaps <span
+class="math inline">A</span> is some event we’re tracking, and <span
+class="math inline">B</span> is a separate event that we know has
+occurred. The value we’re interested in is the <strong>conditional
+probability</strong> of <span class="math inline">A</span> given that
+<span class="math inline">B</span> has occurred, which is denoted as
+<span class="math inline">P\!\left( A|B \right)</span>. This quantity
+may be completely defined by initial probabilities involving <span
+class="math inline">A</span> and <span class="math inline">B</span>. In
+particular, we have</p>
+<p><span class="math display">
+P\!\left( A|B \right)=\frac{P\!\left( A\cap B \right)}{P\!\left( B
+\right)}
+</span></p>
+<p>I think a Venn diagram is a good way to visualize this relation, as
+shown <a
+href="https://www.probabilitycourse.com/chapter1/1_4_0_conditional_probability.php#chapter_image">here</a>.
+Basically, you can think of conditional probability as a normal
+probability, except that now the sample space has been reduced from the
+original <span class="math inline">\Omega</span> to just the conditional
+event <span class="math inline">B</span>. As such, it is worth noting
+that one can define entire probability distributions based on
+conditional probability, i.e. for some random variable <span
+class="math inline">X</span> one could define a <em>conditional</em>
+CDF</p>
+<p><span class="math display">
+F_{X|B}(b)=P\!\left( X\leq b|B \right)=\frac{P\!\left( \{X\leq b\}\cap B
+\right)}{P\!\left( B \right)}
+</span></p>
+<p>where the probabilities are given as if <span
+class="math inline">B</span> is now the sample space. There are also
+notions of conditional expectation and conditional variance, which are
+defined as the usual expectation and variance from the last section, but
+over the conditional distribution.</p>
+<p>Of course, it is possible for two events <span
+class="math inline">A</span> and <span class="math inline">B</span> to
+be completely unrelated, such that knowing that event <span
+class="math inline">B</span> occurs gives you no extra information about
+the potential occurrence of <span class="math inline">A</span>. Going
+back to the dice rolling example, it is clear that knowing the value of
+one die gives you extra information about the sum of the two rolls. But
+knowing something like, I don’t know, yesterday’s high temperature in
+Paris, is not super useful in determining the sum. So we would say that
+the high temperature in Paris and the outcome of your dice rolls are
+<em>independent events</em>. Mathematically, two events <span
+class="math inline">A</span> and <span class="math inline">B</span> are
+<strong>independent</strong> if</p>
+<p><span class="math display">
+P\!\left( A|B \right)=P\!\left( A \right)
+</span></p>
+<p>If <span class="math inline">P\!\left( B \right)&gt;0</span>, then
+subbing in the definition of conditional probability gives us</p>
+<p><span class="math display">
+\frac{P\!\left( A\cap B \right)}{P\!\left( B \right)} = P\!\left( A
+\right) \Leftrightarrow P\!\left( A\cap B \right)=P\!\left( A
+\right)P\!\left( B \right)
+</span></p>
+<p>Indeed, you could see this as an alternative definition of
+independence.</p>
+<!-- {insertSection:sections/stochastic_processes/markov_chains.md} -->
+<!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
+<h1 data-number="8" id="appendix"><span
+class="header-section-number">8</span> Appendix</h1>
+<h2 data-number="8.1" id="sec:symbols"><span
+class="header-section-number">8.1</span> Special symbols</h2>
 <ul>
 <li><span class="math inline">\mathbb{R}</span>: The set of real
 numbers, i.e. anything on the number line between (though not
@@ -11224,9 +11714,14 @@ f&#39;_{x_n}(\mathbf{x})
 \end{bmatrix}
 </span> The symbol <span class="math inline">\nabla</span> is called the
 “nabla” symbol.</li>
+<li><span
+class="math inline">\boldsymbol{1}_{\{\text{condition}\}}</span>: A
+random variable that equals <span class="math inline">1</span> if the
+condition in the subscript is true, and equals <span
+class="math inline">0</span> if the condition is false.</li>
 </ul>
-<h2 data-number="7.2" id="sec:linearAlgebra"><span
-class="header-section-number">7.2</span> Linear algebra review</h2>
+<h2 data-number="8.2" id="sec:linearAlgebra"><span
+class="header-section-number">8.2</span> Linear algebra review</h2>
 <p>Linear algebra is the study of math involving matrices, vectors, and
 linear transformations. A <strong>matrix</strong> (the basic object of
 linear algebra) is a rectangular array of numbers. For example,</p>
@@ -11239,8 +11734,8 @@ said to be <strong>square</strong> if it has the same number of rows and
 columns.</p>
 <p>In these notes, we will usually denote matrices with boldface,
 uppercase letters.</p>
-<h3 data-number="7.2.1" id="sec:matrixMath"><span
-class="header-section-number">7.2.1</span> Matrix math</h3>
+<h3 data-number="8.2.1" id="sec:matrixMath"><span
+class="header-section-number">8.2.1</span> Matrix math</h3>
 <p>We say Matrices <span class="math inline">\mathbf{A}</span>, <span
 class="math inline">\mathbf{B}</span> are <strong>equal</strong> if
 <em>all</em> of their elements are equal. First off, that means <span
@@ -11328,8 +11823,8 @@ sa_{21} &amp; sa_{22} &amp; \cdots &amp; sa_{2n} \\
 sa_{m1} &amp; sa_{m2} &amp; \cdots &amp; sa_{mn} \\
 \end{bmatrix}
 </span></p>
-<h3 data-number="7.2.2" id="properties-of-matrix-operations"><span
-class="header-section-number">7.2.2</span> Properties of matrix
+<h3 data-number="8.2.2" id="properties-of-matrix-operations"><span
+class="header-section-number">8.2.2</span> Properties of matrix
 operations</h3>
 <p>The above matrix operations satisfy the following properties:</p>
 <ul>
@@ -11355,8 +11850,8 @@ class="math inline">\mathbf{B}\mathbf{A}</span> is not even defined if
 <span class="math inline">m\neq s</span>. Even if <span
 class="math inline">m=s</span> and the product is defined, the result
 needs not be the same.</p>
-<h3 data-number="7.2.3" id="special-matrices"><span
-class="header-section-number">7.2.3</span> Special matrices</h3>
+<h3 data-number="8.2.3" id="special-matrices"><span
+class="header-section-number">8.2.3</span> Special matrices</h3>
 <p>A <strong>vector</strong> is a special type of matrix with either a
 single column or a single row, e.g.</p>
 <p><span class="math display">
@@ -11401,8 +11896,8 @@ zero matrix satisfies:</p>
 <p>Note that <span class="math inline">\mathbf{I}</span> and <span
 class="math inline">\mathbf{0}</span> play roles in matrix operations
 similar to the roles of 1 and 0 (respectively) in arithmetic.</p>
-<h3 data-number="7.2.4" id="rank-and-inverse"><span
-class="header-section-number">7.2.4</span> Rank and inverse</h3>
+<h3 data-number="8.2.4" id="rank-and-inverse"><span
+class="header-section-number">8.2.4</span> Rank and inverse</h3>
 <p>A set of vectors <span class="math inline">\mathbf{x}_1,
 \mathbf{x}_2, \dots, \mathbf{x}_m</span> is said to be <strong>linearly
 dependent</strong> if there exists <span class="math inline">m</span>
@@ -11456,8 +11951,8 @@ such that</p>
 the <strong>inverse</strong> of <span
 class="math inline">\mathbf{A}</span>. Furthermore, singular matrices do
 not have inverses.</p>
-<h3 data-number="7.2.5" id="systems-of-equations"><span
-class="header-section-number">7.2.5</span> Systems of equations</h3>
+<h3 data-number="8.2.5" id="systems-of-equations"><span
+class="header-section-number">8.2.5</span> Systems of equations</h3>
 <p>Matrices are great for concisely stating systems of linear equations,
 linear equations in some set of variables you’d like to hold true
 simultaneously. For example, the set of equations</p>
@@ -11479,8 +11974,8 @@ x_1 \\ x_2
 7 \\ 6
 \end{bmatrix}
 </span></p>
-<h3 data-number="7.2.6" id="sec:elementaryRowOperations"><span
-class="header-section-number">7.2.6</span> Elementary operations</h3>
+<h3 data-number="8.2.6" id="sec:elementaryRowOperations"><span
+class="header-section-number">8.2.6</span> Elementary operations</h3>
 <p>There are certain elementary operations one can perform on a system
 of linear equations that don’t have an effect on the solution of the
 system. I’ll state these operations in terms of rows, but similar
@@ -11564,8 +12059,8 @@ x_1 \\ x_2
 \end{bmatrix}
 </span></li>
 </ul>
-<h2 data-number="7.3" id="writing-mathematics-in-a-colab-notebook"><span
-class="header-section-number">7.3</span> Writing mathematics in a Colab
+<h2 data-number="8.3" id="writing-mathematics-in-a-colab-notebook"><span
+class="header-section-number">8.3</span> Writing mathematics in a Colab
 notebook</h2>
 <p>Besides writing Python code, another useful feature of a Colab
 notebook is the ability to use “text” cells to write Markdown. <a
@@ -11583,8 +12078,8 @@ guide, sticking to items I think might be useful for the class. I came
 across a more extensive guide you may want to check out <a
 href="https://ashki23.github.io/markdown-latex.html">here</a>.</p>
 <script src="https://gist.github.com/eea93b3fac7b6040bcb074e95b4e5076.js"></script>
-<h2 data-number="7.4" id="sec:badIpModels"><span
-class="header-section-number">7.4</span> Examples of bad IP
+<h2 data-number="8.4" id="sec:badIpModels"><span
+class="header-section-number">8.4</span> Examples of bad IP
 modeling</h2>
 <p>When modeling problems as integer programs, and especially when using
 binary variables to encode some type of logic, it can be very easy to
@@ -11593,8 +12088,8 @@ the problem and get an answer that you weren’t expecting due to some bad
 constraints. In this section, I’ll give some sample “bad” IP models that
 do not properly enforce the logic they were meant to, and discuss how
 things went wrong.</p>
-<h3 data-number="7.4.1" id="boolean-algebra"><span
-class="header-section-number">7.4.1</span> Boolean algebra</h3>
+<h3 data-number="8.4.1" id="boolean-algebra"><span
+class="header-section-number">8.4.1</span> Boolean algebra</h3>
 <p>Let’s consider the Boolean algebra operations we modeled in
 section <a href="#sec:binVarTricks">5.3.2</a>. We’ll show wrong ways to
 model each of AND, OR, and XOR, and explain why they don’t work as
@@ -11882,8 +12377,8 @@ this as part of the constraint set could never return a solution with
 <span class="math inline">x_1=0, x_2=1</span>, incorrectly cutting off
 an entire segment of the problem’s feasible region.</p></li>
 </ul>
-<h2 data-number="7.5" id="sec:appendixSelectedProofs"><span
-class="header-section-number">7.5</span> Selected proofs</h2>
+<h2 data-number="8.5" id="sec:appendixSelectedProofs"><span
+class="header-section-number">8.5</span> Selected proofs</h2>
 <p>This section contains proofs to selected statements in the main
 text.</p>
 <h1 id="References">References</h1>
@@ -12188,7 +12683,7 @@ other texts, know that these are likely the same as what we’re calling
 IP, MIP, and BIP.<a href="#fnref45" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn46"><p>New notation alert: as mentioned in section <a
-href="#sec:symbols">7.1</a>, the symbol <span
+href="#sec:symbols">8.1</a>, the symbol <span
 class="math inline">\mathbb{I}</span> stands for the set of integer
 numbers. The <span class="math inline">+</span> in the subscript means
 that we are considering non-negative integers (though this is just a
@@ -12260,7 +12755,7 @@ set covering problem.<a href="#fnref55" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn56"><p>Note the new notation in the second summation, <span
 class="math inline">\{j:i\in S_j\}</span>. We call this the “conditional
-set” notation in section <a href="#sec:symbols">7.1</a>. It means the
+set” notation in section <a href="#sec:symbols">8.1</a>. It means the
 set of all <span class="math inline">j</span> such that the condition
 <span class="math inline">i\in S_j</span> is true.<a href="#fnref56"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -12566,6 +13061,19 @@ class="math inline">\nabla f(\mathbf{x}&#39;)</span> is nothing but a
 constant vector, so this does fit the usual form of a linear programming
 objective <span class="math inline">\mathbf{c}\mathbf{x}</span>.<a
 href="#fnref102" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn103"><p>Note that just knowing what outcomes are possible is
+different from knowing the <em>probabilities</em> of the outcomes. You
+can generate the sample space without knowing any related
+probabilities.<a href="#fnref103" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn104"><p>This is the greek capital letter “omega”. We will see
+its lowercase counterpart <span class="math inline">\omega</span> soon
+as well.<a href="#fnref104" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn105"><p>For anyone curious about rigorous formulations of
+probability, the key term to look up is <em>measure theory</em>.<a
+href="#fnref105" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
