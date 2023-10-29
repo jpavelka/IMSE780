@@ -43,3 +43,4 @@
   \end{bmatrix}
   $$
   The symbol $\nabla$ is called the "nabla" symbol.
+- $\indicator_{\{\text{condition}\}}$: A random variable that equals $1$ if the condition in the subscript is true, and equals $0$ if the condition is false.
