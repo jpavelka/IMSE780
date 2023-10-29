@@ -21,3 +21,7 @@
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 \newcommand{\bpi}{\mathbb{\pi}}
 \newcommand{\Q}{\mathbf{Q}}
+\newcommand{\indicator}{\boldsymbol{1}}
+\newcommand{\prob}[1]{P\!\left( #1 \right)}
+\newcommand{\E}[1]{E\!\left( #1 \right)}
+\newcommand{\Var}[1]{\text{Var}\!\left( #1 \right)}

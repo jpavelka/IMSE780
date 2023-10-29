@@ -48,6 +48,12 @@
 
 {insertSection:sections/nonlinear_programming/notes.md}
 
+{insertSection:sections/stochastic_processes/intro.md}
+
+<!-- {insertSection:sections/stochastic_processes/markov_chains.md} -->
+
+<!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
+
 {insertSection:sections/appendix/appendix.md}
 
 {insertSection:sections/appendix/symbols.md}
