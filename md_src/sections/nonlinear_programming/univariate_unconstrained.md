@@ -281,7 +281,7 @@ $$
 x_{i + 1} = x_i - \frac{f'(x_i)}{f''(x_i)}.
 $$
 
-We've determined how to update the trial solution, but how do we know when to stop? Two common stopping criteria are to stop either when two consecutive trial solutions are sufficiently close, i.e. $|x_{i + 1} - x_i|<\epsilon$ for some small $\epsilon>0$, or for the derivative at the trial solution to be sufficiently close to zero, i.e. $f'(x_i)<\epsilon$. For our presentation below, we'll adopt the first standard.
+We've determined how to update the trial solution, but how do we know when to stop? Two common stopping criteria are to stop either when two consecutive trial solutions are sufficiently close, i.e. $|x_{i + 1} - x_i|\leq\epsilon$ for some small $\epsilon>0$, or for the derivative at the trial solution to be sufficiently close to zero, i.e. $f'(x_i)<\epsilon$. For our presentation below, we'll adopt the first standard.
 
 Lastly, how should we determine the first trial solution? It ultimately does not matter - one could just start at $x=0$ or anywhere else you like. If you can plot out the function to find a good initial spot, or otherwise have a good idea where the optimum might be, you can just go with that as well.
 
@@ -290,7 +290,7 @@ Bringing it all together, here are the steps for executing Newton's method:
 - _Initialize_: Select error tolerance $\epsilon$. Set $i=1$ and choose initial trial solution $x_1$.
 - _Iterate_:
   - Set $x_{i+1}=x_i - \frac{f'(x_i)}{f''(x_i)}$.
-  - If $|x_{i+1}-x_i|<\epsilon$:
+  - If $|x_{i+1}-x_i|\leq\epsilon$:
     - Terminate and return $x_{i+1}$ as optimal within tolerance.
   - Else:
     - Set $i=i+1$.
