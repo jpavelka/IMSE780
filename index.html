@@ -9573,7 +9573,7 @@ x_{i + 1} = x_i - \frac{f&#39;(x_i)}{f&#39;&#39;(x_i)}.
 <p>We’ve determined how to update the trial solution, but how do we know
 when to stop? Two common stopping criteria are to stop either when two
 consecutive trial solutions are sufficiently close, i.e. <span
-class="math inline">|x_{i + 1} - x_i|&lt;\epsilon</span> for some small
+class="math inline">|x_{i + 1} - x_i|\leq\epsilon</span> for some small
 <span class="math inline">\epsilon&gt;0</span>, or for the derivative at
 the trial solution to be sufficiently close to zero, i.e. <span
 class="math inline">f&#39;(x_i)&lt;\epsilon</span>. For our presentation
@@ -9595,7 +9595,7 @@ class="math inline">x_1</span>.</li>
 <ul>
 <li>Set <span class="math inline">x_{i+1}=x_i -
 \frac{f&#39;(x_i)}{f&#39;&#39;(x_i)}</span>.</li>
-<li>If <span class="math inline">|x_{i+1}-x_i|&lt;\epsilon</span>:
+<li>If <span class="math inline">|x_{i+1}-x_i|\leq\epsilon</span>:
 <ul>
 <li>Terminate and return <span class="math inline">x_{i+1}</span> as
 optimal within tolerance.</li>
