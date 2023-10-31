@@ -1,5 +1,7 @@
 ## Convex programming
 
+<div class='lectureVideoEmbed' video-id='c4de6679db674101b4b68274b3a096821d' video-date='2023-10-30'>Convex programming</div>
+
 We'll now get a little more general again and explore a form of nonlinear programming called **convex programming**, which is an optimization problem of the form
 
 $$
@@ -53,7 +55,7 @@ One final note - the presentation here assumes that all constraints are inequali
 - _Initialize_: Identify a feasible initial trial solution $\x^{(0)}$ that is not on the boundary of the feasible region. Set $k = 1$ and choose appropriate positive values for $r$, $\theta$ and $\epsilon$.
 - _Iterate_:
   - Starting from $\x^{(k-1)}$, use a multi-variable unconstrained optimization procedure (like gradient search from +@sec:gradientSearch) to find a solution $\x^{(k)}$ that (approximately) maximizes $P(\x, r)=f(\x) - rB(\x)$.
-  - If $B(\x)<\epsilon$:
+  - If $rB(\x)<\epsilon$:
     - Stop with $\x^{(k)}$ as the (approximate) optimal solution.
   - Else:
     - Reset $k = k + 1$, $r = \theta r$ and continue iterating.
