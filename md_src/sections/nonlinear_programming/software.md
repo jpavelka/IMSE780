@@ -1,5 +1,7 @@
 ## Software for nonlinear programs
 
+<div class='lectureVideoEmbed' video-id='32ab466704b74cc08ce70d7355ebd7de1d' video-date='2023-11-01'>Software for nonlinear programming</div>
+
 In this section we'll explore some options for solving nonlinear programs with Python. We'll highlight different libraries in each of the following notebooks, using the example problems from class as ways to explore each library's capabilities. I should stress that the state of software for nonlinear programs is a little less robust than the comparable worlds of linear and integer programming, and you may find that solution techniques do not scale as well. I should also stress that I don't know these solvers as well as I know linear and integer programming software, so you can take my recommendations as a starting point but don't assume that these options will always be your best choice.
 
 We'll start with a notebook focused on our old friend, `gurobipy`.
