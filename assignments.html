@@ -1832,6 +1832,73 @@ each iteration.</li>
 </ol>
 </div>
 </div>
+<div id="Homework 11" class="assignmentContainer"
+data-sub-name="Convex programming, probability basics"
+data-due="2023-11-13">
+<div>
+<ol type="1">
+<li><p>(3pts)* Consider the following convex programming problem</p>
+<p><span class="math display">
+  \begin{align*}
+  \text{max}&amp;&amp; -2x_1 - (x_2 - 3)^2 &amp; \\
+  \text{s.t.}&amp;&amp; x_1 &amp;\geq 3 \\
+       &amp;&amp; x_2 &amp;\geq 3
+  \end{align*}
+  </span></p>
+<p>If SUMT were applied to this problem, what would be the unconstrained
+function <span class="math inline">P(\mathbf{x}, r)</span> to be
+maximized at each iteration?</p></li>
+<li><p>(6pts)* Consider the linearly constrained convex programming
+model</p>
+<p><span class="math display">
+  \begin{align*}
+  \text{max}&amp;&amp; -x_1^4 - 2x_1^2 - 2x_1x_2 - 4x_2^2 &amp; \\
+  \text{s.t.}&amp;&amp; 2x_1 + x_2 &amp;\geq 10 \\
+       &amp;&amp; x_1 + 2x_2 &amp;\geq 10
+  \end{align*}
+  </span></p>
+<p>Starting from the initial trial solution <span
+class="math inline">(x_1, x_2, x_3) = (0, 0, 0)</span>, apply two
+iterations of the Frank-Wolfe algorithm.</p></li>
+<li><p>(6pts) After further research, Wyndor Glass Co no longer believes
+their profit estimates are reasonable. Due to current market conditions,
+they expect significant diminishing returns for batches produced, such
+that the profit attained for a given production level is best estimated
+as</p>
+<p><span class="math display">
+3\ln(2.5x_1 + 1) + 5\ln(2.3x_2 + 1)
+</span></p>
+<ol type="a">
+<li>With the current profit estimates, what would be Wyndor’s profit per
+batch for producing 1, 2, or 3 batches of product 1?</li>
+<li>With the current profit estimates, what would be Wyndor’s profit per
+batch for producing 1, 2, or 3 batches of product 2?</li>
+<li>Using Python and your modeling language of choice (and using all
+other assumptions from the base Wyndor LP model), model this problem as
+a nonlinear programming problem with continuous (not integer) decision
+variables. What is the company’s maximum weekly profit?</li>
+</ol></li>
+<li><p>(4pts)* A cube has its six sides colored red, white, blue, green,
+yellow, and violet. It is assumed that these six sides are equally
+likely to show when the cube is tossed. The cube is tossed once.</p>
+<ol type="a">
+<li>Describe the sample space.</li>
+<li>Consider the random variable that assigns the number 0 to red and
+white, the number 1 to green and blue, and the number 2 to yellow and
+violet. What is the distribution of this random variable (i.e. what
+values can it take and with what probabilities)?</li>
+<li>Let <span class="math inline">Y = (X + 1)^2</span>, where <span
+class="math inline">X</span> is the random variable in part b. Find
+<span class="math inline">E\!\left( Y \right)</span>.</li>
+</ol></li>
+<li><p>(1pt) Suppose that two six-sided dice are thrown, and the dice
+are fair (so that any of the numbers 1-6 are equally likely to come up
+on any roll). Let <span class="math inline">X</span> be the random
+variable equal to the sum of the two rolls. Find <span
+class="math inline">P\!\left( X=36|X\geq 30 \right)</span>.</p></li>
+</ol>
+</div>
+</div>
 <div id="Midterm" class="assignmentContainer"
 data-sub-name="Linear and integer programming" data-due="2023-10-22"
 data-grading-notes-link="https://colab.research.google.com/drive/1DrCzHCUY0XSLWrtcnLH9D-K26R4BDE07?usp=sharing">
