@@ -2881,6 +2881,24 @@ Variance</a></li>
 <li><a href="#conditional-probability"
 id="toc-conditional-probability"><span
 class="toc-section-number">7.1.7</span> Conditional probability</a></li>
+<li><a href="#python" id="toc-python"><span
+class="toc-section-number">7.1.8</span> Python</a></li>
+</ul></li>
+<li><a href="#markov-chains" id="toc-markov-chains"><span
+class="toc-section-number">7.2</span> Markov chains</a>
+<ul>
+<li><a href="#first-examples" id="toc-first-examples"><span
+class="toc-section-number">7.2.1</span> First examples</a></li>
+<li><a href="#sec:nStepTransitionProbs"
+id="toc-sec:nStepTransitionProbs"><span
+class="toc-section-number">7.2.2</span> <span
+class="math inline">n</span>-step transition probabilities</a></li>
+<li><a href="#state-classification" id="toc-state-classification"><span
+class="toc-section-number">7.2.3</span> State classification</a></li>
+<li><a href="#absorption-probabilities"
+id="toc-absorption-probabilities"><span
+class="toc-section-number">7.2.4</span> Absorption
+probabilities</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -11608,8 +11626,635 @@ subbing in the definition of conditional probability gives us</p>
 </span></p>
 <p>Indeed, you could see this as an alternative definition of
 independence.</p>
-<!-- {insertSection:sections/stochastic_processes/markov_chains.md} -->
+<h3 data-number="7.1.8" id="python"><span
+class="header-section-number">7.1.8</span> Python</h3>
+<p>This Python notebook gives some samples related to calculating
+probabilities with Python.</p>
+<script src="https://gist.github.com/dc232799604bb34fdc9ff891fd9fcbeb.js"></script>
+<h2 data-number="7.2" id="markov-chains"><span
+class="header-section-number">7.2</span> Markov chains</h2>
+<p>With those preliminaries out of the way, we’re ready to talk about
+Markov chains, our first stochastic process. This is a particularly
+important class of stochastic process, one of the best known and most
+important, which even had a hand in Google taking over the world<a
+href="#fn106" class="footnote-ref" id="fnref106"
+role="doc-noteref"><sup>106</sup></a>. In this class both of the future
+topics of queueing theory and Markov decision processes will build upon
+what we learn here. Note that the content of this section comes largely
+from a web supplement to <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> and can be found <a
+href="https://highered.mheducation.com/sites/dl/free/1259872998/1126268/Hillier_IOR_11e_Ch028_WebChapter.pdf">here</a>.</p>
+<p>First up: it’s probably high time to actually define what we mean by
+a “stochastic process”. As we said earlier, the word <em>stochastic</em>
+essentially means random. A stochastic process is a model for processes
+that evolve over time in a probabilistic manner. More formally, a
+<strong>stochastic process</strong> is an indexed collection of random
+variables <span class="math inline">\{X_t\}</span>, where the index
+<span class="math inline">t</span> runs through some set <span
+class="math inline">T</span>. Very often <span
+class="math inline">T</span> is the set of non-negative integers, so
+that the collection of random variables we are interested is <span
+class="math inline">\{X_0,X_1,...\}</span> and <span
+class="math inline">X_t</span> represents the state of some system after
+<span class="math inline">t</span> time steps. For example, we might be
+tracking the inventory of a particular product at some store, with <span
+class="math inline">X_0</span> being the inventory level at the
+beginning of the first week, <span class="math inline">X_1</span> the
+inventory level at the beginning of the second week, and so on. When
+<span class="math inline">T</span> is a discrete set, we call the
+process a <strong>discrete-time stochastic process</strong>. This type
+of process will be our focus in this class.</p>
+<p>Let’s talk now about the sample space for the <span
+class="math inline">X_t</span> random variables. For the purposes of
+this class, the sample space will be some finite, discrete set, often
+notated as <span class="math inline">\{0, 1, \dots, M\}</span> for some
+<span class="math inline">M\in\mathbb{I}+</span>. We call <span
+class="math inline">\{0, 1, \dots, M\}</span> the
+<strong>states</strong> of the system. So if for time <span
+class="math inline">t</span> we have <span
+class="math inline">X_t=i</span>, then we say that the system is in
+state <span class="math inline">i</span> at time <span
+class="math inline">t</span>. The stochastic process <span
+class="math inline">\{X_0,X_1,\dots\}</span> then tells us how the state
+of the system changes over time.</p>
+<p>Analyzing stochastic processes can get fairly complicated without
+some simplifying assumptions. In the case of Markov chains, the key
+assumption is the so-called Markovian property. A discrete-time
+stochastic process <span class="math inline">\{X_0,X_1,\dots\}</span> is
+said to have the <strong>Markovian property</strong> if</p>
+<p><span class="math display">
+\begin{align*}
+&amp;P\!\left( X_{t+1}=j|X_0=k_0,X_1=k_1,\dots,X_t=i \right) \\
+=&amp;P\!\left( X_{t+1}=j|X_t=i \right)
+\end{align*}
+</span></p>
+<p>That is, if I’d like to know what will happen in the future of the
+process, it suffices to only know the state of the process <em>right
+now</em>. The rest of history is completely irrelevant to the future of
+the process. Mathematically we can say that <span
+class="math inline">X_{t+1}</span> is independent of <span
+class="math inline">X_0, X_1, \dots, X_{t-1}</span><a href="#fn107"
+class="footnote-ref" id="fnref107"
+role="doc-noteref"><sup>107</sup></a>.</p>
+<p>This property is all we need to finally define a Markov chain. A
+stochastic process <span class="math inline">\{X_0,X_1,\dots\}</span> is
+a <strong>Markov chain</strong> if it has the Markovian property.</p>
+<p>The conditional probability from above, <span
+class="math inline">P\!\left( X_{t+1}=j|X_t=i \right)</span>, is known
+as a <strong>transition probability</strong>, since it gives the
+probability of the system transitioning from state <span
+class="math inline">i</span> in one time step to state <span
+class="math inline">j</span> in the next. For notational convenience, we
+will usually denote this as <span class="math inline">p_{ij}</span>, so
+that</p>
+<p><span class="math display">
+p_{ij}=P\!\left( X_{t+1}=j|X_t=i \right)
+</span></p>
+<p>Implicit in this notation is that <span
+class="math inline">p_{ij}</span> does not depend on the time step <span
+class="math inline">t</span>, so that the transition probabilities are
+<strong>stationary</strong>. This will be an assumption we’ll hold
+throughout the class.</p>
+<h3 data-number="7.2.1" id="first-examples"><span
+class="header-section-number">7.2.1</span> First examples</h3>
+<p>Let’s see how it all comes together with a few examples.</p>
+<h4>
+Weather example
+</h4>
+<p>Quoting from <span class="citation" data-cites="classText">Hillier
+and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span></p>
+<blockquote>
+<p>The weather in the town of Centerville can change rather quickly from
+day to day. However, the chances of being dry (no rain) tomorrow are
+somewhat larger if it is dry today than if it rains today. In
+particular, the probability of being dry tomorrow is 0.8 if it is dry
+today, but is only 0.6 if it rains today. These probabilities do not
+change if information about the weather before today is also taken into
+account.</p>
+<p>The evolution of the weather from day to day in Centerville is a
+stochastic process. Starting on some initial day (labeled as day 0), the
+weather is observed on each day <span class="math inline">t</span>, for
+<span class="math inline">t = 0, 1, 2, . . .</span> The state of the
+system on day <span class="math inline">t</span> can be either State 0
+(day <span class="math inline">t</span> is dry) or State 1 = (day <span
+class="math inline">t</span> has rain). Thus, for <span
+class="math inline">t = 0, 1, 2, . . .</span>, the random variable <span
+class="math inline">X_t</span> takes on the values</p>
+<p><span class="math display">
+X_t=\begin{cases}
+0 &amp; \text{ if day } t \text{ is dry.} \\
+1 &amp; \text{ if day } t \text{ has rain.}
+\end{cases}
+</span></p>
+<p>The stochastic process <span class="math inline">\{X_t\} = \{X_0,
+X_1, X_2, . . .\}</span> provides a mathematical representation of how
+the status of the weather in Centerville evolves over time.</p>
+</blockquote>
+<p>The above gives a general, stochastic process formulation for
+Centerville weather. But notice the assumptions of the model (state
+changes do not depend on weather history) mean that this process is
+actually a Markov chain. So, as is custom with a Markov chain, we will
+go ahead and construct the <strong>(one-step) transition matrix</strong>
+for the problem, denoted as <span class="math inline">\mathbf{P}</span>,
+whose entries <span class="math inline">p_{ij}</span> follow the
+definition from above:</p>
+<p><span class="math display">
+p_{ij}=P\!\left( X_{t+1}=j|X_t=i \right)
+</span></p>
+<p>For this problem the transition matrix becomes<a href="#fn108"
+class="footnote-ref" id="fnref108"
+role="doc-noteref"><sup>108</sup></a>:</p>
+<p><span id="eq:weatherMatrix" class="eqnos"><span class="math display">
+\mathbf{P}=\begin{bmatrix}
+p_{00} &amp; p_{01} \\
+p_{10} &amp; p_{11}
+\end{bmatrix}=\begin{bmatrix}
+0.8 &amp; 0.2 \\
+0.6 &amp; 0.4
+\end{bmatrix}
+</span><span class="eqnos-number">(27)</span></span></p>
+<p>A nice way to visualize a Markov chain is with a transition diagram,
+as illustrated below:</p>
+<figure>
+<img src="images/weather-transition-diagram.png"
+alt="Transition diagram for Centerville weather Markov chain example (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Transition diagram for Centerville
+weather Markov chain example <span class="citation"
+data-cites="classText">(<a href="#ref-classText"
+role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
+</figure>
+<h4>
+Inventory example
+</h4>
+<p>Let’s take another example from the textbook. This example makes
+reference to the <a
+href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson
+distribution</a>, a particular discrete probability distribution that is
+used in many applications.</p>
+<blockquote>
+<p>Dave’s Photography Store has the following inventory problem. The
+store stocks a particular model camera that can be ordered weekly. Let
+<span class="math inline">D_1, D_2, . . .</span> represent the demand
+for this camera (the number of units that would be sold if the inventory
+is not depleted) during the first week, second week, … , respectively,
+so the random variable <span class="math inline">D_t</span> (for <span
+class="math inline">t = 1, 2, . . .</span>) is the number of cameras
+that would be sold in week <span class="math inline">t</span> if the
+inventory is not depleted. (This number includes lost sales when the
+inventory is depleted.)</p>
+<p>It is assumed that the <span class="math inline">D_t</span> are
+independent and identically distributed random variables having a
+Poisson distribution with a mean of 1. Let <span
+class="math inline">X_0</span> represent the number of cameras on hand
+at the outset, <span class="math inline">X_1</span> the number of
+cameras on hand at the end of week 1, <span
+class="math inline">X_2</span> the number of cameras on hand at the end
+of week 2, and so on, so the random variable <span
+class="math inline">X_t</span> (for <span class="math inline">t = 0, 1,
+2, . . .</span>) is the number of cameras on hand at the end of week
+<span class="math inline">t</span>.</p>
+<p>Assume that <span class="math inline">X_0 = 3</span>, so that week 1
+begins with three cameras on hand. <span class="math inline">\{X_t\} =
+\{X_0, X_1, X_2, . . .\}</span> is a stochastic process where the random
+variable <span class="math inline">X_t</span> represents the state of
+the system at time <span class="math inline">t</span>, namely, the
+number of cameras on hand at the end of week <span
+class="math inline">t</span>.</p>
+<p>As the owner of the store, Dave would like to learn more about how
+the status of this stochastic process evolves over time while using the
+current ordering policy described below.</p>
+<p>At the end of each week <span class="math inline">t</span> (Saturday
+night), the store places an order that is delivered in time for the next
+opening of the store on Monday. The store uses the following order
+policy:</p>
+<p><span class="math display">
+\begin{align*}
+\text{If }X_t = 0&amp;,\text{ order 3 cameras}.\\
+\text{If }X_t &gt; 0&amp;,\text{ do not order any cameras}.
+\end{align*}
+</span></p>
+<p>Thus, the inventory level fluctuates between a minimum of zero
+cameras and a maximum of three cameras, so the possible states of the
+system at time <span class="math inline">t</span> (the end of week <span
+class="math inline">t</span>) are 0, 1, 2, or 3 cameras on hand.</p>
+<p>Since each random variable <span class="math inline">X_t</span> <span
+class="math inline">(t = 0, 1, 2, . . .)</span> represents the state of
+the system at the end of week t, its only possible values are 0, 1, 2,
+or 3. The random variables <span class="math inline">X_t</span> are
+dependent and may be evaluated iteratively by the expression</p>
+<p><span class="math display">
+X_{t+1} = \begin{cases}
+\text{max}\{3 − D_{t+1}, 0\}&amp;\text{ if }X_t = 0\\
+\text{max}\{X_t − D_{t+1}, 0\}&amp;\text{ if }X_t \geq 1
+\end{cases}
+</span></p>
+<p>for <span class="math inline">t = 0, 1, 2, . . .</span></p>
+</blockquote>
+<p>This stochastic process follows the Markovian property, since we saw
+above that the state at time <span class="math inline">t+1</span> is a
+function of <span class="math inline">X_t</span> and a random variable
+<span class="math inline">D_{t+1}</span> that is evaluated during the
+week. We know the distribution of the <span
+class="math inline">D_t</span> random variables, so we should be able to
+construct the transition matrix for this example.</p>
+<p>What does the transition matrix look like? Let’s see if we can work
+out a few examples entries, starting with <span
+class="math inline">p_{00}</span>. Recall, <span
+class="math inline">p_{00}=P\!\left( X_{t+1}=0|X_t=0 \right)</span>. If
+<span class="math inline">X_t=0</span>, then Dave will order 3 cameras
+that will be on hand to start week <span class="math inline">t+1</span>.
+So for us to end up with <span class="math inline">X_{t+1}=0</span> we
+need the demand <span class="math inline">D_{t+1}</span> to be greater
+than or equal to 3. Since <span class="math inline">D_{t+1}</span> is a
+Poisson random variable with a mean of 1, we can get the value we need
+from knowledge of the Poisson distribution. In this case, the
+probability we need is</p>
+<p><span class="math display">
+p_{00}=P\!\left( D_{t+1}\geq 3 \right)\approx0.080
+</span></p>
+<p>By similar logic, we have <span class="math inline">p_{01}=P\!\left(
+D_{t+1}=2 \right)</span>, <span class="math inline">p_{02}=P\!\left(
+D_{t+1}=1 \right)</span>, and <span class="math inline">p_{03}=P\!\left(
+D_{t+1}=0 \right)</span>.</p>
+<p>When <span class="math inline">X_t&gt;0</span> then Dave will not
+order any cameras. So if we want to find <span
+class="math inline">p_{10}</span> (corresponding to <span
+class="math inline">X_t=1</span> and <span
+class="math inline">X_t=0</span>) then the probability we need to find
+is <span class="math inline">P\!\left( D_{t+1}\geq 1 \right)</span>,
+while <span class="math inline">p_{11}=P\!\left( D_{t+1}=0
+\right)</span> and <span class="math inline">p_{12}=p_{13}=0</span>.
+Continuing by this logic, we get the transition matrix</p>
+<p><span id="eq:inventoryMatrix" class="eqnos"><span
+class="math display">
+\mathbf{P}=\begin{bmatrix}
+0.080 &amp; 0.184 &amp; 0.368 &amp; 0.368 \\
+0.632 &amp; 0.368 &amp; 0     &amp; 0     \\
+0.264 &amp; 0.368 &amp; 0.368 &amp; 0     \\
+0.080 &amp; 0.184 &amp; 0.368 &amp; 0.368
+\end{bmatrix}
+</span><span class="eqnos-number">(28)</span></span></p>
+<h3 data-number="7.2.2" id="sec:nStepTransitionProbs"><span
+class="header-section-number">7.2.2</span> <span
+class="math inline">n</span>-step transition probabilities</h3>
+<p>Now we know that each Markov chain has an associated transition
+matrix <span class="math inline">\mathbf{P}</span>. Suppose that we have
+a Markov chain with two states, so that <span
+class="math inline">\mathbf{P}</span> is a <span
+class="math inline">2\times2</span> matrix. Watch what happens when we
+multiply <span class="math inline">\mathbf{P}</span> by itself:</p>
+<p><span class="math display">
+\begin{align*}
+\mathbf{P}^2&amp;=\begin{bmatrix}
+p_{00} &amp; p_{01} \\
+p_{10} &amp; p_{11} \\
+\end{bmatrix}\begin{bmatrix}
+p_{00} &amp; p_{01} \\
+p_{10} &amp; p_{11} \\
+\end{bmatrix} \\
+&amp;=\begin{bmatrix}
+p_{00}p_{00} + p_{01}p_{10} &amp;
+p_{00}p_{01} + p_{01}p_{11} \\
+p_{10}p_{00} + p_{11}p_{10} &amp;
+p_{10}p_{01} + p_{11}p_{11}
+\end{bmatrix}
+\end{align*}
+</span></p>
+<p>Let’s denote the <span class="math inline">i,j</span> entry of that
+matrix as <span class="math inline">p_{ij}^{(2)}</span>, and for example
+let’s consider the two terms that make up <span
+class="math inline">p_{00}^{(2)}</span>. We could write the first term
+as</p>
+<p><span class="math display">
+\begin{align*}
+p_{00}p_{00} &amp;= P\!\left( X_{t+1}=0|X_t=0 \right)P\!\left(
+X_{t+1}=0|X_t=0 \right) \\
+&amp;= P\!\left( X_{t+1}=0|X_t=0 \right)P\!\left( X_{t+2}=0|X_{t+1}=0
+\right)
+\end{align*}
+</span></p>
+<p>(the last substitution follows due to time stationarity). Due to
+independence of the relevant events, that term represents the
+probability of transitioning from state 0 to state 0 in two successive
+time steps. Meanwhile, the second term becomes</p>
+<p><span class="math display">
+\begin{align*}
+p_{01}p_{10} &amp;= P\!\left( X_{t+1}=1|X_t=0 \right)P\!\left(
+X_{t+1}=0|X_t=1 \right) \\
+&amp;= P\!\left( X_{t+1}=1|X_t=0 \right)P\!\left( X_{t+2}=0|X_{t+1}=1
+\right)
+\end{align*}
+</span></p>
+<p>or the probability of transitioning from state 0 to state 1, then
+back from 1 to 0 in successive time steps. So together,</p>
+<p><span class="math display">
+p_{00}^{(2)} = p_{00}p_{00} + p_{01}p_{10}
+</span></p>
+<p>represents the two possible ways to start in state 0 in some time
+step, then return back to 0 after two transitions. Since these two paths
+are disjoint events, their joint probability is the sum of the
+individual probabilities. So <span
+class="math inline">p_{00}^{(2)}</span> is exactly the probability of
+starting in state 0 at some time step, and then being in state 0 again
+two steps later.</p>
+<p>In general, we can write out the following <strong>Chapman-Kolmogorov
+equation</strong></p>
+<p><span class="math display">
+p_{ij}^{(n)}=\sum_{k=0}^Mp_{ik}^{(n-1)}p_{kj}
+</span></p>
+<p>essentially saying that to get from state <span
+class="math inline">i</span> to state <span class="math inline">j</span>
+in <span class="math inline">n</span> steps, the associated event
+consists of any sequence that takes us from <span
+class="math inline">i</span> to some state <span
+class="math inline">k</span> in <span class="math inline">n-1</span>
+steps, then directly from <span class="math inline">k</span> to <span
+class="math inline">j</span> in the final step. Furthermore, the
+associated probability is as given above. A simple application of
+mathematical induction tells us that if we let <span
+class="math inline">p_{ij}^{(n)}</span> represent the <span
+class="math inline">i,j</span> entry of the matrix multiplication <span
+class="math inline">\mathbf{P}^n</span> (multiplying <span
+class="math inline">\mathbf{P}</span> by itself <span
+class="math inline">n</span> times), then <span
+class="math inline">p_{ij}^{(n)}</span> equals the probability of being
+in state <span class="math inline">i</span> at some time step and ending
+up in state <span class="math inline">j</span> after <span
+class="math inline">n</span> transitions.</p>
+<p>Wanna apply this knowledge to our previous example Markov chains?
+Check the following notebook.</p>
+<script src="https://gist.github.com/acaebd42106eb6efc95b8f88fee04531.js"></script>
+<h3 data-number="7.2.3" id="state-classification"><span
+class="header-section-number">7.2.3</span> State classification</h3>
+<p>As we continue analyzing Markov chains, many of our results will
+depend on the nature of the possible states in the chain. In this
+section we’ll examine different classifications for the states of Markov
+chains.</p>
+<h4>
+Communication
+</h4>
+<p>A state <span class="math inline">j</span> is said to be
+<strong>accessible</strong> from state <span
+class="math inline">i</span> if <span
+class="math inline">p_{ij}^{(n)}&gt;0</span> for some <span
+class="math inline">n\geq0</span>. In other words, state <span
+class="math inline">j</span> being accessible from state <span
+class="math inline">i</span> simply means that it’s possible for the
+system to enter state <span class="math inline">j</span>
+<em>eventually</em> when it starts from state <span
+class="math inline">i</span>. Furthermore, two states <span
+class="math inline">i</span> and <span class="math inline">j</span> are
+said to <strong>communicate</strong> if both states are accessible from
+each other, i.e. state <span class="math inline">j</span> is accessible
+from state <span class="math inline">i</span> <em>and</em> state <span
+class="math inline">i</span> is accessible from state <span
+class="math inline">j</span>. Said another way, <span
+class="math inline">i\neq j</span> communicate if and only if it is
+possible to start in state <span class="math inline">i</span>, enter
+state <span class="math inline">j</span> some time in the future, then
+eventually make it back to state <span class="math inline">i</span>.
+Given that definition, the following statements must be true:</p>
+<ol type="1">
+<li>Any state communicates with itself (by technicality, since <span
+class="math inline">p_{ii}^{(0)}=P\!\left( X_t=i|X_t=i
+\right)=1</span>).</li>
+<li>If state <span class="math inline">i</span> communicates with state
+<span class="math inline">j</span>, then state <span
+class="math inline">j</span> communicates with state <span
+class="math inline">i</span>.</li>
+<li>If state <span class="math inline">i</span> communicates with state
+<span class="math inline">j</span> and state <span
+class="math inline">j</span> communicates with state <span
+class="math inline">k</span>, then state <span
+class="math inline">i</span> communicates with state <span
+class="math inline">k</span>.</li>
+</ol>
+<p>For the two examples we’ve seen so far (weather and inventory), it
+should be pretty clear that all the states communicate with each other.
+It’s very clear from the transition matrix for the weather example
+(eq. <a href="#eq:weatherMatrix">27</a>) that you can go from any state
+to the other state in just one step. It’s slightly less clear for the
+inventory example (transition matrix eq. <a
+href="#eq:inventoryMatrix">28</a>), since you can’t e.g. go directly
+from state 1 to state 2 in a single step. But you <em>can</em> go from
+state 1 directly to state 0, then from state 0 directly to state 2 (and
+similar could be said for any pair of states)<a href="#fn109"
+class="footnote-ref" id="fnref109"
+role="doc-noteref"><sup>109</sup></a>.</p>
+<p>So it looks like we need another example so we can see these (and
+later) definitions in action.</p>
+<h4>
+Gambling example
+</h4>
+<p>In this example, (once again from +<span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>) a gambler repeatedly plays a game
+until he hits some end condition:</p>
+<blockquote>
+<p>Suppose that a player has $1 and with each play of the game wins $1
+with probability <span class="math inline">p &gt; 0</span> or loses $1
+with probability <span class="math inline">1 − p &gt; 0</span>. The game
+ends when the player either accumulates $3 or goes broke. This game is a
+Markov chain with the states representing the player’s current holding
+of money, that is, $0, $1, $2, or $3.</p>
+</blockquote>
+<p>What should this transition matrix look like? The write-up tells us
+that the gambler stops playing when he reaches either $0 or $3, but we
+can emulate this behavior by saying that whenever the process reaches
+state <span class="math inline">i\in\{0,3\}</span> it will continue to
+stay in state <span class="math inline">i</span> for all subsequent time
+steps. So we will have <span class="math inline">p_{00}=p_{33}=1</span>.
+Then for <span class="math inline">i\in\{1,2\}</span> we just need <span
+class="math inline">p_{i,i+1}=p</span> and <span
+class="math inline">p_{i,i-1}=1-p</span>, so the transition matrix looks
+like:</p>
+<p><span id="eq:gamblingMatrix" class="eqnos"><span
+class="math display">
+\mathbf{P}=\begin{bmatrix}
+1&amp;0&amp;0&amp;0\\
+1-p&amp;0&amp;p&amp;0\\
+0&amp;1-p&amp;0&amp;p\\
+0&amp;0&amp;0&amp;1\\
+\end{bmatrix}
+</span><span class="eqnos-number">(29)</span></span></p>
+<p>which states communicate in this example? Clearly no other states
+communicate with state 0 or state 3. In contrast, States 1 and 2
+<em>do</em> communicate, since <span
+class="math inline">p_{12}&gt;0</span> and <span
+class="math inline">p_{21}&gt;0</span>.</p>
+<h4>
+Classes and reducibility
+</h4>
+<p>If all of the pairs of states in a Markov chain communicate with each
+other, then we say that the chain is <strong>irreducible</strong>. As we
+saw, this is the case in both the weather and inventory examples, but it
+is <em>not</em> the case in the gambling example.</p>
+<p>In the case that a Markov chain is not irreducible, it can still be
+useful to know which groups of states <em>do</em> mutually communicate.
+Indeed, as a consequence of the three properties of communication stated
+above, the states of a Markov chain may be partitioned into one or more
+separate <strong>classes</strong> such that those states that
+communicate with each other are in the same class. Such a class is also
+often called a <strong>communication class</strong>. In the gambling
+example there are three distinct classes, <span
+class="math inline">\{0\}</span>, <span
+class="math inline">\{3\}</span>, and <span
+class="math inline">\{1,2\}</span>.</p>
+<h4>
+Recurring, transient, and absorbing states
+</h4>
+<p>Let’s look again at states 1 and 2 from the gambling example. While
+it is technically possible to keep bouncing back and forth between these
+two states for arbitrarily long, eventually (and in all probability<a
+href="#fn110" class="footnote-ref" id="fnref110"
+role="doc-noteref"><sup>110</sup></a>) the chain will transition to
+either state 0 or 3, and never return to 1 or 2 again. Any such state
+where, upon entering it, it is possible to leave its communication class
+completely and never return again, is called a <strong>transient
+state</strong>. More precisely, a state <span
+class="math inline">i</span> is transient if there exists a state <span
+class="math inline">j</span> such that <span
+class="math inline">j</span> is accessible from <span
+class="math inline">i</span> but <span class="math inline">i</span> is
+not accessible from <span class="math inline">j</span>.</p>
+<p>Conversely, a state is called a <strong>recurrent state</strong> if,
+upon entering this state, the process definitely will (in all
+probability) return to this state again. This forms a true dichotomy
+with the concept of transient states, in that every state in a Markov
+chain must be either transient or recurrent. Every state we’ve seen in
+our three examples have been recurrent states, save for states 1 and 2
+in the gambling example, which are transient.</p>
+<p>Since recurrent states will (in all probability) always be revisited
+after leaving, then they will be visited infinitely often over the
+course of the process (if they are visited at all). In contrast,
+transient states are only ever visited finitely often over all of the
+time steps.</p>
+<p>Not all recurrent states are created equal, however. States 0 and 3
+in the gambling example have the property that once they are visited,
+the process will never leave that state. Such a recurrent state is also
+called an <strong>absorbing state</strong>. A state <span
+class="math inline">i</span> is an absorbing state if and only if <span
+class="math inline">p_{ii}=1</span>.</p>
+<p>It is worth noting that recurrence and transience are both
+<strong>class properties</strong>, i.e. a property that must be shared
+between every state in the same class. Thus if <span
+class="math inline">i</span> and <span class="math inline">j</span> are
+two states in the same recurrence class, it must be that <span
+class="math inline">i</span> and <span class="math inline">j</span> are
+either both recurrent or both transient.</p>
+<h4>
+Periodicity
+</h4>
+<p>Sometimes there are restrictions on the time-steps at which a state
+can be entered. In the gambling example (transition matrix eq. <a
+href="#eq:gamblingMatrix">29</a>) you start at time <span
+class="math inline">t=0</span> in state 1. From there, it is clearly
+impossible to enter state 1 at time <span
+class="math inline">t=1</span>. In fact, the only times you may enter
+state 1 are at <span class="math inline">t=2, t=4, t=6</span>, or any
+even-numbered time step. This observation motivates the next
+definition.</p>
+<p>The <strong>period</strong> of a state <span
+class="math inline">i</span> is the smallest number <span
+class="math inline">t</span> such that</p>
+<p><span class="math display">
+p_{ii}^{(n)}\begin{cases}
+= 0    &amp;&amp; \text{ if } n \text{ is not a multiple of } t \\
+\geq 0 &amp;&amp; \text{ if } n \text{ is a multiple of } t
+\end{cases}
+</span></p>
+<p>If the period of some state <span class="math inline">i</span> is
+equal to 1, then we say that state <span class="math inline">i</span> is
+<strong>aperiodic</strong>.</p>
+<p>From this definition, it is clear that both states 1 and 2 in the
+gambling example are periodic states with periods of 2. Furthermore, we
+know that they <em>have to</em> have the same period, since we already
+know they are in the same recurrence class, and it can be shown that
+periodicity is a class property (i.e. all states in the same class must
+share the same period).</p>
+<p>In a finite-state Markov chain, states that are both recurrent and
+aperiodic are called <strong>ergodic</strong> states. Further, if every
+state in a Markov chain is ergodic, then the chain itself is said to be
+ergodic. Ergodic Markov chains have special properties that we will soon
+explore.</p>
+<h3 data-number="7.2.4" id="absorption-probabilities"><span
+class="header-section-number">7.2.4</span> Absorption probabilities</h3>
+<p>The gambling example (eq. <a href="#eq:gamblingMatrix">29</a>) is
+interesting in that it has multiple absorbing states. If there were only
+one absorbing state, we would know that, in the long run, the chain
+would eventually become stuck at that one state. But since in this case
+we have two different absorbing states (which have very different
+implications for our gambler) we might be interested in knowing the
+probability of getting stuck in one state versus the other. Our aim for
+this section is to show how these probabilities can be calculated.</p>
+<p>Of course, the probability of absorption into a particular state can
+be very dependent on where you started. After all, if you start the
+gambling example in state 0, you’re already absorbed there and cannot
+possibly make it to the other absorbing state 3!. So our goal for this
+section will be to find the probability of absorption into state <span
+class="math inline">k</span> given that the system starts in state <span
+class="math inline">i</span>, which we’ll denote by <span
+class="math inline">f_{ik}</span>.</p>
+<p>How might we be able to find these probabilities? In analogy to the
+Chapman-Kolmogorov equation in section <a
+href="#sec:nStepTransitionProbs">7.2.2</a>, we can write the
+following:</p>
+<p><span class="math display">
+f_{ik}=\sum_{j=0}^Mp_{ij}f_{jk}
+</span></p>
+<p>Where does this come from? This arises from noting that the event of
+starting in state <span class="math inline">i</span> and eventually
+being absorbed in state <span class="math inline">k</span>, is exactly
+the union (over all states <span class="math inline">j</span>) of the
+events of starting in state <span class="math inline">i</span>,
+transitioning first to state <span class="math inline">j</span>, then
+from state <span class="math inline">j</span> eventually being absorbed
+into state <span class="math inline">k</span>.</p>
+<p>Furthermore, there are <span class="math inline">M+1</span> of these
+equations (one for each possible starting state <span
+class="math inline">i</span>), so we can build a system of <span
+class="math inline">M+1</span> linear equations and <span
+class="math inline">M+1</span> unknowns. Thus by solving this system, we
+will recover all the relevant probabilities for the chosen absorbing
+state <span class="math inline">k</span>!</p>
+<p>Let’s now apply this to the gambling example with absorbing state
+<span class="math inline">k=0</span>. In that case, we clearly have
+<span class="math inline">f_{00}=1</span> and <span
+class="math inline">f_{30}=0</span>, so we only need to write out the
+other two equations. Doing so gives us the following system:</p>
+<p><span class="math display">
+\begin{align*}
+f_{10} &amp;= p_{10}f_{00} + p_{11}f_{10} + p_{12}f_{20} + p_{13}f_{30}
+\\
+f_{20} &amp;= p_{20}f_{00} + p_{21}f_{10} + p_{22}f_{20} + p_{23}f_{30}
+\end{align*}
+</span></p>
+<p>Subbing in the values we already know, we get:</p>
+<p><span class="math display">
+\begin{align*}
+f_{10} &amp;= (1-p)(1) + (0)f_{10} + (p)f_{20} + (0)(0) = 1-p + pf_{20}
+\\
+f_{20} &amp;= (0)(1) + (1-p)f_{10} + (0)f_{20} + (p)(0) = (1-p)f_{10}
+\end{align*}
+</span></p>
+<p>Solving this system gives:</p>
+<p><span class="math display">
+f_{10}=\frac{1 - p}{p^{2} - p + 1}\qquad
+f_{20}=\frac{p^{2} - 2 p + 1}{p^{2} - p + 1}
+</span></p>
+<p>We could follow this same procedure to find the <span
+class="math inline">f_{i3}</span> probabilities. But in this case there
+are only two absorbing states, so the only possible long-run
+possibilities are absorption into either state 0 or state 3. So in this
+case we have <span class="math inline">f_{i3} = 1 - f_{i0}</span> for
+all <span class="math inline">i</span>.</p>
+<!-- ### Long-run properties
+
+### First passage times -->
 <!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
+<!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
 <h2 data-number="8.1" id="sec:symbols"><span
@@ -11766,7 +12411,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(27)</span></span></p>
+</span><span class="eqnos-number">(30)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -13089,6 +13734,36 @@ role="doc-backlink">↩︎</a></p></li>
 <li id="fn105"><p>For anyone curious about rigorous formulations of
 probability, the key term to look up is <em>measure theory</em>.<a
 href="#fnref105" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn106"><p>Google’s <a
+href="https://en.wikipedia.org/wiki/PageRank">PageRank</a> algorithm,
+among the first algorithms they used for ranking pages in search
+results, is based on Markov chain theory.<a href="#fnref106"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn107"><p>But, crucially, <span
+class="math inline">X_{t+1}</span> is generally <em>not</em> independent
+of <span class="math inline">X_t</span>.<a href="#fnref107"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn108"><p>It is worth noting that the rows of any transition
+matrix will always sum to 1, since the <span
+class="math inline">i</span>th row accounts for the probabilities of
+transitioning from state <span class="math inline">i</span> to any other
+state <span class="math inline">j</span>. The columns of the matrix do
+<em>not</em> need to sum to 1.<a href="#fnref108" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn109"><p>We could use the previous notebook to show that <span
+class="math inline">\mathbf{P}^2</span> has all positive entries for the
+inventory example, which is also sufficient to show that all states
+communicate.<a href="#fnref109" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn110"><p>I’ll keep peppering the notes with that term, “in all
+probability” as a substitute for notions from the more rigorous
+probability theory that we won’t explore here. It comes from a notion
+that there can be events that are “possible” (exist as a subset of the
+sample space) but still have 0 probability of occurring (like bouncing
+back and forth forever between states 1 and 2 forever). So even though
+they are technically possible, we don’t consider them from a
+probabilistic perspective.<a href="#fnref110" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
