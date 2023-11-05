@@ -50,9 +50,11 @@
 
 {insertSection:sections/stochastic_processes/intro.md}
 
-<!-- {insertSection:sections/stochastic_processes/markov_chains.md} -->
+{insertSection:sections/stochastic_processes/markov_chains.md}
 
 <!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
+
+<!-- {insertSection:sections/stochastic_processes/notes.md} -->
 
 {insertSection:sections/appendix/appendix.md}
 

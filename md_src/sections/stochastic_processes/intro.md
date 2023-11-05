@@ -292,3 +292,9 @@ $$
 $$
 
 Indeed, you could see this as an alternative definition of independence.
+
+### Python
+
+This Python notebook gives some samples related to calculating probabilities with Python.
+
+{colabGist:1Ssl7Xsb-o1y1S5RFQTI4uMRsr7LKpPer,dc232799604bb34fdc9ff891fd9fcbeb}
