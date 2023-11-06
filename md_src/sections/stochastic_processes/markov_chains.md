@@ -317,6 +317,23 @@ $$
 
 We could follow this same procedure to find the $f_{i3}$ probabilities. But in this case there are only two absorbing states, so the only possible long-run possibilities are absorption into either state 0 or state 3. So in this case we have $f_{i3} = 1 - f_{i0}$ for all $i$.
 
-<!-- ### Long-run properties
+<!-- ### Initial state probabilities
+
+
+
+### Steady-state probabilities
+
+Let's take a moment and return to the Colab notebook in +@sec:nStepTransitionProbs, where we explored $n$-step transition probabilities. For either of the probability matrices in that section, if you raise them to a high enough power (20 will suffice for either) you might notice something peculiar. Letting $\mathbf{P}$ be the transition matrix from the inventory example (+@eq:inventoryMatrix), from the notebook you would find that $\mathbf{P}^{n}$ for large $n$ is approximately:
+
+```python
+array([[0.28565411, 0.28483488, 0.26318076, 0.16633024],
+       [0.28565411, 0.28483488, 0.26318076, 0.16633024],
+       [0.28565411, 0.28483488, 0.26318076, 0.16633024],
+       [0.28565411, 0.28483488, 0.26318076, 0.16633024]])
+```
+
+Notice how every row of that matrix is identical to every other row. What does that mean? It would mean that for large enough $n$ the probability of ending up in a given state after $n$ transitions is the same _no matter where you started_. This would imply that starting conditions are irrelevant to the long-run behavior of the system.
+
+We will see shortly that this was no accident. 
 
 ### First passage times -->
