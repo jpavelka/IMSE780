@@ -157,6 +157,69 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
     div.csl-bib-body { }
     div.csl-entry {
       clear: both;
@@ -2899,6 +2962,18 @@ class="toc-section-number">7.2.3</span> State classification</a></li>
 id="toc-absorption-probabilities"><span
 class="toc-section-number">7.2.4</span> Absorption
 probabilities</a></li>
+<li><a href="#sec:markovUnconditional"
+id="toc-sec:markovUnconditional"><span
+class="toc-section-number">7.2.5</span> Unconditional
+probabilities</a></li>
+<li><a href="#steady-state-probabilities"
+id="toc-steady-state-probabilities"><span
+class="toc-section-number">7.2.6</span> Steady-state
+probabilities</a></li>
+<li><a href="#average-cost-per-time-step"
+id="toc-average-cost-per-time-step"><span
+class="toc-section-number">7.2.7</span> Average cost per time
+step</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -11577,10 +11652,11 @@ probability</strong> of <span class="math inline">A</span> given that
 may be completely defined by initial probabilities involving <span
 class="math inline">A</span> and <span class="math inline">B</span>. In
 particular, we have</p>
-<p><span class="math display">
+<p><span id="eq:conditionalProbability" class="eqnos"><span
+class="math display">
 P\!\left( A|B \right)=\frac{P\!\left( A\cap B \right)}{P\!\left( B
 \right)}
-</span></p>
+</span><span class="eqnos-number">(27)</span></span></p>
 <p>I think a Venn diagram is a good way to visualize this relation, as
 shown <a
 href="https://www.probabilitycourse.com/chapter1/1_4_0_conditional_probability.php#chapter_image">here</a>.
@@ -11633,6 +11709,11 @@ probabilities with Python.</p>
 <script src="https://gist.github.com/dc232799604bb34fdc9ff891fd9fcbeb.js"></script>
 <h2 data-number="7.2" id="markov-chains"><span
 class="header-section-number">7.2</span> Markov chains</h2>
+<div class="lectureVideoEmbed"
+data-video-id="14b359b60e3a40eab58a0bdfb1bc85341d"
+data-video-date="2023-11-06">
+Intro to Markov chains
+</div>
 <p>With those preliminaries out of the way, we’re ready to talk about
 Markov chains, our first stochastic process. This is a particularly
 important class of stochastic process, one of the best known and most
@@ -11774,7 +11855,7 @@ p_{10} &amp; p_{11}
 0.8 &amp; 0.2 \\
 0.6 &amp; 0.4
 \end{bmatrix}
-</span><span class="eqnos-number">(27)</span></span></p>
+</span><span class="eqnos-number">(28)</span></span></p>
 <p>A nice way to visualize a Markov chain is with a transition diagram,
 as illustrated below:</p>
 <figure>
@@ -11895,7 +11976,7 @@ class="math display">
 0.264 &amp; 0.368 &amp; 0.368 &amp; 0     \\
 0.080 &amp; 0.184 &amp; 0.368 &amp; 0.368
 \end{bmatrix}
-</span><span class="eqnos-number">(28)</span></span></p>
+</span><span class="eqnos-number">(29)</span></span></p>
 <h3 data-number="7.2.2" id="sec:nStepTransitionProbs"><span
 class="header-section-number">7.2.2</span> <span
 class="math inline">n</span>-step transition probabilities</h3>
@@ -12034,10 +12115,10 @@ class="math inline">k</span>.</li>
 <p>For the two examples we’ve seen so far (weather and inventory), it
 should be pretty clear that all the states communicate with each other.
 It’s very clear from the transition matrix for the weather example
-(eq. <a href="#eq:weatherMatrix">27</a>) that you can go from any state
+(eq. <a href="#eq:weatherMatrix">28</a>) that you can go from any state
 to the other state in just one step. It’s slightly less clear for the
 inventory example (transition matrix eq. <a
-href="#eq:inventoryMatrix">28</a>), since you can’t e.g. go directly
+href="#eq:inventoryMatrix">29</a>), since you can’t e.g. go directly
 from state 1 to state 2 in a single step. But you <em>can</em> go from
 state 1 directly to state 0, then from state 0 directly to state 2 (and
 similar could be said for any pair of states)<a href="#fn109"
@@ -12048,7 +12129,7 @@ later) definitions in action.</p>
 <h4>
 Gambling example
 </h4>
-<p>In this example, (once again from +<span class="citation"
+<p>In this example, (once again from <span class="citation"
 data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
 role="doc-biblioref">2021</a>)</span>) a gambler repeatedly plays a game
 until he hits some end condition:</p>
@@ -12078,8 +12159,17 @@ class="math display">
 0&amp;1-p&amp;0&amp;p\\
 0&amp;0&amp;0&amp;1\\
 \end{bmatrix}
-</span><span class="eqnos-number">(29)</span></span></p>
-<p>which states communicate in this example? Clearly no other states
+</span><span class="eqnos-number">(30)</span></span></p>
+<p>And the associated transition diagram:</p>
+<figure>
+<img src="images/gambling-transition-diagram.png"
+alt="Transition diagram for gambling Markov chain example (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Transition diagram for gambling Markov
+chain example <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<p>Which states communicate in this example? Clearly no other states
 communicate with state 0 or state 3. In contrast, States 1 and 2
 <em>do</em> communicate, since <span
 class="math inline">p_{12}&gt;0</span> and <span
@@ -12149,7 +12239,7 @@ Periodicity
 </h4>
 <p>Sometimes there are restrictions on the time-steps at which a state
 can be entered. In the gambling example (transition matrix eq. <a
-href="#eq:gamblingMatrix">29</a>) you start at time <span
+href="#eq:gamblingMatrix">30</a>) you start at time <span
 class="math inline">t=0</span> in state 1. From there, it is clearly
 impossible to enter state 1 at time <span
 class="math inline">t=1</span>. In fact, the only times you may enter
@@ -12181,7 +12271,7 @@ ergodic. Ergodic Markov chains have special properties that we will soon
 explore.</p>
 <h3 data-number="7.2.4" id="absorption-probabilities"><span
 class="header-section-number">7.2.4</span> Absorption probabilities</h3>
-<p>The gambling example (eq. <a href="#eq:gamblingMatrix">29</a>) is
+<p>The gambling example (eq. <a href="#eq:gamblingMatrix">30</a>) is
 interesting in that it has multiple absorbing states. If there were only
 one absorbing state, we would know that, in the long run, the chain
 would eventually become stuck at that one state. But since in this case
@@ -12250,26 +12340,294 @@ are only two absorbing states, so the only possible long-run
 possibilities are absorption into either state 0 or state 3. So in this
 case we have <span class="math inline">f_{i3} = 1 - f_{i0}</span> for
 all <span class="math inline">i</span>.</p>
-<!-- ### Initial state probabilities
-
-
-
-### Steady-state probabilities
-
-Let's take a moment and return to the Colab notebook in +@sec:nStepTransitionProbs, where we explored $n$-step transition probabilities. For either of the probability matrices in that section, if you raise them to a high enough power (20 will suffice for either) you might notice something peculiar. Letting $\mathbf{P}$ be the transition matrix from the inventory example (+@eq:inventoryMatrix), from the notebook you would find that $\mathbf{P}^{n}$ for large $n$ is approximately:
-
-```python
-array([[0.28565411, 0.28483488, 0.26318076, 0.16633024],
-       [0.28565411, 0.28483488, 0.26318076, 0.16633024],
-       [0.28565411, 0.28483488, 0.26318076, 0.16633024],
-       [0.28565411, 0.28483488, 0.26318076, 0.16633024]])
-```
-
-Notice how every row of that matrix is identical to every other row. What does that mean? It would mean that for large enough $n$ the probability of ending up in a given state after $n$ transitions is the same _no matter where you started_. This would imply that starting conditions are irrelevant to the long-run behavior of the system.
-
-We will see shortly that this was no accident. 
-
-### First passage times -->
+<h3 data-number="7.2.5" id="sec:markovUnconditional"><span
+class="header-section-number">7.2.5</span> Unconditional
+probabilities</h3>
+<p>Most of the probabilities we have seen so far have been
+<em>conditional</em> probabilities, dependent on the current state of
+the process. This is because we don’t know at any given time step where
+the process may be. If we’d like to talk about <em>unconditional</em>
+probabilities, we’ll need to know something more concrete about where
+the system is at any given time. Usually we’ll do this by setting
+initial conditions for the chain, i.e. specifying (either absolutely or
+probabilistically) which state the process will start out in<a
+href="#fn111" class="footnote-ref" id="fnref111"
+role="doc-noteref"><sup>111</sup></a>.</p>
+<p>In order to do this, we can specify a row vector <span
+class="math inline">\boldsymbol\pi</span> where each entry <span
+class="math inline">\pi_i</span> represents</p>
+<p><span class="math display">
+\pi_i=P\!\left( X_0=i \right)
+</span></p>
+<p>Then if we multiply <span
+class="math inline">\boldsymbol\pi\mathbf{P}</span><a href="#fn112"
+class="footnote-ref" id="fnref112"
+role="doc-noteref"><sup>112</sup></a>:</p>
+<p><span class="math display">
+\boldsymbol\pi\mathbf{P}=\begin{bmatrix}
+\pi_0p_{00} + \pi_1p_{10} + \dots + \pi_Mp_{M0} \\
+\pi_0p_{01} + \pi_1p_{11} + \dots + \pi_Mp_{M1} \\
+\vdots \\
+\pi_0p_{0M} + \pi_1p_{1M} + \dots + \pi_Mp_{MM}
+\end{bmatrix}^\intercal
+</span></p>
+<p>Each entry <span class="math inline">i</span> of this resultant
+vector is then given by:</p>
+<p><span class="math display">
+\begin{align*}
+&amp;\pi_0p_{0i} + \pi_1p_{1i} + \dots + \pi_Mp_{Mi} \\
+=&amp;P\!\left( X_0=0 \right)P\!\left( X_1=i|X_0=0 \right) + P\!\left(
+X_0=1 \right)P\!\left( X_1=i|X_0=1 \right) + \dots + P\!\left( X_0=M
+\right)P\!\left( X_1=i|X_0=M \right) \\
+=&amp;P\!\left( \{X_1=i\}\cap\{X_0=0\} \right) + P\!\left(
+\{X_1=i\}\cap\{X_0=1\} \right) + \dots + P\!\left(
+\{X_1=i\}\cap\{X_0=M\} \right) \\
+=&amp;P\!\left( X_1=i \right)
+\end{align*}
+</span></p>
+<p>(Where the third line come from the definition of conditional
+probability eq. <a href="#eq:conditionalProbability">27</a>, and the
+final line is due to the <a
+href="https://en.wikipedia.org/wiki/Law_of_total_probability">law of
+total probability</a>.) It’s not too hard to show that this logic falls
+out the same way for <span class="math inline">\mathbf{P}^n</span> for
+any <span class="math inline">n\geq0</span>. That is, if <span
+class="math inline">\boldsymbol\pi</span> holds the initial state
+probabilities, then we have</p>
+<p><span class="math display">
+\boldsymbol\pi\mathbf{P}^n=\begin{bmatrix}P\!\left( X_n=0 \right) &amp;
+P\!\left( X_n=1 \right) &amp; \cdots &amp; P\!\left( X_n=M
+\right)\end{bmatrix}
+</span></p>
+<p>If you have a case where you want to enforce <span
+class="math inline">X_0=i</span>, then you can simply set up <span
+class="math inline">\boldsymbol\pi</span> so that <span
+class="math inline">\pi_i=1</span> and <span
+class="math inline">\pi_j=0</span> for all <span
+class="math inline">j\neq i</span>.</p>
+<h3 data-number="7.2.6" id="steady-state-probabilities"><span
+class="header-section-number">7.2.6</span> Steady-state
+probabilities</h3>
+<p>Let’s take a moment and return to the Colab notebook in section <a
+href="#sec:nStepTransitionProbs">7.2.2</a>, where we explored <span
+class="math inline">n</span>-step transition probabilities. For either
+of the probability matrices in that section, if you raise them to a high
+enough power (20 will suffice for either) you might notice something
+peculiar. Letting <span class="math inline">\mathbf{P}</span> be the
+transition matrix from the inventory example (eq. <a
+href="#eq:inventoryMatrix">29</a>), using the notebook you would find
+that <span class="math inline">\mathbf{P}^{n}</span> for large <span
+class="math inline">n</span> is approximately:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>array([[<span class="fl">0.28565411</span>, <span class="fl">0.28483488</span>, <span class="fl">0.26318076</span>, <span class="fl">0.16633024</span>],</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>       [<span class="fl">0.28565411</span>, <span class="fl">0.28483488</span>, <span class="fl">0.26318076</span>, <span class="fl">0.16633024</span>],</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>       [<span class="fl">0.28565411</span>, <span class="fl">0.28483488</span>, <span class="fl">0.26318076</span>, <span class="fl">0.16633024</span>],</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>       [<span class="fl">0.28565411</span>, <span class="fl">0.28483488</span>, <span class="fl">0.26318076</span>, <span class="fl">0.16633024</span>]])</span></code></pre></div>
+<p>Notice how every row of that matrix is identical to every other row.
+What does that mean? It would mean that for large enough <span
+class="math inline">n</span> the probability of ending up in a given
+state after <span class="math inline">n</span> transitions is the same
+<em>no matter where you started</em>. This would imply that starting
+conditions are irrelevant to the long-run behavior of the system.</p>
+<p>Let’s state this observation a little more mathematically. For each
+state <span class="math inline">j</span> and large enough <span
+class="math inline">n</span>, we’ve noticed that</p>
+<p><span class="math display">
+p_{0j}^{(n)}\approx p_{1j}^{(n)}\approx\cdots\approx p_{Mj}^{(n)}
+</span></p>
+<p>(at least for these two examples). As we continue to choose larger
+and larger values for <span class="math inline">n</span>, the numbers do
+not appear to change. This is no proof, of course, but it seems
+reasonable to surmise that</p>
+<p><span class="math display">
+\lim_{n\rightarrow\infty}p_{0j}^{(n)} =
+\lim_{n\rightarrow\infty}p_{1j}^{(n)} = \cdots =
+\lim_{n\rightarrow\infty}p_{Mj}^{(n)}
+</span></p>
+<p>It turns out that, under fairly common conditions, these properties
+<em>do</em> hold. In fact, there is often a handy way to solve for these
+long-run probabilities. The main result (which is beyond the scope of
+this class to prove) is as follows:</p>
+<div id="thm:markovSteadyState" class="theorem">
+<p>For any irreducible ergodic Markov chain with transition matrix <span
+class="math inline">\mathbf{P}</span> and any state <span
+class="math inline">j</span>, the limit <span class="math display">
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}
+</span> exists and is independent of <span class="math inline">i</span>.
+Furthermore, for any <span class="math inline">i</span> <span
+class="math display">
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}=\pi_j
+</span> where <span class="math inline">\pi_j</span> is the <span
+class="math inline">j</span>th entry of the unique vector <span
+class="math inline">\boldsymbol\pi</span> satisfying <span
+class="math display">
+\begin{align*}
+\boldsymbol\pi\mathbf{P}&amp;=\boldsymbol\pi\\
+\sum_{j=0}^M\pi_j&amp;=1
+\end{align*}
+</span></p>
+</div>
+<p>Those conditions at the end of the theorem,</p>
+<p><span id="eq:markovSteadyState" class="eqnos"><span
+class="math display">
+\begin{align*}
+\boldsymbol\pi\mathbf{P}&amp;=\boldsymbol\pi\\
+\sum_{j=0}^M\pi_j&amp;=1
+\end{align*}
+</span><span class="eqnos-number">(31)</span></span></p>
+<p>are called the <strong>steady-state equations</strong> of the Markov
+chain, and the solution <span class="math inline">\boldsymbol\pi</span>
+is the vector of <strong>steady-state probabilities</strong>. The
+<em>steady-state</em> part of those names make sense in the light of
+what we explored in section <a
+href="#sec:markovUnconditional">7.2.5</a>. There, we let <span
+class="math inline">j</span>th entry of <span
+class="math inline">\boldsymbol\pi</span> be the probability <span
+class="math inline">P\!\left( X_0=j \right)</span> of starting the
+process in some state <span class="math inline">j</span>. Then we saw
+that the <span class="math inline">j</span>th entry of the product <span
+class="math inline">\boldsymbol\pi\mathbf{P}</span> gave the probability
+<span class="math inline">P\!\left( X_1=j \right)</span> of being in
+state <span class="math inline">j</span> in the next time step. If <span
+class="math inline">\boldsymbol\pi</span> satisfies the steady-state
+equations, then these probabilities are the same!</p>
+<p>Ah, but there seems to be a problem. The steady-state equations
+include <span class="math inline">M+1</span> unknowns (the entries <span
+class="math inline">\pi_j</span> of the vector <span
+class="math inline">\boldsymbol\pi</span>) but <span
+class="math inline">M+2</span> equations, so it seems like there won’t
+be enough degrees of freedom to find a solution.</p>
+<p>But actually, since each row of <span
+class="math inline">\mathbf{P}</span> sums to one, knowing any <span
+class="math inline">M</span> columns out of that matrix is sufficient to
+determine the <span class="math inline">M+1</span>st column. So <span
+class="math inline">\mathbf{P}</span> cannot have full rank, meaning
+only <span class="math inline">M</span> of the equations in <span
+class="math inline">\boldsymbol\pi\mathbf{P}</span> could be linearly
+independent. In practice, this means that we can take only <span
+class="math inline">M</span> of those equations and solve them
+simultaneously with <span class="math inline">\sum_{j=0}^M\pi_j=1</span>
+to find the steady-state probabilities.</p>
+<h4>
+Example
+</h4>
+<p>Let’s use what we know to find the steady-state probabilities for the
+weather example. The system <span
+class="math inline">\boldsymbol\pi\mathbf{P}=\boldsymbol\pi</span> gives
+the equations:</p>
+<p><span class="math display">
+\begin{align*}
+\begin{bmatrix}\pi_1 &amp; \pi_2\end{bmatrix}\begin{bmatrix}0.8 &amp;
+0.2 \\ 0.6 &amp; 0.4\end{bmatrix}&amp;=\begin{bmatrix}\pi_1 &amp;
+\pi_2\end{bmatrix} \\
+&amp;\Updownarrow \\
+\begin{bmatrix}0.8\pi_1 + 0.6\pi_2 &amp; 0.2\pi_1 +
+0.4\pi_2\end{bmatrix}&amp;=\begin{bmatrix}\pi_1 &amp; \pi_2\end{bmatrix}
+\end{align*}
+</span></p>
+<p>Since one of these is redundant, we can choose one to throw away
+(we’ll just say the first one) and solve simultaneously with the
+condition <span class="math inline">\pi_1 + \pi_2 = 1</span>. So we need
+to solve the system:</p>
+<p><span class="math display">
+\begin{align*}
+\pi_1 + \pi_2 &amp;= 1 \\
+0.2\pi_1 + 0.4\pi_2&amp;=\pi_2
+\end{align*}
+</span></p>
+<p>Which works out to</p>
+<p><span class="math display">
+\pi_1=0.75, \quad \pi_2=0.25
+</span></p>
+<p>So the steady-state vector is <span
+class="math inline">\boldsymbol\pi=[0.75, 0.25]</span>.</p>
+<h4>
+Solving for the steady-state probabilities in matrix form
+</h4>
+<p>The above argument gives you a way to solve for the steady-state
+probabilities by hand, but a more machine-friendly way is to use the
+following matrix form (which we won’t bother to prove, though you can
+look for it in <span class="citation"
+data-cites="resnickAdventures">Resnick (<a href="#ref-resnickAdventures"
+role="doc-biblioref">1992</a>)</span>):</p>
+<p><span class="math display">
+\boldsymbol\pi =
+\begin{bmatrix}1&amp;1&amp;\cdots&amp;1\end{bmatrix}(\mathbf{I}-
+\mathbf{P} + \mathbf{O})^{-1}
+</span></p>
+<p>where <span class="math inline">\mathbf{I}</span> is an <span
+class="math inline">(M+1)\times (M+1)</span> identity matrix and <span
+class="math inline">\mathbf{O}</span> is an <span
+class="math inline">(M+1)\times (M+1)</span> matrix with every entry
+equal to 1. You might look at that and be worried about the matrix <span
+class="math inline">(\mathbf{I}- \mathbf{P} + \mathbf{O})</span> even
+having an inverse, but rest assured that if the process is irreducible
+and ergodic then the inverse will exists. We will see how to apply this
+in Python shortly.</p>
+<h3 data-number="7.2.7" id="average-cost-per-time-step"><span
+class="header-section-number">7.2.7</span> Average cost per time
+step</h3>
+<p>These preceding results for</p>
+<p><span class="math display">
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}
+</span></p>
+<p>all required the underlying Markov chain to be ergodic. But suppose
+the Markov chain instead had aperiodic states. Then the limit above need
+not exist, since for infinitely many values of <span
+class="math inline">n</span> we’d have <span
+class="math inline">p_{ij}^{(n)}=0</span>, but for other <span
+class="math inline">n</span> the value may be strictly bounded from
+0.</p>
+<p>But there is a related quantity that always will exist so long as the
+process is irreducible. Namely, for any state <span
+class="math inline">j</span> (and independent of starting state <span
+class="math inline">i</span>) we can show that the following holds:</p>
+<p><span class="math display">
+\lim_{n\rightarrow\infty}\frac{1}{n}\sum_{k=1}^np_{ij}^{(k)}=\pi_j
+</span></p>
+<p>where <span class="math inline">\pi_j</span> is the <span
+class="math inline">j</span>th entry of the vector <span
+class="math inline">\boldsymbol\pi</span> satisfying the steady-state
+equations eq. <a href="#eq:markovSteadyState">31</a>. This limit is
+essentially the long-run average probability of ending up in state <span
+class="math inline">j</span>, with that average taken over all time
+steps. It is very easy to see why this might be related to the
+steady-state probabilities, and luckily it is applicable to a larger
+range of stochastic processes.</p>
+<p>In particular, it is going to help us in the case that we have some
+cost associated with entering particular states in a Markov chain, and
+we’d like to know something about the costs that we incur in the long
+run. In that spirit, let <span class="math inline">c</span> be some
+function so that when a Markov chain enters state <span
+class="math inline">X_i</span> for any <span
+class="math inline">i\in\{0,\dots,M\}</span> we incur some cost <span
+class="math inline">c(X_i)</span>. In this case, we can use that above
+result<a href="#fn113" class="footnote-ref" id="fnref113"
+role="doc-noteref"><sup>113</sup></a> to show that the <strong>long-run
+expected average cost per unit time</strong> is given by:</p>
+<p><span class="math display">
+\lim_{n\rightarrow\infty}E\!\left( \frac{1}{n}\sum_{t=1}^nc(X_t)
+\right)=\sum_{j=0}^M\pi_jc(j).
+</span></p>
+<h4>
+Example
+</h4>
+<p>Let’s reconsider the inventory example (transition matrix eq. <a
+href="#eq:inventoryMatrix">29</a>). Suppose that Dave now incurs a
+storage cost for each camera remaining on the shelf at the end of the
+week. The cost function is structured as follows:</p>
+<p><span class="math display">
+c(x) = \begin{cases}
+0 &amp;&amp;\text{ if } x = 0 \\
+2 &amp;&amp;\text{ if } x = 1 \\
+8 &amp;&amp;\text{ if } x = 2 \\
+18 &amp;&amp;\text{ if } x = 3
+\end{cases}
+</span></p>
+<p>Let’s head to the following Colab notebook to calculate the long-run
+expected average storage cost per week.</p>
+<script src="https://gist.github.com/d0c5365b0fd5a5b2db8aefc5cf025719.js"></script>
+<!-- ### First passage times, if there is time -->
 <!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
@@ -12428,7 +12786,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(30)</span></span></p>
+</span><span class="eqnos-number">(32)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -13091,6 +13449,12 @@ href="https://api.semanticscholar.org/CorpusID:117965841">https://api.semanticsc
 <div id="ref-solverBenchmarks" class="csl-entry" role="doc-biblioentry">
 <span>“Mittelmann Benchmarks.”</span> n.d. <a
 href="https://plato.asu.edu/bench.html">https://plato.asu.edu/bench.html</a>.
+</div>
+<div id="ref-resnickAdventures" class="csl-entry"
+role="doc-biblioentry">
+Resnick, S. I. 1992. <em>Adventures in Stochastic Processes</em>.
+Adventures in Stochastic Processes. Birkhäuser Boston. <a
+href="https://books.google.com/books?id=YGjTl8iX-HsC">https://books.google.com/books?id=YGjTl8iX-HsC</a>.
 </div>
 <div id="ref-spivakCalculus" class="csl-entry" role="doc-biblioentry">
 Spivak, M. 2006. <em>Calculus</em>. Calculus. Cambridge University
@@ -13781,6 +14145,19 @@ sample space) but still have 0 probability of occurring (like bouncing
 back and forth forever between states 1 and 2 forever). So even though
 they are technically possible, we don’t consider them from a
 probabilistic perspective.<a href="#fnref110" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn111"><p>We’ve actually done this once already, when we said
+the inventory example would start out in state <span
+class="math inline">X_0=3</span>.<a href="#fnref111"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn112"><p>Note that the multiplication results in a row vector.
+I’m writing it as a transposed column vector to put each entry on its
+own line and make things a little more clear.<a href="#fnref112"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn113"><p>I’ve sure been presenting a lot of these results
+without even hinting at proofs, haven’t I? It all comes down to not
+wanting to deal with more rigorous probability theory.<a
+href="#fnref113" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
