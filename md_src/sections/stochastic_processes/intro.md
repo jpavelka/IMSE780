@@ -271,6 +271,8 @@ $$
 \prob{A|B}=\frac{\prob{A\cap B}}{\prob{B}}
 $$
 
+{#eq:conditionalProbability}
+
 I think a Venn diagram is a good way to visualize this relation, as shown [here](https://www.probabilitycourse.com/chapter1/1_4_0_conditional_probability.php#chapter_image). Basically, you can think of conditional probability as a normal probability, except that now the sample space has been reduced from the original $\Omega$ to just the conditional event $B$. As such, it is worth noting that one can define entire probability distributions based on conditional probability, i.e. for some random variable $X$ one could define a _conditional_ CDF
 
 $$

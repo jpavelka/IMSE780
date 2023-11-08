@@ -1,5 +1,7 @@
 ## Markov chains
 
+<div class='lectureVideoEmbed' video-id='14b359b60e3a40eab58a0bdfb1bc85341d' video-date='2023-11-06'>Intro to Markov chains</div>
+
 With those preliminaries out of the way, we're ready to talk about Markov chains, our first stochastic process. This is a particularly important class of stochastic process, one of the best known and most important, which even had a hand in Google taking over the world[^pageRankMarkov]. In this class both of the future topics of queueing theory and Markov decision processes will build upon what we learn here. Note that the content of this section comes largely from a web supplement to @classText and can be found [here](https://highered.mheducation.com/sites/dl/free/1259872998/1126268/Hillier_IOR_11e_Ch028_WebChapter.pdf).
 
 [^pageRankMarkov]: Google's [PageRank](https://en.wikipedia.org/wiki/PageRank) algorithm, among the first algorithms they used for ranking pages in search results, is based on Markov chain theory.
@@ -183,7 +185,7 @@ $$
 
 represents the two possible ways to start in state 0 in some time step, then return back to 0 after two transitions. Since these two paths are disjoint events, their joint probability is the sum of the individual probabilities. So $p_{00}^{(2)}$ is exactly the probability of starting in state 0 at some time step, and then being in state 0 again two steps later.
 
-In general, we can write out the following __Chapman-Kolmogorov equation__
+In general, we can write out the following **Chapman-Kolmogorov equation**
 
 $$
 p_{ij}^{(n)}=\sum_{k=0}^Mp_{ik}^{(n-1)}p_{kj}
@@ -201,12 +203,12 @@ As we continue analyzing Markov chains, many of our results will depend on the n
 
 <h4>Communication</h4>
 
-A state $j$ is said to be __accessible__ from state $i$ if $p_{ij}^{(n)}>0$ for some $n\geq0$. In other words, state $j$ being accessible from state $i$ simply means that it's possible for the system to enter state $j$ _eventually_ when it starts from state $i$. Furthermore, two states $i$ and $j$ are said to __communicate__ if both states are accessible from each other, i.e. state $j$ is accessible from state $i$ _and_ state $i$ is accessible from state $j$. Said another way, $i\neq j$ communicate if and only if it is possible to start in state $i$, enter state $j$ some time in the future, then eventually make it back to state $i$. Given that definition, the following statements must be true:
+A state $j$ is said to be **accessible** from state $i$ if $p_{ij}^{(n)}>0$ for some $n\geq0$. In other words, state $j$ being accessible from state $i$ simply means that it's possible for the system to enter state $j$ _eventually_ when it starts from state $i$. Furthermore, two states $i$ and $j$ are said to **communicate** if both states are accessible from each other, i.e. state $j$ is accessible from state $i$ _and_ state $i$ is accessible from state $j$. Said another way, $i\neq j$ communicate if and only if it is possible to start in state $i$, enter state $j$ some time in the future, then eventually make it back to state $i$. Given that definition, the following statements must be true:
 
 1. Any state communicates with itself (by technicality, since $p_{ii}^{(0)}=\prob{X_t=i|X_t=i}=1$).
 2. If state $i$ communicates with state $j$, then state $j$ communicates with state $i$.
 3. If state $i$ communicates with state $j$ and state $j$ communicates with state $k$, then state $i$
-communicates with state $k$.
+   communicates with state $k$.
 
 For the two examples we've seen so far (weather and inventory), it should be pretty clear that all the states communicate with each other. It's very clear from the transition matrix for the weather example (+@eq:weatherMatrix) that you can go from any state to the other state in just one step. It's slightly less clear for the inventory example (transition matrix +@eq:inventoryMatrix), since you can't e.g. go directly from state 1 to state 2 in a single step. But you _can_ go from state 1 directly to state 0, then from state 0 directly to state 2 (and similar could be said for any pair of states)[^exampleMatrixFromNotebook].
 
@@ -216,7 +218,7 @@ So it looks like we need another example so we can see these (and later) definit
 
 <h4>Gambling example</h4>
 
-In this example, (once again from +@classText) a gambler repeatedly plays a game until he hits some end condition:
+In this example, (once again from @classText) a gambler repeatedly plays a game until he hits some end condition:
 
 > Suppose that a player has \$1 and with each play of the game wins $1 with probability $p > 0$ or loses \$1 with probability $1 − p > 0$. The game ends when the player either accumulates $3 or goes broke. This game is a Markov chain with the states representing the player’s current holding of money, that is, \$0, \$1, \$2, or \$3.
 
@@ -233,33 +235,37 @@ $$
 
 {#eq:gamblingMatrix}
 
-which states communicate in this example? Clearly no other states communicate with state 0 or state 3. In contrast, States 1 and 2 _do_ communicate, since $p_{12}>0$ and $p_{21}>0$.
+And the associated transition diagram:
+
+![Transition diagram for gambling Markov chain example [@classText]](images/gambling-transition-diagram.png)
+
+Which states communicate in this example? Clearly no other states communicate with state 0 or state 3. In contrast, States 1 and 2 _do_ communicate, since $p_{12}>0$ and $p_{21}>0$.
 
 <h4>Classes and reducibility</h4>
 
-If all of the pairs of states in a Markov chain communicate with each other, then we say that the chain is __irreducible__. As we saw, this is the case in both the weather and inventory examples, but it is _not_ the case in the gambling example.
+If all of the pairs of states in a Markov chain communicate with each other, then we say that the chain is **irreducible**. As we saw, this is the case in both the weather and inventory examples, but it is _not_ the case in the gambling example.
 
-In the case that a Markov chain is not irreducible, it can still be useful to know which groups of states _do_ mutually communicate. Indeed, as a consequence of the three properties of communication stated above, the states of a Markov chain may be partitioned into one or more separate __classes__ such that those states that communicate with each other are in the same class. Such a class is also often called a __communication class__. In the gambling example there are three distinct classes, $\{0\}$, $\{3\}$, and $\{1,2\}$.
+In the case that a Markov chain is not irreducible, it can still be useful to know which groups of states _do_ mutually communicate. Indeed, as a consequence of the three properties of communication stated above, the states of a Markov chain may be partitioned into one or more separate **classes** such that those states that communicate with each other are in the same class. Such a class is also often called a **communication class**. In the gambling example there are three distinct classes, $\{0\}$, $\{3\}$, and $\{1,2\}$.
 
 <h4>Recurring, transient, and absorbing states</h4>
 
-Let's look again at states 1 and 2 from the gambling example. While it is technically possible to keep bouncing back and forth between these two states for arbitrarily long, eventually (and in all probability[^inAllProbability]) the chain will transition to either state 0 or 3, and never return to 1 or 2 again. Any such state where, upon entering it, it is possible to leave its communication class completely and never return again, is called a __transient state__. More precisely, a state $i$ is transient if there exists a state $j$ such that $j$ is accessible from $i$ but $i$ is not accessible from $j$.
+Let's look again at states 1 and 2 from the gambling example. While it is technically possible to keep bouncing back and forth between these two states for arbitrarily long, eventually (and in all probability[^inAllProbability]) the chain will transition to either state 0 or 3, and never return to 1 or 2 again. Any such state where, upon entering it, it is possible to leave its communication class completely and never return again, is called a **transient state**. More precisely, a state $i$ is transient if there exists a state $j$ such that $j$ is accessible from $i$ but $i$ is not accessible from $j$.
 
 [^inAllProbability]: I'll keep peppering the notes with that term, "in all probability" as a substitute for notions from the more rigorous probability theory that we won't explore here. It comes from a notion that there can be events that are "possible" (exist as a subset of the sample space) but still have 0 probability of occurring (like bouncing back and forth forever between states 1 and 2 forever). So even though they are technically possible, we don't consider them from a probabilistic perspective.
 
-Conversely, a state is called a __recurrent state__ if, upon entering this state, the process definitely will (in all probability) return to this state again. This forms a true dichotomy with the concept of transient states, in that every state in a Markov chain must be either transient or recurrent. Every state we've seen in our three examples have been recurrent states, save for states 1 and 2 in the gambling example, which are transient.
+Conversely, a state is called a **recurrent state** if, upon entering this state, the process definitely will (in all probability) return to this state again. This forms a true dichotomy with the concept of transient states, in that every state in a Markov chain must be either transient or recurrent. Every state we've seen in our three examples have been recurrent states, save for states 1 and 2 in the gambling example, which are transient.
 
 Since recurrent states will (in all probability) always be revisited after leaving, then they will be visited infinitely often over the course of the process (if they are visited at all). In contrast, transient states are only ever visited finitely often over all of the time steps.
 
-Not all recurrent states are created equal, however. States 0 and 3 in the gambling example have the property that once they are visited, the process will never leave that state. Such a recurrent state is also called an __absorbing state__. A state $i$ is an absorbing state if and only if $p_{ii}=1$.
+Not all recurrent states are created equal, however. States 0 and 3 in the gambling example have the property that once they are visited, the process will never leave that state. Such a recurrent state is also called an **absorbing state**. A state $i$ is an absorbing state if and only if $p_{ii}=1$.
 
-It is worth noting that recurrence and transience are both __class properties__, i.e. a property that must be shared between every state in the same class. Thus if $i$ and $j$ are two states in the same recurrence class, it must be that $i$ and $j$ are either both recurrent or both transient.
+It is worth noting that recurrence and transience are both **class properties**, i.e. a property that must be shared between every state in the same class. Thus if $i$ and $j$ are two states in the same recurrence class, it must be that $i$ and $j$ are either both recurrent or both transient.
 
 <h4>Periodicity</h4>
 
 Sometimes there are restrictions on the time-steps at which a state can be entered. In the gambling example (transition matrix +@eq:gamblingMatrix) you start at time $t=0$ in state 1. From there, it is clearly impossible to enter state 1 at time $t=1$. In fact, the only times you may enter state 1 are at $t=2, t=4, t=6$, or any even-numbered time step. This observation motivates the next definition.
 
-The __period__ of a state $i$ is the smallest number $t$ such that 
+The **period** of a state $i$ is the smallest number $t$ such that
 
 $$
 p_{ii}^{(n)}\begin{cases}
@@ -268,11 +274,11 @@ p_{ii}^{(n)}\begin{cases}
 \end{cases}
 $$
 
-If the period of some state $i$ is equal to 1, then we say that state $i$ is __aperiodic__.
+If the period of some state $i$ is equal to 1, then we say that state $i$ is **aperiodic**.
 
 From this definition, it is clear that both states 1 and 2 in the gambling example are periodic states with periods of 2. Furthermore, we know that they _have to_ have the same period, since we already know they are in the same recurrence class, and it can be shown that periodicity is a class property (i.e. all states in the same class must share the same period).
 
-In a finite-state Markov chain, states that are both recurrent and aperiodic are called __ergodic__ states. Further, if every state in a Markov chain is ergodic, then the chain itself is said to be ergodic. Ergodic Markov chains have special properties that we will soon explore.
+In a finite-state Markov chain, states that are both recurrent and aperiodic are called **ergodic** states. Further, if every state in a Markov chain is ergodic, then the chain itself is said to be ergodic. Ergodic Markov chains have special properties that we will soon explore.
 
 ### Absorption probabilities
 
@@ -317,13 +323,53 @@ $$
 
 We could follow this same procedure to find the $f_{i3}$ probabilities. But in this case there are only two absorbing states, so the only possible long-run possibilities are absorption into either state 0 or state 3. So in this case we have $f_{i3} = 1 - f_{i0}$ for all $i$.
 
-<!-- ### Initial state probabilities
+### Unconditional probabilities {#sec:markovUnconditional}
 
+Most of the probabilities we have seen so far have been _conditional_ probabilities, dependent on the current state of the process. This is because we don't know at any given time step where the process may be. If we'd like to talk about _unconditional_ probabilities, we'll need to know something more concrete about where the system is at any given time. Usually we'll do this by setting initial conditions for the chain, i.e. specifying (either absolutely or probabilistically) which state the process will start out in[^initialStateInventory].
 
+[^initialStateInventory]: We've actually done this once already, when we said the inventory example would start out in state $X_0=3$.
+
+In order to do this, we can specify a row vector $\boldsymbol\pi$ where each entry $\pi_i$ represents
+
+$$
+\pi_i=\prob{X_0=i}
+$$
+
+Then if we multiply $\boldsymbol\pi\mathbf{P}$[^columnVectorEasierToSee]:
+
+[^columnVectorEasierToSee]: Note that the multiplication results in a row vector. I'm writing it as a transposed column vector to put each entry on its own line and make things a little more clear.
+
+$$
+\boldsymbol\pi\mathbf{P}=\begin{bmatrix}
+ \pi_0p_{00} + \pi_1p_{10} + \dots + \pi_Mp_{M0} \\
+ \pi_0p_{01} + \pi_1p_{11} + \dots + \pi_Mp_{M1} \\
+ \vdots \\
+ \pi_0p_{0M} + \pi_1p_{1M} + \dots + \pi_Mp_{MM}
+\end{bmatrix}\T
+$$
+
+Each entry $i$ of this resultant vector is then given by:
+
+$$
+\begin{align*}
+&\pi_0p_{0i} + \pi_1p_{1i} + \dots + \pi_Mp_{Mi} \\
+=&\prob{X_0=0}\prob{X_1=i|X_0=0} + \prob{X_0=1}\prob{X_1=i|X_0=1} + \dots + \prob{X_0=M}\prob{X_1=i|X_0=M} \\
+=&\prob{\{X_1=i\}\cap\{X_0=0\}} + \prob{\{X_1=i\}\cap\{X_0=1\}} + \dots + \prob{\{X_1=i\}\cap\{X_0=M\}} \\
+=&\prob{X_1=i}
+\end{align*}
+$$
+
+(Where the third line come from the definition of conditional probability +@eq:conditionalProbability, and the final line is due to the [law of total probability](https://en.wikipedia.org/wiki/Law_of_total_probability).) It's not too hard to show that this logic falls out the same way for $\mathbf{P}^n$ for any $n\geq0$. That is, if $\boldsymbol\pi$ holds the initial state probabilities, then we have
+
+$$
+\boldsymbol\pi\mathbf{P}^n=\begin{bmatrix}\prob{X_n=0} & \prob{X_n=1} & \cdots & \prob{X_n=M}\end{bmatrix}
+$$
+
+If you have a case where you want to enforce $X_0=i$, then you can simply set up $\boldsymbol\pi$ so that $\pi_i=1$ and $\pi_j=0$ for all $j\neq i$.
 
 ### Steady-state probabilities
 
-Let's take a moment and return to the Colab notebook in +@sec:nStepTransitionProbs, where we explored $n$-step transition probabilities. For either of the probability matrices in that section, if you raise them to a high enough power (20 will suffice for either) you might notice something peculiar. Letting $\mathbf{P}$ be the transition matrix from the inventory example (+@eq:inventoryMatrix), from the notebook you would find that $\mathbf{P}^{n}$ for large $n$ is approximately:
+Let's take a moment and return to the Colab notebook in +@sec:nStepTransitionProbs, where we explored $n$-step transition probabilities. For either of the probability matrices in that section, if you raise them to a high enough power (20 will suffice for either) you might notice something peculiar. Letting $\mathbf{P}$ be the transition matrix from the inventory example (+@eq:inventoryMatrix), using the notebook you would find that $\mathbf{P}^{n}$ for large $n$ is approximately:
 
 ```python
 array([[0.28565411, 0.28483488, 0.26318076, 0.16633024],
@@ -334,6 +380,135 @@ array([[0.28565411, 0.28483488, 0.26318076, 0.16633024],
 
 Notice how every row of that matrix is identical to every other row. What does that mean? It would mean that for large enough $n$ the probability of ending up in a given state after $n$ transitions is the same _no matter where you started_. This would imply that starting conditions are irrelevant to the long-run behavior of the system.
 
-We will see shortly that this was no accident. 
+Let's state this observation a little more mathematically. For each state $j$ and large enough $n$, we've noticed that
 
-### First passage times -->
+$$
+p_{0j}^{(n)}\approx p_{1j}^{(n)}\approx\cdots\approx p_{Mj}^{(n)}
+$$
+
+(at least for these two examples). As we continue to choose larger and larger values for $n$, the numbers do not appear to change. This is no proof, of course, but it seems reasonable to surmise that
+
+$$
+\lim_{n\rightarrow\infty}p_{0j}^{(n)} = \lim_{n\rightarrow\infty}p_{1j}^{(n)} = \cdots = \lim_{n\rightarrow\infty}p_{Mj}^{(n)}
+$$
+
+It turns out that, under fairly common conditions, these properties _do_ hold. In fact, there is often a handy way to solve for these long-run probabilities. The main result (which is beyond the scope of this class to prove) is as follows:
+
+<div class='theorem' id='thm:markovSteadyState'>
+For any irreducible ergodic Markov chain with transition matrix $\mathbf{P}$ and any state $j$, the limit
+$$
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}
+$$
+exists and is independent of $i$. Furthermore, for any $i$
+$$
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}=\pi_j
+$$
+where $\pi_j$ is the $j$th entry of the unique vector $\boldsymbol\pi$ satisfying
+$$
+\begin{align*}
+\boldsymbol\pi\mathbf{P}&=\boldsymbol\pi\\
+\sum_{j=0}^M\pi_j&=1
+\end{align*}
+$$
+</div>
+
+Those conditions at the end of the theorem,
+
+$$
+\begin{align*}
+\boldsymbol\pi\mathbf{P}&=\boldsymbol\pi\\
+\sum_{j=0}^M\pi_j&=1
+\end{align*}
+$$
+
+{#eq:markovSteadyState}
+
+are called the **steady-state equations** of the Markov chain, and the solution $\boldsymbol\pi$ is the vector of **steady-state probabilities**. The _steady-state_ part of those names make sense in the light of what we explored in +@sec:markovUnconditional. There, we let $j$th entry of $\boldsymbol\pi$ be the probability $\prob{X_0=j}$ of starting the process in some state $j$. Then we saw that the $j$th entry of the product $\boldsymbol\pi\mathbf{P}$ gave the probability $\prob{X_1=j}$ of being in state $j$ in the next time step. If $\boldsymbol\pi$ satisfies the steady-state equations, then these probabilities are the same!
+
+Ah, but there seems to be a problem. The steady-state equations include $M+1$ unknowns (the entries $\pi_j$ of the vector $\boldsymbol\pi$) but $M+2$ equations, so it seems like there won't be enough degrees of freedom to find a solution.
+
+But actually, since each row of $\mathbf{P}$ sums to one, knowing any $M$ columns out of that matrix is sufficient to determine the $M+1$st column. So $\mathbf{P}$ cannot have full rank, meaning only $M$ of the equations in $\boldsymbol\pi\mathbf{P}$ could be linearly independent. In practice, this means that we can take only $M$ of those equations and solve them simultaneously with $\sum_{j=0}^M\pi_j=1$ to find the steady-state probabilities.
+
+<h4>Example</h4>
+
+Let's use what we know to find the steady-state probabilities for the weather example. The system $\boldsymbol\pi\mathbf{P}=\boldsymbol\pi$ gives the equations:
+
+$$
+\begin{align*}
+\begin{bmatrix}\pi_1 & \pi_2\end{bmatrix}\begin{bmatrix}0.8 & 0.2 \\ 0.6 & 0.4\end{bmatrix}&=\begin{bmatrix}\pi_1 & \pi_2\end{bmatrix} \\
+&\Updownarrow \\
+\begin{bmatrix}0.8\pi_1 + 0.6\pi_2 & 0.2\pi_1 + 0.4\pi_2\end{bmatrix}&=\begin{bmatrix}\pi_1 & \pi_2\end{bmatrix}
+\end{align*}
+$$
+
+Since one of these is redundant, we can choose one to throw away (we'll just say the first one) and solve simultaneously with the condition $\pi_1 + \pi_2 = 1$. So we need to solve the system:
+
+$$
+\begin{align*}
+\pi_1 + \pi_2 &= 1 \\
+0.2\pi_1 + 0.4\pi_2&=\pi_2
+\end{align*}
+$$
+
+Which works out to
+
+$$
+\pi_1=0.75, \quad \pi_2=0.25
+$$
+
+So the steady-state vector is $\boldsymbol\pi=[0.75, 0.25]$.
+
+<h4>Solving for the steady-state probabilities in matrix form</h4>
+
+The above argument gives you a way to solve for the steady-state probabilities by hand, but a more machine-friendly way is to use the following matrix form (which we won't bother to prove, though you can look for it in @resnickAdventures):
+
+$$
+\boldsymbol\pi = \begin{bmatrix}1&1&\cdots&1\end{bmatrix}(\identity - \mathbf{P} + \mathbf{O})\inv
+$$
+
+where $\identity$ is an $(M+1)\times (M+1)$ identity matrix and $\mathbf{O}$ is an $(M+1)\times (M+1)$ matrix with every entry equal to 1. You might look at that and be worried about the matrix $(\identity - \mathbf{P} + \mathbf{O})$ even having an inverse, but rest assured that if the process is irreducible and ergodic then the inverse will exists. We will see how to apply this in Python shortly.
+
+### Average cost per time step
+
+These preceding results for
+
+$$
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}
+$$
+
+all required the underlying Markov chain to be ergodic. But suppose the Markov chain instead had aperiodic states. Then the limit above need not exist, since for infinitely many values of $n$ we'd have $p_{ij}^{(n)}=0$, but for other $n$ the value may be strictly bounded from 0.
+
+But there is a related quantity that always will exist so long as the process is irreducible. Namely, for any state $j$ (and independent of starting state $i$) we can show that the following holds:
+
+$$
+\lim_{n\rightarrow\infty}\frac{1}{n}\sum_{k=1}^np_{ij}^{(k)}=\pi_j
+$$
+
+where $\pi_j$ is the $j$th entry of the vector $\boldsymbol\pi$ satisfying the steady-state equations +@eq:markovSteadyState. This limit is essentially the long-run average probability of ending up in state $j$, with that average taken over all time steps. It is very easy to see why this might be related to the steady-state probabilities, and luckily it is applicable to a larger range of stochastic processes.
+
+In particular, it is going to help us in the case that we have some cost associated with entering particular states in a Markov chain, and we'd like to know something about the costs that we incur in the long run. In that spirit, let $c$ be some function so that when a Markov chain enters state $X_i$ for any $i\in\{0,\dots,M\}$ we incur some cost $c(X_i)$. In this case, we can use that above result[^notProvingLimitTheorems] to show that the **long-run expected average cost per unit time** is given by:
+
+[^notProvingLimitTheorems]: I've sure been presenting a lot of these results without even hinting at proofs, haven't I? It all comes down to not wanting to deal with more rigorous probability theory.
+
+$$
+\lim_{n\rightarrow\infty}\E{\frac{1}{n}\sum_{t=1}^nc(X_t)}=\sum_{j=0}^M\pi_jc(j).
+$$
+
+<h4>Example</h4>
+
+Let's reconsider the inventory example (transition matrix +@eq:inventoryMatrix). Suppose that Dave now incurs a storage cost for each camera remaining on the shelf at the end of the week. The cost function is structured as follows:
+
+$$
+c(x) = \begin{cases}
+0 &&\text{ if } x = 0 \\
+2 &&\text{ if } x = 1 \\
+8 &&\text{ if } x = 2 \\
+18 &&\text{ if } x = 3
+\end{cases}
+$$
+
+Let's head to the following Colab notebook to calculate the long-run expected average storage cost per week.
+
+{colabGist:1K84wMoNPv3BB38THMYn3BtTdEAZQX_pL,d0c5365b0fd5a5b2db8aefc5cf025719}
+
+<!-- ### First passage times, if there is time -->
