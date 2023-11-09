@@ -2975,6 +2975,8 @@ id="toc-average-cost-per-time-step"><span
 class="toc-section-number">7.2.7</span> Average cost per time
 step</a></li>
 </ul></li>
+<li><a href="#queueing-theory" id="toc-queueing-theory"><span
+class="toc-section-number">7.3</span> Queueing theory</a></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">8</span> Appendix</a>
@@ -12069,6 +12071,11 @@ Check the following notebook.</p>
 <script src="https://gist.github.com/acaebd42106eb6efc95b8f88fee04531.js"></script>
 <h3 data-number="7.2.3" id="state-classification"><span
 class="header-section-number">7.2.3</span> State classification</h3>
+<div class="lectureVideoEmbed"
+data-video-id="63e37289e2b140f483720be323e050b91d"
+data-video-date="2023-11-08">
+State classification, absorption probabilities
+</div>
 <p>As we continue analyzing Markov chains, many of our results will
 depend on the nature of the possible states in the chain. In this
 section we’ll examine different classifications for the states of Markov
@@ -12231,7 +12238,7 @@ class="math inline">p_{ii}=1</span>.</p>
 <strong>class properties</strong>, i.e. a property that must be shared
 between every state in the same class. Thus if <span
 class="math inline">i</span> and <span class="math inline">j</span> are
-two states in the same recurrence class, it must be that <span
+two states in the same communication class, it must be that <span
 class="math inline">i</span> and <span class="math inline">j</span> are
 either both recurrent or both transient.</p>
 <h4>
@@ -12261,7 +12268,7 @@ equal to 1, then we say that state <span class="math inline">i</span> is
 <p>From this definition, it is clear that both states 1 and 2 in the
 gambling example are periodic states with periods of 2. Furthermore, we
 know that they <em>have to</em> have the same period, since we already
-know they are in the same recurrence class, and it can be shown that
+know they are in the same communication class, and it can be shown that
 periodicity is a class property (i.e. all states in the same class must
 share the same period).</p>
 <p>In a finite-state Markov chain, states that are both recurrent and
@@ -12628,7 +12635,16 @@ c(x) = \begin{cases}
 expected average storage cost per week.</p>
 <script src="https://gist.github.com/d0c5365b0fd5a5b2db8aefc5cf025719.js"></script>
 <!-- ### First passage times, if there is time -->
-<!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
+<h2 data-number="7.3" id="queueing-theory"><span
+class="header-section-number">7.3</span> Queueing theory</h2>
+<p>The next area of stochastic processes we will study is
+<strong>queueing theory</strong>, which you could call the study of
+waiting in lines. The models we see here could be seen as a special
+class of (continuous-time) Markov chains, but the theory is
+well-developed outside of that formalism, so we won’t be referring back
+to our Markov chain chapter here.</p>
+<p>Examples from the textbook (e.g. edelman prize winners)</p>
+<p>Go back and do pagerank section?</p>
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
