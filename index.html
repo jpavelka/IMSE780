@@ -2974,6 +2974,10 @@ probabilities</a></li>
 id="toc-average-cost-per-time-step"><span
 class="toc-section-number">7.2.7</span> Average cost per time
 step</a></li>
+<li><a href="#application-to-web-search"
+id="toc-application-to-web-search"><span
+class="toc-section-number">7.2.8</span> Application to web
+search</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -12632,7 +12636,76 @@ c(x) = \begin{cases}
 <p>Let’s head to the following Colab notebook to calculate the long-run
 expected average storage cost per week.</p>
 <script src="https://gist.github.com/d0c5365b0fd5a5b2db8aefc5cf025719.js"></script>
-<!-- ### First passage times, if there is time -->
+<h3 data-number="7.2.8" id="application-to-web-search"><span
+class="header-section-number">7.2.8</span> Application to web
+search</h3>
+<p>As mentioned at the beginning of this section, Markov chains have
+played a part in how Google orders pages in its search results<a
+href="#fn114" class="footnote-ref" id="fnref114"
+role="doc-noteref"><sup>114</sup></a>. There is a pretty neat idea
+behind it, so let’s take a look at how it works!</p>
+<p>Suppose you have a collection of <span class="math inline">M+1</span>
+websites that you’d like to rank by “importance”. You have access to the
+content of the sites, but no external information like page views. What
+might you do?</p>
+<p>One thing you can determine from the site content is what pages link
+to other pages in your collection. You might be tempted then to rank
+pages by the number of other pages linking to it. But that could be
+gamed easily - anyone that wants a higher ranking can just create a
+bunch of new websites with links to their main site. So what you’d like
+to do is somehow count links from more important websites higher than
+links from less important websites. But importance is exactly what we’re
+trying to determine in the first place! It all seems just hopelessly
+self-referential.</p>
+<p>But what about this? Pretend that there is some “random” web surfer,
+who navigates to one of the websites at random and, from then on,
+chooses a link at random from all of those available on the page. The
+measure of importance would be what proportion of time the surfer goes
+to a given site. It would be pretty easy to model this as a Markov
+chain. As usual, we’ll label the states <span
+class="math inline">0,1,\dots,M</span>, with each one representing a
+website. Suppose each site <span class="math inline">i</span> had <span
+class="math inline">n_i</span> links out to other websites. Then the
+transition matrix (let’s call it <span
+class="math inline">\mathbf{P}^{\text{links}}</span>) would have
+entries</p>
+<p><span class="math display">
+p^{\text{links}}_{ij} = \begin{cases}
+\frac{1}{n_i}&amp;&amp;\text{if site } i \text{ links to site }j \\
+0&amp;&amp;\text{otherwise}
+\end{cases}
+</span></p>
+<p>This should be able to neutralize the attack mentioned above, where a
+website owner creates a bunch of zombie websites whose only purpose is
+to link back to the main site. If no other sites link to those zombie
+websites, then they can’t affect the traffic to the main site in the
+long term.</p>
+<p>So if we take <span class="math inline">\boldsymbol\pi</span> as the
+solution to the steady-state equations eq. <a
+href="#eq:markovSteadyState">31</a>, then that will give us the
+importance ratings we need! But there could be a problem, as we have no
+guarantee that our Markov chain is recurrent. So it may not be possible
+to solve the steady-state equations. We can mitigate this by creating a
+new matrix <span class="math inline">\mathbf{P}^{\text{uniform}}</span>
+with entries</p>
+<p><span class="math display">
+p^{\text{uniform}}_{ij} = \frac{1}{M+1}
+</span></p>
+<p>Thinking back to the random surfer, this would correspond to the
+surfer not selecting some link on the current site, but instead just
+choosing from random across <em>all</em> the sites considered. To make
+this useful to us, we can combine this matrix with the last one via some
+weighting to create our final transition matrix <span
+class="math inline">\mathbf{P}</span>. Maybe something like:</p>
+<p><span class="math display">
+\mathbf{P} = 0.9\mathbf{P}^{\text{links}} +
+0.1\mathbf{P}^{\text{uniform}}
+</span></p>
+<p>This final matrix corresponds to a process where the surfer clicks on
+a random link 90% of the time, but the other 10% of the time just
+selects a new page at random. Check out the following notebook to get a
+feel for how this might work.</p>
+<script src="https://gist.github.com/829e60ed481a4ab7fe3d4b1e397ddbd2.js"></script>
 <!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
@@ -14163,6 +14236,11 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 without even hinting at proofs, haven’t I? It all comes down to not
 wanting to deal with more rigorous probability theory.<a
 href="#fnref113" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn114"><p>What we’ll show here is part of one of Google’s
+original algorithms, PageRank. Admittedly they’ve added a lot since then
+and I do not know if this particular strategy is still in use.<a
+href="#fnref114" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
