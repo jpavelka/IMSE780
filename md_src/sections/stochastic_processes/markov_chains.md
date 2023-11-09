@@ -513,4 +513,39 @@ Let's head to the following Colab notebook to calculate the long-run expected av
 
 {colabGist:1K84wMoNPv3BB38THMYn3BtTdEAZQX_pL,d0c5365b0fd5a5b2db8aefc5cf025719}
 
-<!-- ### First passage times, if there is time -->
+### Application to web search
+
+As mentioned at the beginning of this section, Markov chains have played a part in how Google orders pages in its search results[^notSureIfStillInUse]. There is a pretty neat idea behind it, so let's take a look at how it works!
+
+[^notSureIfStillInUse]: What we'll show here is part of one of Google's original algorithms, PageRank. Admittedly they've added a lot since then and I do not know if this particular strategy is still in use.
+
+Suppose you have a collection of $M+1$ websites that you'd like to rank by "importance". You have access to the content of the sites, but no external information like page views. What might you do?
+
+One thing you can determine from the site content is what pages link to other pages in your collection. You might be tempted then to rank pages by the number of other pages linking to it. But that could be gamed easily - anyone that wants a higher ranking can just create a bunch of new websites with links to their main site. So what you'd like to do is somehow count links from more important websites higher than links from less important websites. But importance is exactly what we're trying to determine in the first place! It all seems just hopelessly self-referential.
+
+But what about this? Pretend that there is some "random" web surfer, who navigates to one of the websites at random and, from then on, chooses a link at random from all of those available on the page. The measure of importance would be what proportion of time the surfer goes to a given site. It would be pretty easy to model this as a Markov chain. As usual, we'll label the states $0,1,\dots,M$, with each one representing a website. Suppose each site $i$ had $n_i$ links out to other websites. Then the transition matrix (let's call it $\mathbf{P}^{\text{links}}$) would have entries
+
+$$
+p^{\text{links}}_{ij} = \begin{cases}
+\frac{1}{n_i}&&\text{if site } i \text{ links to site }j \\
+0&&\text{otherwise}
+\end{cases}
+$$
+
+This should be able to neutralize the attack mentioned above, where a website owner creates a bunch of zombie websites whose only purpose is to link back to the main site. If no other sites link to those zombie websites, then they can't affect the traffic to the main site in the long term.
+
+So if we take $\boldsymbol\pi$ as the solution to the steady-state equations +@eq:markovSteadyState, then that will give us the importance ratings we need! But there could be a problem, as we have no guarantee that our Markov chain is recurrent. So it may not be possible to solve the steady-state equations. We can mitigate this by creating a new matrix $\mathbf{P}^{\text{uniform}}$ with entries
+
+$$
+p^{\text{uniform}}_{ij} = \frac{1}{M+1}
+$$
+
+Thinking back to the random surfer, this would correspond to the surfer not selecting some link on the current site, but instead just choosing from random across _all_ the sites considered. To make this useful to us, we can combine this matrix with the last one via some weighting to create our final transition matrix $\mathbf{P}$. Maybe something like:
+
+$$
+\mathbf{P} = 0.9\mathbf{P}^{\text{links}} + 0.1\mathbf{P}^{\text{uniform}}
+$$
+
+This final matrix corresponds to a process where the surfer clicks on a random link 90% of the time, but the other 10% of the time just selects a new page at random. Check out the following notebook to get a feel for how this might work.
+
+{colabGist:1v51aGphcWAxmlpyqkvA67a_HbPnfcvPa,829e60ed481a4ab7fe3d4b1e397ddbd2}
