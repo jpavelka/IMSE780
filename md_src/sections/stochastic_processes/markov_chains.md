@@ -199,6 +199,8 @@ Wanna apply this knowledge to our previous example Markov chains? Check the foll
 
 ### State classification
 
+<div class='lectureVideoEmbed' video-id='63e37289e2b140f483720be323e050b91d' video-date='2023-11-08'>State classification, absorption probabilities</div>
+
 As we continue analyzing Markov chains, many of our results will depend on the nature of the possible states in the chain. In this section we'll examine different classifications for the states of Markov chains.
 
 <h4>Communication</h4>
@@ -259,7 +261,7 @@ Since recurrent states will (in all probability) always be revisited after leavi
 
 Not all recurrent states are created equal, however. States 0 and 3 in the gambling example have the property that once they are visited, the process will never leave that state. Such a recurrent state is also called an **absorbing state**. A state $i$ is an absorbing state if and only if $p_{ii}=1$.
 
-It is worth noting that recurrence and transience are both **class properties**, i.e. a property that must be shared between every state in the same class. Thus if $i$ and $j$ are two states in the same recurrence class, it must be that $i$ and $j$ are either both recurrent or both transient.
+It is worth noting that recurrence and transience are both **class properties**, i.e. a property that must be shared between every state in the same class. Thus if $i$ and $j$ are two states in the same communication class, it must be that $i$ and $j$ are either both recurrent or both transient.
 
 <h4>Periodicity</h4>
 
@@ -276,7 +278,7 @@ $$
 
 If the period of some state $i$ is equal to 1, then we say that state $i$ is **aperiodic**.
 
-From this definition, it is clear that both states 1 and 2 in the gambling example are periodic states with periods of 2. Furthermore, we know that they _have to_ have the same period, since we already know they are in the same recurrence class, and it can be shown that periodicity is a class property (i.e. all states in the same class must share the same period).
+From this definition, it is clear that both states 1 and 2 in the gambling example are periodic states with periods of 2. Furthermore, we know that they _have to_ have the same period, since we already know they are in the same communication class, and it can be shown that periodicity is a class property (i.e. all states in the same class must share the same period).
 
 In a finite-state Markov chain, states that are both recurrent and aperiodic are called **ergodic** states. Further, if every state in a Markov chain is ergodic, then the chain itself is said to be ergodic. Ergodic Markov chains have special properties that we will soon explore.
 
