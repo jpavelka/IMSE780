@@ -1900,6 +1900,111 @@ class="math inline">P\!\left( X=36|X\geq 30 \right)</span>.</p></li>
 </ol>
 </div>
 </div>
+<div id="Homework 12" class="assignmentContainer"
+data-sub-name="Markov chains" data-due="2023-11-27">
+<div>
+<ol type="1">
+<li><p>(5pts)** Three white and three black balls are distributed in two
+urns in such a way that each contains three balls. We say that the
+system is in state <span class="math inline">i</span>, <span
+class="math inline">i = 0, 1, 2, 3</span>, if the first urn contains
+<span class="math inline">i</span> white balls. At each step, we draw
+one ball from each urn and place the ball drawn from the first urn into
+the second, and conversely with the ball from the second urn. Let <span
+class="math inline">X_n</span> denote the state of the system after the
+<span class="math inline">n</span>th step. Explain why <span
+class="math inline">\{X_n\}</span> (<span class="math inline">n = 0, 1,
+2,...</span>) is a Markov chain and construct its (one-step) transition
+matrix.</p></li>
+<li><p>(5pts)* Consider a stock market model where whether a certain
+stock goes up tomorrow depends upon whether it increased today
+<em>and</em> yesterday. If the stock increased today and yesterday, it
+will increase tomorrow with probability <span
+class="math inline">\alpha_1</span>. If the stock increased today and
+decreased yesterday, it will increase tomorrow with probability <span
+class="math inline">\alpha_2</span>. If the stock decreased today and
+increased yesterday, it will increase tomorrow with probability <span
+class="math inline">\alpha_3</span>. Finally, if the stock decreased
+today and yesterday, it will increase tomorrow with probability <span
+class="math inline">\alpha_4</span>.</p>
+<p>Initially, it might seem like this scenario cannot be modeled as a
+Markov chain, since what happens in the future (tomorrow) depends upon
+what happened in the past (yesterday) as well as the present (today).
+But this actually can be modeled as a Markov chain by expanding the
+number of states considered. Model this as a Markov chain with 4 states
+by constructing the (one-step) transition matrix.</p></li>
+<li><p>(4pts)* Given the following (one-step) transition matrices of a
+Markov chain, determine the classes of the Markov chain and whether they
+are recurrent.</p>
+<ol type="a">
+<li><span class="math display">
+\begin{bmatrix}
+0 &amp; 0 &amp; \frac{1}{3} &amp; \frac{2}{3} \\
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0
+\end{bmatrix}
+</span></li>
+<li><span class="math display">
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; \frac{1}{2} &amp; \frac{1}{2} &amp; 0 \\
+0 &amp; \frac{1}{2} &amp; \frac{1}{2} &amp; 0 \\
+\frac{1}{2} &amp; 0 &amp; 0 &amp; \frac{1}{2}
+\end{bmatrix}
+</span></li>
+</ol></li>
+<li><p>(6pts)* An important unit consists of two components placed in
+parallel. The unit performs satisfactorily if one of the two components
+is operating. Therefore, only one component is operated at a time, but
+both components are kept operational (capable of being operated) as
+often as possible by repairing them as needed. An operating component
+breaks down in a given period with probability 0.2. When this occurs,
+the parallel component takes over, if it is operational, at the
+beginning of the next period. Only one component can be repaired at a
+time. The repair of a component starts at the beginning of the first
+available period and is completed at the end of the next period. Let
+<span class="math inline">X_t</span> be a vector consisting of two
+elements <span class="math inline">U</span> and <span
+class="math inline">V</span>, where <span class="math inline">U</span>
+represents the number of components that are operational at the end of
+period <span class="math inline">t</span> and <span
+class="math inline">V</span> represents the number of periods of repair
+that have been completed on components that are not yet operational.
+Thus, <span class="math inline">V = 0</span> if <span
+class="math inline">U = 2</span> or if <span class="math inline">U =
+1</span> and the repair of the nonoperational component is just getting
+under way. Because a repair takes two periods, <span
+class="math inline">V = 1</span> if <span class="math inline">U =
+0</span> (since then one nonoperational component is waiting to begin
+repair while the other one is entering its second period of repair) or
+if <span class="math inline">U = 1</span> and the nonoperational
+component is entering its second period of repair. Therefore, the state
+space consists of the four states (2, 0), (1, 0), (0, 1), and (1, 1).
+Denote these four states by <span class="math inline">0, 1, 2, 3</span>,
+respectively. <span class="math inline">{X_t} (t = 0, 1, . . .)</span>
+is a Markov chain (assume that <span class="math inline">X_0 = 0</span>)
+with the (one-step) transition matrix</p>
+<p><span class="math display">
+  \begin{bmatrix}
+  0.8 &amp; 0.2 &amp; 0   &amp; 0 \\
+  0   &amp; 0   &amp; 0.2 &amp; 0.8 \\
+  0   &amp; 1   &amp; 0   &amp; 0 \\
+  0.8 &amp; 0.2 &amp; 0   &amp; 0
+  \end{bmatrix}
+  </span></p>
+<ol type="a">
+<li>What is the probability that the unit will be inoperable (because
+both components are down) after <span class="math inline">n</span>
+periods, for <span class="math inline">n = 2, 5, 10, 20</span>?</li>
+<li>What are the steady-state probabilities for this Markov chain?</li>
+<li>If it costs $30,000 per period when the unit is inoperable (both
+components down) and zero otherwise, what is the (long-run) expected
+average cost per period?</li>
+</ol></li>
+</ol>
+</div>
+</div>
 <div id="Midterm" class="assignmentContainer"
 data-sub-name="Linear and integer programming" data-due="2023-10-22"
 data-grading-notes-link="https://colab.research.google.com/drive/1DrCzHCUY0XSLWrtcnLH9D-K26R4BDE07?usp=sharing">
@@ -1975,6 +2080,7 @@ the “Final Project” assignment on Canvas.</p>
 <p>* : From Hillier &amp; Lieberman, 2021.</p>
 <p><span class="math inline">^\text{\textdagger}</span> : From Wolsey,
 2020.</p>
+<p>**: From Ross, 2007.</p>
 <hr>
 <h1 id="pyInstructions">
 Instructions for submitting Python assignments:
