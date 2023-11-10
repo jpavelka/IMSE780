@@ -327,6 +327,8 @@ We could follow this same procedure to find the $f_{i3}$ probabilities. But in t
 
 ### Unconditional probabilities {#sec:markovUnconditional}
 
+<div class='lectureVideoEmbed' video-id='9c199a22fe4b46ddb849f99e1c8f276b1d' video-date='2023-11-10'>Long-run properties of Markov chains</div>
+
 Most of the probabilities we have seen so far have been _conditional_ probabilities, dependent on the current state of the process. This is because we don't know at any given time step where the process may be. If we'd like to talk about _unconditional_ probabilities, we'll need to know something more concrete about where the system is at any given time. Usually we'll do this by setting initial conditions for the chain, i.e. specifying (either absolutely or probabilistically) which state the process will start out in[^initialStateInventory].
 
 [^initialStateInventory]: We've actually done this once already, when we said the inventory example would start out in state $X_0=3$.
