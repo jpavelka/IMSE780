@@ -42,7 +42,7 @@ Each term in this function becomes large when the denominator is small, and each
 
 But there is a potential problem - if the barrier function keeps us away from the boundary of the feasible region, how can we ever find an optimal solution that happens to lay _on_ the boundary? The answer is right in the name of the method: we do not solve just one of these unconstrained problems but rather a sequence of them. We decrease the value of $r$ from iteration to iteration so as to allow solutions closer and closer to the boundary (in practice, we will pick a multiplier $\theta<1$ such that at each iteration, $r$ is reset to the value $\theta r$). None of the individual problems will solve to a solution on the border, but potentially we can recognize if the sequence of solutions approaches a boundary solution.
 
-How do we know when to stop iterating? Like we've done before, we'd like to continue until we know we're "close to" the optimal solution $\x^*$. Furthermore, one can show that if $\x'$ is an maximizer for $P(\x, r)$ then
+How do we know when to stop iterating? Like we've done before, we'd like to continue until we know we're "close to" the optimal solution $\x^*$. Furthermore, one can show that if $\x'$ is a maximizer for $P(\x, r)$ then
 
 $$
 f(\x')\leq f(\x^*) \leq f(\x') + rB(\x')
