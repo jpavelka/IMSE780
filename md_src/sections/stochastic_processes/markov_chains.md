@@ -371,7 +371,7 @@ $$
 
 If you have a case where you want to enforce $X_0=i$, then you can simply set up $\boldsymbol\pi$ so that $\pi_i=1$ and $\pi_j=0$ for all $j\neq i$.
 
-### Steady-state probabilities
+### Steady-state probabilities {#sec:markovSteadyState}
 
 Let's take a moment and return to the Colab notebook in +@sec:nStepTransitionProbs, where we explored $n$-step transition probabilities. For either of the probability matrices in that section, if you raise them to a high enough power (20 will suffice for either) you might notice something peculiar. Letting $\mathbf{P}$ be the transition matrix from the inventory example (+@eq:inventoryMatrix), using the notebook you would find that $\mathbf{P}^{n}$ for large $n$ is approximately:
 
