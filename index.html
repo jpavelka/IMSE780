@@ -2966,8 +2966,8 @@ probabilities</a></li>
 id="toc-sec:markovUnconditional"><span
 class="toc-section-number">7.2.5</span> Unconditional
 probabilities</a></li>
-<li><a href="#steady-state-probabilities"
-id="toc-steady-state-probabilities"><span
+<li><a href="#sec:markovSteadyState"
+id="toc-sec:markovSteadyState"><span
 class="toc-section-number">7.2.6</span> Steady-state
 probabilities</a></li>
 <li><a href="#average-cost-per-time-step"
@@ -2978,6 +2978,23 @@ step</a></li>
 id="toc-application-to-web-search"><span
 class="toc-section-number">7.2.8</span> Application to web
 search</a></li>
+</ul></li>
+<li><a href="#queueing-theory" id="toc-queueing-theory"><span
+class="toc-section-number">7.3</span> Queueing theory</a>
+<ul>
+<li><a href="#initial-example" id="toc-initial-example"><span
+class="toc-section-number">7.3.1</span> Initial example</a></li>
+<li><a href="#queueing-basics" id="toc-queueing-basics"><span
+class="toc-section-number">7.3.2</span> Queueing basics</a></li>
+<li><a href="#sec:exponentialPoissonDistributions"
+id="toc-sec:exponentialPoissonDistributions"><span
+class="toc-section-number">7.3.3</span> Exponential and Poisson
+distributions</a></li>
+<li><a href="#notation" id="toc-notation"><span
+class="toc-section-number">7.3.4</span> Notation</a></li>
+<li><a href="#queues-in-steady-state"
+id="toc-queues-in-steady-state"><span
+class="toc-section-number">7.3.5</span> Queues in steady state</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -12419,7 +12436,7 @@ class="math inline">\boldsymbol\pi</span> so that <span
 class="math inline">\pi_i=1</span> and <span
 class="math inline">\pi_j=0</span> for all <span
 class="math inline">j\neq i</span>.</p>
-<h3 data-number="7.2.6" id="steady-state-probabilities"><span
+<h3 data-number="7.2.6" id="sec:markovSteadyState"><span
 class="header-section-number">7.2.6</span> Steady-state
 probabilities</h3>
 <p>Let’s take a moment and return to the Colab notebook in section <a
@@ -12711,7 +12728,418 @@ a random link 90% of the time, but the other 10% of the time just
 selects a new page at random. Check out the following notebook to get a
 feel for how this might work.</p>
 <script src="https://gist.github.com/829e60ed481a4ab7fe3d4b1e397ddbd2.js"></script>
-<!-- {insertSection:sections/stochastic_processes/queueing_theory.md} -->
+<h2 data-number="7.3" id="queueing-theory"><span
+class="header-section-number">7.3</span> Queueing theory</h2>
+<p>The next area of stochastic processes we will study is
+<strong>queueing theory</strong>, which you could call the study of
+waiting in lines. The models we see here could be seen as a special
+class of (continuous-time) Markov chains, but the theory is
+well-developed outside of that formalism, so we won’t be referring back
+to our Markov chain chapter here.</p>
+<p>Perhaps studying people standing in lines sounds like it would not be
+of much use - but actually, this is pretty practical! It is of course
+applicable to customer services of all types, and several Edelman prizes
+have been won by queueing applications (see for example <a
+href="https://pubsonline.informs.org/doi/10.1287/inte.6.1pt2.4">here</a>
+and <a
+href="https://pubsonline.informs.org/doi/10.1287/inte.24.1.6">here</a>).
+<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span> highlights
+several other examples in section 17.3</p>
+<h3 data-number="7.3.1" id="initial-example"><span
+class="header-section-number">7.3.1</span> Initial example</h3>
+<p>Let’s now describe our prototype queueing problem, as described by
+<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span>:</p>
+<blockquote>
+<p>The emergency room of COUNTY HOSPITAL provides quick medical care for
+emergency cases brought to the hospital by ambulance or private
+automobile. At any hour there is always one doctor on duty in the
+emergency room. However, because of a growing tendency for emergency
+cases to use these facilities rather than go to a private physician, the
+hospital has been experiencing a continuing increase in the number of
+emergency room visits each year. As a result, it has become quite common
+for patients arriving during peak usage hours (the early evening) to
+have to wait until it is their turn to be treated by the doctor.
+Therefore, a proposal has been made that a second doctor should be
+assigned to the emergency room during these hours, so that two emergency
+cases can be treated simultaneously. The hospital’s management engineer
+has been assigned to study this question.</p>
+<p>The management engineer began by gathering the relevant historical
+data and then projecting these data into the next year. Recognizing that
+the emergency room is a queueing system, she applied several alternative
+queueing theory models to predict the waiting characteristics of the
+system with one doctor and with two doctors, as you will see in the
+latter sections of this chapter.</p>
+</blockquote>
+<h3 data-number="7.3.2" id="queueing-basics"><span
+class="header-section-number">7.3.2</span> Queueing basics</h3>
+<p>The basic mechanics behind a queueing system are that customers
+arrive to some system and wait in line for service, with the time
+between arrivals being determined by some random process. There might be
+one or several lines to choose from. The customer at the front receives
+a service, and the service time is also a random variable. The goal for
+an analysis is to determine any number of possible performance metrics -
+how long customers stay in the system, what percentage of time they are
+waiting in line, how long the lines are on average, etc.</p>
+<p>Customers to a service are assumed to arrive from the so-called
+<strong>input source</strong> or <strong>calling population</strong>. An
+important characteristic of the input source is its
+<strong>size</strong>, which is essentially the maximum potential number
+of customers that may require service. The most important distinction is
+whether the size if <em>finite</em> or <em>infinite</em> (a.k.a.
+<em>limited</em> or <em>unlimited</em>). An assumed infinite input
+source may sound unrealistic, but it makes the math much easier and is a
+good approximation for a very large (but finite) calling population that
+is exceedingly unlikely to all show up for service all at once.</p>
+<p>The process by which customers arrive to the system is called the
+<strong>arrival process</strong>. Most often we will assume that the
+process generating customers is a Poisson process, i.e. the number of
+customers arriving within a given time period follows a Poisson
+distribution. It turns out that this is equivalent to saying that the
+times between consecutive arrivals (also called the <strong>interarrival
+times</strong>) follow an exponential distribution. Both of these
+distributions are well known, and we’ll talk more about them in
+section <a href="#sec:exponentialPoissonDistributions">7.3.3</a>.</p>
+<p>The <strong>queue</strong> is where customers wait before receiving
+service. We may sometimes assume that the queue is <em>finite</em>, so
+that only a certain number of customers can be in line at the same time.
+Other times we’ll not assume any such cap, so that the size of the queue
+is <em>infinite</em>. As was the case with the calling population,
+assuming an infinite queue may not be technically justifiable, but it
+can simplify the math quite a bit, and not change the answers too much
+in certain circumstances (where the actual finite maximum will almost
+certainly never be reached).</p>
+<p>We may also sometimes speak about the so-called <strong>queue
+discipline</strong>, which refers to the order in which members of the
+queue are selected for service. A common assumption is a
+<strong>first-in-first-out</strong> (or
+<strong>first-come-first-served</strong>) discipline, such that the
+customer that has been in the queue for the longest amount of time is
+the next customer serviced.</p>
+<p>Services in the system occur at one or more <strong>service
+facilities</strong>, each of which contains one or more parallel service
+channels, called <strong>servers</strong>. In most basic queueing
+scenarios you will see only one service facility, with a finite number
+of servers (often only one). If there is more than one service facility,
+the customer may receive service from a sequence of these.</p>
+<p>At a given facility, the customer enters one of the parallel service
+channels and is completely serviced by that server. The time elapsed
+from the beginning to the end of service is called the <strong>service
+time</strong>. Quite often, service times are also assumed to come from
+an exponential distribution.</p>
+<p>As is evident from the preceding discussion, queueing systems can
+take on several forms. But the most common (and the one we’ll focus on
+in this course) is described succinctly below by <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>:</p>
+<blockquote>
+<p>A single waiting line (which may be empty at times) forms in the
+front of a single service facility, within which are stationed one or
+more servers. Each customer generated by an input source is serviced by
+one of the servers, perhaps after some waiting in the queue (waiting
+line).</p>
+</blockquote>
+<p>The following image depicts this scenario:</p>
+<figure>
+<img src="images/queue-system-diagram.png"
+alt="Customers (C) and servers (S) in a queueing system (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Customers (C) and servers (S) in a
+queueing system <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<p>When talking about a queueing system, the <strong>state</strong> of
+the system is the <em>total</em> number of customers in the queueing
+system. This is in contrast to the <strong>queue length</strong>, which
+is the number of customers waiting for service to begin. So the state of
+the system is the queue length <em>plus</em> the number of customers
+currently being served. In the above image, there are 11 total
+customers. Four of these customers (standing opposite the servers) are
+currently receiving service, while the other seven are in the queue.
+Thus the state of the system is 11, while the queue length is 7.</p>
+<p>Finally, it is worth noting that although the language we generally
+use conjures up images of people standing one behind another while an
+employee at the front deals with their needs one by one, there not need
+be any actual people or physical lines involved. The customers need not
+be people but instead any kind of product or item that might require
+work. Similarly, the servers may be machines instead of humans. And
+there may be no actual lines at all, perhaps just a “virtual queue” of
+callers waiting for the next available call-center representative.</p>
+<h3 data-number="7.3.3" id="sec:exponentialPoissonDistributions"><span
+class="header-section-number">7.3.3</span> Exponential and Poisson
+distributions</h3>
+<p>In queueing systems, there are two places where randomness comes into
+play: in determining the service times and interarrival times. In real
+life, the distributions governing these processes could take on many
+forms. But, as we’ve mentioned, in much of queueing theory we assume
+these numbers are pulled independently from an exponential distribution.
+The reason for this is two-fold: The first reason is that the form of
+the exponential distribution gives it several nice properties that we’re
+about to explore, and these properties make our calculations fairly
+simple. The second reason is that several real-life processes have been
+shown to follow distributions closely approximating an exponential
+distribution<a href="#fn115" class="footnote-ref" id="fnref115"
+role="doc-noteref"><sup>115</sup></a>.</p>
+<p>Suppose a continuous random variable <span
+class="math inline">T</span> represents the time between two consecutive
+events of some kind. <span class="math inline">T</span> is said to have
+an <strong>exponential distribution</strong> with parameter <span
+class="math inline">\alpha</span> if its PDF is given by:</p>
+<p><span class="math display">
+f_T(t)=\begin{cases}
+\alpha e^{-\alpha t} &amp;&amp; t\geq0\\
+0 &amp;&amp; t&lt;0
+\end{cases}
+</span></p>
+<p>Then the CDF is</p>
+<p><span class="math display">
+F_T(t)=P\!\left( T\leq t \right)=\begin{cases}
+1 - e^{-\alpha t} &amp;&amp; t\geq0\\
+0 &amp;&amp; t&lt;0
+\end{cases}
+</span></p>
+<p>and <span class="math inline">T</span>’s expectation and variance
+are:</p>
+<p><span class="math display">
+E\!\left( T \right)=\frac{1}{\alpha} \qquad \text{Var}\!\left( T
+\right)=\frac{1}{\alpha^2}
+</span></p>
+<p>Beyond this, there are several properties of the exponential
+distribution worth mentioning.</p>
+<h4>
+Memorylessness
+</h4>
+<p>The most famous property of the exponential distribution is the
+so-called <strong>memorylessness property</strong>. Mathematically, this
+means that for any positive quantities <span
+class="math inline">t,s&gt;0</span>, we have</p>
+<p><span class="math display">
+P\!\left( T&gt;t+s|T&gt;t \right)=P\!\left( T&gt;s \right)
+</span></p>
+<p>In words, this is saying that the probability of waiting for <span
+class="math inline">s</span> more seconds after having already waited
+for <span class="math inline">t</span> seconds, is the same as the
+probability would have been to wait <span class="math inline">s</span>
+seconds at the start. There’s no mystery mathematically why this occurs,
+since (using the definition of conditional probability eq. <a
+href="#eq:conditionalProbability">27</a>) we have<a href="#fn116"
+class="footnote-ref" id="fnref116"
+role="doc-noteref"><sup>116</sup></a>:</p>
+<p><span class="math display">
+\begin{align*}
+P\!\left( T&gt;t+s|T&gt;t \right)&amp;=\frac{P\!\left( T&gt;t+s,\ T&gt;t
+\right)}{P\!\left( T&gt;t \right)}\\
+&amp;=\frac{P\!\left( T&gt;t+s \right)}{P\!\left( T&gt;t \right)}\\
+&amp;=\frac{e^{-\alpha(t + s)}}{e^{-\alpha t}}\\
+&amp;=\frac{e^{-\alpha t - \alpha s}}{e^{-\alpha t}}\\
+&amp;=e^{-\alpha s}\\
+&amp;=P\!\left( T&gt;s \right)
+\end{align*}
+</span></p>
+<p>But it does feel a little strange, right? In a lot of situations,
+there is an impulse to think that if you’ve been waiting on something
+for a long time, surely it must be happening soon. But that’s not the
+case here. At the moment one event occurs, the expected time until the
+next event is going to be <span
+class="math inline">\frac{1}{\alpha}</span>. This property then tells us
+that, if we’ve already waited for <span class="math inline">t</span>
+seconds (no matter how large <span class="math inline">t</span> is), the
+expected <em>extra</em> time to wait is still <span
+class="math inline">\frac{1}{\alpha}</span>!</p>
+<p>This really is a profoundly strange property, and I think it goes
+towards describing the situations in which an exponential distribution
+is a good vs. a bad approximation. To me, I’m more accepting of this
+property when it comes to customer interarrival times, since there is
+not reason for individual customer actions to be related to each other.
+I feels it’s more questionable for service times, since in many
+scenarios the nature of the service is such that it should take about
+the same amount of time for each customer. But sometimes the service
+time is dependent on characteristics of the customer, in which case the
+property can seem more reasonable.</p>
+<h4>
+The minimum of exponentials is exponential
+</h4>
+<p>Let <span class="math inline">T_1,T_2,\dots,T_n</span> be independent
+exponential random variables with parameters <span
+class="math inline">\alpha_1,\alpha_2,\dots,\alpha_n</span>. Let <span
+class="math inline">U</span> be the random variable equal to the minimum
+of the <span class="math inline">T_j</span> variables, i.e.</p>
+<p><span class="math display">
+U=\text{min}\{T_1,T_2,\dots,T_n\}
+</span></p>
+<p>In other words, if <span class="math inline">T_1,T_2\dots T_n</span>
+are the times until each of <span class="math inline">n</span> separate
+events occur, then <span class="math inline">U</span> is the time until
+the <em>first</em> of these <span class="math inline">n</span> events
+occur. Now, let’s notice that</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+P\!\left( U&gt;t \right)&amp;=P\!\left( T_1&gt;t,\ T_2&gt;t,\ \dots,\
+T_n&gt;t \right)&amp;&amp;\text{(def. of min)} \\
+&amp;=P\!\left( T_1&gt;t \right)P\!\left( T_2&gt;t \right)\dots
+P\!\left( T_n&gt;t \right)&amp;&amp;\text{(independence)} \\
+&amp;=e^{-\alpha_1t}e^{-\alpha_2t}\dots e^{-\alpha_3t} &amp;&amp;(1 -
+\text{CDF)} \\
+&amp;=e^{-t\sum_{i=1}^n\alpha_i}
+\end{align*}
+</span></p>
+</div>
+<p>So the distribution of <span class="math inline">U</span> is the
+distribution of an exponential random variable with parameter <span
+class="math inline">\alpha=\sum_{i=1}^n\alpha_i</span>. This is
+particularly useful to us in the case that a queueing systems includes
+several servers with exponential service times. If all the servers are
+busy, then the system works mathematically just like a single-server
+system with an exponential rate <span
+class="math inline">\alpha</span>.</p>
+<p>This property also makes it easy to determine probabilities for which
+of the <span class="math inline">T_j</span> variables end up being the
+minimum. We won’t give the full derivation, but the end result is</p>
+<p><span class="math display">
+P\!\left( T_j=U \right)=\frac{\alpha_j}{\sum_{i=1}^n\alpha_i}
+</span></p>
+<p>for every <span class="math inline">j</span>.</p>
+<h4>
+Poisson distribution
+</h4>
+<p>Suppose the time between consecutive events (like arrivals to a
+queueing system) has an exponential distribution with parameter <span
+class="math inline">\alpha</span>. Suppose we’d like to know about the
+number of events that occur within a certain amount of time. To that
+end, we’ll define the random variable <span
+class="math inline">X(t)</span> to be the number of events that occur
+between time <span class="math inline">0</span> (when the timing begins)
+and time <span class="math inline">t</span>. It turns out that <span
+class="math inline">X(t)</span> will have a <strong>Poisson
+distribution</strong>, with its rate parameter equal to <span
+class="math inline">\alpha t</span>. So the relevant probabilities
+are:</p>
+<p><span class="math display">
+P\!\left( X(t)=n \right)=\frac{(\alpha t)^ne^{-\alpha t}}{n!}
+</span></p>
+<p>with expectation</p>
+<p><span class="math display">
+E\!\left( X(t) \right)=\alpha t
+</span></p>
+<p>One example of the relationship can be seen by noting that the
+probability of no arrivals by time <span class="math inline">t</span> is
+given by:</p>
+<p><span class="math display">
+P\!\left( X(t)=0 \right)=e^{-\alpha t}
+</span></p>
+<p>Notice that this is also the probability of an exponential random
+variable (with rate <span class="math inline">\alpha</span>) being
+greater than <span class="math inline">t</span>, which of course is just
+another way of describing the same event.</p>
+<p>We can also imagine a (continuous time) stochastic process consisting
+of the collection of random variables <span class="math inline">\{X(t),
+t\geq0\}</span>. When <span class="math inline">X(t)</span> has a
+Poisson distribution, we call the stochastic process a <strong>Poisson
+process</strong>.</p>
+<h3 data-number="7.3.4" id="notation"><span
+class="header-section-number">7.3.4</span> Notation</h3>
+<p>Let’s now go rapid-fire through some notation we’ll be using.</p>
+<ul>
+<li><span class="math inline">N(t)</span>: The state of (or, number of
+customers in) the queueing system at time <span
+class="math inline">t&gt;0</span>.</li>
+<li><span class="math inline">P_n(t)</span>: The probability of exactly
+<span class="math inline">n</span> customers in the queueing system at
+time <span class="math inline">t</span>.</li>
+<li><span class="math inline">s</span>: The number of servers (parallel
+service channels) in the queueing system.</li>
+<li><span class="math inline">\lambda_n</span>: The mean arrival rate
+(expected number of arrivals per unit time) of new customers when <span
+class="math inline">n</span> customers are in the system.</li>
+<li><span class="math inline">\lambda</span>: If <span
+class="math inline">\lambda_n</span> is constant over all <span
+class="math inline">n</span>, then we’ll just denote the mean arrival
+rate as <span class="math inline">\lambda</span>. In this case, the
+mean/expected interarrival time is <span
+class="math inline">\frac{1}{\lambda}</span>.</li>
+<li><span class="math inline">\mu_n</span>: The mean service rate for
+the overall system (i.e. the expected number of customers completing
+service per unit time when <span class="math inline">n</span> customers
+are in system). This is a combined rate including all busy servers.</li>
+<li><span class="math inline">\mu</span>: When the mean service rate
+<em>per busy server</em> is constant for all <span
+class="math inline">n</span>, we’ll denote this constant by <span
+class="math inline">\mu</span>. (In this case, <span
+class="math inline">\mu_n=s\mu</span> when <span
+class="math inline">n\geq s</span>, that is, when all s servers are
+busy.) When <span class="math inline">\mu</span> exists, the
+mean/expected service time per server is <span
+class="math inline">\frac{1}{\mu}</span>.</li>
+<li><span class="math inline">\rho</span>: In the above conditions where
+<span class="math inline">\lambda</span> and <span
+class="math inline">\mu</span> are defined, <span
+class="math inline">\rho=\frac{\lambda}{s\mu}</span> is known as the
+<strong>utilization factor</strong> of the for the service facility,
+i.e., the expected fraction of time the individual servers are busy,
+because <span class="math inline">\rho</span> represents the fraction of
+the system’s service capacity (<span class="math inline">s\mu</span>)
+that is being utilized on the average by arriving customers (<span
+class="math inline">\lambda</span>).</li>
+</ul>
+<h3 data-number="7.3.5" id="queues-in-steady-state"><span
+class="header-section-number">7.3.5</span> Queues in steady state</h3>
+<p>There is also certain notation that is used to describe a queueing
+system in so-called <strong>steady-state</strong> conditions. Just like
+we saw with Markov chains in section <a
+href="#sec:markovSteadyState">7.2.6</a>, over time state probabilities
+for a queueing system approximate a certain steady-state distribution
+that we’d like to analyze. Steady-state conditions do not exist in the
+unusual condition that <span class="math inline">\rho&gt;1</span>,
+i.e. <span class="math inline">\lambda &gt; s\mu</span> and thus
+customers arrive to the system faster than they can receive service (and
+the queue just continues to grow over time). Otherwise, we’ll use the
+following notation to talk about queues in a steady-state condition:</p>
+<ul>
+<li><span class="math inline">P_n</span>: The probability of having
+exactly <span class="math inline">n</span> customers in the queueing
+system.</li>
+<li><span class="math inline">L</span>: The expected number of customers
+in the queueing system. Note that this can be stated as <span
+class="math display">
+L=\sum_{n=0}^\infty nP_n
+</span></li>
+<li><span class="math inline">L_q</span>: The expected queue length (the
+number of customers in the system, but excluding the customers currently
+being served). This can be written as: <span class="math display">
+L_q=\sum_{n=s}^\infty (n-s)P_n
+</span></li>
+<li><span class="math inline">W</span>: The expected waiting time for a
+customer in the system (includes service time).</li>
+<li><span class="math inline">W_q</span>: The expected waiting time in
+the queue only (excludes service time).</li>
+</ul>
+<p>There are some very intuitive relationships between these
+steady-state quantities (which we will present here without proof). This
+first one is known as <strong>Little’s law</strong>, and applies in
+systems where <span class="math inline">\lambda</span> is defined
+(i.e. the arrival rate is constant for the entire process)<a
+href="#fn117" class="footnote-ref" id="fnref117"
+role="doc-noteref"><sup>117</sup></a>:</p>
+<p><span class="math display">
+L=\lambda W
+</span></p>
+<p>and similarly:</p>
+<p><span class="math display">
+L_q=\lambda W_q
+</span></p>
+<p>If we further assume that the mean service time is a constant <span
+class="math inline">\frac{1}{\mu}</span> for all n, then we also
+have</p>
+<p><span class="math display">
+W=W_q + \frac{1}{\mu}
+</span></p>
+<p>Notice that if these relationships hold, it is possible to calculate
+all four of the steady-state quantities <span class="math inline">L,
+L_q, W, W_q</span> whenever just <em>one</em> of them is known.</p>
+<!-- ### The birth-and-death process -->
+<!-- ### $M/M/s\ $ queues -->
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
@@ -14252,6 +14680,22 @@ role="doc-backlink">↩︎</a></p></li>
 original algorithms, PageRank. Admittedly they’ve added a lot since then
 and I do not know if this particular strategy is still in use.<a
 href="#fnref114" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn115"><p><a
+href="https://geodesy.noaa.gov/library/pdfs/C&amp;GS_TB_0017.pdf">This
+old paper</a> discusses how closely the interarrival times for
+earthquakes match the exponential distribution.<a href="#fnref115"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn116"><p>You’ll notice that I’m being a little sloppy with
+notation here. Instead of writing <span class="math inline">P\!\left(
+\{T&gt;t+s\}\cap\{T&gt;t\} \right)</span>, I’m going to use the more
+succinct <span class="math inline">P\!\left( T&gt;t+s,\ T&gt;t
+\right)</span>.<a href="#fnref116" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn117"><p>If the <span class="math inline">\lambda_n</span> are
+not constant, there is a similar version of Little’s law where <span
+class="math inline">\lambda</span> is replaced by a long-run
+<em>average</em> arrival rate.<a href="#fnref117" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
