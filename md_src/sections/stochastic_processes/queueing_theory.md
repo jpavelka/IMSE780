@@ -1,5 +1,7 @@
 ## Queueing theory
 
+<div class='lectureVideoEmbed' video-id='2adef3f4887e4c5397ba4a5b0be0a43d1d' video-date='2023-11-13'>Intro to queues</div>
+
 The next area of stochastic processes we will study is **queueing theory**, which you could call the study of waiting in lines. The models we see here could be seen as a special class of (continuous-time) Markov chains, but the theory is well-developed outside of that formalism, so we won't be referring back to our Markov chain chapter here.
 
 Perhaps studying people standing in lines sounds like it would not be of much use - but actually, this is pretty practical! It is of course applicable to customer services of all types, and several Edelman prizes have been won by queueing applications (see for example [here](https://pubsonline.informs.org/doi/10.1287/inte.6.1pt2.4) and [here](https://pubsonline.informs.org/doi/10.1287/inte.24.1.6)). @classText highlights several other examples in section 17.3
