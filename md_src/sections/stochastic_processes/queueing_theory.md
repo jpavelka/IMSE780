@@ -6,7 +6,7 @@ Perhaps studying people standing in lines sounds like it would not be of much us
 
 ### Initial example
 
-Let's now describe our prototype queueing problem, as described by @classText:
+Let's now describe our prototype queueing problem, as stated by @classText:
 
 > The emergency room of COUNTY HOSPITAL provides quick medical care for emergency cases brought to the hospital by ambulance or private automobile. At any hour there is always one doctor on duty in the emergency room. However, because of a growing tendency for emergency cases to use these facilities rather than go to a private physician, the hospital has been experiencing a continuing increase in the number of emergency room visits each year. As a result, it has become quite common for patients arriving during peak usage hours (the early evening) to have to wait until it is their turn to be treated by the doctor. Therefore, a proposal has been made that a second doctor should be assigned to the emergency room during these hours, so that two emergency cases can be treated simultaneously. The hospital’s management engineer has been assigned to study this question.
 >
@@ -118,6 +118,9 @@ $$
 &=e^{-t\sum_{i=1}^n\alpha_i}
 \end{align*}
 $$
+
+{#eq:minExponentials}
+
 </div>
 
 So the distribution of $U$ is the distribution of an exponential random variable with parameter $\alpha=\sum_{i=1}^n\alpha_i$. This is particularly useful to us in the case that a queueing systems includes several servers with exponential service times. If all the servers are busy, then the system works mathematically just like a single-server system with an exponential rate $\alpha$.
@@ -167,7 +170,7 @@ Let's now go rapid-fire through some notation we'll be using.
 - $\mu$: When the mean service rate _per busy server_ is constant for all $n$, we'll denote this constant by $\mu$. (In this case, $\mu_n=s\mu$ when $n\geq s$, that is, when all s servers are busy.) When $\mu$ exists, the mean/expected service time per server is $\frac{1}{\mu}$.
 - $\rho$: In the above conditions where $\lambda$ and $\mu$ are defined, $\rho=\frac{\lambda}{s\mu}$ is known as the **utilization factor** of the for the service facility, i.e., the expected fraction of time the individual servers are busy, because $\rho$ represents the fraction of the system’s service capacity ($s\mu$) that is being utilized on the average by arriving customers ($\lambda$).
 
-### Queues in steady state
+### Queues in steady state {#sec:queueSteadyState}
 
 There is also certain notation that is used to describe a queueing system in so-called **steady-state** conditions. Just like we saw with Markov chains in +@sec:markovSteadyState, over time state probabilities for a queueing system approximate a certain steady-state distribution that we'd like to analyze. Steady-state conditions do not exist in the unusual condition that $\rho>1$, i.e. $\lambda > s\mu$ and thus customers arrive to the system faster than they can receive service (and the queue just continues to grow over time). Otherwise, we'll use the following notation to talk about queues in a steady-state condition:
 
@@ -205,6 +208,232 @@ $$
 
 Notice that if these relationships hold, it is possible to calculate all four of the steady-state quantities $L, L_q, W, W_q$ whenever just _one_ of them is known.
 
-<!-- ### The birth-and-death process -->
+### The birth-and-death process {#sec:birthDeathProcess}
 
-<!-- ### $M/M/s\ $ queues -->
+Let's now set up and analyze our first queueing system. The setup here is not in the usual language of queueing theory, but the framework will encompass many different types of queues, and we'll use the results from here to derive results for the queues we do study.
+
+Naturally, this will be a very simple system, albeit with a (in my estimation) rather crude and gruesome name[^strangeName]. The "birth" part of the name just refers to customers entering the queuing system, and the "death" part to customers receiving service and leaving. As usual, the state of the system at time $t$ will be denoted as $N(t)$. There are a few things to know about the **birth-and-death process**
+
+[^strangeName]: Naturally this name wasn't my doing - it is an entrenched part of probability theory at this point. Perhaps you can call it "the queue of life."
+
+- Given $N(t)=n$, the time until the next birth (arrival) is determined by an exponential random variable with parameter $\lambda_n$.
+- Given $N(t)=n$, the time until the next death (service completion) is determined by an exponential random variable with parameter $\mu_n$.
+- The above two random variables are independent of each other.
+- The next transition in the state of the process is either $n \rightarrow n + 1$ (a single birth) or $n \rightarrow n - 1$ (a single death), depending on which random variable is smaller.
+
+The following figure, called the **rate diagram**, provides a visualization of the process:
+
+![Rate diagram for the birth-and-death process [@classText]](images/birth-death-diagram.png)
+
+You'll notice we haven't specifically made mention of any queues or servers. These are not core concepts for the birth-and-death process, but they will be making an appearance soon.
+
+As with most queueing systems, it can be difficult to derive meaningful analyses for the birth-and-death process in transient state (i.e. not steady-state). So we'll focus on results for steady-state birth-and-death processes below, and in particular we want to find the steady-state probability $P_n$ of finding the process in state $n\in\{0,1,\dots\}$.
+
+Consider any state $n\in\{0,1,\dots\}$. Let $E_n(t)$ and $L_n(t)$ track the following quantities:
+
+- $E_n(t)$: The number of times that the process enters state $n$ by time $t$.
+- $L_n(t)$: The number of times that the process leaves state $n$ by time $t$.
+
+Since any transition _to_ state $n$ is followed immediately by a transition _out_ of state $n$ (to either $n+1$ or $n-1$), it follows that $E_n(t)$ and $L_n(t)$ will always either be equal or differ by at most one, i.e.
+
+$$
+\left|E_n(t)-L_n(t)\right|\leq1
+$$
+
+We'd like to talk about the _rates_ (per unit time) at which the process enters or leaves the state. To that end, let's divide both sides by $t$:
+
+$$
+\left|\frac{E_n(t)}{t}-\frac{L_n(t)}{t}\right|\leq\frac{1}{t}
+$$
+
+Then take a limit on both sides:
+
+$$
+\lim_{t\rightarrow\infty}\left|\frac{E_n(t)}{t}-\frac{L_n(t)}{t}\right|=0
+$$
+
+What we have here is then a statement about the _average rate_ at which the process enters or exits a given state. The main result is that these quantities must be equal, i.e. the mean rate of entering a state must equal the mean rate of leaving a state (in the long run).
+
+Let's think about what this means for, say, the state $n=0$. The long-run rate at which the process leaves state 0 must clearly be related to $\lambda_0$ (the rate at which births occur while in state 0) since a birth in state 0 is the only way to leave state 0. But $\lambda_0$ is the average rate at which state 0 is left _if the process is currently in state 0_, and since the process if often (usually?) in a different state, $\lambda_0$ can't be the overall rate at which state 0 is left.
+
+So to find the quantity we want, we need to know $P_n$, the (steady-state) proportion of time that the process is actually _in_ state 0. During those times, the rate of exiting is $\lambda_0$, but during all other times the rate is 0. So the overall rate of exit state 0 is $\lambda_0P_0 + (1-\lambda_0)0=\lambda_0P_0$.
+
+Similarly, the overall rate of entering state 0 (which may only occur via a death in state 1) is $\mu_1P_1$. So our above observation (about the overall rates of entering and leaving being equal) would imply the following **balance equation** for state 0:
+
+$$
+\mu_1P_1=\lambda_0P_0
+$$
+
+{#eq:balanceState0}
+
+For all other states ($n\in\{1,2,\dots\}$) there are _two_ ways to enter or exit a state, to/from states $n-1$ and $n+1$. So the balance equations for these states are
+
+$$
+\lambda_{n-1}P_{n-1}+\mu_{n+1}P_{n+1}=(\lambda_n+\mu_n)P_n
+$$
+
+Let's go ahead and write out the first few balance equations:
+
+$$
+\begin{align*}
+\mu_1P_1&=\lambda_0P_0 \\
+\lambda_{0}P_{0}+\mu_{2}P_{2}&=(\lambda_1+\mu_1)P_1 \\
+\lambda_{1}P_{1}+\mu_{3}P_{3}&=(\lambda_2+\mu_2)P_2 \\
+\lambda_{2}P_{2}+\mu_{4}P_{4}&=(\lambda_3+\mu_3)P_3 \\
+&\ \ \vdots
+\end{align*}
+$$
+
+How can we solve for the $P_n$ values? Let's start with the first equation, with $P_0$ and $P_1$ terms. We can take this and write $P_1$ in terms of $P_0$:
+
+$$
+P_1 = \frac{\lambda_0}{\mu_1}P_0
+$$
+
+The second equation has terms for $P_0, P_1$, and $P_2$. So we can write $P_2$ in terms of $P_1$ and $P_0$ like this:
+
+$$
+\begin{align*}
+P_{2}&=\frac{(\lambda_1+\mu_1)P_1 - \lambda_0P_0}{\mu_2} \\
+&=\frac{\lambda_1P_1+\mu_1P_1-\lambda_0P_0}{\mu_2}
+\end{align*}
+$$
+
+Further, by the first balance equation +@eq:balanceState0 we know that $\mu_1P_1-\lambda_0P_0=0$. So the above reduces to
+
+$$
+P_2=\frac{\lambda_1}{\mu_2}P_1
+$$
+
+Lastly, since we know what $P_1$ is in terms of $P_0$, we can sub that in here and write:
+
+$$
+P_2=\frac{\lambda_1\lambda_0}{\mu_2\mu_1}P_0
+$$
+
+This result will generalize. For example, the next balance equation is written in terms of $P_3, P_2$ and $P_1$. We could clearly rearrange it to see what $P_3$ equals in terms of $P_2$ and $P_1$. From there, we can use the above two results to replace $P_1$ by $\frac{\lambda_0}{\mu_1}P_0$ and $P_2$ by $\frac{\lambda_1\lambda_0}{\mu_2\mu_1}P_0$, so that we have $P_3$ written entirely in terms of $P_0$. Going through this process would yield.
+
+$$
+P_3=\frac{\lambda_2\lambda_1\lambda_0}{\mu_3\mu_2\mu_1}P_0
+$$
+
+As it turns out, we can repeat this process no matter which $n$ we choose, so we have[^piProductNotation]:
+
+[^piProductNotation]:
+    You've likely seen this before, but just in case you haven't, this $\prod$ notation is to products what the $\sum$ notation is to sums. So, e.g.
+
+    $$
+    \prod_{i=0}^n x_n = x_0\cdot x_1\cdot...\cdot x_n
+    $$
+
+$$
+P_n=P_0\prod_{k=1}^n\frac{\lambda_{k-1}}{\mu_{k}}
+$$
+
+{#eq:pnFromP0}
+
+What good does that do us? Well, since $P$ is a probability distribution we must have $\sum_{n=0}^1P_n=1$. So we've reduced the entire set of balance equations to the single (infinite) sum:
+
+$$
+P_0\sum_{n=1}^\infty\prod_{k=1}^n\frac{\lambda_{k-1}}{\mu_{k}}=1
+$$
+
+{#eq:birthDeathSteadyStateProb}
+
+It might not look like it yet, but this is actually quite the improvement! Depending on the assumptions made on the $\mu_n$ and $\lambda_n$ values, this summation may well have an analytical solution, allowing us to recover the $P_n$ probabilities. We will see some examples of this soon.
+
+Once the steady-state probabilities are determined, we will then be able to calculate the other important steady-state quantities from +@sec:queueSteadyState, namely $L,L_q,W$, and $W_q$. As we've already seen, the number of customers in the system and in the queue are calculated as:
+
+$$
+L=\sum_{n=0}^\infty nP_n \qquad L_q=\sum_{n=s}^\infty (n-s) P_n
+$$
+
+{#eq:birthDeathL}
+
+Once we have these values, the average waiting times are calculated as
+
+$$
+W=\frac{L}{\bar\lambda} \qquad W_q=\frac{L_q}{\bar\lambda}
+$$
+
+{#eq:birthDeathW}
+
+where $\bar\lambda$ is the _average_ arrival rate, calculated as
+
+$$
+\bar\lambda=\sum_{n=0}^\infty \lambda_nP_n
+$$
+
+Once again, even though some of these calculations involve infinite sums, in many situations we will be able to derive the exact values using infinite series results from calculus.
+
+A technical note before we move on: the above result is for the steady-state probabilities of the birth-and-death process. But we should note that not every birth-and-death process is guaranteed to ever reach a steady state. Luckily, we do know some conditions where a steady state is guaranteed to exist. Firstly, if $\lambda_n=0$ for some value of $n$ higher than the initial state (so that there are only a finite number of possible states) then the steady-state results are valid. Another condition (which we will make use of shortly) is when $\lambda$ and $\mu$ exist (i.e. the arrival and service rates are constant) and $\rho=\lambda/s\mu<1$ (so that arrivals do not come faster than services complete).
+
+<!-- ### $M/M/s\ $ queues
+
+Finally, we're able to talk about our first general class of queueing models! The $M/M/s$ name comes from a queueing theory convention where the models are named according to the scheme $x/y/z$, where $x$ is the interarrival time distribution, $y$ is the service time distribution, and $z$ is the number of servers. The $M$ in the name stands for "Markovian", signifying that the distribution has the Markovian, memorylessness property - that is, that the interarrival and service time distributions are exponential. The number of servers in the system is denoted by some integer $s\geq1$.
+
+Since the interarrival and service times are exponential random variables, the $M/M/s$ queue is a special case of the birth-and-death process, where the process' arrival rate $\lambda$ and service rate per server $\mu$ are constants. In particular, the birth rates are all the same, $\lambda_n=\lambda$ for all $n\in\{1,2,\dots,n\}$.
+
+The values for $\mu$ are not quite as simple, though. If $s=1$ then the situation is as above for $\lambda$, that $\mu_n=\mu$ for all $n$. But this is not the case for $s>1$, since $\mu_n$ is the rate of deaths for the _entire systems_ whereas $\mu$ is the service rate _at each server_. But we actually already know how to handle that, thanks to something we learned in +@sec:exponentialPoissonDistributions. In particular, for the $M/M/s$ queue the death rates are
+
+$$
+\mu_n=\begin{cases}
+n\mu && n\leq s \\
+s\mu && n>s
+\end{cases}
+$$
+
+Why? This is due to what we saw in +@eq:minExponentials, that the minimum of $n$ exponential random variables is itself and exponential distribution, with rate $\alpha=\alpha_1+\alpha_2+\dots+\alpha_n$. In this case, a death occurs in the process whenever the first service is completed, so the result fits.
+
+As mentioned earlier, so long as $s\mu>\lambda$ the steady-state results we derived in +@sec:birthDeathProcess will hold. As we will show, those earlier infinite sums become tractable in the case of an $M/M/s$ queues. Let's go ahead and see how the results shake out, starting with $M/M/1$ queues then transitioning to $s>1$.
+
+<h4>Results for the $M/M/1$ queue</h4>
+
+For the single-server case, we have constant rates $\lambda_n=\lambda$, $\mu_n=\mu$ for all $n$. To solve for the steady-state probabilities, we go back to the equation for $P_0$ derived in +@eq:birthDeathSteadyStateProb. In this case, it simplifies to
+
+$$
+P_0\sum_{n=0}^\infty\left(\frac{\lambda}{\mu}\right)^n=P_0\sum_{n=0}^\infty\rho^n=1
+$$
+
+We've assumed that $\lambda<s\mu=1$, so $\rho=\frac{\lambda}{\mu}<1$ and hence the above reduces to (due to the standard result on the sum of [geometric series](https://en.wikipedia.org/wiki/Geometric_series)):
+
+$$
+P_0\left(\frac{1}{1-\rho}\right)=1
+$$
+
+So we have $P_0=1-\rho$, and by +@eq:pnFromP0 we also get
+
+$$
+P_n=(1-\rho)\rho^n
+$$
+
+Using a few other tricks, one can derive from +@eq:birthDeathL that
+
+$$
+L=\frac{\lambda}{\mu - \lambda}\qquad L_q=\frac{\lambda^2}{\mu(\mu-\lambda)}
+$$
+
+And from there, using +@eq:birthDeathW we have
+
+$$
+W=\frac{1}{\mu-\lambda}\qquad W_q=\frac{\lambda}{\mu(\mu-\lambda)}
+$$
+
+Before we stop, it think it is interesting to note that in this case the _distribution_ of the wait times is itself an exponential random variable, with rate $\mu-\lambda$, giving a different way to derive $W$.
+
+<h4>Results for the $M/M/s$ queue</h4>
+
+Things become a little messier now when $s>1$, and so the death rates $\mu_n$ for the associate birth-death process are no longer constants. After plugging the relevant values into +@eq:birthDeathSteadyStateProb, one can recover
+
+$$
+P_0=\left[\sum_{n=0}^{s-1}\frac{(\lambda/\mu)^n}{n!}+\frac{(\lambda/\mu)^s}{s!}\frac{1}{1-\lambda/(s\mu)}\right]^{-1}
+$$
+
+Furthermore, one can derive:
+
+$$
+P_n=\begin{cases}
+\frac{(\lambda/ \mu)^n}{n!}P_0 && 0\leq n \leq s \\
+\frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 && n > s
+\end{cases}
+$$ -->
