@@ -2992,9 +2992,12 @@ class="toc-section-number">7.3.3</span> Exponential and Poisson
 distributions</a></li>
 <li><a href="#notation" id="toc-notation"><span
 class="toc-section-number">7.3.4</span> Notation</a></li>
-<li><a href="#queues-in-steady-state"
-id="toc-queues-in-steady-state"><span
+<li><a href="#sec:queueSteadyState" id="toc-sec:queueSteadyState"><span
 class="toc-section-number">7.3.5</span> Queues in steady state</a></li>
+<li><a href="#sec:birthDeathProcess"
+id="toc-sec:birthDeathProcess"><span
+class="toc-section-number">7.3.6</span> The birth-and-death
+process</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -12748,8 +12751,8 @@ href="#ref-classText" role="doc-biblioref">2021</a>)</span> highlights
 several other examples in section 17.3</p>
 <h3 data-number="7.3.1" id="initial-example"><span
 class="header-section-number">7.3.1</span> Initial example</h3>
-<p>Let’s now describe our prototype queueing problem, as described by
-<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+<p>Let’s now describe our prototype queueing problem, as stated by <span
+class="citation" data-cites="classText">Hillier and Lieberman (<a
 href="#ref-classText" role="doc-biblioref">2021</a>)</span>:</p>
 <blockquote>
 <p>The emergency room of COUNTY HOSPITAL provides quick medical care for
@@ -12974,7 +12977,8 @@ events occur, then <span class="math inline">U</span> is the time until
 the <em>first</em> of these <span class="math inline">n</span> events
 occur. Now, let’s notice that</p>
 <div class="mathSmall">
-<p><span class="math display">
+<p><span id="eq:minExponentials" class="eqnos"><span
+class="math display">
 \begin{align*}
 P\!\left( U&gt;t \right)&amp;=P\!\left( T_1&gt;t,\ T_2&gt;t,\ \dots,\
 T_n&gt;t \right)&amp;&amp;\text{(def. of min)} \\
@@ -12984,7 +12988,7 @@ P\!\left( T_n&gt;t \right)&amp;&amp;\text{(independence)} \\
 \text{CDF)} \\
 &amp;=e^{-t\sum_{i=1}^n\alpha_i}
 \end{align*}
-</span></p>
+</span><span class="eqnos-number">(32)</span></span></p>
 </div>
 <p>So the distribution of <span class="math inline">U</span> is the
 distribution of an exponential random variable with parameter <span
@@ -13083,7 +13087,7 @@ the system’s service capacity (<span class="math inline">s\mu</span>)
 that is being utilized on the average by arriving customers (<span
 class="math inline">\lambda</span>).</li>
 </ul>
-<h3 data-number="7.3.5" id="queues-in-steady-state"><span
+<h3 data-number="7.3.5" id="sec:queueSteadyState"><span
 class="header-section-number">7.3.5</span> Queues in steady state</h3>
 <p>There is also certain notation that is used to describe a queueing
 system in so-called <strong>steady-state</strong> conditions. Just like
@@ -13138,8 +13142,310 @@ W=W_q + \frac{1}{\mu}
 <p>Notice that if these relationships hold, it is possible to calculate
 all four of the steady-state quantities <span class="math inline">L,
 L_q, W, W_q</span> whenever just <em>one</em> of them is known.</p>
-<!-- ### The birth-and-death process -->
-<!-- ### $M/M/s\ $ queues -->
+<h3 data-number="7.3.6" id="sec:birthDeathProcess"><span
+class="header-section-number">7.3.6</span> The birth-and-death
+process</h3>
+<p>Let’s now set up and analyze our first queueing system. The setup
+here is not in the usual language of queueing theory, but the framework
+will encompass many different types of queues, and we’ll use the results
+from here to derive results for the queues we do study.</p>
+<p>Naturally, this will be a very simple system, albeit with a (in my
+estimation) rather crude and gruesome name<a href="#fn118"
+class="footnote-ref" id="fnref118"
+role="doc-noteref"><sup>118</sup></a>. The “birth” part of the name just
+refers to customers entering the queuing system, and the “death” part to
+customers receiving service and leaving. As usual, the state of the
+system at time <span class="math inline">t</span> will be denoted as
+<span class="math inline">N(t)</span>. There are a few things to know
+about the <strong>birth-and-death process</strong></p>
+<ul>
+<li>Given <span class="math inline">N(t)=n</span>, the time until the
+next birth (arrival) is determined by an exponential random variable
+with parameter <span class="math inline">\lambda_n</span>.</li>
+<li>Given <span class="math inline">N(t)=n</span>, the time until the
+next death (service completion) is determined by an exponential random
+variable with parameter <span class="math inline">\mu_n</span>.</li>
+<li>The above two random variables are independent of each other.</li>
+<li>The next transition in the state of the process is either <span
+class="math inline">n \rightarrow n + 1</span> (a single birth) or <span
+class="math inline">n \rightarrow n - 1</span> (a single death),
+depending on which random variable is smaller.</li>
+</ul>
+<p>The following figure, called the <strong>rate diagram</strong>,
+provides a visualization of the process:</p>
+<figure>
+<img src="images/birth-death-diagram.png"
+alt="Rate diagram for the birth-and-death process (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Rate diagram for the birth-and-death
+process <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<p>You’ll notice we haven’t specifically made mention of any queues or
+servers. These are not core concepts for the birth-and-death process,
+but they will be making an appearance soon.</p>
+<p>As with most queueing systems, it can be difficult to derive
+meaningful analyses for the birth-and-death process in transient state
+(i.e. not steady-state). So we’ll focus on results for steady-state
+birth-and-death processes below, and in particular we want to find the
+steady-state probability <span class="math inline">P_n</span> of finding
+the process in state <span
+class="math inline">n\in\{0,1,\dots\}</span>.</p>
+<p>Consider any state <span
+class="math inline">n\in\{0,1,\dots\}</span>. Let <span
+class="math inline">E_n(t)</span> and <span
+class="math inline">L_n(t)</span> track the following quantities:</p>
+<ul>
+<li><span class="math inline">E_n(t)</span>: The number of times that
+the process enters state <span class="math inline">n</span> by time
+<span class="math inline">t</span>.</li>
+<li><span class="math inline">L_n(t)</span>: The number of times that
+the process leaves state <span class="math inline">n</span> by time
+<span class="math inline">t</span>.</li>
+</ul>
+<p>Since any transition <em>to</em> state <span
+class="math inline">n</span> is followed immediately by a transition
+<em>out</em> of state <span class="math inline">n</span> (to either
+<span class="math inline">n+1</span> or <span
+class="math inline">n-1</span>), it follows that <span
+class="math inline">E_n(t)</span> and <span
+class="math inline">L_n(t)</span> will always either be equal or differ
+by at most one, i.e.</p>
+<p><span class="math display">
+\left|E_n(t)-L_n(t)\right|\leq1
+</span></p>
+<p>We’d like to talk about the <em>rates</em> (per unit time) at which
+the process enters or leaves the state. To that end, let’s divide both
+sides by <span class="math inline">t</span>:</p>
+<p><span class="math display">
+\left|\frac{E_n(t)}{t}-\frac{L_n(t)}{t}\right|\leq\frac{1}{t}
+</span></p>
+<p>Then take a limit on both sides:</p>
+<p><span class="math display">
+\lim_{t\rightarrow\infty}\left|\frac{E_n(t)}{t}-\frac{L_n(t)}{t}\right|=0
+</span></p>
+<p>What we have here is then a statement about the <em>average rate</em>
+at which the process enters or exits a given state. The main result is
+that these quantities must be equal, i.e. the mean rate of entering a
+state must equal the mean rate of leaving a state (in the long run).</p>
+<p>Let’s think about what this means for, say, the state <span
+class="math inline">n=0</span>. The long-run rate at which the process
+leaves state 0 must clearly be related to <span
+class="math inline">\lambda_0</span> (the rate at which births occur
+while in state 0) since a birth in state 0 is the only way to leave
+state 0. But <span class="math inline">\lambda_0</span> is the average
+rate at which state 0 is left <em>if the process is currently in state
+0</em>, and since the process if often (usually?) in a different state,
+<span class="math inline">\lambda_0</span> can’t be the overall rate at
+which state 0 is left.</p>
+<p>So to find the quantity we want, we need to know <span
+class="math inline">P_n</span>, the (steady-state) proportion of time
+that the process is actually <em>in</em> state 0. During those times,
+the rate of exiting is <span class="math inline">\lambda_0</span>, but
+during all other times the rate is 0. So the overall rate of exit state
+0 is <span class="math inline">\lambda_0P_0 +
+(1-\lambda_0)0=\lambda_0P_0</span>.</p>
+<p>Similarly, the overall rate of entering state 0 (which may only occur
+via a death in state 1) is <span class="math inline">\mu_1P_1</span>. So
+our above observation (about the overall rates of entering and leaving
+being equal) would imply the following <strong>balance equation</strong>
+for state 0:</p>
+<p><span id="eq:balanceState0" class="eqnos"><span class="math display">
+\mu_1P_1=\lambda_0P_0
+</span><span class="eqnos-number">(33)</span></span></p>
+<p>For all other states (<span
+class="math inline">n\in\{1,2,\dots\}</span>) there are <em>two</em>
+ways to enter or exit a state, to/from states <span
+class="math inline">n-1</span> and <span class="math inline">n+1</span>.
+So the balance equations for these states are</p>
+<p><span class="math display">
+\lambda_{n-1}P_{n-1}+\mu_{n+1}P_{n+1}=(\lambda_n+\mu_n)P_n
+</span></p>
+<p>Let’s go ahead and write out the first few balance equations:</p>
+<p><span class="math display">
+\begin{align*}
+\mu_1P_1&amp;=\lambda_0P_0 \\
+\lambda_{0}P_{0}+\mu_{2}P_{2}&amp;=(\lambda_1+\mu_1)P_1 \\
+\lambda_{1}P_{1}+\mu_{3}P_{3}&amp;=(\lambda_2+\mu_2)P_2 \\
+\lambda_{2}P_{2}+\mu_{4}P_{4}&amp;=(\lambda_3+\mu_3)P_3 \\
+&amp;\ \ \vdots
+\end{align*}
+</span></p>
+<p>How can we solve for the <span class="math inline">P_n</span> values?
+Let’s start with the first equation, with <span
+class="math inline">P_0</span> and <span class="math inline">P_1</span>
+terms. We can take this and write <span class="math inline">P_1</span>
+in terms of <span class="math inline">P_0</span>:</p>
+<p><span class="math display">
+P_1 = \frac{\lambda_0}{\mu_1}P_0
+</span></p>
+<p>The second equation has terms for <span class="math inline">P_0,
+P_1</span>, and <span class="math inline">P_2</span>. So we can write
+<span class="math inline">P_2</span> in terms of <span
+class="math inline">P_1</span> and <span class="math inline">P_0</span>
+like this:</p>
+<p><span class="math display">
+\begin{align*}
+P_{2}&amp;=\frac{(\lambda_1+\mu_1)P_1 - \lambda_0P_0}{\mu_2} \\
+&amp;=\frac{\lambda_1P_1+\mu_1P_1-\lambda_0P_0}{\mu_2}
+\end{align*}
+</span></p>
+<p>Further, by the first balance equation eq. <a
+href="#eq:balanceState0">33</a> we know that <span
+class="math inline">\mu_1P_1-\lambda_0P_0=0</span>. So the above reduces
+to</p>
+<p><span class="math display">
+P_2=\frac{\lambda_1}{\mu_2}P_1
+</span></p>
+<p>Lastly, since we know what <span class="math inline">P_1</span> is in
+terms of <span class="math inline">P_0</span>, we can sub that in here
+and write:</p>
+<p><span class="math display">
+P_2=\frac{\lambda_1\lambda_0}{\mu_2\mu_1}P_0
+</span></p>
+<p>This result will generalize. For example, the next balance equation
+is written in terms of <span class="math inline">P_3, P_2</span> and
+<span class="math inline">P_1</span>. We could clearly rearrange it to
+see what <span class="math inline">P_3</span> equals in terms of <span
+class="math inline">P_2</span> and <span class="math inline">P_1</span>.
+From there, we can use the above two results to replace <span
+class="math inline">P_1</span> by <span
+class="math inline">\frac{\lambda_0}{\mu_1}P_0</span> and <span
+class="math inline">P_2</span> by <span
+class="math inline">\frac{\lambda_1\lambda_0}{\mu_2\mu_1}P_0</span>, so
+that we have <span class="math inline">P_3</span> written entirely in
+terms of <span class="math inline">P_0</span>. Going through this
+process would yield.</p>
+<p><span class="math display">
+P_3=\frac{\lambda_2\lambda_1\lambda_0}{\mu_3\mu_2\mu_1}P_0
+</span></p>
+<p>As it turns out, we can repeat this process no matter which <span
+class="math inline">n</span> we choose, so we have<a href="#fn119"
+class="footnote-ref" id="fnref119"
+role="doc-noteref"><sup>119</sup></a>:</p>
+<p><span id="eq:pnFromP0" class="eqnos"><span class="math display">
+P_n=P_0\prod_{k=1}^n\frac{\lambda_{k-1}}{\mu_{k}}
+</span><span class="eqnos-number">(34)</span></span></p>
+<p>What good does that do us? Well, since <span
+class="math inline">P</span> is a probability distribution we must have
+<span class="math inline">\sum_{n=0}^1P_n=1</span>. So we’ve reduced the
+entire set of balance equations to the single (infinite) sum:</p>
+<p><span id="eq:birthDeathSteadyStateProb" class="eqnos"><span
+class="math display">
+P_0\sum_{n=1}^\infty\prod_{k=1}^n\frac{\lambda_{k-1}}{\mu_{k}}=1
+</span><span class="eqnos-number">(35)</span></span></p>
+<p>It might not look like it yet, but this is actually quite the
+improvement! Depending on the assumptions made on the <span
+class="math inline">\mu_n</span> and <span
+class="math inline">\lambda_n</span> values, this summation may well
+have an analytical solution, allowing us to recover the <span
+class="math inline">P_n</span> probabilities. We will see some examples
+of this soon.</p>
+<p>Once the steady-state probabilities are determined, we will then be
+able to calculate the other important steady-state quantities from
+section <a href="#sec:queueSteadyState">7.3.5</a>, namely <span
+class="math inline">L,L_q,W</span>, and <span
+class="math inline">W_q</span>. As we’ve already seen, the number of
+customers in the system and in the queue are calculated as:</p>
+<p><span id="eq:birthDeathL" class="eqnos"><span class="math display">
+L=\sum_{n=0}^\infty nP_n \qquad L_q=\sum_{n=s}^\infty (n-s) P_n
+</span><span class="eqnos-number">(36)</span></span></p>
+<p>Once we have these values, the average waiting times are calculated
+as</p>
+<p><span id="eq:birthDeathW" class="eqnos"><span class="math display">
+W=\frac{L}{\bar\lambda} \qquad W_q=\frac{L_q}{\bar\lambda}
+</span><span class="eqnos-number">(37)</span></span></p>
+<p>where <span class="math inline">\bar\lambda</span> is the
+<em>average</em> arrival rate, calculated as</p>
+<p><span class="math display">
+\bar\lambda=\sum_{n=0}^\infty \lambda_nP_n
+</span></p>
+<p>Once again, even though some of these calculations involve infinite
+sums, in many situations we will be able to derive the exact values
+using infinite series results from calculus.</p>
+<p>A technical note before we move on: the above result is for the
+steady-state probabilities of the birth-and-death process. But we should
+note that not every birth-and-death process is guaranteed to ever reach
+a steady state. Luckily, we do know some conditions where a steady state
+is guaranteed to exist. Firstly, if <span
+class="math inline">\lambda_n=0</span> for some value of <span
+class="math inline">n</span> higher than the initial state (so that
+there are only a finite number of possible states) then the steady-state
+results are valid. Another condition (which we will make use of shortly)
+is when <span class="math inline">\lambda</span> and <span
+class="math inline">\mu</span> exist (i.e. the arrival and service rates
+are constant) and <span
+class="math inline">\rho=\lambda/s\mu&lt;1</span> (so that arrivals do
+not come faster than services complete).</p>
+<!-- ### $M/M/s\ $ queues
+
+Finally, we're able to talk about our first general class of queueing models! The $M/M/s$ name comes from a queueing theory convention where the models are named according to the scheme $x/y/z$, where $x$ is the interarrival time distribution, $y$ is the service time distribution, and $z$ is the number of servers. The $M$ in the name stands for "Markovian", signifying that the distribution has the Markovian, memorylessness property - that is, that the interarrival and service time distributions are exponential. The number of servers in the system is denoted by some integer $s\geq1$.
+
+Since the interarrival and service times are exponential random variables, the $M/M/s$ queue is a special case of the birth-and-death process, where the process' arrival rate $\lambda$ and service rate per server $\mu$ are constants. In particular, the birth rates are all the same, $\lambda_n=\lambda$ for all $n\in\{1,2,\dots,n\}$.
+
+The values for $\mu$ are not quite as simple, though. If $s=1$ then the situation is as above for $\lambda$, that $\mu_n=\mu$ for all $n$. But this is not the case for $s>1$, since $\mu_n$ is the rate of deaths for the _entire systems_ whereas $\mu$ is the service rate _at each server_. But we actually already know how to handle that, thanks to something we learned in +@sec:exponentialPoissonDistributions. In particular, for the $M/M/s$ queue the death rates are
+
+$$
+\mu_n=\begin{cases}
+n\mu && n\leq s \\
+s\mu && n>s
+\end{cases}
+$$
+
+Why? This is due to what we saw in +@eq:minExponentials, that the minimum of $n$ exponential random variables is itself and exponential distribution, with rate $\alpha=\alpha_1+\alpha_2+\dots+\alpha_n$. In this case, a death occurs in the process whenever the first service is completed, so the result fits.
+
+As mentioned earlier, so long as $s\mu>\lambda$ the steady-state results we derived in +@sec:birthDeathProcess will hold. As we will show, those earlier infinite sums become tractable in the case of an $M/M/s$ queues. Let's go ahead and see how the results shake out, starting with $M/M/1$ queues then transitioning to $s>1$.
+
+<h4>Results for the $M/M/1$ queue</h4>
+
+For the single-server case, we have constant rates $\lambda_n=\lambda$, $\mu_n=\mu$ for all $n$. To solve for the steady-state probabilities, we go back to the equation for $P_0$ derived in +@eq:birthDeathSteadyStateProb. In this case, it simplifies to
+
+$$
+P_0\sum_{n=0}^\infty\left(\frac{\lambda}{\mu}\right)^n=P_0\sum_{n=0}^\infty\rho^n=1
+$$
+
+We've assumed that $\lambda<s\mu=1$, so $\rho=\frac{\lambda}{\mu}<1$ and hence the above reduces to (due to the standard result on the sum of [geometric series](https://en.wikipedia.org/wiki/Geometric_series)):
+
+$$
+P_0\left(\frac{1}{1-\rho}\right)=1
+$$
+
+So we have $P_0=1-\rho$, and by +@eq:pnFromP0 we also get
+
+$$
+P_n=(1-\rho)\rho^n
+$$
+
+Using a few other tricks, one can derive from +@eq:birthDeathL that
+
+$$
+L=\frac{\lambda}{\mu - \lambda}\qquad L_q=\frac{\lambda^2}{\mu(\mu-\lambda)}
+$$
+
+And from there, using +@eq:birthDeathW we have
+
+$$
+W=\frac{1}{\mu-\lambda}\qquad W_q=\frac{\lambda}{\mu(\mu-\lambda)}
+$$
+
+Before we stop, it think it is interesting to note that in this case the _distribution_ of the wait times is itself an exponential random variable, with rate $\mu-\lambda$, giving a different way to derive $W$.
+
+<h4>Results for the $M/M/s$ queue</h4>
+
+Things become a little messier now when $s>1$, and so the death rates $\mu_n$ for the associate birth-death process are no longer constants. After plugging the relevant values into +@eq:birthDeathSteadyStateProb, one can recover
+
+$$
+P_0=\left[\sum_{n=0}^{s-1}\frac{(\lambda/\mu)^n}{n!}+\frac{(\lambda/\mu)^s}{s!}\frac{1}{1-\lambda/(s\mu)}\right]^{-1}
+$$
+
+Furthermore, one can derive:
+
+$$
+P_n=\begin{cases}
+\frac{(\lambda/ \mu)^n}{n!}P_0 && 0\leq n \leq s \\
+\frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 && n > s
+\end{cases}
+$$ -->
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
@@ -13297,7 +13603,7 @@ a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} \\
 \end{bmatrix}
-</span><span class="eqnos-number">(32)</span></span></p>
+</span><span class="eqnos-number">(38)</span></span></p>
 <p>and</p>
 <p><span class="math display">
 \mathbf{B} = \begin{bmatrix}
@@ -14696,6 +15002,18 @@ role="doc-backlink">↩︎</a></p></li>
 not constant, there is a similar version of Little’s law where <span
 class="math inline">\lambda</span> is replaced by a long-run
 <em>average</em> arrival rate.<a href="#fnref117" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn118"><p>Naturally this name wasn’t my doing - it is an
+entrenched part of probability theory at this point. Perhaps you can
+call it “the queue of life.”<a href="#fnref118" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn119"><p>You’ve likely seen this before, but just in case you
+haven’t, this <span class="math inline">\prod</span> notation is to
+products what the <span class="math inline">\sum</span> notation is to
+sums. So, e.g.</p>
+<p><span class="math display">
+\prod_{i=0}^n x_n = x_0\cdot x_1\cdot...\cdot x_n
+</span><a href="#fnref119" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
