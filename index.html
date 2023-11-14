@@ -2982,7 +2982,7 @@ search</a></li>
 <li><a href="#queueing-theory" id="toc-queueing-theory"><span
 class="toc-section-number">7.3</span> Queueing theory</a>
 <ul>
-<li><a href="#initial-example" id="toc-initial-example"><span
+<li><a href="#sec:queueExample" id="toc-sec:queueExample"><span
 class="toc-section-number">7.3.1</span> Initial example</a></li>
 <li><a href="#queueing-basics" id="toc-queueing-basics"><span
 class="toc-section-number">7.3.2</span> Queueing basics</a></li>
@@ -2998,6 +2998,9 @@ class="toc-section-number">7.3.5</span> Queues in steady state</a></li>
 id="toc-sec:birthDeathProcess"><span
 class="toc-section-number">7.3.6</span> The birth-and-death
 process</a></li>
+<li><a href="#mms-queues" id="toc-mms-queues"><span
+class="toc-section-number">7.3.7</span> <span class="math inline">M/M/s\
+</span> queues</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -12754,7 +12757,7 @@ href="https://pubsonline.informs.org/doi/10.1287/inte.24.1.6">here</a>).
 <span class="citation" data-cites="classText">Hillier and Lieberman (<a
 href="#ref-classText" role="doc-biblioref">2021</a>)</span> highlights
 several other examples in section 17.3</p>
-<h3 data-number="7.3.1" id="initial-example"><span
+<h3 data-number="7.3.1" id="sec:queueExample"><span
 class="header-section-number">7.3.1</span> Initial example</h3>
 <p>Let’s now describe our prototype queueing problem, as stated by <span
 class="citation" data-cites="classText">Hillier and Lieberman (<a
@@ -13069,9 +13072,10 @@ rate as <span class="math inline">\lambda</span>. In this case, the
 mean/expected interarrival time is <span
 class="math inline">\frac{1}{\lambda}</span>.</li>
 <li><span class="math inline">\mu_n</span>: The mean service rate for
-the overall system (i.e. the expected number of customers completing
-service per unit time when <span class="math inline">n</span> customers
-are in system). This is a combined rate including all busy servers.</li>
+the overall system when in state <span class="math inline">n</span>
+(i.e. the expected number of customers completing service per unit time
+when <span class="math inline">n</span> customers are in the system).
+This is a combined rate including all busy servers.</li>
 <li><span class="math inline">\mu</span>: When the mean service rate
 <em>per busy server</em> is constant for all <span
 class="math inline">n</span>, we’ll denote this constant by <span
@@ -13382,75 +13386,177 @@ class="math inline">\mu</span> exist (i.e. the arrival and service rates
 are constant) and <span
 class="math inline">\rho=\lambda/s\mu&lt;1</span> (so that arrivals do
 not come faster than services complete).</p>
-<!-- ### $M/M/s\ $ queues
-
-Finally, we're able to talk about our first general class of queueing models! The $M/M/s$ name comes from a queueing theory convention where the models are named according to the scheme $x/y/z$, where $x$ is the interarrival time distribution, $y$ is the service time distribution, and $z$ is the number of servers. The $M$ in the name stands for "Markovian", signifying that the distribution has the Markovian, memorylessness property - that is, that the interarrival and service time distributions are exponential. The number of servers in the system is denoted by some integer $s\geq1$.
-
-Since the interarrival and service times are exponential random variables, the $M/M/s$ queue is a special case of the birth-and-death process, where the process' arrival rate $\lambda$ and service rate per server $\mu$ are constants. In particular, the birth rates are all the same, $\lambda_n=\lambda$ for all $n\in\{1,2,\dots,n\}$.
-
-The values for $\mu$ are not quite as simple, though. If $s=1$ then the situation is as above for $\lambda$, that $\mu_n=\mu$ for all $n$. But this is not the case for $s>1$, since $\mu_n$ is the rate of deaths for the _entire systems_ whereas $\mu$ is the service rate _at each server_. But we actually already know how to handle that, thanks to something we learned in +@sec:exponentialPoissonDistributions. In particular, for the $M/M/s$ queue the death rates are
-
-$$
+<h3 data-number="7.3.7" id="mms-queues"><span
+class="header-section-number">7.3.7</span> <span
+class="math inline">M/M/s\ </span> queues</h3>
+<p>Finally, we’re able to talk about our first general class of queueing
+models! The <span class="math inline">M/M/s</span> name comes from a
+queueing theory convention where the models are named according to the
+scheme <span class="math inline">x/y/z</span>, where <span
+class="math inline">x</span> is the interarrival time distribution,
+<span class="math inline">y</span> is the service time distribution, and
+<span class="math inline">z</span> is the number of servers. The <span
+class="math inline">M</span> in the name stands for “Markovian”,
+signifying that the distribution has the Markovian, memorylessness
+property - that is, that the interarrival and service time distributions
+are exponential. The number of servers in the system is denoted by some
+integer <span class="math inline">s\geq1</span>.</p>
+<p>Since the interarrival and service times are exponential random
+variables, the <span class="math inline">M/M/s</span> queue is a special
+case of the birth-and-death process, where the process’ arrival rate
+<span class="math inline">\lambda</span> and service rate per server
+<span class="math inline">\mu</span> are constants. In particular, the
+birth rates are all the same, <span
+class="math inline">\lambda_n=\lambda</span> for all <span
+class="math inline">n\in\{1,2,\dots,n\}</span>.</p>
+<p>The values for <span class="math inline">\mu</span> are not quite as
+simple, though. If <span class="math inline">s=1</span> then the
+situation is as above for <span class="math inline">\lambda</span>, that
+<span class="math inline">\mu_n=\mu</span> for all <span
+class="math inline">n</span>. But this is not the case for <span
+class="math inline">s&gt;1</span>, since <span
+class="math inline">\mu_n</span> is the rate of deaths for the
+<em>entire systems</em> whereas <span class="math inline">\mu</span> is
+the service rate <em>at each server</em>. But we actually already know
+how to handle that, thanks to something we learned in section <a
+href="#sec:exponentialPoissonDistributions">7.3.3</a>. In particular,
+for the <span class="math inline">M/M/s</span> queue the death rates
+are</p>
+<p><span class="math display">
 \mu_n=\begin{cases}
-n\mu && n\leq s \\
-s\mu && n>s
+n\mu &amp;&amp; n\leq s \\
+s\mu &amp;&amp; n&gt;s
 \end{cases}
-$$
-
-Why? This is due to what we saw in +@eq:minExponentials, that the minimum of $n$ exponential random variables is itself and exponential distribution, with rate $\alpha=\alpha_1+\alpha_2+\dots+\alpha_n$. In this case, a death occurs in the process whenever the first service is completed, so the result fits.
-
-As mentioned earlier, so long as $s\mu>\lambda$ the steady-state results we derived in +@sec:birthDeathProcess will hold. As we will show, those earlier infinite sums become tractable in the case of an $M/M/s$ queues. Let's go ahead and see how the results shake out, starting with $M/M/1$ queues then transitioning to $s>1$.
-
-<h4>Results for the $M/M/1$ queue</h4>
-
-For the single-server case, we have constant rates $\lambda_n=\lambda$, $\mu_n=\mu$ for all $n$. To solve for the steady-state probabilities, we go back to the equation for $P_0$ derived in +@eq:birthDeathSteadyStateProb. In this case, it simplifies to
-
-$$
+</span></p>
+<p>Why? This is due to what we saw in eq. <a
+href="#eq:minExponentials">32</a>, that the minimum of <span
+class="math inline">n</span> exponential random variables is itself an
+exponential random variable, with rate <span
+class="math inline">\alpha=\alpha_1+\alpha_2+\dots+\alpha_n</span>. In
+this case, a death occurs in the process whenever the first service is
+completed, so the result fits.</p>
+<p>As mentioned earlier, so long as <span
+class="math inline">s\mu&gt;\lambda</span> the steady-state results we
+derived in section <a href="#sec:birthDeathProcess">7.3.6</a> will hold.
+As we will show, those earlier infinite sums become tractable in the
+case of <span class="math inline">M/M/s</span> queues. Let’s go ahead
+and see how the results shake out, starting with <span
+class="math inline">M/M/1</span> queues then transitioning to <span
+class="math inline">s&gt;1</span>.</p>
+<h4>
+Results for the <span class="math inline">M/M/1</span> queue
+</h4>
+<p>For the single-server case, we have constant rates <span
+class="math inline">\lambda_n=\lambda</span>, <span
+class="math inline">\mu_n=\mu</span> for all <span
+class="math inline">n</span>. To solve for the steady-state
+probabilities, we go back to the equation for <span
+class="math inline">P_0</span> derived in eq. <a
+href="#eq:birthDeathSteadyStateProb">35</a>. In this case, it simplifies
+to</p>
+<p><span class="math display">
 P_0\sum_{n=0}^\infty\left(\frac{\lambda}{\mu}\right)^n=P_0\sum_{n=0}^\infty\rho^n=1
-$$
-
-We've assumed that $\lambda<s\mu=1$, so $\rho=\frac{\lambda}{\mu}<1$ and hence the above reduces to (due to the standard result on the sum of [geometric series](https://en.wikipedia.org/wiki/Geometric_series)):
-
-$$
+</span></p>
+<p>We’ve assumed that <span class="math inline">\lambda&lt;s\mu</span>,
+so <span class="math inline">\rho=\frac{\lambda}{\mu}&lt;1</span> and
+hence the above reduces to (due to the standard result on the sum of <a
+href="https://en.wikipedia.org/wiki/Geometric_series">geometric
+series</a>):</p>
+<p><span class="math display">
 P_0\left(\frac{1}{1-\rho}\right)=1
-$$
-
-So we have $P_0=1-\rho$, and by +@eq:pnFromP0 we also get
-
-$$
+</span></p>
+<p>So we have <span class="math inline">P_0=1-\rho</span>, and by eq. <a
+href="#eq:pnFromP0">34</a> we also get</p>
+<p><span class="math display">
 P_n=(1-\rho)\rho^n
-$$
-
-Using a few other tricks, one can derive from +@eq:birthDeathL that
-
-$$
-L=\frac{\lambda}{\mu - \lambda}\qquad L_q=\frac{\lambda^2}{\mu(\mu-\lambda)}
-$$
-
-And from there, using +@eq:birthDeathW we have
-
-$$
+</span></p>
+<p>Using a few other tricks, one can derive from eq. <a
+href="#eq:birthDeathL">36</a> that</p>
+<p><span class="math display">
+L=\frac{\lambda}{\mu - \lambda}\qquad
+L_q=\frac{\lambda^2}{\mu(\mu-\lambda)}
+</span></p>
+<p>And from there, using eq. <a href="#eq:birthDeathW">37</a> we
+have</p>
+<p><span class="math display">
 W=\frac{1}{\mu-\lambda}\qquad W_q=\frac{\lambda}{\mu(\mu-\lambda)}
-$$
-
-Before we stop, it think it is interesting to note that in this case the _distribution_ of the wait times is itself an exponential random variable, with rate $\mu-\lambda$, giving a different way to derive $W$.
-
-<h4>Results for the $M/M/s$ queue</h4>
-
-Things become a little messier now when $s>1$, and so the death rates $\mu_n$ for the associate birth-death process are no longer constants. After plugging the relevant values into +@eq:birthDeathSteadyStateProb, one can recover
-
-$$
+</span></p>
+<p>We can go a little further than this actually. Say we’d like to know
+the <em>distribution</em> of the wait times, so we can answer questions
+about the probability of having to wait for a certain amount of time.
+<span class="citation" data-cites="classText">Hillier and Lieberman (<a
+href="#ref-classText" role="doc-biblioref">2021</a>)</span> talks a
+little bit about the derivation, but the result is that if the random
+variable <span class="math inline">V</span> represents the wait time for
+a customer arriving while the queue is in steady state, then</p>
+<p><span class="math display">
+P\!\left( V\leq t \right) = 1 - e^{-(\mu - \lambda)t}
+</span></p>
+<p>In other words, the steady-state waiting times are <em>also</em>
+governed by an exponential random variable!</p>
+<p>We can also derive similar results for waiting times in the queue. If
+we let <span class="math inline">V_q</span> represent the time in the
+queue for a customer arriving in steady state, then we get</p>
+<p><span class="math display">
+P\!\left( V_q\leq t \right) = 1 - \rho e^{-(\mu - \lambda)t}
+</span></p>
+<h4>
+Results for the <span class="math inline">M/M/s</span> queue
+</h4>
+<p>Things become a little messier now when <span
+class="math inline">s&gt;1</span>, and so the death rates <span
+class="math inline">\mu_n</span> for the associate birth-death process
+are no longer constants. After plugging the relevant values into eq. <a
+href="#eq:birthDeathSteadyStateProb">35</a>, one can recover</p>
+<p><span class="math display">
 P_0=\left[\sum_{n=0}^{s-1}\frac{(\lambda/\mu)^n}{n!}+\frac{(\lambda/\mu)^s}{s!}\frac{1}{1-\lambda/(s\mu)}\right]^{-1}
-$$
-
-Furthermore, one can derive:
-
-$$
+</span></p>
+<p>Furthermore, one can derive:</p>
+<p><span class="math display">
 P_n=\begin{cases}
-\frac{(\lambda/ \mu)^n}{n!}P_0 && 0\leq n \leq s \\
-\frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 && n > s
+\frac{(\lambda/ \mu)^n}{n!}P_0 &amp;&amp; 0\leq n \leq s \\
+\frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 &amp;&amp; n &gt; s
 \end{cases}
-$$ -->
+</span></p>
+<p>Then the queue lengths and waiting times will become:</p>
+<p><span class="math display">
+\begin{align*}
+L_q &amp;= \frac{P_0(\lambda/\mu)^s\rho}{s!(1 - \rho)^2} &amp;\qquad
+W_q&amp;=\frac{L_q}{\lambda} \\
+L&amp;=L_q + \frac{\lambda}{\mu} &amp;\qquad W&amp;=W_q + \frac{1}{\mu}
+\end{align*}
+</span></p>
+<p>With some effort, we can also recover the distributions of the
+waiting times <span class="math inline">V</span>, <span
+class="math inline">V_q</span> (in the entire system and in the queue)
+for customers arriving to the queue in steady state:</p>
+<p><span class="math display">
+\begin{align*}
+P(V\leq t)&amp;=1-e^{-\mu t}\left(
+1 + \frac{P_0(\lambda/\mu)^s}{s!(1-\rho)}\frac{1 - e^{\mu
+t(s-1-\lambda/\mu)}}{s-1-\lambda/\mu}
+\right)\\
+P(V_q\leq t)&amp;=1-\left(1-\sum_{n=0}^{s-1}P_n\right)e^{-s\mu(1-\rho)t}
+\end{align*}
+</span></p>
+<h4>
+Example
+</h4>
+<p>Let’s consider again the County Hospital example from section <a
+href="#sec:queueExample">7.3.1</a>. The management engineer has
+concluded that arrivals to the hospital roughly follow a Poisson process
+with a rate of <span class="math inline">\lambda=2</span> arrivals per
+hour. She has also concluded that the time a doctor takes with a patient
+is modeled well by an exponential random variable with rate <span
+class="math inline">\mu=3</span>.</p>
+<p>Furthermore, even though the patient arrival rate is not constant
+throughout the day and so the process is unlikely to ever truly reach
+steady state, she figures that the steady-state results will approximate
+real events well enough for the purposes of this analysis. Given this,
+how would you suggest determining whether the second doctor will have
+enough of an effect on the process to justify the extra cost? Let’s jump
+to the following notebook to do some calculations.</p>
+<script src="https://gist.github.com/dc612ddb61811544716937a7af357f17.js"></script>
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
