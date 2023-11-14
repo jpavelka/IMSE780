@@ -6,7 +6,7 @@ The next area of stochastic processes we will study is **queueing theory**, whic
 
 Perhaps studying people standing in lines sounds like it would not be of much use - but actually, this is pretty practical! It is of course applicable to customer services of all types, and several Edelman prizes have been won by queueing applications (see for example [here](https://pubsonline.informs.org/doi/10.1287/inte.6.1pt2.4) and [here](https://pubsonline.informs.org/doi/10.1287/inte.24.1.6)). @classText highlights several other examples in section 17.3
 
-### Initial example
+### Initial example {#sec:queueExample}
 
 Let's now describe our prototype queueing problem, as stated by @classText:
 
@@ -168,7 +168,7 @@ Let's now go rapid-fire through some notation we'll be using.
 - $s$: The number of servers (parallel service channels) in the queueing system.
 - $\lambda_n$: The mean arrival rate (expected number of arrivals per unit time) of new customers when $n$ customers are in the system.
 - $\lambda$: If $\lambda_n$ is constant over all $n$, then we'll just denote the mean arrival rate as $\lambda$. In this case, the mean/expected interarrival time is $\frac{1}{\lambda}$.
-- $\mu_n$: The mean service rate for the overall system (i.e. the expected number of customers completing service per unit time when $n$ customers are in system). This is a combined rate including all busy servers.
+- $\mu_n$: The mean service rate for the overall system when in state $n$ (i.e. the expected number of customers completing service per unit time when $n$ customers are in the system). This is a combined rate including all busy servers.
 - $\mu$: When the mean service rate _per busy server_ is constant for all $n$, we'll denote this constant by $\mu$. (In this case, $\mu_n=s\mu$ when $n\geq s$, that is, when all s servers are busy.) When $\mu$ exists, the mean/expected service time per server is $\frac{1}{\mu}$.
 - $\rho$: In the above conditions where $\lambda$ and $\mu$ are defined, $\rho=\frac{\lambda}{s\mu}$ is known as the **utilization factor** of the for the service facility, i.e., the expected fraction of time the individual servers are busy, because $\rho$ represents the fraction of the system’s service capacity ($s\mu$) that is being utilized on the average by arriving customers ($\lambda$).
 
@@ -370,7 +370,7 @@ Once again, even though some of these calculations involve infinite sums, in man
 
 A technical note before we move on: the above result is for the steady-state probabilities of the birth-and-death process. But we should note that not every birth-and-death process is guaranteed to ever reach a steady state. Luckily, we do know some conditions where a steady state is guaranteed to exist. Firstly, if $\lambda_n=0$ for some value of $n$ higher than the initial state (so that there are only a finite number of possible states) then the steady-state results are valid. Another condition (which we will make use of shortly) is when $\lambda$ and $\mu$ exist (i.e. the arrival and service rates are constant) and $\rho=\lambda/s\mu<1$ (so that arrivals do not come faster than services complete).
 
-<!-- ### $M/M/s\ $ queues
+### $M/M/s\ $ queues
 
 Finally, we're able to talk about our first general class of queueing models! The $M/M/s$ name comes from a queueing theory convention where the models are named according to the scheme $x/y/z$, where $x$ is the interarrival time distribution, $y$ is the service time distribution, and $z$ is the number of servers. The $M$ in the name stands for "Markovian", signifying that the distribution has the Markovian, memorylessness property - that is, that the interarrival and service time distributions are exponential. The number of servers in the system is denoted by some integer $s\geq1$.
 
@@ -385,9 +385,9 @@ s\mu && n>s
 \end{cases}
 $$
 
-Why? This is due to what we saw in +@eq:minExponentials, that the minimum of $n$ exponential random variables is itself and exponential distribution, with rate $\alpha=\alpha_1+\alpha_2+\dots+\alpha_n$. In this case, a death occurs in the process whenever the first service is completed, so the result fits.
+Why? This is due to what we saw in +@eq:minExponentials, that the minimum of $n$ exponential random variables is itself an exponential random variable, with rate $\alpha=\alpha_1+\alpha_2+\dots+\alpha_n$. In this case, a death occurs in the process whenever the first service is completed, so the result fits.
 
-As mentioned earlier, so long as $s\mu>\lambda$ the steady-state results we derived in +@sec:birthDeathProcess will hold. As we will show, those earlier infinite sums become tractable in the case of an $M/M/s$ queues. Let's go ahead and see how the results shake out, starting with $M/M/1$ queues then transitioning to $s>1$.
+As mentioned earlier, so long as $s\mu>\lambda$ the steady-state results we derived in +@sec:birthDeathProcess will hold. As we will show, those earlier infinite sums become tractable in the case of $M/M/s$ queues. Let's go ahead and see how the results shake out, starting with $M/M/1$ queues then transitioning to $s>1$.
 
 <h4>Results for the $M/M/1$ queue</h4>
 
@@ -397,7 +397,7 @@ $$
 P_0\sum_{n=0}^\infty\left(\frac{\lambda}{\mu}\right)^n=P_0\sum_{n=0}^\infty\rho^n=1
 $$
 
-We've assumed that $\lambda<s\mu=1$, so $\rho=\frac{\lambda}{\mu}<1$ and hence the above reduces to (due to the standard result on the sum of [geometric series](https://en.wikipedia.org/wiki/Geometric_series)):
+We've assumed that $\lambda<s\mu$, so $\rho=\frac{\lambda}{\mu}<1$ and hence the above reduces to (due to the standard result on the sum of [geometric series](https://en.wikipedia.org/wiki/Geometric_series)):
 
 $$
 P_0\left(\frac{1}{1-\rho}\right)=1
@@ -421,7 +421,19 @@ $$
 W=\frac{1}{\mu-\lambda}\qquad W_q=\frac{\lambda}{\mu(\mu-\lambda)}
 $$
 
-Before we stop, it think it is interesting to note that in this case the _distribution_ of the wait times is itself an exponential random variable, with rate $\mu-\lambda$, giving a different way to derive $W$.
+We can go a little further than this actually. Say we'd like to know the _distribution_ of the wait times, so we can answer questions about the probability of having to wait for a certain amount of time. @classText talks a little bit about the derivation, but the result is that if the random variable $V$ represents the wait time for a customer arriving while the queue is in steady state, then
+
+$$
+\prob{V\leq t} = 1 - e^{-(\mu - \lambda)t}
+$$
+
+In other words, the steady-state waiting times are _also_ governed by an exponential random variable!
+
+We can also derive similar results for waiting times in the queue. If we let $V_q$ represent the time in the queue for a customer arriving in steady state, then we get
+
+$$
+\prob{V_q\leq t} = 1 - \rho e^{-(\mu - \lambda)t}
+$$
 
 <h4>Results for the $M/M/s$ queue</h4>
 
@@ -438,4 +450,32 @@ P_n=\begin{cases}
 \frac{(\lambda/ \mu)^n}{n!}P_0 && 0\leq n \leq s \\
 \frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 && n > s
 \end{cases}
-$$ -->
+$$
+
+Then the queue lengths and waiting times will become:
+
+$$
+\begin{align*}
+L_q &= \frac{P_0(\lambda/\mu)^s\rho}{s!(1 - \rho)^2} &\qquad W_q&=\frac{L_q}{\lambda} \\
+L&=L_q + \frac{\lambda}{\mu} &\qquad W&=W_q + \frac{1}{\mu}
+\end{align*}
+$$
+
+With some effort, we can also recover the distributions of the waiting times $V$, $V_q$ (in the entire system and in the queue) for customers arriving to the queue in steady state:
+
+$$
+\begin{align*}
+P(V\leq t)&=1-e^{-\mu t}\left(
+1 + \frac{P_0(\lambda/\mu)^s}{s!(1-\rho)}\frac{1 - e^{\mu t(s-1-\lambda/\mu)}}{s-1-\lambda/\mu}
+\right)\\
+P(V_q\leq t)&=1-\left(1-\sum_{n=0}^{s-1}P_n\right)e^{-s\mu(1-\rho)t}
+\end{align*}
+$$
+
+<h4>Example</h4>
+
+Let's consider again the County Hospital example from +@sec:queueExample. The management engineer has concluded that arrivals to the hospital roughly follow a Poisson process with a rate of $\lambda=2$ arrivals per hour. She has also concluded that the time a doctor takes with a patient is modeled well by an exponential random variable with rate $\mu=3$.
+
+Furthermore, even though the patient arrival rate is not constant throughout the day and so the process is unlikely to ever truly reach steady state, she figures that the steady-state results will approximate real events well enough for the purposes of this analysis. Given this, how would you suggest determining whether the second doctor will have enough of an effect on the process to justify the extra cost? Let's jump to the following notebook to do some calculations.
+
+{colabGist:1kvBWyqp3khegQ5RFUiJfuiWEVd2SqDl8,dc612ddb61811544716937a7af357f17}
