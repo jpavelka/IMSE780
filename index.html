@@ -240,101 +240,6 @@
       margin-left: 2em;
     }
   </style>
-  <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-      }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
-  <script>
-      const theoremHelpers = () => {
-          let theoremObj = {};
-          for (thm of document.getElementsByClassName('theorem')) {
-              ((thm) => {
-                  let headerEl = thm.previousSibling;
-                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
-                      headerEl = headerEl.previousSibling;
-                  }
-                  section = headerEl.getAttribute('data-number').split('.')[0];
-                  theoremObj[thm.id] = {
-                      'theorem': thm,
-                      'proof': undefined,
-                      'section': section
-                  };
-              })(thm)
-          }
-          for (prf of document.getElementsByClassName('proof')) {
-              ((prf) => {
-                  theoremObj[prf.getAttribute('for')].proof = prf;
-                  firstP = prf.getElementsByTagName('p')[0];
-                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
-              })(prf)
-          }
-          secNumThms = {};
-          for ([thmId, thmObj] of Object.entries(theoremObj)) {
-              ((thmId, thmObj) => {
-                  thm = document.getElementById(thmId);
-                  sec = thmObj.section;
-                  el = thmObj.theorem;
-                  proof = thmObj.proof;
-                  if (!Object.keys(secNumThms).includes(sec)) {
-                      secNumThms[sec] = 0;
-                  }
-                  secNumThms[sec] += 1;
-                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
-                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
-                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
-                  labelSpan = document.createElement('span');
-                  labelSpan.classList = ['theoremLabel'];
-                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
-                  if (!!thm.getAttribute('data-display-name')) {
-                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
-                  }
-                  labelSpan.textContent = preTheoremStr + ': ';
-                  el.insertBefore(labelSpan, el.firstChild);
-                  const main = document.getElementById('main');
-                  if (!!proof) {
-                      if (proof.getAttribute('data-placement') === 'appendix') {
-                          const appLink = document.createElement('p');
-                          const thmClone = thm.cloneNode(true);
-                          thmClone.id = thm.id + 'AppendixVersionWithProof';
-                          thmCloneLabel = thmClone.firstChild;
-                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
-                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
-                          main.insertBefore(appLink, thm.nextSibling);
-                          const refs = document.getElementById('References');
-                          main.insertBefore(thmClone, refs);
-                          main.insertBefore(proof, refs);
-                      }
-                  }
-              })(thmId, thmObj)
-          }
-          const refEls = document.getElementsByClassName('thmRef');
-          for (ref of refEls) {
-              ((ref) => {
-                  thm = document.getElementById(ref.getAttribute('for'));
-                  if (!!thm) {
-                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
-                  } else {
-                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
-                  }
-              })(ref)
-          }
-          addTooltips([...refEls].map(el => el.firstChild), true);
-      }
-  </script>
   <script>
       const drawAllPlotlyFunctions = () => {
           let plotNum = 0;
@@ -474,561 +379,455 @@
           Plotly.newPlot(elId, data, layout, {displayModeBar: false})
       }
   </script>
-  <style>   
-      #classModeDiv {
-          position: fixed;
-          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
-          padding: 30pt;
-          top: 200px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 2pt solid;
-          border-radius: 10pt;
-          padding: 10px;
-          box-shadow: 5px 5px rgb(200, 200, 200);
-          visibility: hidden;
-      }
-  </style>
   <script>
-      const classModeSetup = () => {
-          const classMode = document.getElementById('classModeDiv');
-          let noClassModeHref = window.location.href.split('#')[0];
-          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
-              noClassModeHref += '/';
+      BBGraphData = {
+          bbTree1: {
+              'edges': [
+                  ['P', 'P^1', 'x_1 \\leq 2'],
+                  ['P', 'P^2', 'x_1 \\geq 3']
+              ],
+              'nodes': {
+                  'P': {lp: '\\frac{59}{7}', state: 'branched'},
+                  'P^1': {},
+                  'P^2': {}
+              }
+          },
+          depthFirstTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '20', state: 'branched'},
+                  'P^2': {},
+                  'P^3': {lp: '17', state: 'branched'},
+                  'P^4': {},
+                  'P^5': {lp: '16', state: 'branched'},
+                  'P^6': {},
+                  'P^7': {lp: '15', state: 'integer'},
+                  'P^8': {},
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^3', 'P^5', 'x_3 \\leq 0'],
+                  ['P^3', 'P^6', 'x_3 \\geq 1'],
+                  ['P^5', 'P^7', 'x_3 \\leq 0'],
+                  ['P^5', 'P^8', 'x_3 \\geq 1']
+              ],
+              rootPlacement: 0.67,
+              siblingSep: 1.4,
+              childSep: 3
+          },
+          bestNodeTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '19', state: 'branched'},
+                  'P^2': {lp: '20', state: 'branched'},
+                  'P^3': {},
+                  'P^4': {},
+                  'P^5': {},
+                  'P^6': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^2', 'P^5', 'x_3 \\leq 0'],
+                  ['P^2', 'P^6', 'x_3 \\geq 1']
+              ],
+          },
+          fullTree3d: {
+              nodes: {
+                  'P': {lp: '', state: 'branched'},
+                  'P^1': {lp: '', state: 'branched'},
+                  'P^2': {lp: '', state: 'branched'},
+                  'P^3': {lp: '', state: 'branched'},
+                  'P^4': {lp: '', state: 'branched'},
+                  'P^5': {lp: '', state: 'branched'},
+                  'P^6': {lp: '', state: 'branched'},
+                  'P^7': {},
+                  'P^8': {},
+                  'P^9': {},
+                  'P^{10}': {},
+                  'P^{11}': {},
+                  'P^{12}': {},
+                  'P^{13}': {},
+                  'P^{14}': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 = 0'],
+                  ['P', 'P^2', 'x_1 = 1'],
+                  ['P^1', 'P^3', 'x_2 = 0'],
+                  ['P^1', 'P^4', 'x_2 = 1'],
+                  ['P^2', 'P^5', 'x_2 = 0'],
+                  ['P^2', 'P^6', 'x_2 = 1'],
+                  ['P^3', 'P^7', 'x_3 = 0'],
+                  ['P^3', 'P^8', 'x_3 = 1'],
+                  ['P^4', 'P^9', 'x_3 = 0'],
+                  ['P^4', 'P^{10}', 'x_3 = 1'],
+                  ['P^5', 'P^{11}', 'x_3 = 0'],
+                  ['P^5', 'P^{12}', 'x_3 = 1'],
+                  ['P^6', 'P^{13}', 'x_3 = 0'],
+                  ['P^6', 'P^{14}', 'x_3 = 1']
+              ],
+              siblingSep: 1.7,
+              childSep: 3,
+              includeLb: false
           }
-          noClassModeHref += '?classmode=false';
-          classMode.onclick = closeClassMode;
-          classMode.innerHTML = `
-              <div>
-                  Welcome to class mode! This is your friendly reminder to check that:
-                  <ul>
-                      <li>The mics are on.</li>
-                      <li>The camera is pointed at the whiteboard.</li>
-                      <li>PIP is off.</li>
-                  </ul>
-                  Click anywhere to close this window.
-                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-              </div>
-          `
       }
-      const closeClassMode = () => {
-          const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
-          const minutesBetweenReminders = 30;
-          if (classMode.style.visibility === "visible") {
-              classMode.style.visibility = "hidden";
-              classMode.innerHTML = `
-                  <div>
-                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
-                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
-                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
-                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-                  </div>
-              `
-              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
-          }
-      }
+      
+      BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
+      BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
+      BBGraphData.bbTree2.nodes['P^3'] = {};
+      BBGraphData.bbTree2.nodes['P^4'] = {};
+      BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
+      BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
+
+      BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
+      BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
+
+      BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
+      BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
+
+      BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
+      BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
   </script>
-  <style>
-      .footnoteTooltipClose {
-          color: #222;
-          font-size: 30pt;
-          font-weight: bold;
-          margin-left: auto;
-          margin-top: -1rem;
-          margin-bottom: -1rem;
-      }
-      .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
-          color: black;
-          text-decoration: none;
-          cursor: pointer;
-      }
-      .footnote-ref sup, .eqnRef {
-          cursor: pointer;
-          color: green !important;
-      }
-      .footnoteTooltip {
-          background-color: #ebebeb;
-          padding: 1rem;
-          border: 1px solid #888;
-          position: absolute;
-          z-index: 1;
-          width: 75%;
-          left: 50%;
-          transform: translateX(-50%);
-          margin-top: 2rem;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-          overflow-x: auto;
-          display: flex;
-          flex-direction: column;
-      }
-      .eqnRef .footnoteTooltip {
-          color: black;
-      }
-      .seeOriginalEq {
-          font-size: 1rem;
-          margin-left: auto;
-      }
-  </style>
   <script>
-      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
-          innerHTML = innerHTML.replaceAll('@@@', '"');
-          const tooltipEl = document.getElementById(id);
-          if (tooltipEl == null) {
-              const newEl = document.createElement("span");
-              closeEl = document.createElement("div");
-              closeEl.classList = ['footnoteTooltipClose'];
-              closeEl.innerHTML = '&times;';
-              newEl.appendChild(closeEl);
-              if (typeof(refElOrId) === 'string'){
-                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
-                  document.getElementById(refElOrId).appendChild(newEl);
-              } else {
-                  closeEl.onclick = () => removeElById(id);
-                  refElOrId.append(newEl);
-              }
-              newEl.id = id;
-              newEl.innerHTML += innerHTML;
-              newEl.classList = ['footnoteTooltip'];
-              for (numEl of newEl.getElementsByClassName('eqnos-number')){
-                  numEl.remove();
-              }
-              if (!!origId) {
-                  seeOrigEl = document.createElement('a');
-                  seeOrigEl.setAttribute('href', '#' + origId);
-                  seeOrigEl.innerHTML = 'jump to';
-                  seeOrigEl.classList = ['seeOriginalEq']
-                  seeOrigEl.onclick = () => {
-                      backEl = document.getElementById('back#' + origId + 'Arrow');
-                      backEl.style.display = 'inline';
-                      backEl.setAttribute('href', '#' + id)
-                  }
-                  newEl.appendChild(seeOrigEl);
-              }
+      document.onreadystatechange = () => {
+          if (document.readyState !== "complete") {
+              document.querySelector("#main").style.display = "none";
+              document.querySelector(".navbar").style.display = "none";
+              document.querySelector("#loader").style.visibility = "visible";
+              document.querySelector("#classModeDiv").style.visibility = "hidden";
           } else {
-              tooltipEl.remove();
+              document.querySelector("#loader").style.display = "none";
+              document.querySelector(".navbar").style.display = "flex";
+              document.querySelector("#main").style.display = "block";
+              if (getUrlParameter('classmode') !== 'false') {
+                  document.querySelector("#classModeDiv").style.visibility = "visible";
+              }
           }
-          
+      };
+      window.onload = () => {
+          appendixSecNo = renumberAppendix();
+          addMathContainers();
+          theoremHelpers();
+          addRefsToToc();
+          eqRefExpandLinksAndAddTooltips();
+          citeRefExpandLinksAndAddTooltips();
+          secRefExpandLinksAndAddBackArrow(appendixSecNo);
+          addFootnoteTooltips();
+          addCodeCopyButtons();
+          tocHelpers();
+          drawAllSvgPlots();
+          classModeSetup();
+          videoEmbeds();
+          document.onclick = closeClassMode;
+          document.getElementById('main').onclick = closeNavIfSmall;
+          makeAssignmentLink();
+          drawPlotlyCharts();
+          drawBBTrees();
+          drawAllPlotlyFunctions();
       }
-      function removeElById(id) {
-          document.getElementById(id).remove();
+      drawPlotlyCharts = () => {
+          for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
+              chartId = 'plotyChart' + ind;
+              el.id = chartId;
+              plotData = JSON.parse(el.getAttribute('data-plot-data'));
+              plotLayout = JSON.parse(el.getAttribute('data-plot-layout') || '{}');
+              Plotly.newPlot(chartId, plotData, plotLayout)
+          }
+      }
+      makeAssignmentLink = () => {
+          toAssignmentsEl = document.getElementById('toAssignments');
+          if (!!toAssignmentsEl){
+              toAssignmentsEl.setAttribute('href',
+                  window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
+              )
+          }
+      }
+      getUrlParameter = (name) => {
+          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+          var results = regex.exec(location.search);
+          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      };
+      addMathContainers = () => {
+          for (el of document.querySelectorAll('.math.display')) {
+              katexContainer = document.createElement('div');
+              katexContainer.classList = ['katexContainer'];
+              el.parentNode.insertBefore(katexContainer, el);
+              katexContainer.appendChild(el);
+          }
+      }
+      renumberAppendix = () => {
+          const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
+          const appendixSecNo = appendixEl.getAttribute('data-number');
+          appendixEl.setAttribute('data-number', 'A');
+          appendixEl.firstChild.remove();
+          const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
+              return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
+          })
+          for (apSec of appendixSections) {
+              const numSplit = apSec.getAttribute('data-number').split('.');
+              const secNo = 'A.' + numSplit.slice(1).join('.');
+              apSec.setAttribute('data-number', secNo);
+              apSec.firstChild.textContent = secNo;
+          }
+          const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
+              return (el.textContent).split('.')[0] === appendixSecNo;
+          })
+          for (tocEl of tocEls) {
+              if (tocEl.textContent == appendixSecNo) {
+                  tocEl.remove();
+              } else {
+                  const numSplit = tocEl.textContent.split('.');
+                  const secNo = 'A.' + numSplit.slice(1).join('.');
+                  tocEl.textContent = secNo;
+              }
+          }
+          return appendixSecNo
+      }
+      tocHelpers = () => {
+          for (el of document.querySelectorAll('#TOC a')) {
+              const hrefId = el.getAttribute('href').slice(1);
+              let parentEl = el.parentNode;
+              let numUlsNested = 0;
+              while (!!parentEl) {
+                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
+                  parentEl = parentEl.parentNode
+              }
+              innerHTML = el.innerHTML;
+              el.innerHTML = '';
+              newEl = document.createElement('div');
+              newEl.innerHTML = innerHTML;
+              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
+              newEl.style.display = 'flex';
+              newEl.innerHTML = innerHTML;
+              if (numUlsNested > 1) {
+                  el.parentNode.classList.add('tocHideable');
+                  el.parentNode.classList.add('tocHidden');
+              }
+              liParent = el.parentNode;
+              if (liParent.getElementsByTagName('UL').length > 0) {
+                  expandEl = document.createElement('span');
+                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                  expandEl.classList = ['tocExpand'];
+                  newEl.appendChild(expandEl);
+                  ((expandEl, liParent) => {
+                      expandEl.onclick = (e) => {
+                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]) {
+                              let hideableParent = hideable.parentNode;
+                              while (hideableParent.tagName !== 'LI') {
+                                  hideableParent = hideableParent.parentNode
+                              }
+                              if (hideableParent !== liParent) {
+                                  continue
+                              }
+                              if ([...hideable.classList].includes('tocHidden')) {
+                                  hideable.classList.remove('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
+                              } else {
+                                  hideable.classList.add('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                              }
+                          };
+                          e.preventDefault();
+                      }
+                  })(expandEl, liParent)
+              }
+              el.appendChild(newEl);
+          }
+      }
+      addCodeCopyButtons = () => {
+          buttonAddFunc = () => {
+              copyButtons = document.querySelectorAll('.copyButton');
+              wide = 700;
+              if (copyButtons.length > 0) {
+                  if (window.innerWidth < wide) {
+                      for (cb of copyButtons) {
+                          cb.remove();
+                      }
+                  }
+              } else {
+                  if (window.innerWidth >= wide) {
+                      for (el of document.querySelectorAll('div.sourceCode')) {
+                          copyEl = document.createElement('span');
+                          el.insertBefore(copyEl, el.firstChild);
+                          copyEl.innerHTML = '📋';
+                          copyEl.classList = ['copyButton'];
+                          ((el, copyEl) => {
+                              copyEl.onclick = () => {
+                                  text = el.getElementsByTagName('pre')[0].textContent;
+                                  navigator.clipboard.writeText(text);
+                                  infoEl = document.createElement('div');
+                                  infoEl.textContent = 'Copied!';
+                                  infoEl.classList = ['copyMessage']
+                                  copyEl.appendChild(infoEl);
+                                  setTimeout(() => infoEl.remove(), 2000);
+                              };
+                          })(el, copyEl)
+                      }
+                  }
+              }
+          }
+          buttonAddFunc();
+          window.addEventListener("resize", buttonAddFunc);
+      }
+      addRefsToToc = () => {
+          liEl = document.createElement('li');
+          aEl = document.createElement('a');
+          aEl.href = '#References';
+          aEl.innerHTML = 'References';
+          ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
+          liEl.appendChild(aEl);
+          ulEl.appendChild(liEl);
+      }
+      addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
+          for ([i, el] of els.entries()) {
+              if ([...el.classList].includes('refNotFound')) {
+                  continue;
+              }
+              ((el, i) => {
+                  refId = el.getAttribute('href');
+                  refEl = document.getElementById(refId.slice(1));
+                  el.setAttribute('href', '#');
+                  el.classList = ['eqnRef'];
+                  nextEl = document.createElement('span');
+                  el.parentNode.insertBefore(nextEl, el.nextSibling);
+                  popupId = refId + 'popup' + i;
+                  elId = popupId + 'Ref';
+                  nextEl.id = elId;
+                  ((a, b, c, d, e) => {
+                      a.onclick = () => {
+                          footnoteOnTooltipClick(b, c, d, e);
+                          return false
+                      };
+                  })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+                  if (includeLinkBacks) {
+                      backId = 'back' + refId;
+                      backEl = document.getElementById(backId);
+                      if (!!!backEl) {
+                          backEl = document.createElement('div');
+                          backEl.id = backId;
+                          backEl.classList = ['backRefElement'];
+                          backArrowEl = document.createElement('a');
+                          backArrowEl.id = backId + 'Arrow';
+                          backArrowEl.innerHTML = "↩︎";
+                          backArrowEl.style.display = 'none';
+                          backEl.onclick = () => backEl.style.display = 'none';
+                          backEl.appendChild(backArrowEl);
+                          refEl.appendChild(backEl);
+                      }
+                  }
+              })(el, i)
+          }
+      }
+      expandLinks = (els, prevWordInclude) => {
+          for (const el of els) {
+              sib = el.previousSibling;
+              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
+              prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
+              if (prevWordInclude.includes(prevWord)) {
+                  repS = RegExp(`${prevWord}[^a-zA-Z]$`);
+                  el.innerHTML = prevWord + ' ' + el.innerHTML;
+                  sib.textContent = sib.textContent.replace(repS, '');
+              }
+          }
+      }
+      eqRefExpandLinksAndAddTooltips = () => {
+          els = document.querySelectorAll('[href^="\#eq:"]');
+          expandLinks(els, ['eq.', 'Equation']);
+          addTooltips(els, true);
+      }
+      secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
+          els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
+              return el.parentNode.tagName !== 'LI'
+          });
+          const appendixStr = 'the appendix';
+          for (el of els) {
+              if (el.textContent == appendixSecNo) {
+                  sib = el.previousSibling;
+                  sib.remove();
+                  el.textContent = appendixStr;
+              } else {
+                  el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
+              }
+          }
+          expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
+          for ([i, el] of els.entries()) {
+              const secId = el.getAttribute('href').slice(1);
+              const elId = 'linkToSec' + secId + i;
+              el.id = elId;
+              const toSec = document.getElementById(secId);
+              el.onclick = () => {
+                  backArrowId = secId + 'ReturnLink';
+                  let backArrowEl = document.getElementById(backArrowId);
+                  if (!!backArrowEl) {
+                      backArrowEl.remove();
+                  }
+                  backArrowEl = document.createElement('a');
+                  backArrowEl.id = backArrowId
+                  backArrowEl.setAttribute('href', '#' + elId);
+                  backArrowEl.style.float = 'right';
+                  backArrowEl.innerHTML = "↩︎";
+                  backArrowEl.onclick = () => backArrowEl.remove();
+                  toSec.appendChild(backArrowEl);
+              }
+          }
+      }
+      citeRefExpandLinksAndAddTooltips = () => {
+          els = document.getElementById('main').getElementsByClassName('citation');
+          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+          for (el of els) {
+              textContent = el.textContent;
+              el.getElementsByTagName('a')[0].textContent = textContent;
+              for (childEl of el.childNodes) {
+                  if (!!!childEl.tagName) {
+                      childEl.textContent = '';
+                  }
+              }
+          }
+      }
+      addFootnoteTooltips = () => {
+          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
+              fnBack.remove();
+          }
+          els = document.getElementById('main').getElementsByClassName('footnote-ref');
+          addTooltips([...els], false);
+          footnotesEl = document.getElementById('footnotes');
+          if (!!footnotesEl) {
+              footnotesEl.remove();
+          }
+          for (el of document.getElementsByClassName('eqnRef')) {
+              const childEl = el.firstChild;
+              if (childEl.tagName === 'SUP') {
+                  childEl.textContent = 'note';
+                  childEl.style.fontSize = '0.5rem';
+              }
+          }
       }
   </script>
   <style>
-      #main {
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          transition: margin-left .5s;
-          padding: 20px;
-          padding-bottom: 30px;
-      }
-      html {
-          scroll-padding-top: 2.5rem;
-          overflow-y: auto;
-      }
-      body {
-          scroll-padding-top: 2.5rem;
-          overflow-y: hidden;
-          max-width: none !important;
-      }
-      .loadingMessage {
-          text-align: center;
-          margin-top: 40vh;
-          font-size: 1.2rem;
-      }
-      blockquote {
-          margin: 1rem 0.5rem;
-          padding-left: 0.5em;
-          padding-right: 0.5em;
-          border-left: 2px solid #e6e6e6;
-          border-right: 2px solid #e6e6e6;
-          color: #444;
-          background-color: #ebebeb;
-      }
-      blockquote p {
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-      }
-      details {
-          cursor: pointer;
-      }
-      figure {
-          margin-inline: 0.5rem;
-      }
-      figure img {
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 100%;
-      }
-      figure figcaption {
-          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
-          text-align: center;
-      }
-      a {
-          color: blue;
-      }
-      a:visited {
-          color: purple;
-      }
-      h1 {
-          position: relative;
-          margin-top: 5rem;
-      }
-      h1:before {
-          content: '';
-          position: absolute;
-          width: 100%;
-          height: 1px;
-          background: black;
-          bottom: 150%;
-          left: 0;
-      }
-      *[role="doc-biblioref"] {
-          color: green !important;
-      }
-      div.sourceCode {
-          background-color: #dfdfdf;
-          padding: 0.5rem;
-          border: 1pt solid black;
-          font-size: max(12pt, 1.1rem);
-      }
-      .copyButton {
-          float: right;
-          cursor: pointer;
-      }
-      .header-section-number::after {
-          content: ':'
-      }
-      @keyframes fade {
-          0%,100% { opacity: 0 }
-          15% { opacity: 1 }
-          85% { opacity: 1 }
-      }
-      .copyMessage {
-          position: absolute;
-          transform: translate(-2rem, -2.8rem);
-          width: 4rem;
-          font-size: max(10pt, 0.7rem);
-          text-align: center;
-          background-color: #eee;
-          border: 1pt solid black;
-          border-radius: 0.25rem;
-          animation: fade 2s linear;
-      }
-      .backRefElement {
-          margin-top: auto;
-      }
-      footer {
-          position: fixed;
-          bottom: 0;
-          text-align: center;
-          width: 100%;
-          background: white;
-          left: 50%;
-          transform: translateX(-50%);
-          border-top: 1pt solid lightgray;
-          font-size: 0.7rem;
+      .eqnos {
           display: flex;
-          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          overflow-x: auto;
       }
-      .embedIndent {
-          margin: 0 1rem;
+      .eqnos br {
           display: none;
       }
-      .lectureEmbedIframe {
-          width: min(600px, 80vw);
-          height: calc(9 * min(600px, 80vw) / 16);
-      }
-      .tinyText {
-          font-size: 0.5rem;
-      }
-      .mathSmall {
-          font-size: 1rem;
-      }
-      .katexSideBySide {
-          align-self: center;
-      }
-      .katexSideBySide .katexContainer {
-          overflow-x: hidden;
-      }
-      .basicCenter {
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
-      }
-      .refNotFound {
-          color: red;
-      }
-  </style>
-  <script>
-      const drawBBTrees = () => {
-          for (svg of document.getElementsByClassName('bbTreeDraw')) {
-              graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
-              rootPlacement = graphInfo.rootPlacement || 0.5;
-              childSep = graphInfo.childSep || 5;
-              siblingSep = graphInfo.siblingSep || 2;
-              includeLb = graphInfo.includeLb;
-              includeLb = includeLb === undefined ? true : includeLb;
-              textsToAdd = [];
-              for (n of Object.keys(graphInfo['nodes'])) {
-                  graphInfo['nodes'][n]['level'] = 0;
-                  graphInfo['nodes'][n]['children'] = [];
-              }
-              for (e of graphInfo['edges']) {
-                  graphInfo['nodes'][e[1]]['level'] = graphInfo['nodes'][e[0]]['level'] + 1;
-                  graphInfo['nodes'][e[1]]['parent'] = e[0];
-              }
-              r = 25
-              const drawNode = (x, y, attrs) => {
-                  circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                  circ.setAttribute('cx', x);
-                  circ.setAttribute('cy', y);
-                  circ.setAttribute('r', r);
-                  circ.setAttribute('fill', 'lightgray');
-                  circ.setAttribute('stroke-width', '2pt');
-                  circ.setAttribute('stroke', 'gray');
-                  for (const [k, v] of Object.entries(attrs || {})) {
-                      circ.setAttribute(k, v);
-                  }
-                  svg.appendChild(circ);
-              }
-              const addMathText = (math, x, y, attrs) => {
-                  attrs = attrs || {};
-                  forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-                  mathEl = document.createElement('span');
-                  katex.render(math, mathEl, {
-                      throwOnError: false
-                  });
-                  if (attrs['coordToPix'] || false) {
-                      [x, y] = coordToPix(x, y)
-                  }
-                  forObj.setAttribute('x', x);
-                  forObj.setAttribute('y', y);
-                  attrs['height'] = attrs['height'] || '1.2rem';
-                  attrs['width'] = attrs['width'] || '15rem';
-                  attrs['font-size'] = attrs['font-size'] || '12pt';
-                  attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
-                  for (const [k, v] of Object.entries(attrs || {})) {
-                      forObj.setAttribute(k, v);
-                  }
-                  forObj.appendChild(mathEl);
-                  textsToAdd.push(forObj);
-              }
-              const drawLine = (x1, y1, x2, y2, attrs) => {
-                  el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                  el.setAttribute('x1', x1);
-                  el.setAttribute('y1', y1);
-                  el.setAttribute('x2', x2);
-                  el.setAttribute('y2', y2);
-                  attrs = attrs || {}
-                  attrs['style'] = attrs['style'] || 'stroke:gray';
-                  for (const [k, v] of Object.entries(attrs)) {
-                      el.setAttribute(k, v);
-                  }
-                  svg.appendChild(el);
-              }
-              incumbentVal = undefined;
-              maxLevel = Math.max(...Object.values(graphInfo.nodes).map(n => n.level));
-              for ([n, d] of Object.entries(graphInfo.nodes)) {
-                  x = parseFloat(svg.getAttribute('width')) * rootPlacement;
-                  if (d.parent) {
-                      parentInfo = graphInfo.nodes[d['parent']];
-                      d.childNum = parentInfo.children.length;
-                      side = d.childNum === 0 ? -1 : 1;
-                      dist = siblingSep * (Math.max(3, maxLevel + 1) - d.level) * r;
-                      if (d['level'] == 1) {
-                          dist += 1.5 * r;
-                      }
-                      x = parentInfo.x + side * dist;
-                      parentInfo.children.push(n);
-                  }
-                  y = (2 + childSep * d.level) * r - 0.5 * r;
-                  graphInfo['nodes'][n]['level'] = d.level;
-                  graphInfo['nodes'][n]['x'] = x;
-                  graphInfo['nodes'][n]['y'] = y;
-                  addMathText(n, x - 8, y - 10);
-                  if (d.state === 'integer') {
-                      incumbentVal = incumbentVal === undefined ? d.lp : Math.max(incumbentVal, d.lp);
-                      d.lp += '^*';
-                  }
-                  if (!!d.lp) {
-                      addMathText(d.lp, x + 25, y - 30);
-                  }
-              }
-              for (e of graphInfo.edges) {
-                  coords = []
-                  for (i of [0, 1]) {
-                      for (j of ['x', 'y']) {
-                          coords.push(graphInfo.nodes[e[i]][j]);
-                      }
-                  }
-                  drawLine(...coords);
-                  textX = (coords[0] + coords[2]) / 2;
-                  textY = (coords[1] + coords[3]) / 2 - 20;
-                  if (graphInfo.nodes[e[1]].childNum === 0) {
-                      textX -= 55;
-                  } else {
-                      textX += 0;
-                  }
-                  addMathText(e[2], textX, textY);
-              }
-              for (d of Object.values(graphInfo.nodes)) {
-                  if (d.level === 0 && includeLb) {
-                      incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
-                      addMathText(incumbentText, d.x + 28, d.y + 5);
-                  }
-                  attrs = {}
-                  if (d.state === 'branched') {
-                      attrs.stroke = 'blue';
-                      attrs.fill = 'lightblue';
-                  }
-                  if (d.state === 'infeasible') {
-                      attrs.stroke = 'red';
-                      attrs.fill = 'lightpink';
-                  }
-                  if (d.state === 'integer') {
-                      attrs.stroke = 'purple';
-                      attrs.fill = 'plum';
-                  }
-                  if (d.state === 'bounded') {
-                      attrs.stroke = 'darkorange';
-                      attrs.fill = 'peachpuff';
-                  }
-                  drawNode(d.x, d.y, attrs);
-              }
-              for (textObj of textsToAdd) {
-                  svg.appendChild(textObj);
-              }
-          }
-      }
-  </script>
-  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-  <style>
-      nav#TOC:nth-child(2) {
-          margin-top: 0.6rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
-      }
-      nav#TOC li {
-          list-style-type: none;
-      }
-      nav#TOC > ul {
-          margin-bottom: 1.5rem;
-          margin-top: 2rem;
-          line-height: 1.9rem;
-      }
-      #TOC ul {
-          padding-left: 0;
-      }
-      nav#TOC {
-          height: 100%;
-          width: 0;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #ebebeb;
-          overflow-x: hidden;
-          padding-top: 1rem;
-          transition: 0.5s;
-          overflow-y: scroll;
-      }
-      nav#TOC a {
-          text-decoration: none;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-          color: #000;
-          display: block;
-          transition: 0.3s;
-          padding-top: 0.2rem;
-          padding-bottom: 0.3rem;
-          border-bottom: 1pt solid lightgray;
-      }
-      nav#TOC a:hover {
-          color: #888;
-      }
-      #TOC .toc-section-number::after {
-          content: ':\00a0'
-      }
-      #tocTop {
-          height: 1.5em;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 0.5rem;
-          padding-bottom: 0.65rem;
-          position: fixed;
-          top: 0;
-          visibility: hidden;
-          background-color: #ebebeb;
-          z-index: 1;
-          border-bottom: 1pt solid gray;
-      }
-      .tocHidden {
-          display: none     
-      }
-      .tocExpand {
+      .eqnos-number {
           margin-left: auto;
-          font-size: 30pt !important;
-          font-family: 'Courier New', Courier, monospace;
+          padding-left: 1rem;
       }
-      .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          font-size: 1.1rem;
-          background-color: #ebebeb;
-          width: 100%;
-          border-bottom: 1pt solid gray;
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          display: flex;
-          justify-content: space-between;
-          z-index: 2;
-      }
-      @media screen and (max-height: 450px) {
-          .sidenav {
-              padding-top: 15px;
-          }
-
-          .sidenav a {
-              font-size: 18px;
-          }
+      .katexContainer {
+          flex-grow: 1;
+          overflow-x: auto;
       }
   </style>
-  <script>
-      function openCloseNav() {
-          const tocTop = document.getElementById("tocTop")
-          if (tocTop.style.visibility == "visible") {
-              closeNav();
-              return
-          }
-          const screenWidth = window.innerWidth;
-          const tocWidth = Math.min(0.75 * screenWidth, 350);
-          const leftoverWidth = screenWidth - tocWidth;
-          const main = document.getElementById("main");
-          const mainWidth = main.offsetWidth;
-          document.getElementById("TOC").style.width = tocWidth + 'px';
-          tocTop.style.width = tocWidth + 'px';
-          tocTop.style.visibility = "visible";
-          if (leftoverWidth >= mainWidth) {
-              main.style.marginLeft = tocWidth / 2 + 'px';
-          }
-      }
-      function closeNav() {
-          document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = null;
-          document.getElementById("tocTop").style.visibility = "hidden";
-      }
-      function closeNavIfSmall() {
-          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
-              closeNav()
-          }
-      }
-  </script>
   <script>
       let baseLps = {
           prototypeLp: {
@@ -1915,318 +1714,218 @@
           }
       }
   </script>
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
+      }
+  </style>
+  <style>   
+      #classModeDiv {
+          position: fixed;
+          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+          padding: 30pt;
+          top: 200px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          border: 2pt solid;
+          border-radius: 10pt;
+          padding: 10px;
+          box-shadow: 5px 5px rgb(200, 200, 200);
+          visibility: hidden;
+      }
+  </style>
   <script>
-      document.onreadystatechange = () => {
-          if (document.readyState !== "complete") {
-              document.querySelector("#main").style.display = "none";
-              document.querySelector(".navbar").style.display = "none";
-              document.querySelector("#loader").style.visibility = "visible";
-              document.querySelector("#classModeDiv").style.visibility = "hidden";
-          } else {
-              document.querySelector("#loader").style.display = "none";
-              document.querySelector(".navbar").style.display = "flex";
-              document.querySelector("#main").style.display = "block";
-              if (getUrlParameter('classmode') !== 'false') {
-                  document.querySelector("#classModeDiv").style.visibility = "visible";
+      const classModeSetup = () => {
+          const classMode = document.getElementById('classModeDiv');
+          let noClassModeHref = window.location.href.split('#')[0];
+          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
+              noClassModeHref += '/';
+          }
+          noClassModeHref += '?classmode=false';
+          classMode.onclick = closeClassMode;
+          classMode.innerHTML = `
+              <div>
+                  Welcome to class mode! This is your friendly reminder to check that:
+                  <ul>
+                      <li>The mics are on.</li>
+                      <li>The camera is pointed at the whiteboard.</li>
+                      <li>PIP is off.</li>
+                  </ul>
+                  Click anywhere to close this window.
+                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+              </div>
+          `
+      }
+      const closeClassMode = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+          const minutesBetweenReminders = 30;
+          if (classMode.style.visibility === "visible") {
+              classMode.style.visibility = "hidden";
+              classMode.innerHTML = `
+                  <div>
+                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                  </div>
+              `
+              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+          }
+      }
+  </script>
+  <script>
+      const drawBBTrees = () => {
+          for (svg of document.getElementsByClassName('bbTreeDraw')) {
+              graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
+              rootPlacement = graphInfo.rootPlacement || 0.5;
+              childSep = graphInfo.childSep || 5;
+              siblingSep = graphInfo.siblingSep || 2;
+              includeLb = graphInfo.includeLb;
+              includeLb = includeLb === undefined ? true : includeLb;
+              textsToAdd = [];
+              for (n of Object.keys(graphInfo['nodes'])) {
+                  graphInfo['nodes'][n]['level'] = 0;
+                  graphInfo['nodes'][n]['children'] = [];
               }
-          }
-      };
-      window.onload = () => {
-          appendixSecNo = renumberAppendix();
-          addMathContainers();
-          theoremHelpers();
-          addRefsToToc();
-          eqRefExpandLinksAndAddTooltips();
-          citeRefExpandLinksAndAddTooltips();
-          secRefExpandLinksAndAddBackArrow(appendixSecNo);
-          addFootnoteTooltips();
-          addCodeCopyButtons();
-          tocHelpers();
-          drawAllSvgPlots();
-          classModeSetup();
-          videoEmbeds();
-          document.onclick = closeClassMode;
-          document.getElementById('main').onclick = closeNavIfSmall;
-          makeAssignmentLink();
-          drawPlotlyCharts();
-          drawBBTrees();
-          drawAllPlotlyFunctions();
-      }
-      drawPlotlyCharts = () => {
-          for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
-              chartId = 'plotyChart' + ind;
-              el.id = chartId;
-              plotData = JSON.parse(el.getAttribute('data-plot-data'));
-              plotLayout = JSON.parse(el.getAttribute('data-plot-layout') || '{}');
-              Plotly.newPlot(chartId, plotData, plotLayout)
-          }
-      }
-      makeAssignmentLink = () => {
-          toAssignmentsEl = document.getElementById('toAssignments');
-          if (!!toAssignmentsEl){
-              toAssignmentsEl.setAttribute('href',
-                  window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
-              )
-          }
-      }
-      getUrlParameter = (name) => {
-          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-          var results = regex.exec(location.search);
-          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-      };
-      addMathContainers = () => {
-          for (el of document.querySelectorAll('.math.display')) {
-              katexContainer = document.createElement('div');
-              katexContainer.classList = ['katexContainer'];
-              el.parentNode.insertBefore(katexContainer, el);
-              katexContainer.appendChild(el);
-          }
-      }
-      renumberAppendix = () => {
-          const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
-          const appendixSecNo = appendixEl.getAttribute('data-number');
-          appendixEl.setAttribute('data-number', 'A');
-          appendixEl.firstChild.remove();
-          const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
-              return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
-          })
-          for (apSec of appendixSections) {
-              const numSplit = apSec.getAttribute('data-number').split('.');
-              const secNo = 'A.' + numSplit.slice(1).join('.');
-              apSec.setAttribute('data-number', secNo);
-              apSec.firstChild.textContent = secNo;
-          }
-          const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
-              return (el.textContent).split('.')[0] === appendixSecNo;
-          })
-          for (tocEl of tocEls) {
-              if (tocEl.textContent == appendixSecNo) {
-                  tocEl.remove();
-              } else {
-                  const numSplit = tocEl.textContent.split('.');
-                  const secNo = 'A.' + numSplit.slice(1).join('.');
-                  tocEl.textContent = secNo;
+              for (e of graphInfo['edges']) {
+                  graphInfo['nodes'][e[1]]['level'] = graphInfo['nodes'][e[0]]['level'] + 1;
+                  graphInfo['nodes'][e[1]]['parent'] = e[0];
               }
-          }
-          return appendixSecNo
-      }
-      tocHelpers = () => {
-          for (el of document.querySelectorAll('#TOC a')) {
-              const hrefId = el.getAttribute('href').slice(1);
-              let parentEl = el.parentNode;
-              let numUlsNested = 0;
-              while (!!parentEl) {
-                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
-                  parentEl = parentEl.parentNode
+              r = 25
+              const drawNode = (x, y, attrs) => {
+                  circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                  circ.setAttribute('cx', x);
+                  circ.setAttribute('cy', y);
+                  circ.setAttribute('r', r);
+                  circ.setAttribute('fill', 'lightgray');
+                  circ.setAttribute('stroke-width', '2pt');
+                  circ.setAttribute('stroke', 'gray');
+                  for (const [k, v] of Object.entries(attrs || {})) {
+                      circ.setAttribute(k, v);
+                  }
+                  svg.appendChild(circ);
               }
-              innerHTML = el.innerHTML;
-              el.innerHTML = '';
-              newEl = document.createElement('div');
-              newEl.innerHTML = innerHTML;
-              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
-              newEl.style.display = 'flex';
-              newEl.innerHTML = innerHTML;
-              if (numUlsNested > 1) {
-                  el.parentNode.classList.add('tocHideable');
-                  el.parentNode.classList.add('tocHidden');
+              const addMathText = (math, x, y, attrs) => {
+                  attrs = attrs || {};
+                  forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+                  mathEl = document.createElement('span');
+                  katex.render(math, mathEl, {
+                      throwOnError: false
+                  });
+                  if (attrs['coordToPix'] || false) {
+                      [x, y] = coordToPix(x, y)
+                  }
+                  forObj.setAttribute('x', x);
+                  forObj.setAttribute('y', y);
+                  attrs['height'] = attrs['height'] || '1.2rem';
+                  attrs['width'] = attrs['width'] || '15rem';
+                  attrs['font-size'] = attrs['font-size'] || '12pt';
+                  attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
+                  for (const [k, v] of Object.entries(attrs || {})) {
+                      forObj.setAttribute(k, v);
+                  }
+                  forObj.appendChild(mathEl);
+                  textsToAdd.push(forObj);
               }
-              liParent = el.parentNode;
-              if (liParent.getElementsByTagName('UL').length > 0) {
-                  expandEl = document.createElement('span');
-                  expandEl.innerHTML = '&nbsp;+&nbsp;';
-                  expandEl.classList = ['tocExpand'];
-                  newEl.appendChild(expandEl);
-                  ((expandEl, liParent) => {
-                      expandEl.onclick = (e) => {
-                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]) {
-                              let hideableParent = hideable.parentNode;
-                              while (hideableParent.tagName !== 'LI') {
-                                  hideableParent = hideableParent.parentNode
-                              }
-                              if (hideableParent !== liParent) {
-                                  continue
-                              }
-                              if ([...hideable.classList].includes('tocHidden')) {
-                                  hideable.classList.remove('tocHidden');
-                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
-                              } else {
-                                  hideable.classList.add('tocHidden');
-                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
-                              }
-                          };
-                          e.preventDefault();
+              const drawLine = (x1, y1, x2, y2, attrs) => {
+                  el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                  el.setAttribute('x1', x1);
+                  el.setAttribute('y1', y1);
+                  el.setAttribute('x2', x2);
+                  el.setAttribute('y2', y2);
+                  attrs = attrs || {}
+                  attrs['style'] = attrs['style'] || 'stroke:gray';
+                  for (const [k, v] of Object.entries(attrs)) {
+                      el.setAttribute(k, v);
+                  }
+                  svg.appendChild(el);
+              }
+              incumbentVal = undefined;
+              maxLevel = Math.max(...Object.values(graphInfo.nodes).map(n => n.level));
+              for ([n, d] of Object.entries(graphInfo.nodes)) {
+                  x = parseFloat(svg.getAttribute('width')) * rootPlacement;
+                  if (d.parent) {
+                      parentInfo = graphInfo.nodes[d['parent']];
+                      d.childNum = parentInfo.children.length;
+                      side = d.childNum === 0 ? -1 : 1;
+                      dist = siblingSep * (Math.max(3, maxLevel + 1) - d.level) * r;
+                      if (d['level'] == 1) {
+                          dist += 1.5 * r;
                       }
-                  })(expandEl, liParent)
+                      x = parentInfo.x + side * dist;
+                      parentInfo.children.push(n);
+                  }
+                  y = (2 + childSep * d.level) * r - 0.5 * r;
+                  graphInfo['nodes'][n]['level'] = d.level;
+                  graphInfo['nodes'][n]['x'] = x;
+                  graphInfo['nodes'][n]['y'] = y;
+                  addMathText(n, x - 8, y - 10);
+                  if (d.state === 'integer') {
+                      incumbentVal = incumbentVal === undefined ? d.lp : Math.max(incumbentVal, d.lp);
+                      d.lp += '^*';
+                  }
+                  if (!!d.lp) {
+                      addMathText(d.lp, x + 25, y - 30);
+                  }
               }
-              el.appendChild(newEl);
-          }
-      }
-      addCodeCopyButtons = () => {
-          buttonAddFunc = () => {
-              copyButtons = document.querySelectorAll('.copyButton');
-              wide = 700;
-              if (copyButtons.length > 0) {
-                  if (window.innerWidth < wide) {
-                      for (cb of copyButtons) {
-                          cb.remove();
+              for (e of graphInfo.edges) {
+                  coords = []
+                  for (i of [0, 1]) {
+                      for (j of ['x', 'y']) {
+                          coords.push(graphInfo.nodes[e[i]][j]);
                       }
                   }
-              } else {
-                  if (window.innerWidth >= wide) {
-                      for (el of document.querySelectorAll('div.sourceCode')) {
-                          copyEl = document.createElement('span');
-                          el.insertBefore(copyEl, el.firstChild);
-                          copyEl.innerHTML = '📋';
-                          copyEl.classList = ['copyButton'];
-                          ((el, copyEl) => {
-                              copyEl.onclick = () => {
-                                  text = el.getElementsByTagName('pre')[0].textContent;
-                                  navigator.clipboard.writeText(text);
-                                  infoEl = document.createElement('div');
-                                  infoEl.textContent = 'Copied!';
-                                  infoEl.classList = ['copyMessage']
-                                  copyEl.appendChild(infoEl);
-                                  setTimeout(() => infoEl.remove(), 2000);
-                              };
-                          })(el, copyEl)
-                      }
+                  drawLine(...coords);
+                  textX = (coords[0] + coords[2]) / 2;
+                  textY = (coords[1] + coords[3]) / 2 - 20;
+                  if (graphInfo.nodes[e[1]].childNum === 0) {
+                      textX -= 55;
+                  } else {
+                      textX += 0;
                   }
+                  addMathText(e[2], textX, textY);
               }
-          }
-          buttonAddFunc();
-          window.addEventListener("resize", buttonAddFunc);
-      }
-      addRefsToToc = () => {
-          liEl = document.createElement('li');
-          aEl = document.createElement('a');
-          aEl.href = '#References';
-          aEl.innerHTML = 'References';
-          ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
-          liEl.appendChild(aEl);
-          ulEl.appendChild(liEl);
-      }
-      addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
-          for ([i, el] of els.entries()) {
-              if ([...el.classList].includes('refNotFound')) {
-                  continue;
-              }
-              ((el, i) => {
-                  refId = el.getAttribute('href');
-                  refEl = document.getElementById(refId.slice(1));
-                  el.setAttribute('href', '#');
-                  el.classList = ['eqnRef'];
-                  nextEl = document.createElement('span');
-                  el.parentNode.insertBefore(nextEl, el.nextSibling);
-                  popupId = refId + 'popup' + i;
-                  elId = popupId + 'Ref';
-                  nextEl.id = elId;
-                  ((a, b, c, d, e) => {
-                      a.onclick = () => {
-                          footnoteOnTooltipClick(b, c, d, e);
-                          return false
-                      };
-                  })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
-                  if (includeLinkBacks) {
-                      backId = 'back' + refId;
-                      backEl = document.getElementById(backId);
-                      if (!!!backEl) {
-                          backEl = document.createElement('div');
-                          backEl.id = backId;
-                          backEl.classList = ['backRefElement'];
-                          backArrowEl = document.createElement('a');
-                          backArrowEl.id = backId + 'Arrow';
-                          backArrowEl.innerHTML = "↩︎";
-                          backArrowEl.style.display = 'none';
-                          backEl.onclick = () => backEl.style.display = 'none';
-                          backEl.appendChild(backArrowEl);
-                          refEl.appendChild(backEl);
-                      }
+              for (d of Object.values(graphInfo.nodes)) {
+                  if (d.level === 0 && includeLb) {
+                      incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
+                      addMathText(incumbentText, d.x + 28, d.y + 5);
                   }
-              })(el, i)
-          }
-      }
-      expandLinks = (els, prevWordInclude) => {
-          for (const el of els) {
-              sib = el.previousSibling;
-              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
-              prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
-              if (prevWordInclude.includes(prevWord)) {
-                  repS = RegExp(`${prevWord}[^a-zA-Z]$`);
-                  el.innerHTML = prevWord + ' ' + el.innerHTML;
-                  sib.textContent = sib.textContent.replace(repS, '');
-              }
-          }
-      }
-      eqRefExpandLinksAndAddTooltips = () => {
-          els = document.querySelectorAll('[href^="\#eq:"]');
-          expandLinks(els, ['eq.', 'Equation']);
-          addTooltips(els, true);
-      }
-      secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
-          els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
-              return el.parentNode.tagName !== 'LI'
-          });
-          const appendixStr = 'the appendix';
-          for (el of els) {
-              if (el.textContent == appendixSecNo) {
-                  sib = el.previousSibling;
-                  sib.remove();
-                  el.textContent = appendixStr;
-              } else {
-                  el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
-              }
-          }
-          expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
-          for ([i, el] of els.entries()) {
-              const secId = el.getAttribute('href').slice(1);
-              const elId = 'linkToSec' + secId + i;
-              el.id = elId;
-              const toSec = document.getElementById(secId);
-              el.onclick = () => {
-                  backArrowId = secId + 'ReturnLink';
-                  let backArrowEl = document.getElementById(backArrowId);
-                  if (!!backArrowEl) {
-                      backArrowEl.remove();
+                  attrs = {}
+                  if (d.state === 'branched') {
+                      attrs.stroke = 'blue';
+                      attrs.fill = 'lightblue';
                   }
-                  backArrowEl = document.createElement('a');
-                  backArrowEl.id = backArrowId
-                  backArrowEl.setAttribute('href', '#' + elId);
-                  backArrowEl.style.float = 'right';
-                  backArrowEl.innerHTML = "↩︎";
-                  backArrowEl.onclick = () => backArrowEl.remove();
-                  toSec.appendChild(backArrowEl);
-              }
-          }
-      }
-      citeRefExpandLinksAndAddTooltips = () => {
-          els = document.getElementById('main').getElementsByClassName('citation');
-          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
-          for (el of els) {
-              textContent = el.textContent;
-              el.getElementsByTagName('a')[0].textContent = textContent;
-              for (childEl of el.childNodes) {
-                  if (!!!childEl.tagName) {
-                      childEl.textContent = '';
+                  if (d.state === 'infeasible') {
+                      attrs.stroke = 'red';
+                      attrs.fill = 'lightpink';
                   }
+                  if (d.state === 'integer') {
+                      attrs.stroke = 'purple';
+                      attrs.fill = 'plum';
+                  }
+                  if (d.state === 'bounded') {
+                      attrs.stroke = 'darkorange';
+                      attrs.fill = 'peachpuff';
+                  }
+                  drawNode(d.x, d.y, attrs);
               }
-          }
-      }
-      addFootnoteTooltips = () => {
-          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
-              fnBack.remove();
-          }
-          els = document.getElementById('main').getElementsByClassName('footnote-ref');
-          addTooltips([...els], false);
-          footnotesEl = document.getElementById('footnotes');
-          if (!!footnotesEl) {
-              footnotesEl.remove();
-          }
-          for (el of document.getElementsByClassName('eqnRef')) {
-              const childEl = el.firstChild;
-              if (childEl.tagName === 'SUP') {
-                  childEl.textContent = 'note';
-                  childEl.style.fontSize = '0.5rem';
+              for (textObj of textsToAdd) {
+                  svg.appendChild(textObj);
               }
           }
       }
@@ -2285,118 +1984,288 @@
       }
   </style>
   <script>
-      BBGraphData = {
-          bbTree1: {
-              'edges': [
-                  ['P', 'P^1', 'x_1 \\leq 2'],
-                  ['P', 'P^2', 'x_1 \\geq 3']
-              ],
-              'nodes': {
-                  'P': {lp: '\\frac{59}{7}', state: 'branched'},
-                  'P^1': {},
-                  'P^2': {}
-              }
-          },
-          depthFirstTree: {
-              nodes: {
-                  'P': {lp: '22', state: 'branched'},
-                  'P^1': {lp: '20', state: 'branched'},
-                  'P^2': {},
-                  'P^3': {lp: '17', state: 'branched'},
-                  'P^4': {},
-                  'P^5': {lp: '16', state: 'branched'},
-                  'P^6': {},
-                  'P^7': {lp: '15', state: 'integer'},
-                  'P^8': {},
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 \\leq 0'],
-                  ['P', 'P^2', 'x_1 \\geq 1'],
-                  ['P^1', 'P^3', 'x_2 \\leq 0'],
-                  ['P^1', 'P^4', 'x_2 \\geq 1'],
-                  ['P^3', 'P^5', 'x_3 \\leq 0'],
-                  ['P^3', 'P^6', 'x_3 \\geq 1'],
-                  ['P^5', 'P^7', 'x_3 \\leq 0'],
-                  ['P^5', 'P^8', 'x_3 \\geq 1']
-              ],
-              rootPlacement: 0.67,
-              siblingSep: 1.4,
-              childSep: 3
-          },
-          bestNodeTree: {
-              nodes: {
-                  'P': {lp: '22', state: 'branched'},
-                  'P^1': {lp: '19', state: 'branched'},
-                  'P^2': {lp: '20', state: 'branched'},
-                  'P^3': {},
-                  'P^4': {},
-                  'P^5': {},
-                  'P^6': {}
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 \\leq 0'],
-                  ['P', 'P^2', 'x_1 \\geq 1'],
-                  ['P^1', 'P^3', 'x_2 \\leq 0'],
-                  ['P^1', 'P^4', 'x_2 \\geq 1'],
-                  ['P^2', 'P^5', 'x_3 \\leq 0'],
-                  ['P^2', 'P^6', 'x_3 \\geq 1']
-              ],
-          },
-          fullTree3d: {
-              nodes: {
-                  'P': {lp: '', state: 'branched'},
-                  'P^1': {lp: '', state: 'branched'},
-                  'P^2': {lp: '', state: 'branched'},
-                  'P^3': {lp: '', state: 'branched'},
-                  'P^4': {lp: '', state: 'branched'},
-                  'P^5': {lp: '', state: 'branched'},
-                  'P^6': {lp: '', state: 'branched'},
-                  'P^7': {},
-                  'P^8': {},
-                  'P^9': {},
-                  'P^{10}': {},
-                  'P^{11}': {},
-                  'P^{12}': {},
-                  'P^{13}': {},
-                  'P^{14}': {}
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 = 0'],
-                  ['P', 'P^2', 'x_1 = 1'],
-                  ['P^1', 'P^3', 'x_2 = 0'],
-                  ['P^1', 'P^4', 'x_2 = 1'],
-                  ['P^2', 'P^5', 'x_2 = 0'],
-                  ['P^2', 'P^6', 'x_2 = 1'],
-                  ['P^3', 'P^7', 'x_3 = 0'],
-                  ['P^3', 'P^8', 'x_3 = 1'],
-                  ['P^4', 'P^9', 'x_3 = 0'],
-                  ['P^4', 'P^{10}', 'x_3 = 1'],
-                  ['P^5', 'P^{11}', 'x_3 = 0'],
-                  ['P^5', 'P^{12}', 'x_3 = 1'],
-                  ['P^6', 'P^{13}', 'x_3 = 0'],
-                  ['P^6', 'P^{14}', 'x_3 = 1']
-              ],
-              siblingSep: 1.7,
-              childSep: 3,
-              includeLb: false
+      const theoremHelpers = () => {
+          let theoremObj = {};
+          for (thm of document.getElementsByClassName('theorem')) {
+              ((thm) => {
+                  let headerEl = thm.previousSibling;
+                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
+                      headerEl = headerEl.previousSibling;
+                  }
+                  section = headerEl.getAttribute('data-number').split('.')[0];
+                  theoremObj[thm.id] = {
+                      'theorem': thm,
+                      'proof': undefined,
+                      'section': section
+                  };
+              })(thm)
+          }
+          for (prf of document.getElementsByClassName('proof')) {
+              ((prf) => {
+                  theoremObj[prf.getAttribute('for')].proof = prf;
+                  firstP = prf.getElementsByTagName('p')[0];
+                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
+              })(prf)
+          }
+          secNumThms = {};
+          for ([thmId, thmObj] of Object.entries(theoremObj)) {
+              ((thmId, thmObj) => {
+                  thm = document.getElementById(thmId);
+                  sec = thmObj.section;
+                  el = thmObj.theorem;
+                  proof = thmObj.proof;
+                  if (!Object.keys(secNumThms).includes(sec)) {
+                      secNumThms[sec] = 0;
+                  }
+                  secNumThms[sec] += 1;
+                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
+                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
+                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
+                  labelSpan = document.createElement('span');
+                  labelSpan.classList = ['theoremLabel'];
+                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
+                  if (!!thm.getAttribute('data-display-name')) {
+                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
+                  }
+                  labelSpan.textContent = preTheoremStr + ': ';
+                  el.insertBefore(labelSpan, el.firstChild);
+                  const main = document.getElementById('main');
+                  if (!!proof) {
+                      if (proof.getAttribute('data-placement') === 'appendix') {
+                          const appLink = document.createElement('p');
+                          const thmClone = thm.cloneNode(true);
+                          thmClone.id = thm.id + 'AppendixVersionWithProof';
+                          thmCloneLabel = thmClone.firstChild;
+                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                          main.insertBefore(appLink, thm.nextSibling);
+                          const refs = document.getElementById('References');
+                          main.insertBefore(thmClone, refs);
+                          main.insertBefore(proof, refs);
+                      }
+                  }
+              })(thmId, thmObj)
+          }
+          const refEls = document.getElementsByClassName('thmRef');
+          for (ref of refEls) {
+              ((ref) => {
+                  thm = document.getElementById(ref.getAttribute('for'));
+                  if (!!thm) {
+                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                  } else {
+                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
+                  }
+              })(ref)
+          }
+          addTooltips([...refEls].map(el => el.firstChild), true);
+      }
+  </script>
+  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+  <style>
+      nav#TOC:nth-child(2) {
+          margin-top: 0.6rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+      }
+      nav#TOC li {
+          list-style-type: none;
+      }
+      nav#TOC > ul {
+          margin-bottom: 1.5rem;
+          margin-top: 2rem;
+          line-height: 1.9rem;
+      }
+      #TOC ul {
+          padding-left: 0;
+      }
+      nav#TOC {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #ebebeb;
+          overflow-x: hidden;
+          padding-top: 1rem;
+          transition: 0.5s;
+          overflow-y: scroll;
+      }
+      nav#TOC a {
+          text-decoration: none;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+          color: #000;
+          display: block;
+          transition: 0.3s;
+          padding-top: 0.2rem;
+          padding-bottom: 0.3rem;
+          border-bottom: 1pt solid lightgray;
+      }
+      nav#TOC a:hover {
+          color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
+      }
+      #tocTop {
+          height: 1.5em;
+          display: flex;
+          justify-content: space-between;
+          padding-top: 0.5rem;
+          padding-bottom: 0.65rem;
+          position: fixed;
+          top: 0;
+          visibility: hidden;
+          background-color: #ebebeb;
+          z-index: 1;
+          border-bottom: 1pt solid gray;
+      }
+      .tocHidden {
+          display: none     
+      }
+      .tocExpand {
+          margin-left: auto;
+          font-size: 30pt !important;
+          font-family: 'Courier New', Courier, monospace;
+      }
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-size: 1.1rem;
+          background-color: #ebebeb;
+          width: 100%;
+          border-bottom: 1pt solid gray;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          z-index: 2;
+      }
+      @media screen and (max-height: 450px) {
+          .sidenav {
+              padding-top: 15px;
+          }
+
+          .sidenav a {
+              font-size: 18px;
           }
       }
-      
-      BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
-      BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
-      BBGraphData.bbTree2.nodes['P^3'] = {};
-      BBGraphData.bbTree2.nodes['P^4'] = {};
-      BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
-      BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
-
-      BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
-      BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
-
-      BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
-      BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
-
-      BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
-      BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
+  </style>
+  <script>
+      function openCloseNav() {
+          const tocTop = document.getElementById("tocTop")
+          if (tocTop.style.visibility == "visible") {
+              closeNav();
+              return
+          }
+          const screenWidth = window.innerWidth;
+          const tocWidth = Math.min(0.75 * screenWidth, 350);
+          const leftoverWidth = screenWidth - tocWidth;
+          const main = document.getElementById("main");
+          const mainWidth = main.offsetWidth;
+          document.getElementById("TOC").style.width = tocWidth + 'px';
+          tocTop.style.width = tocWidth + 'px';
+          tocTop.style.visibility = "visible";
+          if (leftoverWidth >= mainWidth) {
+              main.style.marginLeft = tocWidth / 2 + 'px';
+          }
+      }
+      function closeNav() {
+          document.getElementById("TOC").style.width = "0";
+          document.getElementById("main").style.marginLeft = null;
+          document.getElementById("tocTop").style.visibility = "hidden";
+      }
+      function closeNavIfSmall() {
+          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
+              closeNav()
+          }
+      }
+  </script>
+  <style>
+      .footnoteTooltipClose {
+          color: #222;
+          font-size: 30pt;
+          font-weight: bold;
+          margin-left: auto;
+          margin-top: -1rem;
+          margin-bottom: -1rem;
+      }
+      .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+      }
+      .footnote-ref sup, .eqnRef {
+          cursor: pointer;
+          color: green !important;
+      }
+      .footnoteTooltip {
+          background-color: #ebebeb;
+          padding: 1rem;
+          border: 1px solid #888;
+          position: absolute;
+          z-index: 1;
+          width: 75%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 2rem;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          overflow-x: auto;
+          display: flex;
+          flex-direction: column;
+      }
+      .eqnRef .footnoteTooltip {
+          color: black;
+      }
+      .seeOriginalEq {
+          font-size: 1rem;
+          margin-left: auto;
+      }
+  </style>
+  <script>
+      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
+          innerHTML = innerHTML.replaceAll('@@@', '"');
+          const tooltipEl = document.getElementById(id);
+          if (tooltipEl == null) {
+              const newEl = document.createElement("span");
+              closeEl = document.createElement("div");
+              closeEl.classList = ['footnoteTooltipClose'];
+              closeEl.innerHTML = '&times;';
+              newEl.appendChild(closeEl);
+              if (typeof(refElOrId) === 'string'){
+                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
+                  document.getElementById(refElOrId).appendChild(newEl);
+              } else {
+                  closeEl.onclick = () => removeElById(id);
+                  refElOrId.append(newEl);
+              }
+              newEl.id = id;
+              newEl.innerHTML += innerHTML;
+              newEl.classList = ['footnoteTooltip'];
+              for (numEl of newEl.getElementsByClassName('eqnos-number')){
+                  numEl.remove();
+              }
+              if (!!origId) {
+                  seeOrigEl = document.createElement('a');
+                  seeOrigEl.setAttribute('href', '#' + origId);
+                  seeOrigEl.innerHTML = 'jump to';
+                  seeOrigEl.classList = ['seeOriginalEq']
+                  seeOrigEl.onclick = () => {
+                      backEl = document.getElementById('back#' + origId + 'Arrow');
+                      backEl.style.display = 'inline';
+                      backEl.setAttribute('href', '#' + id)
+                  }
+                  newEl.appendChild(seeOrigEl);
+              }
+          } else {
+              tooltipEl.remove();
+          }
+          
+      }
+      function removeElById(id) {
+          document.getElementById(id).remove();
+      }
   </script>
   <style>
       .lpDraw {
@@ -2479,22 +2348,153 @@
       }
   </style>
   <style>
-      .eqnos {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          overflow-x: auto;
+      #main {
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: margin-left .5s;
+          padding: 20px;
+          padding-bottom: 30px;
       }
-      .eqnos br {
+      html {
+          scroll-padding-top: 2.5rem;
+          overflow-y: auto;
+      }
+      body {
+          scroll-padding-top: 2.5rem;
+          overflow-y: hidden;
+          max-width: none !important;
+      }
+      .loadingMessage {
+          text-align: center;
+          margin-top: 40vh;
+          font-size: 1.2rem;
+      }
+      blockquote {
+          margin: 1rem 0.5rem;
+          padding-left: 0.5em;
+          padding-right: 0.5em;
+          border-left: 2px solid #e6e6e6;
+          border-right: 2px solid #e6e6e6;
+          color: #444;
+          background-color: #ebebeb;
+      }
+      blockquote p {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+      }
+      details {
+          cursor: pointer;
+      }
+      figure {
+          margin-inline: 0.5rem;
+      }
+      figure img {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          max-width: 100%;
+      }
+      figure figcaption {
+          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
+          text-align: center;
+      }
+      a {
+          color: blue;
+      }
+      a:visited {
+          color: purple;
+      }
+      h1 {
+          position: relative;
+          margin-top: 5rem;
+      }
+      h1:before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          background: black;
+          bottom: 150%;
+          left: 0;
+      }
+      *[role="doc-biblioref"] {
+          color: green !important;
+      }
+      div.sourceCode {
+          background-color: #dfdfdf;
+          padding: 0.5rem;
+          border: 1pt solid black;
+          font-size: max(12pt, 1.1rem);
+      }
+      .copyButton {
+          float: right;
+          cursor: pointer;
+      }
+      .header-section-number::after {
+          content: ':'
+      }
+      @keyframes fade {
+          0%,100% { opacity: 0 }
+          15% { opacity: 1 }
+          85% { opacity: 1 }
+      }
+      .copyMessage {
+          position: absolute;
+          transform: translate(-2rem, -2.8rem);
+          width: 4rem;
+          font-size: max(10pt, 0.7rem);
+          text-align: center;
+          background-color: #eee;
+          border: 1pt solid black;
+          border-radius: 0.25rem;
+          animation: fade 2s linear;
+      }
+      .backRefElement {
+          margin-top: auto;
+      }
+      footer {
+          position: fixed;
+          bottom: 0;
+          text-align: center;
+          width: 100%;
+          background: white;
+          left: 50%;
+          transform: translateX(-50%);
+          border-top: 1pt solid lightgray;
+          font-size: 0.7rem;
+          display: flex;
+          justify-content: space-between;
+      }
+      .embedIndent {
+          margin: 0 1rem;
           display: none;
       }
-      .eqnos-number {
-          margin-left: auto;
-          padding-left: 1rem;
+      .lectureEmbedIframe {
+          width: min(600px, 80vw);
+          height: calc(9 * min(600px, 80vw) / 16);
       }
-      .katexContainer {
-          flex-grow: 1;
-          overflow-x: auto;
+      .tinyText {
+          font-size: 0.5rem;
+      }
+      .mathSmall {
+          font-size: 1rem;
+      }
+      .katexSideBySide {
+          align-self: center;
+      }
+      .katexSideBySide .katexContainer {
+          overflow-x: hidden;
+      }
+      .basicCenter {
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      .refNotFound {
+          color: red;
       }
   </style>
   <script defer=""
@@ -3001,6 +3001,9 @@ process</a></li>
 <li><a href="#mms-queues" id="toc-mms-queues"><span
 class="toc-section-number">7.3.7</span> <span class="math inline">M/M/s\
 </span> queues</a></li>
+<li><a href="#mmsk-queues" id="toc-mmsk-queues"><span
+class="toc-section-number">7.3.8</span> <span
+class="math inline">M/M/s/K\ </span> Queues</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -13108,12 +13111,13 @@ system in so-called <strong>steady-state</strong> conditions. Just like
 we saw with Markov chains in section <a
 href="#sec:markovSteadyState">7.2.6</a>, over time state probabilities
 for a queueing system approximate a certain steady-state distribution
-that we’d like to analyze. Steady-state conditions do not exist in the
-unusual condition that <span class="math inline">\rho&gt;1</span>,
-i.e. <span class="math inline">\lambda &gt; s\mu</span> and thus
-customers arrive to the system faster than they can receive service (and
-the queue just continues to grow over time). Otherwise, we’ll use the
-following notation to talk about queues in a steady-state condition:</p>
+that we’d like to analyze. For systems with infinite queue size,
+steady-state conditions do not exist in the unusual condition that <span
+class="math inline">\rho&gt;1</span>, i.e. <span
+class="math inline">\lambda &gt; s\mu</span> and thus customers arrive
+to the system faster than they can receive service (and the queue just
+continues to grow over time). Otherwise, we’ll use the following
+notation to talk about queues in a steady-state condition:</p>
 <ul>
 <li><span class="math inline">P_n</span>: The probability of having
 exactly <span class="math inline">n</span> customers in the queueing
@@ -13562,6 +13566,80 @@ how would you suggest determining whether the second doctor will have
 enough of an effect on the process to justify the extra cost? Let’s jump
 to the following notebook to do some calculations.</p>
 <script src="https://gist.github.com/dc612ddb61811544716937a7af357f17.js"></script>
+<h3 data-number="7.3.8" id="mmsk-queues"><span
+class="header-section-number">7.3.8</span> <span
+class="math inline">M/M/s/K\ </span> Queues</h3>
+<p>For our final class of queueing model, we’ll explore what happens
+when the system is limited to having at most <span
+class="math inline">K</span> customers in it, where <span
+class="math inline">K\in\mathbb{I}_+</span>. We will be keeping the
+exponential interarrival and service times, and assuming the system has
+some number <span class="math inline">s\leq K</span> of servers (so that
+the queue is limited to at most <span class="math inline">K-s</span>
+customers). We call this type of queue the <span
+class="math inline">M/M/s/K</span> queue. A physical interpretation may
+be that there is only so much waiting room in the facility, or perhaps
+any customer seeing so many people already in line will decide to leave
+and seek out an alternative<a href="#fn120" class="footnote-ref"
+id="fnref120" role="doc-noteref"><sup>120</sup></a>. For this model, we
+will assume that a customer will leave (and never return) if they arrive
+when the system is in state <span class="math inline">K</span>.</p>
+<p>Does this fit into the birth-and-death process framework? It does!
+Letting <span class="math inline">\lambda</span> be the rate of arrivals
+to the system, we would have <span
+class="math inline">\lambda_0=\lambda_1=\dots=\lambda_{K-1}=\lambda</span>.
+But since we can never transition out of state <span
+class="math inline">K</span>, we will let <span
+class="math inline">\lambda_n=0</span> for <span
+class="math inline">n\geq K</span>. The <span
+class="math inline">\mu_n</span> values will be the same as we
+calculated for the <span class="math inline">M/M/s</span> queue.</p>
+<p>Importantly, since the number of possible states is finite, we can
+determine steady-state quantities for the <span
+class="math inline">M/M/s/K</span> queue whether <span
+class="math inline">\rho&lt;1</span> or not<a href="#fn121"
+class="footnote-ref" id="fnref121"
+role="doc-noteref"><sup>121</sup></a>! We will not work through the
+derivations, but the steady-state probabilities work out to:</p>
+<p><span class="math display">
+P_0=\left[\sum_{n=0}^{s}\frac{(\lambda/\mu)^n}{n!}+\frac{(\lambda/\mu)^s}{s!}\sum_{n=s+1}^K\left(\frac{\lambda}{s\mu}\right)^{n-s}\right]^{-1}
+</span></p>
+<p>and:</p>
+<p><span class="math display">
+P_n=\begin{cases}
+\frac{(\lambda/ \mu)^n}{n!}P_0 &amp;&amp; 0\leq n \leq s \\
+\frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 &amp;&amp; s+1 \leq n \leq K \\
+0 &amp;&amp; n &gt; K
+\end{cases}
+</span></p>
+<p>The expected system size and queue lengths are given by:</p>
+<p><span class="math display">
+\begin{align*}
+L_q &amp;= \frac{P_0(\lambda/\mu)^s\rho}{s!(1 - \rho)^2}\left(1 -
+\rho^{K-s} - (K - s)\rho^{K - s}(1-\rho)\right) \\
+L&amp;=\sum_{n=0}^{s-1}nP_n + L_q + s\left(1 -
+\sum_{n=0}^{s-1}P_n\right)
+\end{align*}
+</span></p>
+<p>The expected wait times can be calculated as in eq. <a
+href="#eq:birthDeathW">37</a>, where <span
+class="math inline">\bar\lambda</span> is the average arrival rate in
+steady state. In this case, the arrival rate is always <span
+class="math inline">\lambda</span> except in state <span
+class="math inline">K</span> when the rate is 0. So we have</p>
+<p><span class="math display">
+\bar\lambda=\lambda(1-P_K)
+</span></p>
+<p>Thus the average wait time results are:</p>
+<p><span class="math display">
+W=\frac{L}{\lambda(1-P_K)} \qquad W_q=\frac{L_q}{\lambda(1-P_K)}
+</span></p>
+<p>Unfortunately, there is no good way to obtain a closed-form solution
+for the wait time distributions, like we did in the <span
+class="math inline">M/M/s</span> case.</p>
+<p>See the following notebook (similar to the one we just saw in the
+last section) for Python code to calculate all of the above values.</p>
+<script src="https://gist.github.com/e62a58947981b011b0d8635640cf1969.js"></script>
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
@@ -15130,6 +15208,20 @@ sums. So, e.g.</p>
 <p><span class="math display">
 \prod_{i=0}^n x_n = x_0\cdot x_1\cdot...\cdot x_n
 </span><a href="#fnref119" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn120"><p>It should be said, there are other queueing models
+that can handle this so-called “balking” behavior more naturally. We
+will not cover them in this course.<a href="#fnref120"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn121"><p>There is an important caveat: If <span
+class="math inline">\rho=1</span> then some of these formulas will not
+work because of division by 0 errors. I don’t think it’s important
+enough to derive the special-case results for that scenario. If you’re
+trying to analyze a real-life system with <span
+class="math inline">\rho=1</span>, you could try just tweaking <span
+class="math inline">\lambda</span> or <span
+class="math inline">\mu</span> a <em>tiny</em> bit to get the numbers to
+work out.<a href="#fnref121" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
