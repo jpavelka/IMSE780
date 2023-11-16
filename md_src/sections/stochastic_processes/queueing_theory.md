@@ -176,7 +176,7 @@ Let's now go rapid-fire through some notation we'll be using.
 
 <div class='lectureVideoEmbed' video-id='1eace4cc2d43409bb7b553418a93beb91d' video-date='2023-11-15'>Steady states, birth-and-death process</div>
 
-There is also certain notation that is used to describe a queueing system in so-called **steady-state** conditions. Just like we saw with Markov chains in +@sec:markovSteadyState, over time state probabilities for a queueing system approximate a certain steady-state distribution that we'd like to analyze. Steady-state conditions do not exist in the unusual condition that $\rho>1$, i.e. $\lambda > s\mu$ and thus customers arrive to the system faster than they can receive service (and the queue just continues to grow over time). Otherwise, we'll use the following notation to talk about queues in a steady-state condition:
+There is also certain notation that is used to describe a queueing system in so-called **steady-state** conditions. Just like we saw with Markov chains in +@sec:markovSteadyState, over time state probabilities for a queueing system approximate a certain steady-state distribution that we'd like to analyze. For systems with infinite queue size, steady-state conditions do not exist in the unusual condition that $\rho>1$, i.e. $\lambda > s\mu$ and thus customers arrive to the system faster than they can receive service (and the queue just continues to grow over time). Otherwise, we'll use the following notation to talk about queues in a steady-state condition:
 
 - $P_n$: The probability of having exactly $n$ customers in the queueing system.
 - $L$: The expected number of customers in the queueing system. Note that this can be stated as
@@ -481,3 +481,56 @@ Let's consider again the County Hospital example from +@sec:queueExample. The ma
 Furthermore, even though the patient arrival rate is not constant throughout the day and so the process is unlikely to ever truly reach steady state, she figures that the steady-state results will approximate real events well enough for the purposes of this analysis. Given this, how would you suggest determining whether the second doctor will have enough of an effect on the process to justify the extra cost? Let's jump to the following notebook to do some calculations.
 
 {colabGist:1kvBWyqp3khegQ5RFUiJfuiWEVd2SqDl8,dc612ddb61811544716937a7af357f17}
+
+### $M/M/s/K\ $ Queues
+
+For our final class of queueing model, we'll explore what happens when the system is limited to having at most $K$ customers in it, where $K\in\I_+$. We will be keeping the exponential interarrival and service times, and assuming the system has some number $s\leq K$ of servers (so that the queue is limited to at most $K-s$ customers). We call this type of queue the $M/M/s/K$ queue. A physical interpretation may be that there is only so much waiting room in the facility, or perhaps any customer seeing so many people already in line will decide to leave and seek out an alternative[^queueBalking]. For this model, we will assume that a customer will leave (and never return) if they arrive when the system is in state $K$.
+
+[^queueBalking]: It should be said, there are other queueing models that can handle this so-called "balking" behavior more naturally. We will not cover them in this course.
+
+Does this fit into the birth-and-death process framework? It does! Letting $\lambda$ be the rate of arrivals to the system, we would have $\lambda_0=\lambda_1=\dots=\lambda_{K-1}=\lambda$. But since we can never transition out of state $K$, we will let $\lambda_n=0$ for $n\geq K$. The $\mu_n$ values will be the same as we calculated for the $M/M/s$ queue.
+
+Importantly, since the number of possible states is finite, we can determine steady-state quantities for the $M/M/s/K$ queue whether $\rho<1$ or not[^rhoEqual1]! We will not work through the derivations, but the steady-state probabilities work out to:
+
+[^rhoEqual1]: There is an important caveat: If $\rho=1$ then some of these formulas will not work because of division by 0 errors. I don't think it's important enough to derive the special-case results for that scenario. If you're trying to analyze a real-life system with $\rho=1$, you could try just tweaking $\lambda$ or $\mu$ a _tiny_ bit to get the numbers to work out.
+
+$$
+P_0=\left[\sum_{n=0}^{s}\frac{(\lambda/\mu)^n}{n!}+\frac{(\lambda/\mu)^s}{s!}\sum_{n=s+1}^K\left(\frac{\lambda}{s\mu}\right)^{n-s}\right]^{-1}
+$$
+
+and:
+
+$$
+P_n=\begin{cases}
+\frac{(\lambda/ \mu)^n}{n!}P_0 && 0\leq n \leq s \\
+\frac{(\lambda/ \mu)^n}{s!s^{n-s}}P_0 && s+1 \leq n \leq K \\
+0 && n > K
+\end{cases}
+$$
+
+The expected system size and queue lengths are given by:
+
+$$
+\begin{align*}
+L_q &= \frac{P_0(\lambda/\mu)^s\rho}{s!(1 - \rho)^2}\left(1 - \rho^{K-s} - (K - s)\rho^{K - s}(1-\rho)\right) \\
+L&=\sum_{n=0}^{s-1}nP_n + L_q + s\left(1 - \sum_{n=0}^{s-1}P_n\right)
+\end{align*}
+$$
+
+The expected wait times can be calculated as in +@eq:birthDeathW, where $\bar\lambda$ is the average arrival rate in steady state. In this case, the arrival rate is always $\lambda$ except in state $K$ when the rate is 0. So we have
+
+$$
+\bar\lambda=\lambda(1-P_K)
+$$
+
+Thus the average wait time results are:
+
+$$
+W=\frac{L}{\lambda(1-P_K)} \qquad W_q=\frac{L_q}{\lambda(1-P_K)}
+$$
+
+Unfortunately, there is no good way to obtain a closed-form solution for the wait time distributions, like we did in the $M/M/s$ case.
+
+See the following notebook (similar to the one we just saw in the last section) for Python code to calculate all of the above values.
+
+{colabGist:1pnF67KGoBCENt-6y02YzXzCT3DkYHG3W,e62a58947981b011b0d8635640cf1969}
