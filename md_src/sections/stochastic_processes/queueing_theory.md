@@ -174,6 +174,8 @@ Let's now go rapid-fire through some notation we'll be using.
 
 ### Queues in steady state {#sec:queueSteadyState}
 
+<div class='lectureVideoEmbed' video-id='1eace4cc2d43409bb7b553418a93beb91d' video-date='2023-11-15'>Steady states, birth-and-death process</div>
+
 There is also certain notation that is used to describe a queueing system in so-called **steady-state** conditions. Just like we saw with Markov chains in +@sec:markovSteadyState, over time state probabilities for a queueing system approximate a certain steady-state distribution that we'd like to analyze. Steady-state conditions do not exist in the unusual condition that $\rho>1$, i.e. $\lambda > s\mu$ and thus customers arrive to the system faster than they can receive service (and the queue just continues to grow over time). Otherwise, we'll use the following notation to talk about queues in a steady-state condition:
 
 - $P_n$: The probability of having exactly $n$ customers in the queueing system.
@@ -258,7 +260,7 @@ What we have here is then a statement about the _average rate_ at which the proc
 
 Let's think about what this means for, say, the state $n=0$. The long-run rate at which the process leaves state 0 must clearly be related to $\lambda_0$ (the rate at which births occur while in state 0) since a birth in state 0 is the only way to leave state 0. But $\lambda_0$ is the average rate at which state 0 is left _if the process is currently in state 0_, and since the process if often (usually?) in a different state, $\lambda_0$ can't be the overall rate at which state 0 is left.
 
-So to find the quantity we want, we need to know $P_n$, the (steady-state) proportion of time that the process is actually _in_ state 0. During those times, the rate of exiting is $\lambda_0$, but during all other times the rate is 0. So the overall rate of exit state 0 is $\lambda_0P_0 + (1-\lambda_0)0=\lambda_0P_0$.
+So to find the quantity we want, we need to know $P_n$, the (steady-state) proportion of time that the process is actually _in_ state 0. During those times, the rate of exiting is $\lambda_0$, but during all other times the rate is 0. So the overall rate of exit state 0 is $\lambda_0P_0 + 0(1-P_0)=\lambda_0P_0$.
 
 Similarly, the overall rate of entering state 0 (which may only occur via a death in state 1) is $\mu_1P_1$. So our above observation (about the overall rates of entering and leaving being equal) would imply the following **balance equation** for state 0:
 
