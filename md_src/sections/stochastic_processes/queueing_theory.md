@@ -374,9 +374,11 @@ A technical note before we move on: the above result is for the steady-state pro
 
 ### $M/M/s\ $ queues
 
+<div class='lectureVideoEmbed' video-id='c2db16d8210c465382e9944fdf8bb8de1d' video-date='2023-11-17'>M/M/s and M/M/s/K queues</div>
+
 Finally, we're able to talk about our first general class of queueing models! The $M/M/s$ name comes from a queueing theory convention where the models are named according to the scheme $x/y/z$, where $x$ is the interarrival time distribution, $y$ is the service time distribution, and $z$ is the number of servers. The $M$ in the name stands for "Markovian", signifying that the distribution has the Markovian, memorylessness property - that is, that the interarrival and service time distributions are exponential. The number of servers in the system is denoted by some integer $s\geq1$.
 
-Since the interarrival and service times are exponential random variables, the $M/M/s$ queue is a special case of the birth-and-death process, where the process' arrival rate $\lambda$ and service rate per server $\mu$ are constants. In particular, the birth rates are all the same, $\lambda_n=\lambda$ for all $n\in\{1,2,\dots,n\}$.
+Since the interarrival and service times are exponential random variables, the $M/M/s$ queue is a special case of the birth-and-death process, where the process' arrival rate $\lambda$ and service rate per server $\mu$ are constants. In particular, the birth rates are all the same, $\lambda_n=\lambda$ for all $n$.
 
 The values for $\mu$ are not quite as simple, though. If $s=1$ then the situation is as above for $\lambda$, that $\mu_n=\mu$ for all $n$. But this is not the case for $s>1$, since $\mu_n$ is the rate of deaths for the _entire systems_ whereas $\mu$ is the service rate _at each server_. But we actually already know how to handle that, thanks to something we learned in +@sec:exponentialPoissonDistributions. In particular, for the $M/M/s$ queue the death rates are
 
@@ -482,7 +484,7 @@ Furthermore, even though the patient arrival rate is not constant throughout the
 
 {colabGist:1kvBWyqp3khegQ5RFUiJfuiWEVd2SqDl8,dc612ddb61811544716937a7af357f17}
 
-### $M/M/s/K\ $ Queues
+### $M/M/s/K\ $ queues
 
 For our final class of queueing model, we'll explore what happens when the system is limited to having at most $K$ customers in it, where $K\in\I_+$. We will be keeping the exponential interarrival and service times, and assuming the system has some number $s\leq K$ of servers (so that the queue is limited to at most $K-s$ customers). We call this type of queue the $M/M/s/K$ queue. A physical interpretation may be that there is only so much waiting room in the facility, or perhaps any customer seeing so many people already in line will decide to leave and seek out an alternative[^queueBalking]. For this model, we will assume that a customer will leave (and never return) if they arrive when the system is in state $K$.
 
