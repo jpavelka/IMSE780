@@ -1,4 +1,4 @@
-## Markov chains {sec:markovChains}
+## Markov chains {#sec:markovChains}
 
 <div class='lectureVideoEmbed' video-id='14b359b60e3a40eab58a0bdfb1bc85341d' video-date='2023-11-06'>Intro to Markov chains</div>
 
