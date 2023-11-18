@@ -95,7 +95,7 @@ $$
 
 The policy we examined above is considered a __stationary__ policy, since it doesn't change regardless of the current time step $t$. Furthermore, it is considered __deterministic__ since the decision in each state is set. One could imagine a policy where, say, in state 2 we flip a coin to decide between replacing the machine or doing nothing. We will consider such policies, called __randomized__ policies, later.
 
-But for now, let's discuss how we might find the best possible stationary, deterministic policy for our example problem.
+But for now, let's discuss how we might find the best possible stationary, deterministic policy for our example problem. Since the number of options is so small, we should be able to just list off all the 
 
 Not a _good_ way to do it, but in this case we can explicitly enumerate the possibilities.
 
