@@ -472,7 +472,7 @@ $$
 
 where $\identity$ is an $(M+1)\times (M+1)$ identity matrix and $\mathbf{O}$ is an $(M+1)\times (M+1)$ matrix with every entry equal to 1. You might look at that and be worried about the matrix $(\identity - \mathbf{P} + \mathbf{O})$ even having an inverse, but rest assured that if the process is irreducible and ergodic then the inverse will exists. We will see how to apply this in Python shortly.
 
-### Average cost per time step {sec:markovLongRunAverageCost}
+### Average cost per time step {#sec:markovLongRunAverageCost}
 
 These preceding results for
 
