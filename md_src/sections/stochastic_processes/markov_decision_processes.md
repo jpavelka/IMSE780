@@ -95,9 +95,9 @@ $$
 
 The policy we examined above is considered a __stationary__ policy, since it doesn't change regardless of the current time step $t$. Furthermore, it is considered __deterministic__ since the decision in each state is set. One could imagine a policy where, say, in state 2 we flip a coin to decide between replacing the machine or doing nothing. We will consider such policies, called __randomized__ policies, later.
 
-But for now, let's discuss how we might find the best possible stationary, deterministic policy for our example problem. Since the number of options is so small, we should be able to just list off all the 
+But for now, let's discuss how we might find the best possible stationary, deterministic policy for our example problem. Since the number of options is so small, we should be able to just list off all the possible policies and evaluate them one-by-one. To be clear, this is not generally a _good_ way to optimize an MDP, as it is only tractable when there are a small number of states and possible actions. That caveat aside, let's jump to the following notebook to see how we might solve the example MDP by enumeration.
 
-Not a _good_ way to do it, but in this case we can explicitly enumerate the possibilities.
+{colabGist:1mDMv9JZAb7L5vOVHFirMlMdhjgv7bfvd,0cdb94e0c2f8ae58b8f08994eef5f0e4}
 
 ### Randomized policies
 
