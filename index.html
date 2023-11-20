@@ -240,101 +240,6 @@
       margin-left: 2em;
     }
   </style>
-  <style>
-      .ytEmbedContainer {
-          position: relative;
-          padding-bottom: 56.25%;
-          height: 0;
-          overflow: hidden;
-          max-width: 100%;
-      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-      }
-      .ytEmbedContainerContainer {
-          max-width: 640px;
-      }
-  </style>
-  <script>
-      const theoremHelpers = () => {
-          let theoremObj = {};
-          for (thm of document.getElementsByClassName('theorem')) {
-              ((thm) => {
-                  let headerEl = thm.previousSibling;
-                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
-                      headerEl = headerEl.previousSibling;
-                  }
-                  section = headerEl.getAttribute('data-number').split('.')[0];
-                  theoremObj[thm.id] = {
-                      'theorem': thm,
-                      'proof': undefined,
-                      'section': section
-                  };
-              })(thm)
-          }
-          for (prf of document.getElementsByClassName('proof')) {
-              ((prf) => {
-                  theoremObj[prf.getAttribute('for')].proof = prf;
-                  firstP = prf.getElementsByTagName('p')[0];
-                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
-              })(prf)
-          }
-          secNumThms = {};
-          for ([thmId, thmObj] of Object.entries(theoremObj)) {
-              ((thmId, thmObj) => {
-                  thm = document.getElementById(thmId);
-                  sec = thmObj.section;
-                  el = thmObj.theorem;
-                  proof = thmObj.proof;
-                  if (!Object.keys(secNumThms).includes(sec)) {
-                      secNumThms[sec] = 0;
-                  }
-                  secNumThms[sec] += 1;
-                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
-                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
-                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
-                  labelSpan = document.createElement('span');
-                  labelSpan.classList = ['theoremLabel'];
-                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
-                  if (!!thm.getAttribute('data-display-name')) {
-                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
-                  }
-                  labelSpan.textContent = preTheoremStr + ': ';
-                  el.insertBefore(labelSpan, el.firstChild);
-                  const main = document.getElementById('main');
-                  if (!!proof) {
-                      if (proof.getAttribute('data-placement') === 'appendix') {
-                          const appLink = document.createElement('p');
-                          const thmClone = thm.cloneNode(true);
-                          thmClone.id = thm.id + 'AppendixVersionWithProof';
-                          thmCloneLabel = thmClone.firstChild;
-                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
-                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
-                          main.insertBefore(appLink, thm.nextSibling);
-                          const refs = document.getElementById('References');
-                          main.insertBefore(thmClone, refs);
-                          main.insertBefore(proof, refs);
-                      }
-                  }
-              })(thmId, thmObj)
-          }
-          const refEls = document.getElementsByClassName('thmRef');
-          for (ref of refEls) {
-              ((ref) => {
-                  thm = document.getElementById(ref.getAttribute('for'));
-                  if (!!thm) {
-                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
-                  } else {
-                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
-                  }
-              })(ref)
-          }
-          addTooltips([...refEls].map(el => el.firstChild), true);
-      }
-  </script>
   <script>
       const drawAllPlotlyFunctions = () => {
           let plotNum = 0;
@@ -474,561 +379,455 @@
           Plotly.newPlot(elId, data, layout, {displayModeBar: false})
       }
   </script>
-  <style>   
-      #classModeDiv {
-          position: fixed;
-          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
-          padding: 30pt;
-          top: 200px;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: white;
-          border: 2pt solid;
-          border-radius: 10pt;
-          padding: 10px;
-          box-shadow: 5px 5px rgb(200, 200, 200);
-          visibility: hidden;
-      }
-  </style>
   <script>
-      const classModeSetup = () => {
-          const classMode = document.getElementById('classModeDiv');
-          let noClassModeHref = window.location.href.split('#')[0];
-          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
-              noClassModeHref += '/';
+      BBGraphData = {
+          bbTree1: {
+              'edges': [
+                  ['P', 'P^1', 'x_1 \\leq 2'],
+                  ['P', 'P^2', 'x_1 \\geq 3']
+              ],
+              'nodes': {
+                  'P': {lp: '\\frac{59}{7}', state: 'branched'},
+                  'P^1': {},
+                  'P^2': {}
+              }
+          },
+          depthFirstTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '20', state: 'branched'},
+                  'P^2': {},
+                  'P^3': {lp: '17', state: 'branched'},
+                  'P^4': {},
+                  'P^5': {lp: '16', state: 'branched'},
+                  'P^6': {},
+                  'P^7': {lp: '15', state: 'integer'},
+                  'P^8': {},
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^3', 'P^5', 'x_3 \\leq 0'],
+                  ['P^3', 'P^6', 'x_3 \\geq 1'],
+                  ['P^5', 'P^7', 'x_3 \\leq 0'],
+                  ['P^5', 'P^8', 'x_3 \\geq 1']
+              ],
+              rootPlacement: 0.67,
+              siblingSep: 1.4,
+              childSep: 3
+          },
+          bestNodeTree: {
+              nodes: {
+                  'P': {lp: '22', state: 'branched'},
+                  'P^1': {lp: '19', state: 'branched'},
+                  'P^2': {lp: '20', state: 'branched'},
+                  'P^3': {},
+                  'P^4': {},
+                  'P^5': {},
+                  'P^6': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 \\leq 0'],
+                  ['P', 'P^2', 'x_1 \\geq 1'],
+                  ['P^1', 'P^3', 'x_2 \\leq 0'],
+                  ['P^1', 'P^4', 'x_2 \\geq 1'],
+                  ['P^2', 'P^5', 'x_3 \\leq 0'],
+                  ['P^2', 'P^6', 'x_3 \\geq 1']
+              ],
+          },
+          fullTree3d: {
+              nodes: {
+                  'P': {lp: '', state: 'branched'},
+                  'P^1': {lp: '', state: 'branched'},
+                  'P^2': {lp: '', state: 'branched'},
+                  'P^3': {lp: '', state: 'branched'},
+                  'P^4': {lp: '', state: 'branched'},
+                  'P^5': {lp: '', state: 'branched'},
+                  'P^6': {lp: '', state: 'branched'},
+                  'P^7': {},
+                  'P^8': {},
+                  'P^9': {},
+                  'P^{10}': {},
+                  'P^{11}': {},
+                  'P^{12}': {},
+                  'P^{13}': {},
+                  'P^{14}': {}
+              },
+              edges: [
+                  ['P', 'P^1', 'x_1 = 0'],
+                  ['P', 'P^2', 'x_1 = 1'],
+                  ['P^1', 'P^3', 'x_2 = 0'],
+                  ['P^1', 'P^4', 'x_2 = 1'],
+                  ['P^2', 'P^5', 'x_2 = 0'],
+                  ['P^2', 'P^6', 'x_2 = 1'],
+                  ['P^3', 'P^7', 'x_3 = 0'],
+                  ['P^3', 'P^8', 'x_3 = 1'],
+                  ['P^4', 'P^9', 'x_3 = 0'],
+                  ['P^4', 'P^{10}', 'x_3 = 1'],
+                  ['P^5', 'P^{11}', 'x_3 = 0'],
+                  ['P^5', 'P^{12}', 'x_3 = 1'],
+                  ['P^6', 'P^{13}', 'x_3 = 0'],
+                  ['P^6', 'P^{14}', 'x_3 = 1']
+              ],
+              siblingSep: 1.7,
+              childSep: 3,
+              includeLb: false
           }
-          noClassModeHref += '?classmode=false';
-          classMode.onclick = closeClassMode;
-          classMode.innerHTML = `
-              <div>
-                  Welcome to class mode! This is your friendly reminder to check that:
-                  <ul>
-                      <li>The mics are on.</li>
-                      <li>The camera is pointed at the whiteboard.</li>
-                      <li>PIP is off.</li>
-                  </ul>
-                  Click anywhere to close this window.
-                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-              </div>
-          `
       }
-      const closeClassMode = () => {
-          const classMode = document.getElementById('classModeDiv');
-          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
-          const minutesBetweenReminders = 30;
-          if (classMode.style.visibility === "visible") {
-              classMode.style.visibility = "hidden";
-              classMode.innerHTML = `
-                  <div>
-                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
-                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
-                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
-                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
-                  </div>
-              `
-              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
-          }
-      }
+      
+      BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
+      BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
+      BBGraphData.bbTree2.nodes['P^3'] = {};
+      BBGraphData.bbTree2.nodes['P^4'] = {};
+      BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
+      BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
+
+      BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
+      BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
+
+      BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
+      BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
+
+      BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
+      BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
   </script>
-  <style>
-      .footnoteTooltipClose {
-          color: #222;
-          font-size: 30pt;
-          font-weight: bold;
-          margin-left: auto;
-          margin-top: -1rem;
-          margin-bottom: -1rem;
-      }
-      .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
-          color: black;
-          text-decoration: none;
-          cursor: pointer;
-      }
-      .footnote-ref sup, .eqnRef {
-          cursor: pointer;
-          color: green !important;
-      }
-      .footnoteTooltip {
-          background-color: #ebebeb;
-          padding: 1rem;
-          border: 1px solid #888;
-          position: absolute;
-          z-index: 1;
-          width: 75%;
-          left: 50%;
-          transform: translateX(-50%);
-          margin-top: 2rem;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-          overflow-x: auto;
-          display: flex;
-          flex-direction: column;
-      }
-      .eqnRef .footnoteTooltip {
-          color: black;
-      }
-      .seeOriginalEq {
-          font-size: 1rem;
-          margin-left: auto;
-      }
-  </style>
   <script>
-      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
-          innerHTML = innerHTML.replaceAll('@@@', '"');
-          const tooltipEl = document.getElementById(id);
-          if (tooltipEl == null) {
-              const newEl = document.createElement("span");
-              closeEl = document.createElement("div");
-              closeEl.classList = ['footnoteTooltipClose'];
-              closeEl.innerHTML = '&times;';
-              newEl.appendChild(closeEl);
-              if (typeof(refElOrId) === 'string'){
-                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
-                  document.getElementById(refElOrId).appendChild(newEl);
-              } else {
-                  closeEl.onclick = () => removeElById(id);
-                  refElOrId.append(newEl);
-              }
-              newEl.id = id;
-              newEl.innerHTML += innerHTML;
-              newEl.classList = ['footnoteTooltip'];
-              for (numEl of newEl.getElementsByClassName('eqnos-number')){
-                  numEl.remove();
-              }
-              if (!!origId) {
-                  seeOrigEl = document.createElement('a');
-                  seeOrigEl.setAttribute('href', '#' + origId);
-                  seeOrigEl.innerHTML = 'jump to';
-                  seeOrigEl.classList = ['seeOriginalEq']
-                  seeOrigEl.onclick = () => {
-                      backEl = document.getElementById('back#' + origId + 'Arrow');
-                      backEl.style.display = 'inline';
-                      backEl.setAttribute('href', '#' + id)
-                  }
-                  newEl.appendChild(seeOrigEl);
-              }
+      document.onreadystatechange = () => {
+          if (document.readyState !== "complete") {
+              document.querySelector("#main").style.display = "none";
+              document.querySelector(".navbar").style.display = "none";
+              document.querySelector("#loader").style.visibility = "visible";
+              document.querySelector("#classModeDiv").style.visibility = "hidden";
           } else {
-              tooltipEl.remove();
+              document.querySelector("#loader").style.display = "none";
+              document.querySelector(".navbar").style.display = "flex";
+              document.querySelector("#main").style.display = "block";
+              if (getUrlParameter('classmode') !== 'false') {
+                  document.querySelector("#classModeDiv").style.visibility = "visible";
+              }
           }
-          
+      };
+      window.onload = () => {
+          appendixSecNo = renumberAppendix();
+          addMathContainers();
+          theoremHelpers();
+          addRefsToToc();
+          eqRefExpandLinksAndAddTooltips();
+          citeRefExpandLinksAndAddTooltips();
+          secRefExpandLinksAndAddBackArrow(appendixSecNo);
+          addFootnoteTooltips();
+          addCodeCopyButtons();
+          tocHelpers();
+          drawAllSvgPlots();
+          classModeSetup();
+          videoEmbeds();
+          document.onclick = closeClassMode;
+          document.getElementById('main').onclick = closeNavIfSmall;
+          makeAssignmentLink();
+          drawPlotlyCharts();
+          drawBBTrees();
+          drawAllPlotlyFunctions();
       }
-      function removeElById(id) {
-          document.getElementById(id).remove();
+      drawPlotlyCharts = () => {
+          for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
+              chartId = 'plotyChart' + ind;
+              el.id = chartId;
+              plotData = JSON.parse(el.getAttribute('data-plot-data'));
+              plotLayout = JSON.parse(el.getAttribute('data-plot-layout') || '{}');
+              Plotly.newPlot(chartId, plotData, plotLayout)
+          }
+      }
+      makeAssignmentLink = () => {
+          toAssignmentsEl = document.getElementById('toAssignments');
+          if (!!toAssignmentsEl){
+              toAssignmentsEl.setAttribute('href',
+                  window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
+              )
+          }
+      }
+      getUrlParameter = (name) => {
+          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+          var results = regex.exec(location.search);
+          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      };
+      addMathContainers = () => {
+          for (el of document.querySelectorAll('.math.display')) {
+              katexContainer = document.createElement('div');
+              katexContainer.classList = ['katexContainer'];
+              el.parentNode.insertBefore(katexContainer, el);
+              katexContainer.appendChild(el);
+          }
+      }
+      renumberAppendix = () => {
+          const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
+          const appendixSecNo = appendixEl.getAttribute('data-number');
+          appendixEl.setAttribute('data-number', 'A');
+          appendixEl.firstChild.remove();
+          const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
+              return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
+          })
+          for (apSec of appendixSections) {
+              const numSplit = apSec.getAttribute('data-number').split('.');
+              const secNo = 'A.' + numSplit.slice(1).join('.');
+              apSec.setAttribute('data-number', secNo);
+              apSec.firstChild.textContent = secNo;
+          }
+          const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
+              return (el.textContent).split('.')[0] === appendixSecNo;
+          })
+          for (tocEl of tocEls) {
+              if (tocEl.textContent == appendixSecNo) {
+                  tocEl.remove();
+              } else {
+                  const numSplit = tocEl.textContent.split('.');
+                  const secNo = 'A.' + numSplit.slice(1).join('.');
+                  tocEl.textContent = secNo;
+              }
+          }
+          return appendixSecNo
+      }
+      tocHelpers = () => {
+          for (el of document.querySelectorAll('#TOC a')) {
+              const hrefId = el.getAttribute('href').slice(1);
+              let parentEl = el.parentNode;
+              let numUlsNested = 0;
+              while (!!parentEl) {
+                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
+                  parentEl = parentEl.parentNode
+              }
+              innerHTML = el.innerHTML;
+              el.innerHTML = '';
+              newEl = document.createElement('div');
+              newEl.innerHTML = innerHTML;
+              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
+              newEl.style.display = 'flex';
+              newEl.innerHTML = innerHTML;
+              if (numUlsNested > 1) {
+                  el.parentNode.classList.add('tocHideable');
+                  el.parentNode.classList.add('tocHidden');
+              }
+              liParent = el.parentNode;
+              if (liParent.getElementsByTagName('UL').length > 0) {
+                  expandEl = document.createElement('span');
+                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                  expandEl.classList = ['tocExpand'];
+                  newEl.appendChild(expandEl);
+                  ((expandEl, liParent) => {
+                      expandEl.onclick = (e) => {
+                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]) {
+                              let hideableParent = hideable.parentNode;
+                              while (hideableParent.tagName !== 'LI') {
+                                  hideableParent = hideableParent.parentNode
+                              }
+                              if (hideableParent !== liParent) {
+                                  continue
+                              }
+                              if ([...hideable.classList].includes('tocHidden')) {
+                                  hideable.classList.remove('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
+                              } else {
+                                  hideable.classList.add('tocHidden');
+                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
+                              }
+                          };
+                          e.preventDefault();
+                      }
+                  })(expandEl, liParent)
+              }
+              el.appendChild(newEl);
+          }
+      }
+      addCodeCopyButtons = () => {
+          buttonAddFunc = () => {
+              copyButtons = document.querySelectorAll('.copyButton');
+              wide = 700;
+              if (copyButtons.length > 0) {
+                  if (window.innerWidth < wide) {
+                      for (cb of copyButtons) {
+                          cb.remove();
+                      }
+                  }
+              } else {
+                  if (window.innerWidth >= wide) {
+                      for (el of document.querySelectorAll('div.sourceCode')) {
+                          copyEl = document.createElement('span');
+                          el.insertBefore(copyEl, el.firstChild);
+                          copyEl.innerHTML = '📋';
+                          copyEl.classList = ['copyButton'];
+                          ((el, copyEl) => {
+                              copyEl.onclick = () => {
+                                  text = el.getElementsByTagName('pre')[0].textContent;
+                                  navigator.clipboard.writeText(text);
+                                  infoEl = document.createElement('div');
+                                  infoEl.textContent = 'Copied!';
+                                  infoEl.classList = ['copyMessage']
+                                  copyEl.appendChild(infoEl);
+                                  setTimeout(() => infoEl.remove(), 2000);
+                              };
+                          })(el, copyEl)
+                      }
+                  }
+              }
+          }
+          buttonAddFunc();
+          window.addEventListener("resize", buttonAddFunc);
+      }
+      addRefsToToc = () => {
+          liEl = document.createElement('li');
+          aEl = document.createElement('a');
+          aEl.href = '#References';
+          aEl.innerHTML = 'References';
+          ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
+          liEl.appendChild(aEl);
+          ulEl.appendChild(liEl);
+      }
+      addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
+          for ([i, el] of els.entries()) {
+              if ([...el.classList].includes('refNotFound')) {
+                  continue;
+              }
+              ((el, i) => {
+                  refId = el.getAttribute('href');
+                  refEl = document.getElementById(refId.slice(1));
+                  el.setAttribute('href', '#');
+                  el.classList = ['eqnRef'];
+                  nextEl = document.createElement('span');
+                  el.parentNode.insertBefore(nextEl, el.nextSibling);
+                  popupId = refId + 'popup' + i;
+                  elId = popupId + 'Ref';
+                  nextEl.id = elId;
+                  ((a, b, c, d, e) => {
+                      a.onclick = () => {
+                          footnoteOnTooltipClick(b, c, d, e);
+                          return false
+                      };
+                  })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
+                  if (includeLinkBacks) {
+                      backId = 'back' + refId;
+                      backEl = document.getElementById(backId);
+                      if (!!!backEl) {
+                          backEl = document.createElement('div');
+                          backEl.id = backId;
+                          backEl.classList = ['backRefElement'];
+                          backArrowEl = document.createElement('a');
+                          backArrowEl.id = backId + 'Arrow';
+                          backArrowEl.innerHTML = "↩︎";
+                          backArrowEl.style.display = 'none';
+                          backEl.onclick = () => backEl.style.display = 'none';
+                          backEl.appendChild(backArrowEl);
+                          refEl.appendChild(backEl);
+                      }
+                  }
+              })(el, i)
+          }
+      }
+      expandLinks = (els, prevWordInclude) => {
+          for (const el of els) {
+              sib = el.previousSibling;
+              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
+              prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
+              if (prevWordInclude.includes(prevWord)) {
+                  repS = RegExp(`${prevWord}[^a-zA-Z]$`);
+                  el.innerHTML = prevWord + ' ' + el.innerHTML;
+                  sib.textContent = sib.textContent.replace(repS, '');
+              }
+          }
+      }
+      eqRefExpandLinksAndAddTooltips = () => {
+          els = document.querySelectorAll('[href^="\#eq:"]');
+          expandLinks(els, ['eq.', 'Equation']);
+          addTooltips(els, true);
+      }
+      secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
+          els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
+              return el.parentNode.tagName !== 'LI'
+          });
+          const appendixStr = 'the appendix';
+          for (el of els) {
+              if (el.textContent == appendixSecNo) {
+                  sib = el.previousSibling;
+                  sib.remove();
+                  el.textContent = appendixStr;
+              } else {
+                  el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
+              }
+          }
+          expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
+          for ([i, el] of els.entries()) {
+              const secId = el.getAttribute('href').slice(1);
+              const elId = 'linkToSec' + secId + i;
+              el.id = elId;
+              const toSec = document.getElementById(secId);
+              el.onclick = () => {
+                  backArrowId = secId + 'ReturnLink';
+                  let backArrowEl = document.getElementById(backArrowId);
+                  if (!!backArrowEl) {
+                      backArrowEl.remove();
+                  }
+                  backArrowEl = document.createElement('a');
+                  backArrowEl.id = backArrowId
+                  backArrowEl.setAttribute('href', '#' + elId);
+                  backArrowEl.style.float = 'right';
+                  backArrowEl.innerHTML = "↩︎";
+                  backArrowEl.onclick = () => backArrowEl.remove();
+                  toSec.appendChild(backArrowEl);
+              }
+          }
+      }
+      citeRefExpandLinksAndAddTooltips = () => {
+          els = document.getElementById('main').getElementsByClassName('citation');
+          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
+          for (el of els) {
+              textContent = el.textContent;
+              el.getElementsByTagName('a')[0].textContent = textContent;
+              for (childEl of el.childNodes) {
+                  if (!!!childEl.tagName) {
+                      childEl.textContent = '';
+                  }
+              }
+          }
+      }
+      addFootnoteTooltips = () => {
+          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
+              fnBack.remove();
+          }
+          els = document.getElementById('main').getElementsByClassName('footnote-ref');
+          addTooltips([...els], false);
+          footnotesEl = document.getElementById('footnotes');
+          if (!!footnotesEl) {
+              footnotesEl.remove();
+          }
+          for (el of document.getElementsByClassName('eqnRef')) {
+              const childEl = el.firstChild;
+              if (childEl.tagName === 'SUP') {
+                  childEl.textContent = 'note';
+                  childEl.style.fontSize = '0.5rem';
+              }
+          }
       }
   </script>
   <style>
-      #main {
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
-          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          transition: margin-left .5s;
-          padding: 20px;
-          padding-bottom: 30px;
-      }
-      html {
-          scroll-padding-top: 2.5rem;
-          overflow-y: auto;
-      }
-      body {
-          scroll-padding-top: 2.5rem;
-          overflow-y: hidden;
-          max-width: none !important;
-      }
-      .loadingMessage {
-          text-align: center;
-          margin-top: 40vh;
-          font-size: 1.2rem;
-      }
-      blockquote {
-          margin: 1rem 0.5rem;
-          padding-left: 0.5em;
-          padding-right: 0.5em;
-          border-left: 2px solid #e6e6e6;
-          border-right: 2px solid #e6e6e6;
-          color: #444;
-          background-color: #ebebeb;
-      }
-      blockquote p {
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-      }
-      details {
-          cursor: pointer;
-      }
-      figure {
-          margin-inline: 0.5rem;
-      }
-      figure img {
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 100%;
-      }
-      figure figcaption {
-          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
-          text-align: center;
-      }
-      a {
-          color: blue;
-      }
-      a:visited {
-          color: purple;
-      }
-      h1 {
-          position: relative;
-          margin-top: 5rem;
-      }
-      h1:before {
-          content: '';
-          position: absolute;
-          width: 100%;
-          height: 1px;
-          background: black;
-          bottom: 150%;
-          left: 0;
-      }
-      *[role="doc-biblioref"] {
-          color: green !important;
-      }
-      div.sourceCode {
-          background-color: #dfdfdf;
-          padding: 0.5rem;
-          border: 1pt solid black;
-          font-size: max(12pt, 1.1rem);
-      }
-      .copyButton {
-          float: right;
-          cursor: pointer;
-      }
-      .header-section-number::after {
-          content: ':'
-      }
-      @keyframes fade {
-          0%,100% { opacity: 0 }
-          15% { opacity: 1 }
-          85% { opacity: 1 }
-      }
-      .copyMessage {
-          position: absolute;
-          transform: translate(-2rem, -2.8rem);
-          width: 4rem;
-          font-size: max(10pt, 0.7rem);
-          text-align: center;
-          background-color: #eee;
-          border: 1pt solid black;
-          border-radius: 0.25rem;
-          animation: fade 2s linear;
-      }
-      .backRefElement {
-          margin-top: auto;
-      }
-      footer {
-          position: fixed;
-          bottom: 0;
-          text-align: center;
-          width: 100%;
-          background: white;
-          left: 50%;
-          transform: translateX(-50%);
-          border-top: 1pt solid lightgray;
-          font-size: 0.7rem;
+      .eqnos {
           display: flex;
-          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          overflow-x: auto;
       }
-      .embedIndent {
-          margin: 0 1rem;
+      .eqnos br {
           display: none;
       }
-      .lectureEmbedIframe {
-          width: min(600px, 80vw);
-          height: calc(9 * min(600px, 80vw) / 16);
-      }
-      .tinyText {
-          font-size: 0.5rem;
-      }
-      .mathSmall {
-          font-size: 1rem;
-      }
-      .katexSideBySide {
-          align-self: center;
-      }
-      .katexSideBySide .katexContainer {
-          overflow-x: hidden;
-      }
-      .basicCenter {
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
-      }
-      .refNotFound {
-          color: red;
-      }
-  </style>
-  <script>
-      const drawBBTrees = () => {
-          for (svg of document.getElementsByClassName('bbTreeDraw')) {
-              graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
-              rootPlacement = graphInfo.rootPlacement || 0.5;
-              childSep = graphInfo.childSep || 5;
-              siblingSep = graphInfo.siblingSep || 2;
-              includeLb = graphInfo.includeLb;
-              includeLb = includeLb === undefined ? true : includeLb;
-              textsToAdd = [];
-              for (n of Object.keys(graphInfo['nodes'])) {
-                  graphInfo['nodes'][n]['level'] = 0;
-                  graphInfo['nodes'][n]['children'] = [];
-              }
-              for (e of graphInfo['edges']) {
-                  graphInfo['nodes'][e[1]]['level'] = graphInfo['nodes'][e[0]]['level'] + 1;
-                  graphInfo['nodes'][e[1]]['parent'] = e[0];
-              }
-              r = 25
-              const drawNode = (x, y, attrs) => {
-                  circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                  circ.setAttribute('cx', x);
-                  circ.setAttribute('cy', y);
-                  circ.setAttribute('r', r);
-                  circ.setAttribute('fill', 'lightgray');
-                  circ.setAttribute('stroke-width', '2pt');
-                  circ.setAttribute('stroke', 'gray');
-                  for (const [k, v] of Object.entries(attrs || {})) {
-                      circ.setAttribute(k, v);
-                  }
-                  svg.appendChild(circ);
-              }
-              const addMathText = (math, x, y, attrs) => {
-                  attrs = attrs || {};
-                  forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-                  mathEl = document.createElement('span');
-                  katex.render(math, mathEl, {
-                      throwOnError: false
-                  });
-                  if (attrs['coordToPix'] || false) {
-                      [x, y] = coordToPix(x, y)
-                  }
-                  forObj.setAttribute('x', x);
-                  forObj.setAttribute('y', y);
-                  attrs['height'] = attrs['height'] || '1.2rem';
-                  attrs['width'] = attrs['width'] || '15rem';
-                  attrs['font-size'] = attrs['font-size'] || '12pt';
-                  attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
-                  for (const [k, v] of Object.entries(attrs || {})) {
-                      forObj.setAttribute(k, v);
-                  }
-                  forObj.appendChild(mathEl);
-                  textsToAdd.push(forObj);
-              }
-              const drawLine = (x1, y1, x2, y2, attrs) => {
-                  el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                  el.setAttribute('x1', x1);
-                  el.setAttribute('y1', y1);
-                  el.setAttribute('x2', x2);
-                  el.setAttribute('y2', y2);
-                  attrs = attrs || {}
-                  attrs['style'] = attrs['style'] || 'stroke:gray';
-                  for (const [k, v] of Object.entries(attrs)) {
-                      el.setAttribute(k, v);
-                  }
-                  svg.appendChild(el);
-              }
-              incumbentVal = undefined;
-              maxLevel = Math.max(...Object.values(graphInfo.nodes).map(n => n.level));
-              for ([n, d] of Object.entries(graphInfo.nodes)) {
-                  x = parseFloat(svg.getAttribute('width')) * rootPlacement;
-                  if (d.parent) {
-                      parentInfo = graphInfo.nodes[d['parent']];
-                      d.childNum = parentInfo.children.length;
-                      side = d.childNum === 0 ? -1 : 1;
-                      dist = siblingSep * (Math.max(3, maxLevel + 1) - d.level) * r;
-                      if (d['level'] == 1) {
-                          dist += 1.5 * r;
-                      }
-                      x = parentInfo.x + side * dist;
-                      parentInfo.children.push(n);
-                  }
-                  y = (2 + childSep * d.level) * r - 0.5 * r;
-                  graphInfo['nodes'][n]['level'] = d.level;
-                  graphInfo['nodes'][n]['x'] = x;
-                  graphInfo['nodes'][n]['y'] = y;
-                  addMathText(n, x - 8, y - 10);
-                  if (d.state === 'integer') {
-                      incumbentVal = incumbentVal === undefined ? d.lp : Math.max(incumbentVal, d.lp);
-                      d.lp += '^*';
-                  }
-                  if (!!d.lp) {
-                      addMathText(d.lp, x + 25, y - 30);
-                  }
-              }
-              for (e of graphInfo.edges) {
-                  coords = []
-                  for (i of [0, 1]) {
-                      for (j of ['x', 'y']) {
-                          coords.push(graphInfo.nodes[e[i]][j]);
-                      }
-                  }
-                  drawLine(...coords);
-                  textX = (coords[0] + coords[2]) / 2;
-                  textY = (coords[1] + coords[3]) / 2 - 20;
-                  if (graphInfo.nodes[e[1]].childNum === 0) {
-                      textX -= 55;
-                  } else {
-                      textX += 0;
-                  }
-                  addMathText(e[2], textX, textY);
-              }
-              for (d of Object.values(graphInfo.nodes)) {
-                  if (d.level === 0 && includeLb) {
-                      incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
-                      addMathText(incumbentText, d.x + 28, d.y + 5);
-                  }
-                  attrs = {}
-                  if (d.state === 'branched') {
-                      attrs.stroke = 'blue';
-                      attrs.fill = 'lightblue';
-                  }
-                  if (d.state === 'infeasible') {
-                      attrs.stroke = 'red';
-                      attrs.fill = 'lightpink';
-                  }
-                  if (d.state === 'integer') {
-                      attrs.stroke = 'purple';
-                      attrs.fill = 'plum';
-                  }
-                  if (d.state === 'bounded') {
-                      attrs.stroke = 'darkorange';
-                      attrs.fill = 'peachpuff';
-                  }
-                  drawNode(d.x, d.y, attrs);
-              }
-              for (textObj of textsToAdd) {
-                  svg.appendChild(textObj);
-              }
-          }
-      }
-  </script>
-  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-  <style>
-      nav#TOC:nth-child(2) {
-          margin-top: 0.6rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
-      }
-      nav#TOC li {
-          list-style-type: none;
-      }
-      nav#TOC > ul {
-          margin-bottom: 1.5rem;
-          margin-top: 2rem;
-          line-height: 1.9rem;
-      }
-      #TOC ul {
-          padding-left: 0;
-      }
-      nav#TOC {
-          height: 100%;
-          width: 0;
-          position: fixed;
-          z-index: 1;
-          top: 0;
-          left: 0;
-          background-color: #ebebeb;
-          overflow-x: hidden;
-          padding-top: 1rem;
-          transition: 0.5s;
-          overflow-y: scroll;
-      }
-      nav#TOC a {
-          text-decoration: none;
-          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
-          color: #000;
-          display: block;
-          transition: 0.3s;
-          padding-top: 0.2rem;
-          padding-bottom: 0.3rem;
-          border-bottom: 1pt solid lightgray;
-      }
-      nav#TOC a:hover {
-          color: #888;
-      }
-      #TOC .toc-section-number::after {
-          content: ':\00a0'
-      }
-      #tocTop {
-          height: 1.5em;
-          display: flex;
-          justify-content: space-between;
-          padding-top: 0.5rem;
-          padding-bottom: 0.65rem;
-          position: fixed;
-          top: 0;
-          visibility: hidden;
-          background-color: #ebebeb;
-          z-index: 1;
-          border-bottom: 1pt solid gray;
-      }
-      .tocHidden {
-          display: none     
-      }
-      .tocExpand {
+      .eqnos-number {
           margin-left: auto;
-          font-size: 30pt !important;
-          font-family: 'Courier New', Courier, monospace;
+          padding-left: 1rem;
       }
-      .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          font-size: 1.1rem;
-          background-color: #ebebeb;
-          width: 100%;
-          border-bottom: 1pt solid gray;
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          display: flex;
-          justify-content: space-between;
-          z-index: 2;
-      }
-      @media screen and (max-height: 450px) {
-          .sidenav {
-              padding-top: 15px;
-          }
-
-          .sidenav a {
-              font-size: 18px;
-          }
+      .katexContainer {
+          flex-grow: 1;
+          overflow-x: auto;
       }
   </style>
-  <script>
-      function openCloseNav() {
-          const tocTop = document.getElementById("tocTop")
-          if (tocTop.style.visibility == "visible") {
-              closeNav();
-              return
-          }
-          const screenWidth = window.innerWidth;
-          const tocWidth = Math.min(0.75 * screenWidth, 350);
-          const leftoverWidth = screenWidth - tocWidth;
-          const main = document.getElementById("main");
-          const mainWidth = main.offsetWidth;
-          document.getElementById("TOC").style.width = tocWidth + 'px';
-          tocTop.style.width = tocWidth + 'px';
-          tocTop.style.visibility = "visible";
-          if (leftoverWidth >= mainWidth) {
-              main.style.marginLeft = tocWidth / 2 + 'px';
-          }
-      }
-      function closeNav() {
-          document.getElementById("TOC").style.width = "0";
-          document.getElementById("main").style.marginLeft = null;
-          document.getElementById("tocTop").style.visibility = "hidden";
-      }
-      function closeNavIfSmall() {
-          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
-              closeNav()
-          }
-      }
-  </script>
   <script>
       let baseLps = {
           prototypeLp: {
@@ -1915,318 +1714,218 @@
           }
       }
   </script>
+  <style>
+      .ytEmbedContainer {
+          position: relative;
+          padding-bottom: 56.25%;
+          height: 0;
+          overflow: hidden;
+          max-width: 100%;
+      } .ytEmbedContainer iframe, .ytEmbedContainer object, .ytEmbedContainer embed {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .ytEmbedContainerContainer {
+          max-width: 640px;
+      }
+  </style>
+  <style>   
+      #classModeDiv {
+          position: fixed;
+          width: min(max(80%, calc(100% - min(50%, 300px) - 1rem)), 700px);
+          padding: 30pt;
+          top: 200px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          border: 2pt solid;
+          border-radius: 10pt;
+          padding: 10px;
+          box-shadow: 5px 5px rgb(200, 200, 200);
+          visibility: hidden;
+      }
+  </style>
   <script>
-      document.onreadystatechange = () => {
-          if (document.readyState !== "complete") {
-              document.querySelector("#main").style.display = "none";
-              document.querySelector(".navbar").style.display = "none";
-              document.querySelector("#loader").style.visibility = "visible";
-              document.querySelector("#classModeDiv").style.visibility = "hidden";
-          } else {
-              document.querySelector("#loader").style.display = "none";
-              document.querySelector(".navbar").style.display = "flex";
-              document.querySelector("#main").style.display = "block";
-              if (getUrlParameter('classmode') !== 'false') {
-                  document.querySelector("#classModeDiv").style.visibility = "visible";
+      const classModeSetup = () => {
+          const classMode = document.getElementById('classModeDiv');
+          let noClassModeHref = window.location.href.split('#')[0];
+          if (noClassModeHref[noClassModeHref.length - 1] !== '/') {
+              noClassModeHref += '/';
+          }
+          noClassModeHref += '?classmode=false';
+          classMode.onclick = closeClassMode;
+          classMode.innerHTML = `
+              <div>
+                  Welcome to class mode! This is your friendly reminder to check that:
+                  <ul>
+                      <li>The mics are on.</li>
+                      <li>The camera is pointed at the whiteboard.</li>
+                      <li>PIP is off.</li>
+                  </ul>
+                  Click anywhere to close this window.
+                  <div>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+              </div>
+          `
+      }
+      const closeClassMode = () => {
+          const classMode = document.getElementById('classModeDiv');
+          const noClassModeHref = window.location.href.split('?')[0] + '/?classmode=false';
+          const minutesBetweenReminders = 30;
+          if (classMode.style.visibility === "visible") {
+              classMode.style.visibility = "hidden";
+              classMode.innerHTML = `
+                  <div>
+                      <div style='padding: 0.5rem;'>Hi! This is your periodic class mode reminder to:</div>
+                      <div style='text-align:center;font-size:1.2rem;'><b>Check the microphone!</b></div>
+                      <div style='padding: 0.5rem;'>Click anywhere to close this window.</div>
+                      <div style='padding: 0.5rem;'>To turn off class mode, click <a href=${noClassModeHref}>here</a>.</div>
+                  </div>
+              `
+              setTimeout(() => classMode.style.visibility = "visible", 1000 * 60 * minutesBetweenReminders);
+          }
+      }
+  </script>
+  <script>
+      const drawBBTrees = () => {
+          for (svg of document.getElementsByClassName('bbTreeDraw')) {
+              graphInfo = JSON.parse(JSON.stringify(BBGraphData[svg.getAttribute('base')]));
+              rootPlacement = graphInfo.rootPlacement || 0.5;
+              childSep = graphInfo.childSep || 5;
+              siblingSep = graphInfo.siblingSep || 2;
+              includeLb = graphInfo.includeLb;
+              includeLb = includeLb === undefined ? true : includeLb;
+              textsToAdd = [];
+              for (n of Object.keys(graphInfo['nodes'])) {
+                  graphInfo['nodes'][n]['level'] = 0;
+                  graphInfo['nodes'][n]['children'] = [];
               }
-          }
-      };
-      window.onload = () => {
-          appendixSecNo = renumberAppendix();
-          addMathContainers();
-          theoremHelpers();
-          addRefsToToc();
-          eqRefExpandLinksAndAddTooltips();
-          citeRefExpandLinksAndAddTooltips();
-          secRefExpandLinksAndAddBackArrow(appendixSecNo);
-          addFootnoteTooltips();
-          addCodeCopyButtons();
-          tocHelpers();
-          drawAllSvgPlots();
-          classModeSetup();
-          videoEmbeds();
-          document.onclick = closeClassMode;
-          document.getElementById('main').onclick = closeNavIfSmall;
-          makeAssignmentLink();
-          drawPlotlyCharts();
-          drawBBTrees();
-          drawAllPlotlyFunctions();
-      }
-      drawPlotlyCharts = () => {
-          for ([ind, el] of [...document.getElementsByClassName('plotlyLineChart')].entries()) {
-              chartId = 'plotyChart' + ind;
-              el.id = chartId;
-              plotData = JSON.parse(el.getAttribute('data-plot-data'));
-              plotLayout = JSON.parse(el.getAttribute('data-plot-layout') || '{}');
-              Plotly.newPlot(chartId, plotData, plotLayout)
-          }
-      }
-      makeAssignmentLink = () => {
-          toAssignmentsEl = document.getElementById('toAssignments');
-          if (!!toAssignmentsEl){
-              toAssignmentsEl.setAttribute('href',
-                  window.location.href.split('#')[0].split('?')[0] + 'assignments.html'
-              )
-          }
-      }
-      getUrlParameter = (name) => {
-          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-          var results = regex.exec(location.search);
-          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-      };
-      addMathContainers = () => {
-          for (el of document.querySelectorAll('.math.display')) {
-              katexContainer = document.createElement('div');
-              katexContainer.classList = ['katexContainer'];
-              el.parentNode.insertBefore(katexContainer, el);
-              katexContainer.appendChild(el);
-          }
-      }
-      renumberAppendix = () => {
-          const appendixEl = document.getElementById('appendix') || document.getElementById('sec:appendix');
-          const appendixSecNo = appendixEl.getAttribute('data-number');
-          appendixEl.setAttribute('data-number', 'A');
-          appendixEl.firstChild.remove();
-          const appendixSections = [...document.getElementsByTagName('*')].filter(el => {
-              return (el.getAttribute('data-number') || 'a').split('.')[0] === appendixSecNo;
-          })
-          for (apSec of appendixSections) {
-              const numSplit = apSec.getAttribute('data-number').split('.');
-              const secNo = 'A.' + numSplit.slice(1).join('.');
-              apSec.setAttribute('data-number', secNo);
-              apSec.firstChild.textContent = secNo;
-          }
-          const tocEls = [...document.getElementsByClassName('toc-section-number')].filter(el => {
-              return (el.textContent).split('.')[0] === appendixSecNo;
-          })
-          for (tocEl of tocEls) {
-              if (tocEl.textContent == appendixSecNo) {
-                  tocEl.remove();
-              } else {
-                  const numSplit = tocEl.textContent.split('.');
-                  const secNo = 'A.' + numSplit.slice(1).join('.');
-                  tocEl.textContent = secNo;
+              for (e of graphInfo['edges']) {
+                  graphInfo['nodes'][e[1]]['level'] = graphInfo['nodes'][e[0]]['level'] + 1;
+                  graphInfo['nodes'][e[1]]['parent'] = e[0];
               }
-          }
-          return appendixSecNo
-      }
-      tocHelpers = () => {
-          for (el of document.querySelectorAll('#TOC a')) {
-              const hrefId = el.getAttribute('href').slice(1);
-              let parentEl = el.parentNode;
-              let numUlsNested = 0;
-              while (!!parentEl) {
-                  numUlsNested += (parentEl.tagName == 'UL') ? 1 : 0
-                  parentEl = parentEl.parentNode
+              r = 25
+              const drawNode = (x, y, attrs) => {
+                  circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                  circ.setAttribute('cx', x);
+                  circ.setAttribute('cy', y);
+                  circ.setAttribute('r', r);
+                  circ.setAttribute('fill', 'lightgray');
+                  circ.setAttribute('stroke-width', '2pt');
+                  circ.setAttribute('stroke', 'gray');
+                  for (const [k, v] of Object.entries(attrs || {})) {
+                      circ.setAttribute(k, v);
+                  }
+                  svg.appendChild(circ);
               }
-              innerHTML = el.innerHTML;
-              el.innerHTML = '';
-              newEl = document.createElement('div');
-              newEl.innerHTML = innerHTML;
-              newEl.style.marginLeft = numUlsNested * 0.4 + 'rem';
-              newEl.style.display = 'flex';
-              newEl.innerHTML = innerHTML;
-              if (numUlsNested > 1) {
-                  el.parentNode.classList.add('tocHideable');
-                  el.parentNode.classList.add('tocHidden');
+              const addMathText = (math, x, y, attrs) => {
+                  attrs = attrs || {};
+                  forObj = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+                  mathEl = document.createElement('span');
+                  katex.render(math, mathEl, {
+                      throwOnError: false
+                  });
+                  if (attrs['coordToPix'] || false) {
+                      [x, y] = coordToPix(x, y)
+                  }
+                  forObj.setAttribute('x', x);
+                  forObj.setAttribute('y', y);
+                  attrs['height'] = attrs['height'] || '1.2rem';
+                  attrs['width'] = attrs['width'] || '15rem';
+                  attrs['font-size'] = attrs['font-size'] || '12pt';
+                  attrs['font-family'] = attrs['font-family'] || 'KaTeX_Main,Times New Roman,serif';
+                  for (const [k, v] of Object.entries(attrs || {})) {
+                      forObj.setAttribute(k, v);
+                  }
+                  forObj.appendChild(mathEl);
+                  textsToAdd.push(forObj);
               }
-              liParent = el.parentNode;
-              if (liParent.getElementsByTagName('UL').length > 0) {
-                  expandEl = document.createElement('span');
-                  expandEl.innerHTML = '&nbsp;+&nbsp;';
-                  expandEl.classList = ['tocExpand'];
-                  newEl.appendChild(expandEl);
-                  ((expandEl, liParent) => {
-                      expandEl.onclick = (e) => {
-                          for (hideable of [...liParent.getElementsByClassName('tocHideable')]) {
-                              let hideableParent = hideable.parentNode;
-                              while (hideableParent.tagName !== 'LI') {
-                                  hideableParent = hideableParent.parentNode
-                              }
-                              if (hideableParent !== liParent) {
-                                  continue
-                              }
-                              if ([...hideable.classList].includes('tocHidden')) {
-                                  hideable.classList.remove('tocHidden');
-                                  expandEl.innerHTML = '&nbsp;-&nbsp;';
-                              } else {
-                                  hideable.classList.add('tocHidden');
-                                  expandEl.innerHTML = '&nbsp;+&nbsp;';
-                              }
-                          };
-                          e.preventDefault();
+              const drawLine = (x1, y1, x2, y2, attrs) => {
+                  el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                  el.setAttribute('x1', x1);
+                  el.setAttribute('y1', y1);
+                  el.setAttribute('x2', x2);
+                  el.setAttribute('y2', y2);
+                  attrs = attrs || {}
+                  attrs['style'] = attrs['style'] || 'stroke:gray';
+                  for (const [k, v] of Object.entries(attrs)) {
+                      el.setAttribute(k, v);
+                  }
+                  svg.appendChild(el);
+              }
+              incumbentVal = undefined;
+              maxLevel = Math.max(...Object.values(graphInfo.nodes).map(n => n.level));
+              for ([n, d] of Object.entries(graphInfo.nodes)) {
+                  x = parseFloat(svg.getAttribute('width')) * rootPlacement;
+                  if (d.parent) {
+                      parentInfo = graphInfo.nodes[d['parent']];
+                      d.childNum = parentInfo.children.length;
+                      side = d.childNum === 0 ? -1 : 1;
+                      dist = siblingSep * (Math.max(3, maxLevel + 1) - d.level) * r;
+                      if (d['level'] == 1) {
+                          dist += 1.5 * r;
                       }
-                  })(expandEl, liParent)
+                      x = parentInfo.x + side * dist;
+                      parentInfo.children.push(n);
+                  }
+                  y = (2 + childSep * d.level) * r - 0.5 * r;
+                  graphInfo['nodes'][n]['level'] = d.level;
+                  graphInfo['nodes'][n]['x'] = x;
+                  graphInfo['nodes'][n]['y'] = y;
+                  addMathText(n, x - 8, y - 10);
+                  if (d.state === 'integer') {
+                      incumbentVal = incumbentVal === undefined ? d.lp : Math.max(incumbentVal, d.lp);
+                      d.lp += '^*';
+                  }
+                  if (!!d.lp) {
+                      addMathText(d.lp, x + 25, y - 30);
+                  }
               }
-              el.appendChild(newEl);
-          }
-      }
-      addCodeCopyButtons = () => {
-          buttonAddFunc = () => {
-              copyButtons = document.querySelectorAll('.copyButton');
-              wide = 700;
-              if (copyButtons.length > 0) {
-                  if (window.innerWidth < wide) {
-                      for (cb of copyButtons) {
-                          cb.remove();
+              for (e of graphInfo.edges) {
+                  coords = []
+                  for (i of [0, 1]) {
+                      for (j of ['x', 'y']) {
+                          coords.push(graphInfo.nodes[e[i]][j]);
                       }
                   }
-              } else {
-                  if (window.innerWidth >= wide) {
-                      for (el of document.querySelectorAll('div.sourceCode')) {
-                          copyEl = document.createElement('span');
-                          el.insertBefore(copyEl, el.firstChild);
-                          copyEl.innerHTML = '📋';
-                          copyEl.classList = ['copyButton'];
-                          ((el, copyEl) => {
-                              copyEl.onclick = () => {
-                                  text = el.getElementsByTagName('pre')[0].textContent;
-                                  navigator.clipboard.writeText(text);
-                                  infoEl = document.createElement('div');
-                                  infoEl.textContent = 'Copied!';
-                                  infoEl.classList = ['copyMessage']
-                                  copyEl.appendChild(infoEl);
-                                  setTimeout(() => infoEl.remove(), 2000);
-                              };
-                          })(el, copyEl)
-                      }
+                  drawLine(...coords);
+                  textX = (coords[0] + coords[2]) / 2;
+                  textY = (coords[1] + coords[3]) / 2 - 20;
+                  if (graphInfo.nodes[e[1]].childNum === 0) {
+                      textX -= 55;
+                  } else {
+                      textX += 0;
                   }
+                  addMathText(e[2], textX, textY);
               }
-          }
-          buttonAddFunc();
-          window.addEventListener("resize", buttonAddFunc);
-      }
-      addRefsToToc = () => {
-          liEl = document.createElement('li');
-          aEl = document.createElement('a');
-          aEl.href = '#References';
-          aEl.innerHTML = 'References';
-          ulEl = document.getElementById('TOC').getElementsByTagName('ul')[0];
-          liEl.appendChild(aEl);
-          ulEl.appendChild(liEl);
-      }
-      addTooltips = (els, includeLinkBacks, arrowFloat = false) => {
-          for ([i, el] of els.entries()) {
-              if ([...el.classList].includes('refNotFound')) {
-                  continue;
-              }
-              ((el, i) => {
-                  refId = el.getAttribute('href');
-                  refEl = document.getElementById(refId.slice(1));
-                  el.setAttribute('href', '#');
-                  el.classList = ['eqnRef'];
-                  nextEl = document.createElement('span');
-                  el.parentNode.insertBefore(nextEl, el.nextSibling);
-                  popupId = refId + 'popup' + i;
-                  elId = popupId + 'Ref';
-                  nextEl.id = elId;
-                  ((a, b, c, d, e) => {
-                      a.onclick = () => {
-                          footnoteOnTooltipClick(b, c, d, e);
-                          return false
-                      };
-                  })(el, popupId, refEl.innerHTML, elId, includeLinkBacks ? refId.slice(1) : null)
-                  if (includeLinkBacks) {
-                      backId = 'back' + refId;
-                      backEl = document.getElementById(backId);
-                      if (!!!backEl) {
-                          backEl = document.createElement('div');
-                          backEl.id = backId;
-                          backEl.classList = ['backRefElement'];
-                          backArrowEl = document.createElement('a');
-                          backArrowEl.id = backId + 'Arrow';
-                          backArrowEl.innerHTML = "↩︎";
-                          backArrowEl.style.display = 'none';
-                          backEl.onclick = () => backEl.style.display = 'none';
-                          backEl.appendChild(backArrowEl);
-                          refEl.appendChild(backEl);
-                      }
+              for (d of Object.values(graphInfo.nodes)) {
+                  if (d.level === 0 && includeLb) {
+                      incumbentText = incumbentVal === undefined ? '-\\infty' : `${incumbentVal}`
+                      addMathText(incumbentText, d.x + 28, d.y + 5);
                   }
-              })(el, i)
-          }
-      }
-      expandLinks = (els, prevWordInclude) => {
-          for (const el of els) {
-              sib = el.previousSibling;
-              sibTextSplit = sib.textContent.split(/\s+/).filter(s => s !== '');
-              prevWord = sibTextSplit[sibTextSplit.length - 1].replace('(', '');
-              if (prevWordInclude.includes(prevWord)) {
-                  repS = RegExp(`${prevWord}[^a-zA-Z]$`);
-                  el.innerHTML = prevWord + ' ' + el.innerHTML;
-                  sib.textContent = sib.textContent.replace(repS, '');
-              }
-          }
-      }
-      eqRefExpandLinksAndAddTooltips = () => {
-          els = document.querySelectorAll('[href^="\#eq:"]');
-          expandLinks(els, ['eq.', 'Equation']);
-          addTooltips(els, true);
-      }
-      secRefExpandLinksAndAddBackArrow = (appendixSecNo) => {
-          els = [...document.querySelectorAll('[href^="\#sec:"]')].filter(el => {
-              return el.parentNode.tagName !== 'LI'
-          });
-          const appendixStr = 'the appendix';
-          for (el of els) {
-              if (el.textContent == appendixSecNo) {
-                  sib = el.previousSibling;
-                  sib.remove();
-                  el.textContent = appendixStr;
-              } else {
-                  el.textContent = document.getElementById(el.getAttribute('href').slice(1)).getAttribute('data-number');
-              }
-          }
-          expandLinks(els.filter(el => el.textContent !== appendixStr), ['section']);
-          for ([i, el] of els.entries()) {
-              const secId = el.getAttribute('href').slice(1);
-              const elId = 'linkToSec' + secId + i;
-              el.id = elId;
-              const toSec = document.getElementById(secId);
-              el.onclick = () => {
-                  backArrowId = secId + 'ReturnLink';
-                  let backArrowEl = document.getElementById(backArrowId);
-                  if (!!backArrowEl) {
-                      backArrowEl.remove();
+                  attrs = {}
+                  if (d.state === 'branched') {
+                      attrs.stroke = 'blue';
+                      attrs.fill = 'lightblue';
                   }
-                  backArrowEl = document.createElement('a');
-                  backArrowEl.id = backArrowId
-                  backArrowEl.setAttribute('href', '#' + elId);
-                  backArrowEl.style.float = 'right';
-                  backArrowEl.innerHTML = "↩︎";
-                  backArrowEl.onclick = () => backArrowEl.remove();
-                  toSec.appendChild(backArrowEl);
-              }
-          }
-      }
-      citeRefExpandLinksAndAddTooltips = () => {
-          els = document.getElementById('main').getElementsByClassName('citation');
-          addTooltips([...els].map(el => el.getElementsByTagName('a')[0]), false);
-          for (el of els) {
-              textContent = el.textContent;
-              el.getElementsByTagName('a')[0].textContent = textContent;
-              for (childEl of el.childNodes) {
-                  if (!!!childEl.tagName) {
-                      childEl.textContent = '';
+                  if (d.state === 'infeasible') {
+                      attrs.stroke = 'red';
+                      attrs.fill = 'lightpink';
                   }
+                  if (d.state === 'integer') {
+                      attrs.stroke = 'purple';
+                      attrs.fill = 'plum';
+                  }
+                  if (d.state === 'bounded') {
+                      attrs.stroke = 'darkorange';
+                      attrs.fill = 'peachpuff';
+                  }
+                  drawNode(d.x, d.y, attrs);
               }
-          }
-      }
-      addFootnoteTooltips = () => {
-          for (fnBack of [...document.getElementById('main').getElementsByClassName('footnote-back')]) {
-              fnBack.remove();
-          }
-          els = document.getElementById('main').getElementsByClassName('footnote-ref');
-          addTooltips([...els], false);
-          footnotesEl = document.getElementById('footnotes');
-          if (!!footnotesEl) {
-              footnotesEl.remove();
-          }
-          for (el of document.getElementsByClassName('eqnRef')) {
-              const childEl = el.firstChild;
-              if (childEl.tagName === 'SUP') {
-                  childEl.textContent = 'note';
-                  childEl.style.fontSize = '0.5rem';
+              for (textObj of textsToAdd) {
+                  svg.appendChild(textObj);
               }
           }
       }
@@ -2285,118 +1984,288 @@
       }
   </style>
   <script>
-      BBGraphData = {
-          bbTree1: {
-              'edges': [
-                  ['P', 'P^1', 'x_1 \\leq 2'],
-                  ['P', 'P^2', 'x_1 \\geq 3']
-              ],
-              'nodes': {
-                  'P': {lp: '\\frac{59}{7}', state: 'branched'},
-                  'P^1': {},
-                  'P^2': {}
-              }
-          },
-          depthFirstTree: {
-              nodes: {
-                  'P': {lp: '22', state: 'branched'},
-                  'P^1': {lp: '20', state: 'branched'},
-                  'P^2': {},
-                  'P^3': {lp: '17', state: 'branched'},
-                  'P^4': {},
-                  'P^5': {lp: '16', state: 'branched'},
-                  'P^6': {},
-                  'P^7': {lp: '15', state: 'integer'},
-                  'P^8': {},
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 \\leq 0'],
-                  ['P', 'P^2', 'x_1 \\geq 1'],
-                  ['P^1', 'P^3', 'x_2 \\leq 0'],
-                  ['P^1', 'P^4', 'x_2 \\geq 1'],
-                  ['P^3', 'P^5', 'x_3 \\leq 0'],
-                  ['P^3', 'P^6', 'x_3 \\geq 1'],
-                  ['P^5', 'P^7', 'x_3 \\leq 0'],
-                  ['P^5', 'P^8', 'x_3 \\geq 1']
-              ],
-              rootPlacement: 0.67,
-              siblingSep: 1.4,
-              childSep: 3
-          },
-          bestNodeTree: {
-              nodes: {
-                  'P': {lp: '22', state: 'branched'},
-                  'P^1': {lp: '19', state: 'branched'},
-                  'P^2': {lp: '20', state: 'branched'},
-                  'P^3': {},
-                  'P^4': {},
-                  'P^5': {},
-                  'P^6': {}
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 \\leq 0'],
-                  ['P', 'P^2', 'x_1 \\geq 1'],
-                  ['P^1', 'P^3', 'x_2 \\leq 0'],
-                  ['P^1', 'P^4', 'x_2 \\geq 1'],
-                  ['P^2', 'P^5', 'x_3 \\leq 0'],
-                  ['P^2', 'P^6', 'x_3 \\geq 1']
-              ],
-          },
-          fullTree3d: {
-              nodes: {
-                  'P': {lp: '', state: 'branched'},
-                  'P^1': {lp: '', state: 'branched'},
-                  'P^2': {lp: '', state: 'branched'},
-                  'P^3': {lp: '', state: 'branched'},
-                  'P^4': {lp: '', state: 'branched'},
-                  'P^5': {lp: '', state: 'branched'},
-                  'P^6': {lp: '', state: 'branched'},
-                  'P^7': {},
-                  'P^8': {},
-                  'P^9': {},
-                  'P^{10}': {},
-                  'P^{11}': {},
-                  'P^{12}': {},
-                  'P^{13}': {},
-                  'P^{14}': {}
-              },
-              edges: [
-                  ['P', 'P^1', 'x_1 = 0'],
-                  ['P', 'P^2', 'x_1 = 1'],
-                  ['P^1', 'P^3', 'x_2 = 0'],
-                  ['P^1', 'P^4', 'x_2 = 1'],
-                  ['P^2', 'P^5', 'x_2 = 0'],
-                  ['P^2', 'P^6', 'x_2 = 1'],
-                  ['P^3', 'P^7', 'x_3 = 0'],
-                  ['P^3', 'P^8', 'x_3 = 1'],
-                  ['P^4', 'P^9', 'x_3 = 0'],
-                  ['P^4', 'P^{10}', 'x_3 = 1'],
-                  ['P^5', 'P^{11}', 'x_3 = 0'],
-                  ['P^5', 'P^{12}', 'x_3 = 1'],
-                  ['P^6', 'P^{13}', 'x_3 = 0'],
-                  ['P^6', 'P^{14}', 'x_3 = 1']
-              ],
-              siblingSep: 1.7,
-              childSep: 3,
-              includeLb: false
+      const theoremHelpers = () => {
+          let theoremObj = {};
+          for (thm of document.getElementsByClassName('theorem')) {
+              ((thm) => {
+                  let headerEl = thm.previousSibling;
+                  while ( !['H1', 'H2', 'H3'].includes(headerEl.tagName)) {
+                      headerEl = headerEl.previousSibling;
+                  }
+                  section = headerEl.getAttribute('data-number').split('.')[0];
+                  theoremObj[thm.id] = {
+                      'theorem': thm,
+                      'proof': undefined,
+                      'section': section
+                  };
+              })(thm)
+          }
+          for (prf of document.getElementsByClassName('proof')) {
+              ((prf) => {
+                  theoremObj[prf.getAttribute('for')].proof = prf;
+                  firstP = prf.getElementsByTagName('p')[0];
+                  firstP.innerHTML = '<b>Proof: </b>' + firstP.innerHTML;
+              })(prf)
+          }
+          secNumThms = {};
+          for ([thmId, thmObj] of Object.entries(theoremObj)) {
+              ((thmId, thmObj) => {
+                  thm = document.getElementById(thmId);
+                  sec = thmObj.section;
+                  el = thmObj.theorem;
+                  proof = thmObj.proof;
+                  if (!Object.keys(secNumThms).includes(sec)) {
+                      secNumThms[sec] = 0;
+                  }
+                  secNumThms[sec] += 1;
+                  thmTypeStr = thm.getAttribute('data-thm-type') || 'theorem';
+                  thmTypeStr = thmTypeStr[0].toUpperCase() + thmTypeStr.slice(1);
+                  el.setAttribute('refStr', `${thmTypeStr} ${sec}.${secNumThms[sec]}`)
+                  labelSpan = document.createElement('span');
+                  labelSpan.classList = ['theoremLabel'];
+                  let preTheoremStr = `${thmTypeStr} ${sec}.${secNumThms[sec]}`
+                  if (!!thm.getAttribute('data-display-name')) {
+                      preTheoremStr += ` (${thm.getAttribute('data-display-name')})`
+                  }
+                  labelSpan.textContent = preTheoremStr + ': ';
+                  el.insertBefore(labelSpan, el.firstChild);
+                  const main = document.getElementById('main');
+                  if (!!proof) {
+                      if (proof.getAttribute('data-placement') === 'appendix') {
+                          const appLink = document.createElement('p');
+                          const thmClone = thm.cloneNode(true);
+                          thmClone.id = thm.id + 'AppendixVersionWithProof';
+                          thmCloneLabel = thmClone.firstChild;
+                          thmCloneLabel.innerHTML = `<a href="#${thm.id}">${thmCloneLabel.textContent.trim()}</a>&nbsp;`
+                          appLink.innerHTML = `(<a href="#${thmClone.id}">Proof</a> in the appendix.)`;
+                          main.insertBefore(appLink, thm.nextSibling);
+                          const refs = document.getElementById('References');
+                          main.insertBefore(thmClone, refs);
+                          main.insertBefore(proof, refs);
+                      }
+                  }
+              })(thmId, thmObj)
+          }
+          const refEls = document.getElementsByClassName('thmRef');
+          for (ref of refEls) {
+              ((ref) => {
+                  thm = document.getElementById(ref.getAttribute('for'));
+                  if (!!thm) {
+                      ref.innerHTML = `<a href="#${thm.id}">${thm.getAttribute('refStr')}</a>`
+                  } else {
+                      ref.innerHTML = '<span class="refNotFound">!!reference not found!!</span>'
+                  }
+              })(ref)
+          }
+          addTooltips([...refEls].map(el => el.firstChild), true);
+      }
+  </script>
+  <!-- TOC styling adapted from https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+  <style>
+      nav#TOC:nth-child(2) {
+          margin-top: 0.6rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 2px 0px 10px 1px;
+      }
+      nav#TOC li {
+          list-style-type: none;
+      }
+      nav#TOC > ul {
+          margin-bottom: 1.5rem;
+          margin-top: 2rem;
+          line-height: 1.9rem;
+      }
+      #TOC ul {
+          padding-left: 0;
+      }
+      nav#TOC {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #ebebeb;
+          overflow-x: hidden;
+          padding-top: 1rem;
+          transition: 0.5s;
+          overflow-y: scroll;
+      }
+      nav#TOC a {
+          text-decoration: none;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));;
+          color: #000;
+          display: block;
+          transition: 0.3s;
+          padding-top: 0.2rem;
+          padding-bottom: 0.3rem;
+          border-bottom: 1pt solid lightgray;
+      }
+      nav#TOC a:hover {
+          color: #888;
+      }
+      #TOC .toc-section-number::after {
+          content: ':\00a0'
+      }
+      #tocTop {
+          height: 1.5em;
+          display: flex;
+          justify-content: space-between;
+          padding-top: 0.5rem;
+          padding-bottom: 0.65rem;
+          position: fixed;
+          top: 0;
+          visibility: hidden;
+          background-color: #ebebeb;
+          z-index: 1;
+          border-bottom: 1pt solid gray;
+      }
+      .tocHidden {
+          display: none     
+      }
+      .tocExpand {
+          margin-left: auto;
+          font-size: 30pt !important;
+          font-family: 'Courier New', Courier, monospace;
+      }
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          font-size: 1.1rem;
+          background-color: #ebebeb;
+          width: 100%;
+          border-bottom: 1pt solid gray;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+          z-index: 2;
+      }
+      @media screen and (max-height: 450px) {
+          .sidenav {
+              padding-top: 15px;
+          }
+
+          .sidenav a {
+              font-size: 18px;
           }
       }
-      
-      BBGraphData.bbTree2 = JSON.parse(JSON.stringify(BBGraphData.bbTree1));
-      BBGraphData.bbTree2.nodes['P^1'] = {lp: '\\frac{15}{2}', state: 'branched'};
-      BBGraphData.bbTree2.nodes['P^3'] = {};
-      BBGraphData.bbTree2.nodes['P^4'] = {};
-      BBGraphData.bbTree2.edges.push(['P^1', 'P^3', 'x_2 \\leq 0']);
-      BBGraphData.bbTree2.edges.push(['P^1', 'P^4', 'x_2 \\geq 1']);
-
-      BBGraphData.bbTree3 = JSON.parse(JSON.stringify(BBGraphData.bbTree2));
-      BBGraphData.bbTree3.nodes['P^2'] = {lp: '-\\infty', state: 'infeasible'};
-
-      BBGraphData.bbTree4 = JSON.parse(JSON.stringify(BBGraphData.bbTree3));
-      BBGraphData.bbTree4.nodes['P^4'] = {lp: '7', state: 'integer'};
-
-      BBGraphData.bbTree5 = JSON.parse(JSON.stringify(BBGraphData.bbTree4));
-      BBGraphData.bbTree5.nodes['P^3'] = {lp: '6', state: 'bounded'};
+  </style>
+  <script>
+      function openCloseNav() {
+          const tocTop = document.getElementById("tocTop")
+          if (tocTop.style.visibility == "visible") {
+              closeNav();
+              return
+          }
+          const screenWidth = window.innerWidth;
+          const tocWidth = Math.min(0.75 * screenWidth, 350);
+          const leftoverWidth = screenWidth - tocWidth;
+          const main = document.getElementById("main");
+          const mainWidth = main.offsetWidth;
+          document.getElementById("TOC").style.width = tocWidth + 'px';
+          tocTop.style.width = tocWidth + 'px';
+          tocTop.style.visibility = "visible";
+          if (leftoverWidth >= mainWidth) {
+              main.style.marginLeft = tocWidth / 2 + 'px';
+          }
+      }
+      function closeNav() {
+          document.getElementById("TOC").style.width = "0";
+          document.getElementById("main").style.marginLeft = null;
+          document.getElementById("tocTop").style.visibility = "hidden";
+      }
+      function closeNavIfSmall() {
+          if (document.getElementById("tocTop").style.visibility == "visible" && document.getElementById("main").style.marginLeft == 0){
+              closeNav()
+          }
+      }
+  </script>
+  <style>
+      .footnoteTooltipClose {
+          color: #222;
+          font-size: 30pt;
+          font-weight: bold;
+          margin-left: auto;
+          margin-top: -1rem;
+          margin-bottom: -1rem;
+      }
+      .footnoteTooltipClose:hover, .footnoteTooltipClose:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+      }
+      .footnote-ref sup, .eqnRef {
+          cursor: pointer;
+          color: green !important;
+      }
+      .footnoteTooltip {
+          background-color: #ebebeb;
+          padding: 1rem;
+          border: 1px solid #888;
+          position: absolute;
+          z-index: 1;
+          width: 75%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 2rem;
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          overflow-x: auto;
+          display: flex;
+          flex-direction: column;
+      }
+      .eqnRef .footnoteTooltip {
+          color: black;
+      }
+      .seeOriginalEq {
+          font-size: 1rem;
+          margin-left: auto;
+      }
+  </style>
+  <script>
+      function footnoteOnTooltipClick(id, innerHTML, refElOrId, origId) {
+          innerHTML = innerHTML.replaceAll('@@@', '"');
+          const tooltipEl = document.getElementById(id);
+          if (tooltipEl == null) {
+              const newEl = document.createElement("span");
+              closeEl = document.createElement("div");
+              closeEl.classList = ['footnoteTooltipClose'];
+              closeEl.innerHTML = '&times;';
+              newEl.appendChild(closeEl);
+              if (typeof(refElOrId) === 'string'){
+                  closeEl.setAttribute("onclick", "removeElById('" + id + "')");
+                  document.getElementById(refElOrId).appendChild(newEl);
+              } else {
+                  closeEl.onclick = () => removeElById(id);
+                  refElOrId.append(newEl);
+              }
+              newEl.id = id;
+              newEl.innerHTML += innerHTML;
+              newEl.classList = ['footnoteTooltip'];
+              for (numEl of newEl.getElementsByClassName('eqnos-number')){
+                  numEl.remove();
+              }
+              if (!!origId) {
+                  seeOrigEl = document.createElement('a');
+                  seeOrigEl.setAttribute('href', '#' + origId);
+                  seeOrigEl.innerHTML = 'jump to';
+                  seeOrigEl.classList = ['seeOriginalEq']
+                  seeOrigEl.onclick = () => {
+                      backEl = document.getElementById('back#' + origId + 'Arrow');
+                      backEl.style.display = 'inline';
+                      backEl.setAttribute('href', '#' + id)
+                  }
+                  newEl.appendChild(seeOrigEl);
+              }
+          } else {
+              tooltipEl.remove();
+          }
+          
+      }
+      function removeElById(id) {
+          document.getElementById(id).remove();
+      }
   </script>
   <style>
       .lpDraw {
@@ -2479,22 +2348,153 @@
       }
   </style>
   <style>
-      .eqnos {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          overflow-x: auto;
+      #main {
+          font-size: max(1rem, min(calc(0.9rem + 0.4vw), 22pt));
+          width: min(max(90%, calc(100% - min(60%, 350px) - 1rem)), 800px);
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: margin-left .5s;
+          padding: 20px;
+          padding-bottom: 30px;
       }
-      .eqnos br {
+      html {
+          scroll-padding-top: 2.5rem;
+          overflow-y: auto;
+      }
+      body {
+          scroll-padding-top: 2.5rem;
+          overflow-y: hidden;
+          max-width: none !important;
+      }
+      .loadingMessage {
+          text-align: center;
+          margin-top: 40vh;
+          font-size: 1.2rem;
+      }
+      blockquote {
+          margin: 1rem 0.5rem;
+          padding-left: 0.5em;
+          padding-right: 0.5em;
+          border-left: 2px solid #e6e6e6;
+          border-right: 2px solid #e6e6e6;
+          color: #444;
+          background-color: #ebebeb;
+      }
+      blockquote p {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+      }
+      details {
+          cursor: pointer;
+      }
+      figure {
+          margin-inline: 0.5rem;
+      }
+      figure img {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          max-width: 100%;
+      }
+      figure figcaption {
+          font-size: max(0.9rem, min(calc(0.8rem + 0.4vw), 20pt));;
+          text-align: center;
+      }
+      a {
+          color: blue;
+      }
+      a:visited {
+          color: purple;
+      }
+      h1 {
+          position: relative;
+          margin-top: 5rem;
+      }
+      h1:before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          background: black;
+          bottom: 150%;
+          left: 0;
+      }
+      *[role="doc-biblioref"] {
+          color: green !important;
+      }
+      div.sourceCode {
+          background-color: #dfdfdf;
+          padding: 0.5rem;
+          border: 1pt solid black;
+          font-size: max(12pt, 1.1rem);
+      }
+      .copyButton {
+          float: right;
+          cursor: pointer;
+      }
+      .header-section-number::after {
+          content: ':'
+      }
+      @keyframes fade {
+          0%,100% { opacity: 0 }
+          15% { opacity: 1 }
+          85% { opacity: 1 }
+      }
+      .copyMessage {
+          position: absolute;
+          transform: translate(-2rem, -2.8rem);
+          width: 4rem;
+          font-size: max(10pt, 0.7rem);
+          text-align: center;
+          background-color: #eee;
+          border: 1pt solid black;
+          border-radius: 0.25rem;
+          animation: fade 2s linear;
+      }
+      .backRefElement {
+          margin-top: auto;
+      }
+      footer {
+          position: fixed;
+          bottom: 0;
+          text-align: center;
+          width: 100%;
+          background: white;
+          left: 50%;
+          transform: translateX(-50%);
+          border-top: 1pt solid lightgray;
+          font-size: 0.7rem;
+          display: flex;
+          justify-content: space-between;
+      }
+      .embedIndent {
+          margin: 0 1rem;
           display: none;
       }
-      .eqnos-number {
-          margin-left: auto;
-          padding-left: 1rem;
+      .lectureEmbedIframe {
+          width: min(600px, 80vw);
+          height: calc(9 * min(600px, 80vw) / 16);
       }
-      .katexContainer {
-          flex-grow: 1;
-          overflow-x: auto;
+      .tinyText {
+          font-size: 0.5rem;
+      }
+      .mathSmall {
+          font-size: 1rem;
+      }
+      .katexSideBySide {
+          align-self: center;
+      }
+      .katexSideBySide .katexContainer {
+          overflow-x: hidden;
+      }
+      .basicCenter {
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      .refNotFound {
+          color: red;
       }
   </style>
   <script defer=""
@@ -3004,6 +3004,23 @@ class="toc-section-number">7.3.7</span> <span class="math inline">M/M/s\
 <li><a href="#mmsk-queues" id="toc-mmsk-queues"><span
 class="toc-section-number">7.3.8</span> <span
 class="math inline">M/M/s/K\ </span> queues</a></li>
+</ul></li>
+<li><a href="#markov-decision-processes"
+id="toc-markov-decision-processes"><span
+class="toc-section-number">7.4</span> Markov decision processes</a>
+<ul>
+<li><a href="#sec:mdpExample" id="toc-sec:mdpExample"><span
+class="toc-section-number">7.4.1</span> Example</a></li>
+<li><a href="#mdp-basics" id="toc-mdp-basics"><span
+class="toc-section-number">7.4.2</span> MDP basics</a></li>
+<li><a href="#evaluating-policies" id="toc-evaluating-policies"><span
+class="toc-section-number">7.4.3</span> Evaluating policies</a></li>
+<li><a href="#enumerating-policies" id="toc-enumerating-policies"><span
+class="toc-section-number">7.4.4</span> Enumerating policies</a></li>
+<li><a href="#randomized-policies" id="toc-randomized-policies"><span
+class="toc-section-number">7.4.5</span> Randomized policies</a></li>
+<li><a href="#linear-programming" id="toc-linear-programming"><span
+class="toc-section-number">7.4.6</span> Linear programming</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
@@ -13645,7 +13662,436 @@ class="math inline">M/M/s</span> case.</p>
 <p>See the following notebook (similar to the one we just saw in the
 last section) for Python code to calculate all of the above values.</p>
 <script src="https://gist.github.com/e62a58947981b011b0d8635640cf1969.js"></script>
-<!-- {insertSection:sections/stochastic_processes/markov_decision_processes.md} -->
+<h2 data-number="7.4" id="markov-decision-processes"><span
+class="header-section-number">7.4</span> Markov decision processes</h2>
+<p>Up to this point in our exploration of stochastic processes, we’ve
+only been <em>describing</em> the evolution of random processes and
+probabilities around certain outcomes. We’ve had no agency, letting
+random dynamics control all of the outcomes. In this chapter, we’ll find
+ourselves trying to make decisions in order to influence a random
+process to attain desirable outcomes. In particular, we will assume that
+we’re interacting with a system whose dynamics are explained by a Markov
+chain. However, at any given state, we are allowed to choose between a
+given set of actions to take. Whatever action we choose will bring us
+some kind of cost or reward, while also affecting the transition
+probabilities that determine the next state. Our goal will be to choose
+a policy (set of actions to take in each state) that will net us the
+lowest long-term costs (or highest long-term rewards). Such a process is
+called a <strong>Markov decision process</strong>
+(<strong>MDP</strong>).</p>
+<h3 data-number="7.4.1" id="sec:mdpExample"><span
+class="header-section-number">7.4.1</span> Example</h3>
+<p>Let’s start off with an example scenario through which we can
+describe the important components of MDPs. As usual, this example comes
+from <span class="citation" data-cites="classText">Hillier and Lieberman
+(<a href="#ref-classText" role="doc-biblioref">2021</a>)</span>.</p>
+<blockquote>
+<p>A manufacturer has one key machine at the core of one of its
+production processes. Because of heavy use, the machine deteriorates
+rapidly in both quality and output. Therefore, at the end of each week,
+a thorough inspection is done that results in classifying the condition
+of the machine into one of four possible states:</p>
+<ul>
+<li>State 0: Good as new</li>
+<li>State 1: Operable - minor deterioration</li>
+<li>State 2: Operable - major deterioration</li>
+<li>State 3: Inoperable - output of unacceptable quality</li>
+</ul>
+<p>After historical data on these inspection results are gathered,
+statistical analysis is done on how the state of the machine evolves
+from week to week. The following matrix shows the relative frequency
+(probability) of each possible transition from the state in one week (a
+row of the matrix) to the state in the following week (a column of the
+matrix).</p>
+<p><span class="math display">
+\begin{bmatrix}
+0 &amp; \frac{7}{8} &amp; \frac{1}{16} &amp; \frac{1}{16} \\
+0 &amp; \frac{3}{4} &amp; \frac{1}{8} &amp; \frac{1}{8} \\
+0 &amp; 0 &amp; \frac{1}{2} &amp; \frac{1}{2} \\
+0 &amp; 0 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+</span></p>
+<p>In addition, statistical analysis has found that these transition
+probabilities are unaffected by also considering what the states were in
+prior weeks. This “lack-of-memory property” is the Markovian property
+that characterizes Markov chains. Therefore, letting the random variable
+<span class="math inline">X_t</span> be the state of the machine at the
+end of week <span class="math inline">t</span>, the conclusion is that
+the stochastic process <span class="math inline">\{X_t, t = 0, 1, 2, . .
+.\}</span> is a discrete-time Markov chain whose (one-step) transition
+matrix is just the above matrix.</p>
+</blockquote>
+<p>Right, so we have a Markov chain like what we studied in section <a
+href="#sec:markovChains">7.2</a>. But look at that transition matrix.
+Even if the process starts in state 0, before too many transitions the
+machine will end up inoperable and stuck in state 3. But this is a very
+important bit of machinery. Surely the manufacturer would not just sit
+by idly with a broken machine and the subsequent loss of revenue.</p>
+<p>So let’s assume that the company will replace the product after it
+becomes inoperable. The replacement takes 1 week to complete and costs
+$4,000. Furthermore,the cost of lost production during the 1-week
+downtime is $2,000, so the total cost incurred whenever the current
+machine enters state 3 is $6,000.</p>
+<p>Let’s also assume that there is cost associated with using the
+degraded machine in states 1 and 2 (say, due to defective items). These
+costs will be $1,000 in state 1 and $3,000 in state 2. To avoid those
+costs, the company is able to <em>overhaul</em> the machine once it
+enters state 2, with the effect of reversing most of the deterioration
+so that the machine returns to state 1.</p>
+<p>A natural question is, what maintenance policy should the company
+follow for their machine? There are several options they can choose from
+depending on the state the system is currently in. The costs and effects
+of these policies are summarized below (note that we’ve also added
+options to replace the machine in states 1 or 2):</p>
+<figure>
+<img src="images/mdp-example-actions.png"
+alt="Summary of decisions and costs for MDP example (Hillier and Lieberman 2021)" />
+<figcaption aria-hidden="true">Summary of decisions and costs for MDP
+example <span class="citation" data-cites="classText">(<a
+href="#ref-classText" role="doc-biblioref">Hillier and Lieberman
+2021</a>)</span></figcaption>
+</figure>
+<h3 data-number="7.4.2" id="mdp-basics"><span
+class="header-section-number">7.4.2</span> MDP basics</h3>
+<p>Before trying to determine the best maintenance policy, let’s pause
+for a moment to learn the relevant notation and definitions for MDPs.
+The basic process is as follows:</p>
+<ul>
+<li>The <strong>state</strong> <span class="math inline">i</span> of a
+discrete-time Markov chain is observed after each transition, where (as
+in <a href="#sec:markovChains">7.2</a>) the possible states are <span
+class="math inline">i = 0, 1, . . . , M</span>.</li>
+<li>After each observation, a <strong>decision</strong> (or
+<strong>action</strong>) <span class="math inline">k</span> is chosen
+from a set of <span class="math inline">K</span> available options,
+<span class="math inline">\{1,2,...,K\}</span>. Some of the <span
+class="math inline">K</span> decisions may not be relevant for every
+state.</li>
+<li>If decision <span class="math inline">d_i=k</span> is made in state
+<span class="math inline">i</span>, an immediate <strong>cost</strong>
+is incurred that has an expected value <span
+class="math inline">C_{ik}</span>.</li>
+<li>The decision <span class="math inline">d_i=k</span> in state <span
+class="math inline">i</span> determines what the <strong>transition
+probabilities</strong> will be for the next transition from state <span
+class="math inline">i</span>. Denote these transition probabilities by
+<span class="math inline">p_{ij}(k)</span>, for <span
+class="math inline">j\in\{0,1, . . . , M\}</span>. For this class, we
+will assume that the resultant transition matrices always describe an
+irreducible Markov chain.</li>
+<li>A specification of the decisions for each state <span
+class="math inline">(d_0, d_1, . . . , d_M)</span> is called a
+<strong>policy</strong> for the MDP.</li>
+<li>The objective is to find an optimal policy according to some cost
+criterion which considers both immediate <em>and</em> future costs. The
+objective we focus on here is the (long-run) expected average cost per
+time step (though we will see an alternative criterion later).</li>
+</ul>
+<p>Hopefully you can see how this relates to the example scenario we
+presented above. Depending on the state of the system, the company can
+choose a decision/action to take (either do nothing, overhaul, or
+replace). Each decision has an effect on the subsequent transition
+(e.g. a decision to overhaul automatically moves the process to state 1
+in the next transition). Each state transition induces some combination
+of costs (replacement, lost production, or defects).</p>
+<h3 data-number="7.4.3" id="evaluating-policies"><span
+class="header-section-number">7.4.3</span> Evaluating policies</h3>
+<p>How can we evaluate a policy? As an example, let’s say that the
+company’s policy is to stick with a degraded machine in states 1 and 2,
+but replace the machine any time it becomes inoperable (i.e. a
+transition to state 3). Thus the policy we are evaluating is <span
+class="math inline">(1, 1, 1, 3)</span>. With this policy, the
+transition matrix becomes</p>
+<p><span class="math display">
+\begin{bmatrix}
+0 &amp; \frac{7}{8} &amp; \frac{1}{16} &amp; \frac{1}{16} \\
+0 &amp; \frac{3}{4} &amp; \frac{1}{8} &amp; \frac{1}{8} \\
+0 &amp; 0 &amp; \frac{1}{2} &amp; \frac{1}{2} \\
+1 &amp; 0 &amp; 0 &amp; 0 \\
+\end{bmatrix}
+</span></p>
+<p>Notice the change from the transition matrix in the example
+definition, since we’re now immediately replacing the machine whenever
+the process enters state 3.</p>
+<p>How do we evaluate this policy? As stated, our objective is to
+minimize the long-run expected average cost per time step. And we
+already learned how to calculate that in section <a
+href="#sec:markovLongRunAverageCost">7.2.7</a>: First we find the
+steady-state probabilities <span
+class="math inline">\boldsymbol\pi</span> by solving for</p>
+<p><span class="math display">
+\boldsymbol\pi\mathbf{P}=\boldsymbol\pi
+</span></p>
+<p>(where <span class="math inline">\mathbf{P}</span> is the transition
+matrix). In this case, that comes to</p>
+<p><span class="math display">
+\boldsymbol\pi = \begin{bmatrix}
+\frac{2}{13} &amp; \frac{7}{13} &amp; \frac{2}{13} &amp; \frac{2}{13}
+\end{bmatrix}
+</span></p>
+<p>Then we just need to multiply <span
+class="math inline">\boldsymbol\pi</span> by the vector of costs for
+entering each state, which we know from above is (in thousands of
+dollars).</p>
+<p><span class="math display">
+\begin{bmatrix}0 &amp; 1 &amp; 3 &amp; 6\end{bmatrix}
+</span></p>
+<p>So the long-run average cost of this policy is</p>
+<p><span class="math display">
+0\frac{2}{13} + 1\frac{7}{13} + 3\frac{2}{13} + 6\frac{2}{13} =
+\frac{25}{13}
+</span></p>
+<h3 data-number="7.4.4" id="enumerating-policies"><span
+class="header-section-number">7.4.4</span> Enumerating policies</h3>
+<p>The policy we examined above is considered a
+<strong>stationary</strong> policy, since it doesn’t change regardless
+of the current time step <span class="math inline">t</span>.
+Furthermore, it is considered <strong>deterministic</strong> since the
+decision in each state is set. One could imagine a policy where, say, in
+state 2 we flip a coin to decide between replacing the machine or doing
+nothing. We will consider such policies, called
+<strong>randomized</strong> policies, later.</p>
+<p>But for now, let’s discuss how we might find the best possible
+stationary, deterministic policy for our example problem. Since the
+number of options is so small, we should be able to just list off all
+the possible policies and evaluate them one-by-one. To be clear, this is
+not generally a <em>good</em> way to optimize an MDP, as it is only
+tractable when there are a small number of states and possible actions.
+That caveat aside, let’s jump to the following notebook to see how we
+might solve the example MDP by enumeration.</p>
+<script src="https://gist.github.com/0cdb94e0c2f8ae58b8f08994eef5f0e4.js"></script>
+<h3 data-number="7.4.5" id="randomized-policies"><span
+class="header-section-number">7.4.5</span> Randomized policies</h3>
+<p>The last section gave us a simple way to find the best stationary,
+deterministic policy for an MDP. But it is of limited usefulness,
+because most practical MDPs will have far too many policies for
+enumeration to be practical. For our next solution method, we’ll need to
+extend our notion of a policy. In particular, we’ll let our decision at
+any given state be <strong>randomized</strong>, i.e. the output of some
+random variable. So instead of making decision <span
+class="math inline">d_i\in\{1,2,...,K\}</span> for each state <span
+class="math inline">i</span>, we’ll instead define probabilities <span
+class="math inline">D_{ik}</span> for each state <span
+class="math inline">i\in\{0,1,...,M\}</span> and <span
+class="math inline">k\in\{1,2,...,K\}</span> such that</p>
+<p><span class="math display">
+D_{ik}=P\!\left( \text{decision}=k|\text{state}=i \right)
+</span></p>
+<p>Naturally, we can write this as a (not necessarily square) matrix</p>
+<p><span class="math display">
+D=\begin{bmatrix}
+D_{01} &amp; D_{02} &amp; \cdots &amp; D_{0K} \\
+D_{11} &amp; D_{12} &amp; \cdots &amp; D_{1K} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+D_{M1} &amp; D_{M2} &amp; \cdots &amp; D_{MK}
+\end{bmatrix}
+</span></p>
+<p>and since these are probabilities, we’ll need the values across each
+row to sum to 1, i.e.</p>
+<p><span class="math display">
+\begin{align*}
+\sum_{k=1}^KD_{ik} = 1 &amp;&amp; \forall\ i\in\{0, 1, \dots, M\}
+\end{align*}
+</span></p>
+<p>Of course, the deterministic policies we’ve already seen can fit into
+this framework as well. Simply put a value of 0 in every entry of the
+matrix, except for if <span class="math inline">d_i=k</span> then set
+<span class="math inline">D_{ik}=1</span>. For example, the
+deterministic policy <span class="math inline">(1, 1, 2, 3)</span> can
+be written as</p>
+<p><span class="math display">
+D=\begin{bmatrix}
+1 &amp; 0 &amp; 0 \\
+1 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+</span></p>
+<p>In contrast, a randomized policy given by</p>
+<p><span class="math display">
+D=\begin{bmatrix}
+1 &amp; 0 &amp; 0 \\
+\frac{1}{2} &amp; 0 &amp; \frac{1}{2} \\
+\frac{1}{4} &amp; \frac{1}{4} &amp; \frac{1}{2} \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+</span></p>
+<p>will have you (randomly) splitting decisions in state 1 between doing
+nothing half the time and replacing half the time. Meanwhile, after
+finding yourself in state 2, you would do nothing a quarter the time,
+overhaul a quarter of the time, and replace half of the time.</p>
+<h3 data-number="7.4.6" id="linear-programming"><span
+class="header-section-number">7.4.6</span> Linear programming</h3>
+<p>The introduction of randomized policies opens us up to a new solution
+method via linear programming. Our decision variables will relate to the
+<span class="math inline">D_{ik}</span> quantities and are allowed to
+take on continuous values, making linear programming a possibility.</p>
+<p>But the decision variables won’t <em>exactly</em> be the <span
+class="math inline">D_{ik}</span> values, which you’ll recall were
+conditional probabilities</p>
+<p><span class="math display">
+D_{ik}=P\!\left( \text{decision}=k|\text{state}=i \right)
+</span></p>
+<p>Instead, our variables <span class="math inline">y_{ik}</span> will
+be <em>unconditional</em>, <em>joint</em> probabilities of the form</p>
+<p><span class="math display">
+y_{ik}=P\!\left( \text{decision}=k,\text{state}=i \right)
+</span></p>
+<p>That is, the steady-state proportion of time that the process is in
+state <span class="math inline">i</span> <em>and</em> decision <span
+class="math inline">k</span> is made. Of course, these values are linked
+to the <span class="math inline">D_{ik}</span> values via the definition
+of conditional probability, since</p>
+<div class="mathSmall">
+<p><span class="math display">
+\begin{align*}
+P\!\left( \text{decision}=k,\text{state}=i \right) &amp;= P\!\left(
+\text{state}=i \right)P\!\left( \text{decision}=k|\text{state}=i \right)
+\\
+&amp;\Updownarrow \\
+y_{ik}&amp;=\pi_iD_{ik}
+\end{align*}
+</span></p>
+</div>
+<p>where <span class="math inline">\pi_i</span> is (as usual) the
+steady-state probability of being in state <span
+class="math inline">i</span>. Note also that given a valid setting for
+the <span class="math inline">y_{ik}</span> variables, we can
+immediately recover the <span class="math inline">D_{ik}</span> values
+since</p>
+<p><span class="math display">
+\begin{align*}
+\pi_i&amp;=P\!\left( \text{state}=i \right) \\
+&amp;=\sum_{k=1}^KP\!\left( \text{decision}=k,\text{state}=i \right) \\
+&amp;=\sum_{k=1}^Ky_{ik}
+\end{align*}
+</span></p>
+<p>So each <span class="math inline">D_{ik}</span> will be calculated
+as</p>
+<p><span class="math display">
+D_{ik} = \frac{p_{ik}}{\pi_i}
+</span></p>
+<p>Given <span class="math inline">y_{ik}</span> as our variables, what
+should the objective value be? We want to minimize the long-run average
+cost per unit time, which in terms of the variables would be written
+as:</p>
+<p><span class="math display">
+\sum_{i=0}^M\sum_{k=1}^KC_{ik}y_{ik}
+</span></p>
+<p>To make sure that the <span class="math inline">y_{ik}</span> values
+imply a proper probability distribution, we need each <span
+class="math inline">y_{ik}\geq0</span> and</p>
+<p><span class="math display">
+\sum_{i=0}^M\sum_{k=1}^Ky_{ik}=1
+</span></p>
+<p>We’ve yet to use any of the transition probability information
+though. For this, let’s define the value <span
+class="math inline">p_{ij}(k)</span> as the probability of transitioning
+from state <span class="math inline">i</span> to state <span
+class="math inline">j</span> when decision <span
+class="math inline">k</span> is made, i.e.</p>
+<p><span class="math display">
+p_{ij}(k)=P\!\left( \text{next state}=j|\text{current
+state}=i,\text{decision}=k \right)
+</span></p>
+<p>In analogy to the regular steady-state condition <span
+class="math inline">\pi_j=\sum_{i=0}^M\pi_ip_{ij}</span>, we have</p>
+<p><span class="math display">
+\sum_{k=1}^Ky_{jk}=\sum_{i=0}^M\sum_{k=1}^Ky_{ik}p_{ij}(k)
+</span></p>
+<p>Thus the LP formulation for determining the best randomized policy
+for an MDP is:</p>
+<p><span class="math display">
+\begin{align*}
+\text{min}&amp;&amp; \sum_{i=0}^M\sum_{k=1}^KC_{ik}y_{ik} \\
+\text{s.t.}&amp;&amp; \sum_{i=0}^M\sum_{k=1}^Ky_{ik}&amp;=1 \\
+     &amp;&amp; \sum_{k=1}^Ky_{jk} -
+\sum_{i=0}^M\sum_{k=1}^Ky_{ik}p_{ij}(k)&amp;=0 &amp; \forall\ j \in
+\{0,1,\dots,M\} \\
+     &amp;&amp; \mathbf{y}&amp;\geq\mathbf{0}
+\end{align*}
+</span></p>
+<h4>
+Solving the example MDP with linear programming
+</h4>
+<p>Let’s go ahead and set up this LP for our example MDP. We need one
+<span class="math inline">y_{ik}</span> variable for each allowable
+state/decision pair, meaning that the decision variables in this case
+are:</p>
+<p><span class="math display">
+y_{01},\quad y_{11},\quad y_{13},\quad y_{21},\quad y_{22},\quad
+y_{23},\quad y_{33}
+</span></p>
+<p>The associated costs <span class="math inline">C_{ik}</span> come
+from the table at the end of section <a
+href="#sec:mdpExample">7.4.1</a>. The <span
+class="math inline">p_{ij}(k)</span> values come from the problem’s
+initial transition matrix, plus the logic of the other decisions (an
+overhaul takes you to state 1 with probability 1, and a replacement
+takes you to state 0 with probability 1). So the formulation
+becomes:</p>
+<p><span class="math display">
+\begin{align*}
+\text{min}&amp;&amp; y_{11} + 6y_{13} + 3y_{21} + 4y_{22} + 6y_{23} +
+6y_{33} \\
+\text{s.t.}&amp;&amp; y_{01} + y_{11} + y_{13} + y_{21} + y_{22} +
+y_{23} + y_{33} &amp;= 1 \\
+     &amp;&amp; y_{01} - \left( y_{13} + y_{23} + y_{33} \right) &amp;=
+0 \\
+     &amp;&amp; y_{11} + y_{13} - \left( \frac{7}{8}y_{01} +
+\frac{3}{4}y_{11} + y_{22} \right) &amp;= 0 \\
+     &amp;&amp; y_{21} + y_{22} + y_{23} - \left(\frac{1}{16}y_{01} +
+\frac{1}{8}y_{11} + \frac{1}{2}y_{21} \right) &amp;= 0 \\
+     &amp;&amp; y_{33} - \left( \frac{1}{16}y_{01} + \frac{1}{8}y_{11} +
+\frac{1}{2}y_{21}\right) &amp;=0 \\
+     &amp;&amp; y_{01}, y_{11}, y_{13}, y_{21}, y_{22}, y_{23}, y_{33}
+&amp;\geq 0
+\end{align*}
+</span></p>
+<p>Let’s take this formulation and solve it in the following Colab
+notebook.</p>
+<script src="https://gist.github.com/fb2c8258644bbd271faaeacefa9daa03.js"></script>
+<h4>
+Analyzing the solution
+</h4>
+<p>After solving the problem in the above notebook, we find that the
+<span class="math inline">D_{ik}</span> values (given in matrix form)
+are:</p>
+<p><span class="math display">
+D=\begin{bmatrix}
+1 &amp; 0 &amp; 0 \\
+1 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+</span></p>
+<p>So it seems that the best randomized policy is actually a stationary
+policy as well! It turns out that this is not a coincidence. Let’s
+examine the formulation we created. It contains <span
+class="math inline">M+2</span> constraints, but actually (for the same
+reason as we saw when calculating steady-state probabilities in
+section <a href="#sec:markovSteadyState">7.2.6</a>) one of these
+constraints will be redundant. So in effect the model has only <span
+class="math inline">M+1</span> rows. This means that when the problem is
+solved via the simplex method, there can be only <span
+class="math inline">M+1</span> variables with non-zero values.
+Furthermore, it can be shown<a href="#fn122" class="footnote-ref"
+id="fnref122" role="doc-noteref"><sup>122</sup></a> that for any <span
+class="math inline">i</span>, <span
+class="math inline">y_{ik}&gt;0</span> must hold for some <span
+class="math inline">k</span>.</p>
+<p>The end result is that for each state <span
+class="math inline">i</span>, exactly one decision <span
+class="math inline">k</span> will have <span
+class="math inline">y_{ik}&gt;0</span>. Thus <span
+class="math inline">\pi_i=y_{ik}</span> for that <span
+class="math inline">k</span>, meaning that <span
+class="math inline">D_{ik}=y_{ik}/\pi_i=1</span> for that <span
+class="math inline">k</span> and 0 for all other decisions. In other
+words, any policy obtained via the simplex method will be a
+deterministic one. This means that allowing randomized policies cannot
+improve the long-run cost per unit time, which is an interesting
+result.</p>
 <!-- {insertSection:sections/stochastic_processes/reinforcement_learning.md} -->
 <!-- {insertSection:sections/stochastic_processes/notes.md} -->
 <h1 data-number="8" id="appendix"><span
@@ -15229,6 +15675,10 @@ class="math inline">\rho=1</span>, you could try just tweaking <span
 class="math inline">\lambda</span> or <span
 class="math inline">\mu</span> a <em>tiny</em> bit to get the numbers to
 work out.<a href="#fnref121" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn122"><p>We won’t work through it, but it will follow from the
+fact that we assumed the induced probability matrices were all
+irreducible.<a href="#fnref122" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
