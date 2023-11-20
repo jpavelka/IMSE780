@@ -54,7 +54,7 @@
 
 {insertSection:sections/stochastic_processes/queueing_theory.md}
 
-<!-- {insertSection:sections/stochastic_processes/markov_decision_processes.md} -->
+{insertSection:sections/stochastic_processes/markov_decision_processes.md}
 
 <!-- {insertSection:sections/stochastic_processes/reinforcement_learning.md} -->
 
