@@ -56,9 +56,9 @@
 
 {insertSection:sections/stochastic_processes/markov_decision_processes.md}
 
-<!-- {insertSection:sections/stochastic_processes/reinforcement_learning.md} -->
+{insertSection:sections/stochastic_processes/reinforcement_learning.md}
 
-<!-- {insertSection:sections/stochastic_processes/notes.md} -->
+{insertSection:sections/stochastic_processes/notes.md}
 
 {insertSection:sections/appendix/appendix.md}
 

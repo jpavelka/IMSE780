@@ -1,4 +1,4 @@
-## Markov decision processes
+## Markov decision processes {#sec:markovDecisionProcesses}
 
 Up to this point in our exploration of stochastic processes, we've only been _describing_ the evolution of random processes and probabilities around certain outcomes. We've had no agency, letting random dynamics control all of the outcomes. In this chapter, we'll find ourselves trying to make decisions in order to influence a random process to attain desirable outcomes. In particular, we will assume that we're interacting with a system whose dynamics are explained by a Markov chain. However, at any given state, we are allowed to choose between a given set of actions to take. Whatever action we choose will bring us some kind of cost or reward, while also affecting the transition probabilities that determine the next state. Our goal will be to choose a policy (set of actions to take in each state) that will net us the lowest long-term costs (or highest long-term rewards). Such a process is called a **Markov decision process** (**MDP**).
 
@@ -149,7 +149,7 @@ $$
 
 will have you (randomly) splitting decisions in state 1 between doing nothing half the time and replacing half the time. Meanwhile, after finding yourself in state 2, you would do nothing a quarter the time, overhaul a quarter of the time, and replace half of the time.
 
-### Linear programming
+### Linear programming {#sec:mdpLp}
 
 The introduction of randomized policies opens us up to a new solution method via linear programming. Our decision variables will relate to the $D_{ik}$ quantities and are allowed to take on continuous values, making linear programming a possibility.
 
