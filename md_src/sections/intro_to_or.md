@@ -76,7 +76,7 @@ Your textbook handily comes full of case studies explaining how companies have u
 
 It's pretty staggering to look at the figures in the "Annual Savings" column, which taken together sum to the billions. OR is an enormously valuable tool.
 
-### Edelman Prize
+### Edelman Prize {#sec:edelmanPrize}
 
 Now, admittedly, some of those case studies are a little stale. But don't fret, OR is still relevant in industry today. A great showcase for the most recent impactful OR work is the annual Edelman Prize, awarded by the [Institute for Operations Research and Management Science (INFORMS)](https://www.informs.org/). The winners of this award were judged to have demonstrated the best application of OR methodologies in industry. You can take a look at the [program for the 2023 edition of the award](https://3449182.fs1.hubspotusercontent-na1.net/hubfs/3449182/2023_Edelman_Gala_Book.pdf) and find cases submitted by names like DHL, Huawei, Lyft, and the winner Walmart.
 
