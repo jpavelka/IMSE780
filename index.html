@@ -2565,7 +2565,7 @@ class="toc-section-number">2.3</span> OR in practice</a>
 class="toc-section-number">2.3.1</span> Origins of OR</a></li>
 <li><a href="#case-studies" id="toc-case-studies"><span
 class="toc-section-number">2.3.2</span> Case studies</a></li>
-<li><a href="#edelman-prize" id="toc-edelman-prize"><span
+<li><a href="#sec:edelmanPrize" id="toc-sec:edelmanPrize"><span
 class="toc-section-number">2.3.3</span> Edelman Prize</a></li>
 </ul></li>
 <li><a href="#topics-well-cover" id="toc-topics-well-cover"><span
@@ -3005,8 +3005,8 @@ class="toc-section-number">7.3.7</span> <span class="math inline">M/M/s\
 class="toc-section-number">7.3.8</span> <span
 class="math inline">M/M/s/K\ </span> queues</a></li>
 </ul></li>
-<li><a href="#markov-decision-processes"
-id="toc-markov-decision-processes"><span
+<li><a href="#sec:markovDecisionProcesses"
+id="toc-sec:markovDecisionProcesses"><span
 class="toc-section-number">7.4</span> Markov decision processes</a>
 <ul>
 <li><a href="#sec:mdpExample" id="toc-sec:mdpExample"><span
@@ -3019,9 +3019,44 @@ class="toc-section-number">7.4.3</span> Evaluating policies</a></li>
 class="toc-section-number">7.4.4</span> Enumerating policies</a></li>
 <li><a href="#randomized-policies" id="toc-randomized-policies"><span
 class="toc-section-number">7.4.5</span> Randomized policies</a></li>
-<li><a href="#linear-programming" id="toc-linear-programming"><span
+<li><a href="#sec:mdpLp" id="toc-sec:mdpLp"><span
 class="toc-section-number">7.4.6</span> Linear programming</a></li>
 </ul></li>
+<li><a href="#sec:reinforcementLearning"
+id="toc-sec:reinforcementLearning"><span
+class="toc-section-number">7.5</span> Reinforcement learning</a>
+<ul>
+<li><a href="#what-is-rl" id="toc-what-is-rl"><span
+class="toc-section-number">7.5.1</span> What is RL?</a></li>
+<li><a href="#reinforcement-learning-by-the-book-video-1"
+id="toc-reinforcement-learning-by-the-book-video-1"><span
+class="toc-section-number">7.5.2</span> Reinforcement learning, by the
+book (video 1)</a></li>
+<li><a
+href="#bellman-equations-dynamic-programming-generalized-policy-iteration-video-2"
+id="toc-bellman-equations-dynamic-programming-generalized-policy-iteration-video-2"><span
+class="toc-section-number">7.5.3</span> Bellman equations, dynamic
+programming, generalized policy iteration (video 2)</a></li>
+<li><a href="#monte-carlo-and-off-policy-methods-video-3"
+id="toc-monte-carlo-and-off-policy-methods-video-3"><span
+class="toc-section-number">7.5.4</span> Monte Carlo and off-policy
+methods (video 3)</a></li>
+<li><a href="#temporal-difference-learning-video-4"
+id="toc-temporal-difference-learning-video-4"><span
+class="toc-section-number">7.5.5</span> Temporal difference learning
+(video 4)</a></li>
+<li><a href="#function-approximation-video-5"
+id="toc-function-approximation-video-5"><span
+class="toc-section-number">7.5.6</span> Function approximation (video
+5)</a></li>
+<li><a href="#policy-gradient-methods-video-6"
+id="toc-policy-gradient-methods-video-6"><span
+class="toc-section-number">7.5.7</span> Policy gradient methods (video
+6)</a></li>
+</ul></li>
+<li><a href="#notes-and-further-reading-3"
+id="toc-notes-and-further-reading-3"><span
+class="toc-section-number">7.6</span> Notes and further reading</a></li>
 </ul></li>
 <li><a href="#appendix" id="toc-appendix"><span
 class="toc-section-number">8</span> Appendix</a>
@@ -3278,7 +3313,7 @@ role="doc-biblioref">Hillier and Lieberman 2021</a>)</span></figcaption>
 <p>It’s pretty staggering to look at the figures in the “Annual Savings”
 column, which taken together sum to the billions. OR is an enormously
 valuable tool.</p>
-<h3 data-number="2.3.3" id="edelman-prize"><span
+<h3 data-number="2.3.3" id="sec:edelmanPrize"><span
 class="header-section-number">2.3.3</span> Edelman Prize</h3>
 <p>Now, admittedly, some of those case studies are a little stale. But
 don’t fret, OR is still relevant in industry today. A great showcase for
@@ -13662,7 +13697,7 @@ class="math inline">M/M/s</span> case.</p>
 <p>See the following notebook (similar to the one we just saw in the
 last section) for Python code to calculate all of the above values.</p>
 <script src="https://gist.github.com/e62a58947981b011b0d8635640cf1969.js"></script>
-<h2 data-number="7.4" id="markov-decision-processes"><span
+<h2 data-number="7.4" id="sec:markovDecisionProcesses"><span
 class="header-section-number">7.4</span> Markov decision processes</h2>
 <p>Up to this point in our exploration of stochastic processes, we’ve
 only been <em>describing</em> the evolution of random processes and
@@ -13920,7 +13955,7 @@ D=\begin{bmatrix}
 nothing half the time and replacing half the time. Meanwhile, after
 finding yourself in state 2, you would do nothing a quarter the time,
 overhaul a quarter of the time, and replace half of the time.</p>
-<h3 data-number="7.4.6" id="linear-programming"><span
+<h3 data-number="7.4.6" id="sec:mdpLp"><span
 class="header-section-number">7.4.6</span> Linear programming</h3>
 <p>The introduction of randomized policies opens us up to a new solution
 method via linear programming. Our decision variables will relate to the
@@ -14092,8 +14127,182 @@ words, any policy obtained via the simplex method will be a
 deterministic one. This means that allowing randomized policies cannot
 improve the long-run cost per unit time, which is an interesting
 result.</p>
-<!-- {insertSection:sections/stochastic_processes/reinforcement_learning.md} -->
-<!-- {insertSection:sections/stochastic_processes/notes.md} -->
+<h2 data-number="7.5" id="sec:reinforcementLearning"><span
+class="header-section-number">7.5</span> Reinforcement learning</h2>
+<p>We’ve made it to the final section of the notes! Before we wrap up, I
+wanted to give you a little taste of <strong>reinforcement
+learning</strong> (<strong>RL</strong>), since it is a hot topic these
+days, and several of the Edelman Prize finalist I pointed you to in
+section <a href="#sec:edelmanPrize">2.3.3</a> included a reinforcement
+learning component.</p>
+<p>This section will be a bit different from the previous ones in that
+I’m not going to teach it to you! As you know, I’m out of town for the
+last week of this class, and I didn’t feel great about giving you
+material while I’m less available to help answer questions, then turning
+around and testing you on it the next week. Consequently, this material
+will not be on the exam. Then, given that and the fact that I haven’t
+loved the lectures I’ve pre-recorded so far, I decided I could let you
+watch some videos that are actually well produced instead.</p>
+<p>What you’ll find below, then, is a series of YouTube videos giving an
+overview of material from <span class="citation"
+data-cites="sutton2018reinforcement">Sutton and Barto (<a
+href="#ref-sutton2018reinforcement"
+role="doc-biblioref">2018</a>)</span>, which is basically the
+authoritative text for reinforcement learning (and also freely available
+in pdf form <a
+href="http://incompleteideas.net/book/the-book-2nd.html">here</a>). It
+starts from Markov decision processes, which is a common theoretical
+framing for RL. The way he approaches it is slightly different from what
+we did in section <a href="#sec:markovDecisionProcesses">7.4</a>, but it
+should still look familiar to you. We’ll also see a different (and more
+practically useful) solution technique for MDPs than the LP method that
+we covered. He’ll then strip away some of the assumptions of MDPs that
+will turn the problem into true RL, and show how these problems are
+approached in practice.</p>
+<p>It’s worth noting - there is a lot of notation! But the videos do a
+good job of pausing and reminding you what things mean. It also gets a
+little more technical that I probably would have in presenting some of
+the ideas. But don’t worry if you get a little confused. Remember, you
+will have no homework or exam questions on this material. I’m just
+hoping it’s a fun extension to some of the topics we’ve already
+learned.</p>
+<h3 data-number="7.5.1" id="what-is-rl"><span
+class="header-section-number">7.5.1</span> What is RL?</h3>
+<p>The following passage from <span class="citation"
+data-cites="sutton2018reinforcement">Sutton and Barto (<a
+href="#ref-sutton2018reinforcement"
+role="doc-biblioref">2018</a>)</span> succinctly describes the general
+problem of reinforcement learning:</p>
+<blockquote>
+<p>Reinforcement learning is learning what to do—how to map situations
+to actions—so as to maximize a numerical reward signal. The learner is
+not told which actions to take, but instead must discover which actions
+yield the most reward by trying them. In the most interesting and
+challenging cases, actions may affect not only the immediate reward but
+also the next situation and, through that, all subsequent rewards.</p>
+</blockquote>
+<p>It has turned out to be an immensely powerful tool in teaching
+computers to complete all sorts of tasks. From playing games to driving
+cars to teaching robots how to walk, a wide range of tasks can be
+learned by RL systems, often surpassing the levels of human experts.</p>
+<h3 data-number="7.5.2"
+id="reinforcement-learning-by-the-book-video-1"><span
+class="header-section-number">7.5.2</span> Reinforcement learning, by
+the book (video 1)</h3>
+<p>In the first video of our series, we’ll get a brief introduction to
+RL, and a formulation of Markov decision processes. His MDP formulation
+is slightly different from ours and uses different notation, but I think
+you’ll still be able to recognize it. One big difference, though, is
+that in the video the objective is not maximizing the long-run expected
+reward per time step. Instead, he uses a notion of <strong>total
+discounted future reward</strong>, which is another common criterion for
+optimizing MDPs. Additionally, there are notions here that we did not
+mention in class - sampled episodes, terminal states, etc. They weren’t
+important for what we learned already in class, but they will play a
+part here.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/NFo9v_yKQXA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<h3 data-number="7.5.3"
+id="bellman-equations-dynamic-programming-generalized-policy-iteration-video-2"><span
+class="header-section-number">7.5.3</span> Bellman equations, dynamic
+programming, generalized policy iteration (video 2)</h3>
+<p>In this video, we’re still just dealing with MDPs. The solution
+method he talks about, <strong>policy iteration</strong>, is a more
+practical way to go about solving MDPs than the linear programming
+method we presented in section <a href="#sec:mdpLp">7.4.6</a>. It also
+uses the notion of <a
+href="https://en.wikipedia.org/wiki/Dynamic_programming"><strong>dynamic
+programming</strong></a>, which is a technique of recursively breaking a
+problem down into simpler sub-problems, and using the optimal solutions
+of the sub-problems to inform the solutions of the larger problems. It
+is a notion that pops up in optimization algorithms for several types of
+problems, so I’m glad to give you some exposure to it here.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/_j6pvGEchWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<h3 data-number="7.5.4"
+id="monte-carlo-and-off-policy-methods-video-3"><span
+class="header-section-number">7.5.4</span> Monte Carlo and off-policy
+methods (video 3)</h3>
+<p>In this video we’re no longer just dealing with MDPs, but learning
+techniques that can be useful for actual reinforcement learning! The
+difference is that we no longer assume any knowledge of the state
+transition probabilities. Therefore the potential rewards from each
+state must be learned by interactions with the environment. That means
+lots of simulations, and an appearance of the important
+<strong>exploration vs. exploitation</strong> tradeoff central to RL
+solution methods. In the end, the video applies what we’ve learned to
+determine optimal play for the casino game blackjack.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/bpUszPiWM7o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<h3 data-number="7.5.5" id="temporal-difference-learning-video-4"><span
+class="header-section-number">7.5.5</span> Temporal difference learning
+(video 4)</h3>
+<p>In this video, we’ll learn what amount to tweaks to the Monte Carlo
+method from the last video. These tweaks can help improve performance of
+the learning process.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/AJiG3ykOxmY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<h3 data-number="7.5.6" id="function-approximation-video-5"><span
+class="header-section-number">7.5.6</span> Function approximation (video
+5)</h3>
+<p>Now we’ll move on to cases where the set of states is no longer
+discrete. Things get a little more abstract from here. But we do see a
+return of our old friend, gradient descent!</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/Vky0WVh_FSk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<h3 data-number="7.5.7" id="policy-gradient-methods-video-6"><span
+class="header-section-number">7.5.7</span> Policy gradient methods
+(video 6)</h3>
+<p>This final video touches on a neat class of algorithms for
+reinforcement learning when the state space is huge.</p>
+<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/e20EY4tFC_Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+<h2 data-number="7.6" id="notes-and-further-reading-3"><span
+class="header-section-number">7.6</span> Notes and further reading</h2>
+<p>Our discussion of Markov chains included only the discrete-time
+version. <span class="citation" data-cites="classText">Hillier and
+Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> also covers a bit on the
+continuous-time version in section 28.8. There are also several classes
+of queueing models that we didn’t cover, if you’re interested you can
+peruse sections 17.7-17.9 in <span class="citation"
+data-cites="classText">Hillier and Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span>. For more extensive coverage on
+stochastic processes and probability models, I highly recommend <span
+class="citation" data-cites="ross2007introduction">Ross (<a
+href="#ref-ross2007introduction"
+role="doc-biblioref">2007</a>)</span>.</p>
+<p>Both <span class="citation" data-cites="classText">Hillier and
+Lieberman (<a href="#ref-classText"
+role="doc-biblioref">2021</a>)</span> and <span class="citation"
+data-cites="ross2007introduction">Ross (<a
+href="#ref-ross2007introduction" role="doc-biblioref">2007</a>)</span>
+also contain sections on simulation, which is a technique for analyzing
+stochastic processes where the interactions and underlying distributions
+make key metrics hard to derive mathematically. We did see something
+like this in the videos in section <a
+href="#sec:reinforcementLearning">7.5</a> (basically anywhere he used
+the words “Monte Carlo”, he was talking about simulation). This is a key
+technique used by OR professionals.</p>
+<p>When it comes to Markov decision processes, the standard reference is
+<span class="citation" data-cites="puterman2014markov">Puterman (<a
+href="#ref-puterman2014markov" role="doc-biblioref">2014</a>)</span>. As
+mentioned already, the standard reference for reinforcement learning is
+<span class="citation" data-cites="sutton2018reinforcement">Sutton and
+Barto (<a href="#ref-sutton2018reinforcement"
+role="doc-biblioref">2018</a>)</span>.</p>
+<p>As far as other courses, the K-State IMSE department offers several
+courses that extend on ideas from this section. You can read up on these
+in the <a
+href="https://catalog.k-state.edu/content.php?catoid=58&amp;navoid=11444">course
+catalog</a>:</p>
+<ul>
+<li>IMSE 643 - Industrial Simulation</li>
+<li>IMSE 865 - Simulation of Industrial Management Systems</li>
+<li>IMSE 866 - Applied Stochastic Processes</li>
+<li>IMSE 867 - Stochastic Programming</li>
+<li>IMSE 971 - Industrial Queuing Processes</li>
+</ul>
 <h1 data-number="8" id="appendix"><span
 class="header-section-number">8</span> Appendix</h1>
 <h2 data-number="8.1" id="sec:symbols"><span
@@ -14914,6 +15123,13 @@ href="https://api.semanticscholar.org/CorpusID:117965841">https://api.semanticsc
 <span>“Mittelmann Benchmarks.”</span> n.d. <a
 href="https://plato.asu.edu/bench.html">https://plato.asu.edu/bench.html</a>.
 </div>
+<div id="ref-puterman2014markov" class="csl-entry"
+role="doc-biblioentry">
+Puterman, M. L. 2014. <em>Markov Decision Processes: Discrete Stochastic
+Dynamic Programming</em>. Wiley Series in Probability and Statistics.
+Wiley. <a
+href="https://books.google.com/books?id=VvBjBAAAQBAJ">https://books.google.com/books?id=VvBjBAAAQBAJ</a>.
+</div>
 <div id="ref-resnickAdventures" class="csl-entry"
 role="doc-biblioentry">
 Resnick, S. I. 1992. <em>Adventures in Stochastic Processes</em>.
@@ -14930,6 +15146,13 @@ href="https://books.google.com/books?id=1uxBwhAb_zYC">https://books.google.com/b
 Spivak, M. 2006. <em>Calculus</em>. Calculus. Cambridge University
 Press. <a
 href="https://books.google.com/books?id=7JKVu_9InRUC">https://books.google.com/books?id=7JKVu_9InRUC</a>.
+</div>
+<div id="ref-sutton2018reinforcement" class="csl-entry"
+role="doc-biblioentry">
+Sutton, R. S., and A. G. Barto. 2018. <em>Reinforcement Learning, Second
+Edition: An Introduction</em>. Adaptive Computation and Machine Learning
+Series. MIT Press. <a
+href="http://incompleteideas.net/book/the-book-2nd.html">http://incompleteideas.net/book/the-book-2nd.html</a>.
 </div>
 <div id="ref-tspPic" class="csl-entry" role="doc-biblioentry">
 <span>“Waterloo TSP.”</span> n.d. <a
