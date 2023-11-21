@@ -272,3 +272,5 @@ So it seems that the best randomized policy is actually a stationary policy as w
 The end result is that for each state $i$, exactly one decision $k$ will have $y_{ik}>0$. Thus $\pi_i=y_{ik}$ for that $k$, meaning that $D_{ik}=y_{ik}/\pi_i=1$ for that $k$ and 0 for all other decisions. In other words, any policy obtained via the simplex method will be a deterministic one. This means that allowing randomized policies cannot improve the long-run cost per unit time, which is an interesting result.
 
 [^assumedIrreducible]: We won't work through it, but it will follow from the fact that we assumed the induced probability matrices were all irreducible.
+
+Before we wrap up the section, it should be noted that this LP method (while better than full enumeration) is not generally the most efficient way to solve large MDPs. We'll see a better method while talking about reinforcement learning.
