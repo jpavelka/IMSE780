@@ -439,25 +439,25 @@ Let's use what we know to find the steady-state probabilities for the weather ex
 
 $$
 \begin{align*}
-\begin{bmatrix}\pi_1 & \pi_2\end{bmatrix}\begin{bmatrix}0.8 & 0.2 \\ 0.6 & 0.4\end{bmatrix}&=\begin{bmatrix}\pi_1 & \pi_2\end{bmatrix} \\
+\begin{bmatrix}\pi_0 & \pi_1\end{bmatrix}\begin{bmatrix}0.8 & 0.2 \\ 0.6 & 0.4\end{bmatrix}&=\begin{bmatrix}\pi_0 & \pi_1\end{bmatrix} \\
 &\Updownarrow \\
-\begin{bmatrix}0.8\pi_1 + 0.6\pi_2 & 0.2\pi_1 + 0.4\pi_2\end{bmatrix}&=\begin{bmatrix}\pi_1 & \pi_2\end{bmatrix}
+\begin{bmatrix}0.8\pi_0 + 0.6\pi_1 & 0.2\pi_0 + 0.4\pi_1\end{bmatrix}&=\begin{bmatrix}\pi_0 & \pi_1\end{bmatrix}
 \end{align*}
 $$
 
-Since one of these is redundant, we can choose one to throw away (we'll just say the first one) and solve simultaneously with the condition $\pi_1 + \pi_2 = 1$. So we need to solve the system:
+Since one of these is redundant, we can choose one to throw away (we'll just say the first one) and solve simultaneously with the condition $\pi_0 + \pi_1 = 1$. So we need to solve the system:
 
 $$
 \begin{align*}
-\pi_1 + \pi_2 &= 1 \\
-0.2\pi_1 + 0.4\pi_2&=\pi_2
+\pi_0 + \pi_1 &= 1 \\
+0.2\pi_0 + 0.4\pi_1&=\pi_1
 \end{align*}
 $$
 
 Which works out to
 
 $$
-\pi_1=0.75, \quad \pi_2=0.25
+\pi_0=0.75, \quad \pi_1=0.25
 $$
 
 So the steady-state vector is $\boldsymbol\pi=[0.75, 0.25]$.
