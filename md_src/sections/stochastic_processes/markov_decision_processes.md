@@ -67,7 +67,10 @@ Notice the change from the transition matrix in the example definition, since we
 How do we evaluate this policy? As stated, our objective is to minimize the long-run expected average cost per time step. And we already learned how to calculate that in +@sec:markovLongRunAverageCost: First we find the steady-state probabilities $\boldsymbol\pi$ by solving for
 
 $$
-\boldsymbol\pi\mathbf{P}=\boldsymbol\pi
+\begin{align*}
+\boldsymbol\pi\mathbf{P}&=\boldsymbol\pi \\
+\sum_{i=0}^M\pi_i&=1
+\end{align*}
 $$
 
 (where $\mathbf{P}$ is the transition matrix). In this case, that comes to
