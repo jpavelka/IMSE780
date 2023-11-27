@@ -1,5 +1,7 @@
 ## Markov decision processes {#sec:markovDecisionProcesses}
 
+<div class='lectureVideoEmbed' video-id='bf1977aad12240749ad6a736e4065b501d' video-date='2023-11-27'>Intro to MDPs, plus some important upcoming dates.</div>
+
 Up to this point in our exploration of stochastic processes, we've only been _describing_ the evolution of random processes and probabilities around certain outcomes. We've had no agency, letting random dynamics control all of the outcomes. In this chapter, we'll find ourselves trying to make decisions in order to influence a random process to attain desirable outcomes. In particular, we will assume that we're interacting with a system whose dynamics are explained by a Markov chain. However, at any given state, we are allowed to choose between a given set of actions to take. Whatever action we choose will bring us some kind of cost or reward, while also affecting the transition probabilities that determine the next state. Our goal will be to choose a policy (set of actions to take in each state) that will net us the lowest long-term costs (or highest long-term rewards). Such a process is called a **Markov decision process** (**MDP**).
 
 ### Example {#sec:mdpExample}
