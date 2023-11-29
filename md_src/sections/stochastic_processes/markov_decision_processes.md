@@ -195,7 +195,7 @@ $$
 So each $D_{ik}$ will be calculated as
 
 $$
-D_{ik} = \frac{p_{ik}}{\pi_i}
+D_{ik} = \frac{y_{ik}}{\pi_i}
 $$
 
 Given $y_{ik}$ as our variables, what should the objective value be? We want to minimize the long-run average cost per unit time, which in terms of the variables would be written as:
@@ -272,7 +272,7 @@ D=\begin{bmatrix}
 \end{bmatrix}
 $$
 
-So it seems that the best randomized policy is actually a stationary policy as well! It turns out that this is not a coincidence. Let's examine the formulation we created. It contains $M+2$ constraints, but actually (for the same reason as we saw when calculating steady-state probabilities in +@sec:markovSteadyState) one of these constraints will be redundant. So in effect the model has only $M+1$ rows. This means that when the problem is solved via the simplex method, there can be only $M+1$ variables with non-zero values. Furthermore, it can be shown[^assumedIrreducible] that for any $i$, $y_{ik}>0$ must hold for some $k$.
+So it seems that the best randomized policy is actually a deterministic policy as well! It turns out that this is not a coincidence. Let's examine the formulation we created. It contains $M+2$ constraints, but actually (for the same reason as we saw when calculating steady-state probabilities in +@sec:markovSteadyState) one of these constraints will be redundant. So in effect the model has only $M+1$ rows. This means that when the problem is solved via the simplex method, there can be only $M+1$ variables with non-zero values. Furthermore, it can be shown[^assumedIrreducible] that for any $i$, $y_{ik}>0$ must hold for some $k$.
 
 The end result is that for each state $i$, exactly one decision $k$ will have $y_{ik}>0$. Thus $\pi_i=y_{ik}$ for that $k$, meaning that $D_{ik}=y_{ik}/\pi_i=1$ for that $k$ and 0 for all other decisions. In other words, any policy obtained via the simplex method will be a deterministic one. This means that allowing randomized policies cannot improve the long-run cost per unit time, which is an interesting result.
 
