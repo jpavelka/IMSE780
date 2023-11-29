@@ -14012,7 +14012,7 @@ since</p>
 <p>So each <span class="math inline">D_{ik}</span> will be calculated
 as</p>
 <p><span class="math display">
-D_{ik} = \frac{p_{ik}}{\pi_i}
+D_{ik} = \frac{y_{ik}}{\pi_i}
 </span></p>
 <p>Given <span class="math inline">y_{ik}</span> as our variables, what
 should the objective value be? We want to minimize the long-run average
@@ -14108,9 +14108,9 @@ D=\begin{bmatrix}
 0 &amp; 0 &amp; 1
 \end{bmatrix}
 </span></p>
-<p>So it seems that the best randomized policy is actually a stationary
-policy as well! It turns out that this is not a coincidence. Let’s
-examine the formulation we created. It contains <span
+<p>So it seems that the best randomized policy is actually a
+deterministic policy as well! It turns out that this is not a
+coincidence. Let’s examine the formulation we created. It contains <span
 class="math inline">M+2</span> constraints, but actually (for the same
 reason as we saw when calculating steady-state probabilities in
 section <a href="#sec:markovSteadyState">7.2.6</a>) one of these
