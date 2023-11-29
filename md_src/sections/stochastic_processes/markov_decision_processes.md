@@ -105,6 +105,8 @@ But for now, let's discuss how we might find the best possible stationary, deter
 
 ### Randomized policies
 
+<div class='lectureVideoEmbed' video-id='410db3addbb440b4a4752921e7e90dc91d' video-date='2023-11-29'>Solving MDPs via linear programming</div>
+
 The last section gave us a simple way to find the best stationary, deterministic policy for an MDP. But it is of limited usefulness, because most practical MDPs will have far too many policies for enumeration to be practical. For our next solution method, we'll need to extend our notion of a policy. In particular, we'll let our decision at any given state be **randomized**, i.e. the output of some random variable. So instead of making decision $d_i\in\{1,2,...,K\}$ for each state $i$, we'll instead define probabilities $D_{ik}$ for each state $i\in\{0,1,...,M\}$ and $k\in\{1,2,...,K\}$ such that
 
 $$
@@ -279,3 +281,7 @@ The end result is that for each state $i$, exactly one decision $k$ will have $y
 [^assumedIrreducible]: We won't work through it, but it will follow from the fact that we assumed the induced probability matrices were all irreducible.
 
 Before we wrap up the section, it should be noted that this LP method (while better than full enumeration) is not generally the most efficient way to solve large MDPs. We'll see a better method while talking about reinforcement learning.
+
+<!-- ### Another example
+
+In the following notebook, we work through another example MDP (taken from @classText).   -->
