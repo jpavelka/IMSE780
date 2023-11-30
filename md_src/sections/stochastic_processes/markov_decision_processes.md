@@ -282,6 +282,8 @@ The end result is that for each state $i$, exactly one decision $k$ will have $y
 
 Before we wrap up the section, it should be noted that this LP method (while better than full enumeration) is not generally the most efficient way to solve large MDPs. We'll see a better method while talking about reinforcement learning.
 
-<!-- ### Another example
+### Another example
 
-In the following notebook, we work through another example MDP (taken from @classText).   -->
+In the following notebook, we work through another example MDP (taken from @classText).
+
+{colabGist:13kjqGVOOJcPfWOgQHDiqQMGNElBxnM2t,dafbdbce4fa3b3421c15e0816d92c968}
