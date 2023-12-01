@@ -284,6 +284,8 @@ Before we wrap up the section, it should be noted that this LP method (while bet
 
 ### Another example
 
+<div class='lectureVideoEmbed' video-id='05cfd15aecef419284d881a6c19282e81d' video-date='2023-12-01'>One more MDP example</div>
+
 In the following notebook, we work through another example MDP (taken from @classText).
 
 {colabGist:13kjqGVOOJcPfWOgQHDiqQMGNElBxnM2t,dafbdbce4fa3b3421c15e0816d92c968}
