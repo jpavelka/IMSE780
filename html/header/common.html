@@ -9,7 +9,7 @@
             document.querySelector("#loader").style.display = "none";
             document.querySelector(".navbar").style.display = "flex";
             document.querySelector("#main").style.display = "block";
-            if (getUrlParameter('classmode') !== 'false') {
+            if (getUrlParameter('classmode') !== 'false' && false) {  // turning off classmode, remove the "&& false" bit to enable again
                 document.querySelector("#classModeDiv").style.visibility = "visible";
             }
         }
