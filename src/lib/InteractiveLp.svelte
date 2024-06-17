@@ -6,6 +6,7 @@
     import ChoosePoints from "./drawing/ChoosePoints.svelte";
     import Constraint from "./drawing/Constraint.svelte";
     import FeasibleRegion from "./drawing/FeasibleRegion.svelte";
+    import ShowIntegerPoints from "./drawing/ShowIntegerPoints.svelte";
     import ShowVertices from "./drawing/ShowVertices.svelte";
     import { checkPtFeasible, getConstraintInfo, getEdgeAndFeasibleIntersections, getVertices, pixToCoord } from "./drawing/utils";
 
@@ -21,6 +22,8 @@
     export let choosePoints = false;
     export let chooseObjVals = false;
     export let showVertices = false;
+    export let showIntegerPoints = false;
+    export let feasibleRegionText = true;
 
     const constants = {
         h: svgHeight,
@@ -59,7 +62,7 @@
             {#each constraintInfo.filter(cInfo => !cInfo.nonNegConstraint) as cInfo}
                 <Constraint {constants} {cInfo} />
             {/each}
-            <FeasibleRegion {constants} {constraintInfo}/>
+            <FeasibleRegion {constants} {constraintInfo} {feasibleRegionText}/>
             <Axes {constants} />
             {#if choosePoints}
                 <ChoosePoints {constants} pt={pointToShow} feasible={pointFeasible} constraintInfo={constraintInfo} />
@@ -69,6 +72,9 @@
             {/if}
             {#if showVertices}
                 <ShowVertices {constants} {vertices} />
+            {/if}
+            {#if showIntegerPoints}
+                <ShowIntegerPoints {constants} {constraintInfo}/>
             {/if}
         </svg>
         {#if choosePoints}

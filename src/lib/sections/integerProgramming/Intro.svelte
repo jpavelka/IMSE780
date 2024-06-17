@@ -6,6 +6,7 @@
     import Math from "$lib/Math.svelte";
     import MathDisp from "$lib/MathDisp.svelte";
     import SectionRef from "$lib/SectionRef.svelte";
+    import ShowIntegerPoints from "$lib/drawing/ShowIntegerPoints.svelte";
 </script>
 
 <Heading level=1 refId=integerProgramming>Integer programming</Heading>
@@ -89,7 +90,7 @@ A MIP is more flexible that a pure IP, but much of the theory we cover will be e
     We've shown this 2-dimensional IP in a plot below. Shaded in gray is the feasible region to the problem's LP relaxation. The plotted points are all the feasible solutions to the IP, i.e. the points inside the LP relaxation's feasible region which are also integer. In this case, you can verify graphically that the optimal solution to the LP relaxation is <Math>(x_1, x_2)=(2.5, 4.5)</Math> with an objective value of 75.
 </BodyText>
 
-<!-- todo: fix this -->
+<!-- todo: objective lines are not coming out right -->
 <InteractiveLp
     inequalities={[
         [-7, 5, "l", 5, {'textPlacement': [3.25, 5.25]}],
@@ -101,10 +102,10 @@ A MIP is more flexible that a pure IP, but much of the theory we cover will be e
     x2Min={-0.99}
     x2Max={5.99}
     chooseObjVals={true}
+    showIntegerPoints={true}
+    feasibleRegionText={false}
     refId=roundingNotEnough
 ><span slot=caption>Demonstrating the perils of rounding for IP solutions.</span></InteractiveLp>
-<!-- todo: new svg -->
-<!-- <svg width=350 height=350 class="lpDraw" base="roundingIp" altArgs='{"chooseObjVals": true}'> Sorry, your browser does not support inline SVG.</svg> -->
 
 <BodyText>
     Say we'd like to find our integer solution by simply rounding the optimal LP relaxation solution. The first difficulty would be determining which way (up vs. down) to round the numbers. But another, more fundamental difficulty is that there is no guarantee that <em>any</em> rounded solution will be feasible. Indeed, that is the case we find ourselves in here, as each of the rounded solutions <Math>(2, 4), (2, 5), (3, 4)</Math>, and <Math>(3, 5)</Math> are infeasible<Footnote>I should point out that, in a practical application, there is often some wiggle room in the (sometimes shoddily estimated) problem data such that you could fudge a little and make one of these rounded solutions work. This may or may not be an option depending on your scenario.</Footnote>.

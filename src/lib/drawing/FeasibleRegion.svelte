@@ -4,6 +4,7 @@
 
     export let constants;
     export let constraintInfo;
+    export let feasibleRegionText;
     
     const vertices = getVertices(constraintInfo.concat(getConstraintInfo([
         [1, 0, 'l', constants.x1Max],
@@ -20,6 +21,8 @@
 
 {#if vertices.length > 0}
     <polygon points={pixPts.map(pix => `${pix[0]},${pix[1]}`).join(' ')} stroke='black' fill='#ddd' />
-    <text x={centerOfMass[0] - 25} y={centerOfMass[1]}>Feasible</text>
-    <text x={centerOfMass[0] - 25} y={centerOfMass[1] + 20}>Region</text>
+    {#if feasibleRegionText}
+        <text x={centerOfMass[0] - 25} y={centerOfMass[1]}>Feasible</text>
+        <text x={centerOfMass[0] - 25} y={centerOfMass[1] + 20}>Region</text>
+    {/if}
 {/if}

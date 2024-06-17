@@ -8,7 +8,6 @@ function customPP() {
 			if (filename.search('src/lib/sections') < 0) {
 				return
 			}
-			console.log(filename)
 			const regexpStart = '<Math[^>]*>'
 			const regexpEnd = '</Math[^>]*>'
 			let converted = [];

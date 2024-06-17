@@ -159,13 +159,14 @@ const getEdgeAndFeasibleIntersections = (constants, constraintInfo, objective, o
 }
 
 const getPlotStartEnd = (cInfo: Object, constants: Object) => {
-    return !!cInfo.x1Intercept && !!cInfo.x2Intercept ? (
-        [[cInfo.x1Intercept, 0], [0, cInfo.x2Intercept]]
-    ) : !!cInfo.x1Intercept ? (
-        [[cInfo.x1Intercept, 0], [cInfo.x1Intercept, constants.x2Max]]
-    ) : !!cInfo.x2Intercept ? (
-        [[0, cInfo.x2Intercept], [constants.x1Max, cInfo.x2Intercept]]
-    ) : [undefined, undefined]
+    const uniqueEdgePoints = [
+        [1, 0, 0], [0, 1, 0], [1, 0, -constants.x1Max], [0, 1, -constants.x2Max]
+    ].map(x => {
+        return getIntersection(cInfo.x1Coeff, cInfo.x2Coeff, -cInfo.rhs, x[0], x[1], x[2]);
+    }).filter(x => !!x).filter(x => {
+        return x[0] >= 0 && x[0] <= constants.x1Max && x[1] >= 0 && x[1] <= constants.x2Max
+    })
+    return [...new Set(uniqueEdgePoints.map(x => x.join(',')))].map(x => x.split(',').map(s => parseFloat(s)))
 }
 
 export { coordToPix, pixToCoord, getConstraintInfo, getVertices, checkPtFeasible, getPlotStartEnd, getIntersection, getEdgeAndFeasibleIntersections }
