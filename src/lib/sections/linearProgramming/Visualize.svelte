@@ -201,7 +201,7 @@
 
 <BodyText>
     Let see some examples of the other scenarios we defined above. In each case,
-    we'll take our initial model +@eq:prototypeLp and modify it to show the
+    we'll take our initial model <EquationRef refId=prototypeLp/> and modify it to show the
     desired property.
 </BodyText>
 

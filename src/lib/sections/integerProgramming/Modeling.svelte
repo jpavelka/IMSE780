@@ -11,6 +11,9 @@
     import SectionRef from "$lib/SectionRef.svelte";
     
     import ip1Data from "$lib/images/ip-example-1-data.png";
+    import ip2Data from "$lib/images/ip-example-2-data.png";
+    import ip3Data from "$lib/images/ip-example-3-data.png";
+    import subtours from "$lib/images/subtours.png";
 </script>
 
 <Heading level=2 refId=ipModeling>IP modeling</Heading>
@@ -258,7 +261,7 @@ Here, <Math>M</Math><Footnote>This is the second time we've seen <Math>M</Math> 
 <Heading level=3 refId=ipWordProblems>Example word problems</Heading>
 
 <BodyText>
-    Here we present the sample scenarios in section 12.4 of @classText, and talk about how to model each scenario. Each formulation will require some tricks with binary variables.
+    Here we present the sample scenarios in section 12.4 of <CitationRef refId=classText/>, and talk about how to model each scenario. Each formulation will require some tricks with binary variables.
 </BodyText>
 
 <Heading level=4 refId=ipResourceAllocRestrict>Resource allocation with extra restrictions</Heading>
@@ -316,17 +319,20 @@ Here, <Math>M</Math><Footnote>This is the second time we've seen <Math>M</Math> 
 
 <Heading level=4 refId=ipViolateProportion>Violating proportionality</Heading>
 
-<!--
+<BlockQuote>
+    <BodyText>
+        The SUPERSUDS CORPORATION is developing its marketing plans for next year’s new products. For three of these products, the decision has been made to purchase a total of five TV spots for commercials on national television networks. The problem we will focus on is how to allocate the five spots to these three products, with a maximum of three spots (and a minimum of zero) for each product.
+    </BodyText>
+    <BodyText>
+        The following table shows the estimated impact of allocating zero, one, two, or three spots to each product. This impact is measured in terms of the profit (in units of millions of dollars) from the additional sales that would result from the spots, considering also the cost of producing the commercial and purchasing the spots. The objective is to allocate five spots to the products so as to maximize the total profit.
+    </BodyText>
+</BlockQuote>
 
+<Figure refId="ipEx2">
+    <img src={ip2Data} alt="IP example" />
+    <span slot=caption>Data for proportionality violation sample IP, from <CitationRef refId=classText/></span>
+</Figure>
 
-
-
-
-> The SUPERSUDS CORPORATION is developing its marketing plans for next year’s new products. For three of these products, the decision has been made to purchase a total of five TV spots for commercials on national television networks. The problem we will focus on is how to allocate the five spots to these three products, with a maximum of three spots (and a minimum of zero) for each product.
->
-> The following table shows the estimated impact of allocating zero, one, two, or three spots to each product. This impact is measured in terms of the profit (in units of millions of dollars) from the additional sales that would result from the spots, considering also the cost of producing the commercial and purchasing the spots. The objective is to allocate five spots to the products so as to maximize the total profit.
-
-![Data for the Supersuds Corporation problem [@classText]](images/ip-example-2-data.png)
 <BodyText>
     Your first thought for modeling this may be to have integer variables <Math>x_1, x_2, x_3</Math>, with the value of <Math>x_i</Math> denoting the number of TV spots allocated to product <Math>i</Math>. But this won't work, because the objective violates the so-called <em>proportionality assumption</em> for linear functions, i.e. that each extra unit of a variable affects the value of the function by the same amount. That is not true here, e.g. for product 1 doubling from 1 spot to 2 does not double the profit.
 </BodyText>
@@ -334,39 +340,46 @@ Here, <Math>M</Math><Footnote>This is the second time we've seen <Math>M</Math> 
     Instead, let's define a separate binary variable for each product and each possible selection of TV spots for the product. So we'll have a binary variables <Math>y_{ij}</Math> such that <Math>y_{ij}=1</Math> if and only if we decide on <Math>j</Math> TV spots for product <Math>i</Math>, and otherwise <Math>y_{ij}=0</Math>. With this setup, our model would look like:
 </BodyText>
 
-<div class='mathSmall'>
-<MathDisp>\begin{align*}
-\max && y_{11} + 3y_{12} + 3y_{13} + 2y_{22} + 3y_{23} - y_{31} + 2y_{32} + 4y_{33}& \\
-\st  && y_{11} + y_{12} + y_{13} & \leq 1 \\
-     && y_{21} + y_{22} + y_{23} & \leq 1 \\
-     && y_{31} + y_{32} + y_{33} & \leq 1 \\
-     && y_{11} + 2y_{12} + 3y_{13} + y_{21} + 2y_{22} + 3y_{23} + y_{31} + 2y_{32} + 3y_{33} & \leq 5 \\
-     && y_{ij} & \in \{0,1\} \ \ \forall\ i,j
-\end{align*}
-</MathDisp></div>
-<BodyText>
-    The objective is straightforward, coming directly from the numbers in the table. As for the constraints, lets start with the first three. We shouldn't have something like, say, both <Math>y_{11}=1</Math> and <Math>y_{12}=1</Math>, since it doesn't make sense to allocate both <Math>1</Math> and <Math>2</Math> spots for the same product. At most one of <Math>y_{i1}, y_{i2}</Math>, or <Math>y_{i3}</Math> can be chosen which is why we've included the 
-</BodyText>
-
-<MathDisp>y_{i1} + y_{i2} + y_{i3} \leq 1
+<MathDisp fontSize=0.9>\begin{align*}
+    \max && y_{11} + 3y_{12} + 3y_{13} + 2y_{22} + 3y_{23} - y_{31} + 2y_{32} + 4y_{33}& \\
+    \st  && y_{11} + y_{12} + y_{13} & \leq 1 \\
+         && y_{21} + y_{22} + y_{23} & \leq 1 \\
+         && y_{31} + y_{32} + y_{33} & \leq 1 \\
+         && y_{11} + 2y_{12} + 3y_{13} + y_{21} + 2y_{22} + 3y_{23} + y_{31} + 2y_{32} + 3y_{33} & \leq 5 \\
+         && y_{ij} & \in \{0,1\} \ \ \forall\ i,j
+    \end{align*}
 </MathDisp>
-constraints.
+
+<BodyText>
+    The objective is straightforward, coming directly from the numbers in the table. As for the constraints, lets start with the first three. We shouldn't have something like, say, both <Math>y_{11}=1</Math> and <Math>y_{12}=1</Math>, since it doesn't make sense to allocate both <Math>1</Math> and <Math>2</Math> spots for the same product. At most one of <Math>y_{i1}, y_{i2}</Math>, or <Math>y_{i3}</Math> can be chosen which is why we've included the
+    <MathDisp>
+        y_{i1} + y_{i2} + y_{i3} \leq 1
+    </MathDisp>
+    constraints.
+</BodyText>
 <BodyText>
     What about the final (functional) constraint? The left-hand side of the constraint sums up the total number of TV spots that are allocated. So the reason that, for example, we see the term <Math>3y_{13}</Math> is that selecting <Math>y_{13}=1</Math> allocates 3 spots to product 1, thus making use of 3 of the available 5 slots. Then the 5 on the right-hand side enforces that at most 5 TV spots are allocated overall.
 </BodyText>
 
 <Heading level=4 refId=ipCoverChar>Covering all characteristics</Heading>
 
+<BlockQuote>
+    <BodyText>
+        SOUTHWESTERN AIRWAYS needs to assign its crews to cover all its upcoming flights. We will focus on the problem of assigning three crews based in San Francisco to the flights listed in the first column of the following table. The other 12 columns show the 12 feasible sequences of flights for a crew. (The numbers in each column indicate the order of the flights.) Exactly three of the sequences need to be chosen (one per crew) in such a way that every flight is covered. (It is permissible to have more than one crew on a flight, where the extra crews would fly as passengers, but union contracts require that the extra crews would still need to be paid for their time as if they were working.) The cost of assigning a crew to a particular sequence of flights is given (in thousands of dollars) in the bottom row of the table. The objective is to minimize the total cost of the three crew assignments that cover all the flights.
+    </BodyText>
+</BlockQuote>
 
-> SOUTHWESTERN AIRWAYS needs to assign its crews to cover all its upcoming flights. We will focus on the problem of assigning three crews based in San Francisco to the flights listed in the first column of the following table. The other 12 columns show the 12 feasible sequences of flights for a crew. (The numbers in each column indicate the order of the flights.) Exactly three of the sequences need to be chosen (one per crew) in such a way that every flight is covered. (It is permissible to have more than one crew on a flight, where the extra crews would fly as passengers, but union contracts require that the extra crews would still need to be paid for their time as if they were working.) The cost of assigning a crew to a particular sequence of flights is given (in thousands of dollars) in the bottom row of the table. The objective is to minimize the total cost of the three crew assignments that cover all the flights.
+<Figure refId="ipEx3">
+    <img src={ip3Data} alt="IP example" />
+    <span slot=caption>Data for characteristic covering sample IP, from <CitationRef refId=classText/></span>
+</Figure>
 
-![Data for the Southwestern Airways problem [@classText]](images/ip-example-3-data.png)
 <BodyText>
     We can model this problem in the following way, with the binary variable <Math>x_i=1</Math> if we assign sequence <Math>i</Math> to some crew, and otherwise <Math>x_i=0</Math>:
 </BodyText>
 
-<div class='mathSmall'>
-<MathDisp>\begin{align*}
+<MathDisp fontSize=0.9>
+\begin{align*}
 \min && 2x_1 + 3x_2 + 4x_3 + 6x_4 + 7x_5 + 5x_6 & \\
      && + 7x_7 + 8x_8 + 9x_9 + 9x_{10} + 8x_{11} + 9x_{12}& \\
 \st  && x_1 + x_4 + x_7 + x_{10} & \geq 1 \qquad  \text{(SF to LA)} \\
@@ -383,7 +396,8 @@ constraints.
      && \sum_{j=1}^{12} x_j & = 3 \qquad \text{(3 crews)} \\
      && x_j & \in \{0,1\} \ \ \ \forall\ j
 \end{align*}
-</MathDisp></div>
+</MathDisp>
+
 <BodyText>
     The objective function is straightforward: if we assign one of the sequences to some crew, then we must pay the costs according to the bottom row of the table. Our constraints are that we are required to cover every flight. Take the first constraint for example. This is the constraint that enforces that we must have some crew flying from SF to LA. Which sequences contain that flight? From the first row in the table, we see this leg is included in sequences 1, 4, 7, and 10. So we are required to select at least one of those sequences to make sure there is a crew flying from SF to LA, hence we have the constraint <Math>x_1 + x_4 + x_7 + x_{10} \geq 1</Math>.
 </BodyText>
@@ -393,56 +407,53 @@ constraints.
 
 <Heading level=3 refId=ipModelDataSep>Model/data separation</Heading>
 
-<div class='lectureVideoEmbed' video-id='ca5c6f5b711b4646ac87678cf72beac21d' video-date='2023-09-25'>Even more IP modeling, this time with model/data separation.</div>
 <BodyText>
-    The above ad-hoc modeling is useful, but in real applications we often have to solve different, but similarly structured models on some regular schedule. We'd prefer not to write a new model from scratch every time we need to solve one. As we discussed in <SectionRef refId=lpModelDataSep/>, the best practice is to write[^writeComputerCode] a base, general model which encodes all the logic for the problem, then inject the relevant problem data when an instance needs to be solved.
+    The above ad-hoc modeling is useful, but in real applications we often have to solve different, but similarly structured models on some regular schedule. We'd prefer not to write a new model from scratch every time we need to solve one. As we discussed in <SectionRef refId=lpModelDataSep/>, the best practice is to write<Footnote>Ideally in computer code.</Footnote> a base, general model which encodes all the logic for the problem, then inject the relevant problem data when an instance needs to be solved.
 </BodyText>
 
-[^writeComputerCode]: Ideally in computer code.
 <BodyText>
     To that end, in this section we'll present some generalized IP formulations for common OR problems.
 </BodyText>
 
 <Heading level=4 refId=ipKnapsack>Knapsack</Heading>
 <BodyText>
-    We'll start with a simple one, the [knapsack problem](https://en.wikipedia.org/wiki/Knapsack_problem). The classical framing is something like this: you're going on a camping trip. The weight you can carry in your backpack is limited to <Math>W\in\R</Math>. There are <Math>n</Math> items you can take with you, and for each <Math>j\in\{1,2,\dots,n\}</Math>, item <Math>j</Math> has some weight <Math>w_j</Math> and some value to you <Math>v_j</Math>. The goal is to select which items to take with you, subject to the weight constraint, such that the total value of the items taken is maximized.
+    We'll start with a simple one, the <a href='https://en.wikipedia.org/wiki/Knapsack_problem'>knapsack problem</a>. The classical framing is something like this: you're going on a camping trip. The weight you can carry in your backpack is limited to <Math>W\in\R</Math>. There are <Math>n</Math> items you can take with you, and for each <Math>j\in\{1,2,\dots,n\}</Math>, item <Math>j</Math> has some weight <Math>w_j</Math> and some value to you <Math>v_j</Math>. The goal is to select which items to take with you, subject to the weight constraint, such that the total value of the items taken is maximized.
 </BodyText>
 <BodyText>
     We can model this problem with binary variables <Math>x_j</Math>, <Math>j\in\{1,2,\dots,n\}</Math> so that <Math>x_j=1</Math> if we choose to take item <Math>j</Math>, and otherwise <Math>x_j=0</Math>. The formulation looks like:
 </BodyText>
 
-<MathDisp>\begin{align*}
-\max&& \sum_{j=1}^n v_jx_j& \\
-\st&& \sum_{j=1}^n w_jx_j&\leq W \\
-&&x_j&\in\{0, 1\} \ \ \forall \ j\in\{1,2,\dots,n\}
-\end{align*}
+<MathDisp>
+    \begin{align*}
+    \max&& \sum_{j=1}^n v_jx_j& \\
+    \st&& \sum_{j=1}^n w_jx_j&\leq W \\
+    &&x_j&\in\{0, 1\} \ \ \forall \ j\in\{1,2,\dots,n\}
+    \end{align*}
 </MathDisp>
 
 <Heading level=4 refId=ipSetCover>Set covering</Heading>
 <BodyText>
-    The [set covering problem](https://en.wikipedia.org/wiki/Set_cover_problem) is another classic OR problem with several applications (the Southwestern Airlines crew scheduling problem in <SectionRef refId=ipWordProblems/> was one example). In abstract terms, the idea is that there is some set of items <Math>S</Math>, and some number of <Math>n</Math> subsets[^newNotationSubset] <Math>S_j\subseteq S</Math>, <Math>j\in\{1,2,\dots,n\}</Math>. The idea is to choose some collection of the subsets so that every member of <Math>S</Math> is also present in at least one subset.
+    The <a href='https://en.wikipedia.org/wiki/Set_cover_problem'>set covering problem</a> is another classic OR problem with several applications (the Southwestern Airlines crew scheduling problem in <SectionRef refId=ipCoverChar/> was one example). In abstract terms, the idea is that there is some set of items <Math>S</Math>, and some number of <Math>n</Math> subsets<Footnote>New notation: when we write <Math>S'\subseteq S</Math>, we mean to say that <Math>S'</Math> is a subset of <Math>S</Math>. That is, <Math>S</Math> and <Math>S'</Math> are both sets, and every element of <Math>S'</Math> is also an element of <Math>S</Math>.</Footnote> <Math>S_j\subseteq S</Math>, <Math>j\in\{1,2,\dots,n\}</Math>. The idea is to choose some collection of the subsets so that every member of <Math>S</Math> is also present in at least one subset.
 </BodyText>
 
-[^newNotationSubset]: New notation: when we write <Math>S'\subseteq S</Math>, we mean to say that <Math>S'</Math> is a subset of <Math>S</Math>. That is, <Math>S</Math> and <Math>S'</Math> are both sets, and every element of <Math>S'</Math> is also an element of <Math>S</Math>.
 <BodyText>
-    Ok, that was a mouthful, let's try to explain with an example. Remember the airline crew scheduling problem referenced above? In that case, the base set <Math>S</Math> was the set of flight segments that the airline needed to fly (SF to LA, Chicago to Denver, etc.). The <Math>S_j</Math> subsets were the feasible flight sequences, like sequence 6 from the table that consisted of flying from SF to Seattle, then Seattle to LA, and finally LA to SF. Our job was to select the flight sequences such that every flight segment was flown at least once[^notQuiteSetCover].
+    Ok, that was a mouthful, let's try to explain with an example. Remember the airline crew scheduling problem referenced above? In that case, the base set <Math>S</Math> was the set of flight segments that the airline needed to fly (SF to LA, Chicago to Denver, etc.). The <Math>S_j</Math> subsets were the feasible flight sequences, like sequence 6 from the table that consisted of flying from SF to Seattle, then Seattle to LA, and finally LA to SF. Our job was to select the flight sequences such that every flight segment was flown at least once<Footnote>Plus an extra constraint on the number of flight segments to choose - this constraint is not included in the classical set covering problem.</Footnote>.
 </BodyText>
 
-[^notQuiteSetCover]: Plus an extra constraint on the number of flight segments to choose - this constraint is not included in the classical set covering problem.
 <BodyText>
     Let's give one more example to motivate our formulation. Say a new city is deciding where to place their fire stations. They require that every neighborhood in the city can be reached in under 5 minutes by at least one fire station. There are <Math>n</Math> potential building sites for the new stations, and <Math>m</Math> different neighborhoods in the city (so <Math>S=\{1,2,\dots,m\}</Math>). For each potential building site <Math>j\in\{1,2,\dots,n\}</Math>, there is a set <Math>S_j\subseteq S</Math> of neighborhoods that can be reached from that site in under 5 minutes. There is also a cost <Math>c_j\in\R</Math> associated with building a station at site <Math>j</Math>. How can the city minimize building costs while still meeting the requirements?
 </BodyText>
+
 <BodyText>
-    Our formulation will include binary variables <Math>x_j</Math> with the interpretation that a station will be built at site <Math>j</Math> if and only if <Math>x_j=1</Math>. The formulation follows[^newNotationConditionalSet]:
+    Our formulation will include binary variables <Math>x_j</Math> with the interpretation that a station will be built at site <Math>j</Math> if and only if <Math>x_j=1</Math>. The formulation follows<Footnote>Note the new notation in the second summation, <Math>\{j:i\in S_j\}</Math>. We call this the "conditional set" notation in <SectionRef refId=symbols/>. It means the set of all <Math>j</Math> such that the condition <Math>i\in S_j</Math> is true.</Footnote>:
 </BodyText>
 
-[^newNotationConditionalSet]: Note the new notation in the second summation, <Math>\{j:i\in S_j\}</Math>. We call this the "conditional set" notation in <SectionRef refId=symbols/>. It means the set of all <Math>j</Math> such that the condition <Math>i\in S_j</Math> is true.
-
-<MathDisp>\begin{align*}
-\min&& \sum_{j=1}^n c_jx_j& \\
-\st&& \sum_{j:i\in S_j} x_j&\geq 1 & \forall i\in\{1,2,\dots,m\}\\
-&&x_j&\in\{0, 1\} & \forall \ j\in\{1,2,\dots,n\}
-\end{align*}
+<MathDisp>
+    \begin{align*}
+    \min&& \sum_{j=1}^n c_jx_j& \\
+    \st&& \sum_{j:i\in S_j} x_j&\geq 1 & \forall i\in\{1,2,\dots,m\}\\
+    &&x_j&\in\{0, 1\} & \forall \ j\in\{1,2,\dots,n\}
+    \end{align*}
 </MathDisp>
 
 <Heading level=4 refId=ipTSP>Traveling salesman</Heading>
@@ -450,57 +461,72 @@ constraints.
     We've touched on the traveling salesman problem (TSP) already, way back in <SectionRef refId=tsp/>. This is the famous problem where a salesman has a list of cities to visit and needs to find the shortest possible path that leads him through every city before returning to the starting point.
 </BodyText>
 <BodyText>
-    To formalize things a bit, say the salesman needs to visit a list of <Math>n</Math> cities, and the distances between any two cities <Math>i,j\in\{1,\dots,n\}, i\neq j</Math> is known and denoted as <Math>d_{ij}</Math>[^symmetricTSP]. We'll use binary variables <Math>x_{ij}</Math> for each <Math>i,j\in\{1,\dots,n\}, i\neq j</Math>, with the interpretation that <Math>x_{ij}=1</Math> if and only if the salesman chooses to travel directly from city <Math>i</Math> to city <Math>j</Math> as part of his path. A first attempt at this model might look like this:
+    To formalize things a bit, say the salesman needs to visit a list of <Math>n</Math> cities, and the distances between any two cities <Math>i,j\in\{1,\dots,n\}, i\neq j</Math> is known and denoted as <Math>d_{ij}</Math><Footnote>If <Math>d_{ij}=d_{ji}</Math> for all <Math>i,j</Math> then we call it a <em>symmetric TSP</em>  But this doesn't need to hold for our formulations to work.</Footnote>. We'll use binary variables <Math>x_{ij}</Math> for each <Math>i,j\in\{1,\dots,n\}, i\neq j</Math>, with the interpretation that <Math>x_{ij}=1</Math> if and only if the salesman chooses to travel directly from city <Math>i</Math> to city <Math>j</Math> as part of his path. A first attempt at this model might look like this:
 </BodyText>
 
-[^symmetricTSP]: If <Math>d_{ij}=d_{ji}</Math> for all <Math>i,j</Math> then we call it a <em>symmetric TSP</em>  But this doesn't need to hold for our formulations to work.
-
-<MathDisp>\begin{align*}
-\min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
-\st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
-&& \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
-&&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
-\end{align*}
+<MathDisp>
+    \begin{align*}
+    \min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
+    \st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
+    && \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
+    &&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
+    \end{align*}
 </MathDisp>
-On first inspection, this <em>looks like</em> it's a correct formulation. There are two groups of constraints above. In the first group you set some <Math>i</Math>, then amongst all <Math>j\neq i</Math> you ensure that exactly one <Math>x_{ij}</Math> equals <Math>1</Math>. This has the effect of enforcing that the salesman leaves every town exactly once. The second group of constraints does something similar, enforcing that the salesman arrives in every town exactly once.
+
 <BodyText>
-    So, what's the problem? It might not be evident initially[^ipModelsNotStraightforward], but this formulation does nothing to eliminate so-called <em>subtours</em> in the formulation. That is to say, the feasible solutions to the above model include a solution where the salesman visits, say, the first half of the cities in one tour and the second half of the cities in a second, separate tour, with no links between the two. A solution including subtours is illustrated below.
+    On first inspection, this <em>looks like</em> it's a correct formulation. There are two groups of constraints above. In the first group you set some <Math>i</Math>, then amongst all <Math>j\neq i</Math> you ensure that exactly one <Math>x_{ij}</Math> equals <Math>1</Math>. This has the effect of enforcing that the salesman leaves every town exactly once. The second group of constraints does something similar, enforcing that the salesman arrives in every town exactly once.
 </BodyText>
 
-[^ipModelsNotStraightforward]: I can't tell you how many times I've come up with what I thought was a valid formulation for a problem, only to solve the model and get some invalid result because I overlooked some subtle case my model didn't cover. Modeling a given IP is not always as straightforward as it might initially appear.
+<BodyText>
+    So, what's the problem? It might not be evident initially<Footnote>I can't tell you how many times I've come up with what I thought was a valid formulation for a problem, only to solve the model and get some invalid result because I overlooked some subtle case my model didn't cover. Modeling a given IP is not always as straightforward as it might initially appear.</Footnote>, but this formulation does nothing to eliminate so-called <em>subtours</em> in the formulation. That is to say, the feasible solutions to the above model include a solution where the salesman visits, say, the first half of the cities in one tour and the second half of the cities in a second, separate tour, with no links between the two. A solution including subtours is illustrated below.
+</BodyText>
 
-![TSP subtours [@wolsey2020]](images/subtours.png)
+<Figure refId="tspSubtours">
+    <img src={subtours} alt="TSP subtours" />
+    <span slot=caption>Subtours in a graph</span>
+</Figure>
+
 <BodyText>
     To recover a valid formulation, we'll need to include constraints that make these subtours impossible. How might we do that? Consider the above image, where we see a subtour among cities 3, 8, and 9. We can keep this from happening by way of a constraint that ensures that the salesman travels at least once between some city in the set <Math>\{3, 8, 9\}</Math> and another city not in that set, i.e. a city in the complement set <Math>\{1, 2, 4, 5, 6, 7, 10\}</Math>. That is, we can add the constraint:
 </BodyText>
 
-<MathDisp>\sum_{i\in\{3, 8, 9\}}\sum_{j\in\{1, 2, 4, 5, 6, 7, 10\}}x_{ij} \geq 1
+<MathDisp>
+    \sum_{i\in\{3, 8, 9\}}\sum_{j\in\{1, 2, 4, 5, 6, 7, 10\}}x_{ij} \geq 1
 </MathDisp>
-Alternatively, we could write the constraint in terms of just the original set <Math>\{3, 8, 9\}</Math> by restricting the number of edges between set members to less than 3 (the size of the set).
 
-<MathDisp>\sum_{i\in\{3, 8, 9\}}\sum_{j\in\{3, 8, 9\}}x_{ij} \leq 2
+<BodyText>
+    Alternatively, we could write the constraint in terms of just the original set <Math>\{3, 8, 9\}</Math> by restricting the number of edges between set members to less than 3 (the size of the set).
+</BodyText>
+
+<MathDisp>
+    \sum_{i\in\{3, 8, 9\}}\sum_{j\in\{3, 8, 9\}}x_{ij} \leq 2
 </MathDisp>
-Of course, this constraint will only eliminate the possibility of that one subtour (and its complement). There are plenty of other subtours possible, one for essentially every subset of <Math>\{1,\dots,n\}</Math>. So a truly valid formulation for the TSP must include one of these <em>_subtour elimination constraints_</em> for every[^tspAlmostEverySubset] subset <Math>S\subseteq\{1,\dots,n\}</Math>[^tspLotsOfConstraints]. Such a formulation including these constraints[^justSubtourElim] could look like[^newNotationEmptySetSize]: 
 
-[^tspLotsOfConstraints]: If you're thinking "that could be a lot of constraints", you're right. It can be a problem. We'll be coming back to this observation later.
+<BodyText>
 
-[^tspAlmostEverySubset]: Technically we don't need <em>every</em> subset, since the same constraint will cover both the selected subset and its complement (e.g. the constraint above will eliminate the possibility of subtours in both sets <Math>\{3, 8, 0\}</Math> and <Math>\{1, 2, 4, 5, 6, 7, 10\}</Math>). Further, subsets of size 1 are technically covered by the basic "leave every city once" constraints.
+</BodyText>
 
-[^justSubtourElim]: In fact, you could make due with <em>only</em> the subtour elimination constraints, since the original functional constraints are essentially just subtour elimination constraints for the subtours of size <Math>n-1</Math>.
+<BodyText>
+    Of course, this constraint will only eliminate the possibility of that one subtour (and its complement). There are plenty of other subtours possible, one for essentially every subset of <Math>\{1,\dots,n\}</Math>. So a truly valid formulation for the TSP must include one of these <em>subtour elimination constraints</em> for every<Footnote>
+        Technically we don't need <em>every</em> subset, since the same constraint will cover both the selected subset and its complement (e.g. the constraint above will eliminate the possibility of subtours in both sets <Math>\{3, 8, 0\}</Math> and <Math>\{1, 2, 4, 5, 6, 7, 10\}</Math>). Further, subsets of size 1 are technically covered by the basic "leave every city once" constraints.
+    </Footnote> subset <Math>S\subseteq\{1,\dots,n\}</Math><Footnote>
+        If you're thinking "that could be a lot of constraints", you're right. It can be a problem. We'll be coming back to this observation later.
+    </Footnote>. Such a formulation including these constraints<Footnote>
+        In fact, you could make due with <em>only</em> the subtour elimination constraints, since the original functional constraints are essentially just subtour elimination constraints for the subtours of size <Math>n-1</Math>.
+    </Footnote> could look like<Footnote>
+        Two bits of new notation here. First, <Math>\emptyset</Math> represents an empty set, i.e. a set with no elements. Technically, <Math>\emptyset</Math> is a subset of all other sets, but we don't want to consider it in our formulation so we'll explicitly exclude it. Second, <Math>|S|</Math> denotes the size of a set, i.e. the number of elements in it.
+    </Footnote>: 
+</BodyText>
 
-[^newNotationEmptySetSize]: Two bits of new notation here. First, <Math>\emptyset</Math> represents an empty set, i.e. a set with no elements. Technically, <Math>\emptyset</Math> is a subset of all other sets, but we don't want to consider it in our formulation so we'll explicitly exclude it. Second, <Math>|S|</Math> denotes the size of a set, i.e. the number of elements in it.
-
-<div class="mathSmall">
-<MathDisp>\begin{align*}
-\min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
-\st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
-&& \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
-&& \sum_{i\in S}\sum_{j\in S:i\neq j}x_{ij} &\leq |S|-1 && \forall \ S\subseteq \{1,\dots,n\}, S\neq\emptyset\\
-&&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
-\end{align*}
-</MathDisp></div>
-
--->
+<MathDisp fontSize=0.9>
+    \begin{align*}
+        \min&& \sum_{i\in\{1,\dots,n\}}\sum_{j\in\{1,\dots,n\}:j\neq i} d_{ij}x_{ij}& \\
+        \st&& \sum_{j\in\{1,\dots,n\}:j\neq i} x_{ij} &= 1&& \forall \ i\in\{1,\dots,n\}\\
+        && \sum_{i\in\{1,\dots,n\}:i\neq j} x_{ij} &= 1&& \forall \ j\in\{1,\dots,n\}\\
+        && \sum_{i\in S}\sum_{j\in S:i\neq j}x_{ij} &\leq |S|-1 && \forall \ S\subseteq \{1,\dots,n\}, S\neq\emptyset\\
+        &&x_{ij}&\in\{0, 1\} && \forall \ i\neq j
+    \end{align*}
+</MathDisp>
 
 <style>
     th {

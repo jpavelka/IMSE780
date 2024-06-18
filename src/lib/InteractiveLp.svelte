@@ -64,17 +64,17 @@
             {/each}
             <FeasibleRegion {constants} {constraintInfo} {feasibleRegionText}/>
             <Axes {constants} />
-            {#if choosePoints}
-                <ChoosePoints {constants} pt={pointToShow} feasible={pointFeasible} constraintInfo={constraintInfo} />
-            {/if}
-            {#if chooseObjVals}
-                <ChooseObjVals {constants} {edgeIntersections} {feasibleIntersections} />
-            {/if}
             {#if showVertices}
                 <ShowVertices {constants} {vertices} />
             {/if}
             {#if showIntegerPoints}
                 <ShowIntegerPoints {constants} {constraintInfo}/>
+            {/if}
+            {#if choosePoints}
+                <ChoosePoints {constants} pt={pointToShow} feasible={pointFeasible} constraintInfo={constraintInfo} />
+            {/if}
+            {#if chooseObjVals}
+                <ChooseObjVals {constants} {edgeIntersections} {feasibleIntersections} />
             {/if}
         </svg>
         {#if choosePoints}

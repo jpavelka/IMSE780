@@ -243,7 +243,7 @@
 `}</MathDisp>
 
 <BodyText>
-    which looks just like the constraint section of the standard form LP +@eq:standardFormLp. Due to the conciseness, my favorite notation for the standard form LP is
+    which looks just like the constraint section of the standard form LP <EquationRef refId=standardFormLp/>. Due to the conciseness, my favorite notation for the standard form LP is
 </BodyText>
 
 <MathDisp refId=standardFormLpMatrix>{String.raw`

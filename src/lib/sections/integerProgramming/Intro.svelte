@@ -94,9 +94,9 @@ A MIP is more flexible that a pure IP, but much of the theory we cover will be e
 <InteractiveLp
     inequalities={[
         [-7, 5, "l", 5, {'textPlacement': [3.25, 5.25]}],
-        [9, 7, "l", 54, {'textPlacement': [4.25, 2.75]}],
+        [9, 7, "l", 54, {'textPlacement': [4.4, 2.75]}],
     ]}
-    objective={[3, 5, "max"]}
+    objective={[12, 10, "max"]}
     x1Min={-0.99}
     x1Max={7.99}
     x2Min={-0.99}

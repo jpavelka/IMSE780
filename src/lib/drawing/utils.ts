@@ -73,10 +73,10 @@ const buildLatexStr = (info) => {
     return s
 }
 
-const checkPtFeasibleForConstr = (pt: Array<number>, constrInfo: object) => {
+const checkPtFeasibleForConstr = (pt: Array<number>, constrInfo: object, tolerance: number = 0.0001) => {
     const lhs = pt[0] * constrInfo.x1Coeff + pt[1] * constrInfo.x2Coeff;
     const rhs = constrInfo.rhs;
-    return constrInfo.sense === 'g' ? lhs >= rhs : lhs <= rhs
+    return constrInfo.sense === 'g' ? lhs >= rhs - tolerance : lhs <= rhs + tolerance
 }
 
 const checkPtFeasible = (pt, constraintInfo) => {
@@ -138,7 +138,7 @@ const getEdgeAndFeasibleIntersections = (constants, constraintInfo, objective, o
     edgeIntersections = edgeIntersections
         .filter(x => x !== undefined && x !== Infinity)
         .filter(x => x[0] >= 0 && x[0] <= constants.x1Max && x[1] >= 0 && x[1] <= constants.x2Max);
-    edgeIntersections = [...new Set(edgeIntersections.map(x => x?.join(',')))].map(s => s?.split(','));
+    edgeIntersections = [...new Set(edgeIntersections.map(x => x?.join(',')))].map(s => s?.split(',').map(s => parseFloat(s)));
     let feasibleIntersections = [];
     if (edgeIntersections.length === 0) {
         feasibleIntersections = [];
@@ -153,7 +153,7 @@ const getEdgeAndFeasibleIntersections = (constants, constraintInfo, objective, o
         feasibleIntersections = feasibleIntersections
             .filter(x => x !== undefined && x !== Infinity)
             .filter(pt => checkPtFeasible(pt, constraintInfo));
-        feasibleIntersections = [...new Set(feasibleIntersections.map(x => x?.join(',')))].map(s => s?.split(','));
+        feasibleIntersections = [...new Set(feasibleIntersections.map(x => x?.join(',')))].map(s => s?.split(',').map(s => parseFloat(s)));
     }
     return [edgeIntersections, feasibleIntersections]
 }
