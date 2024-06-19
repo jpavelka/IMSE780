@@ -10,7 +10,7 @@ def convert(f):
     # display math
     cnt = 0
     even_replace = "<MathDisp>"
-    odd_replace = "</MathDisp>"
+    odd_replace = "</MathDisp>\n"
     while (s.find('$$\n') > 0):
         imports.add('MathDisp')
         s = s.replace('$$\n', even_replace if cnt % 2 == 0 else odd_replace, 1)
@@ -86,6 +86,19 @@ def convert(f):
             line = f'<Heading level={level}>{name}</Heading>'
         ind1, ind2 = m.span()
         s = s[:ind1] + '\n' + line + s[ind2:]
+    # footnotes
+    regex = '\[\^[^\]]*\]'
+    while re.search(regex, s):
+        imports.add('Footnote')
+        m = re.search(regex, s)
+        ind1, ind2 = m.span()
+        pre = s[:ind1]
+        post = s[ind2:]
+        name = m.group()[2:-1]
+        m = re.search(f'\[\^{name}\]:[^\n]*\n', post)
+        note = m.group().replace(f'[^{name}]:', '').strip()
+        ind1, ind2 = m.span()
+        s = pre + '<Footnote>' + note + '</Footnote>' + post[:ind1] + post[ind2:]
     # citations
     regex = ' @[a-zA-Z0-9]*'
     while re.search(regex, s):

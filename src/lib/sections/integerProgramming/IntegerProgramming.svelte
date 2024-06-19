@@ -4,6 +4,7 @@
     import Software from './Software.svelte';
     import Complexity from './Complexity.svelte';
     import BranchAndBound from './BranchAndBound.svelte';
+    import CuttingPlanes from './CuttingPlanes.svelte';
     import Misc from './Misc.svelte';
     import Notes from './Notes.svelte';
 </script>
@@ -13,5 +14,6 @@
 <Software/>
 <Complexity/>
 <BranchAndBound/>
+<CuttingPlanes/>
 <Misc/>
 <Notes/>
