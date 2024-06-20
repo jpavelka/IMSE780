@@ -23,10 +23,14 @@ import Heading from "$lib/Heading.svelte";
         <li><Math>{String.raw`S^m`}</Math>: The set of vectors with <Math>{String.raw`m`}</Math> elements, all of which are from some set <Math>{String.raw`S`}</Math>. For example, <Math>{String.raw`\R^3`}</Math> is the set of 3-element, real number vectors. So we could say
             <MathDisp>{String.raw`
                 \begin{bmatrix}1 \\ 2.64 \\ -3\end{bmatrix}\in\R^3.
-            `}</MathDisp>- <Math>{String.raw`S^{m\times n}`}</Math>: The set of matrices with <Math>{String.raw`m`}</Math> rows and <Math>{String.raw`n`}</Math> columns, whose elements are from some set <Math>{String.raw`S`}</Math>. For example, <Math>{String.raw`\I^{m\times n}`}</Math> is the set of <Math>{String.raw`m\times n`}</Math> matrices whose entries are all integers. So we could say
+            `}</MathDisp>
+        </li>
+        <li><Math>{String.raw`S^{m\times n}`}</Math>: The set of matrices with <Math>{String.raw`m`}</Math> rows and <Math>{String.raw`n`}</Math> columns, whose elements are from some set <Math>{String.raw`S`}</Math>. For example, <Math>{String.raw`\I^{m\times n}`}</Math> is the set of <Math>{String.raw`m\times n`}</Math> matrices whose entries are all integers. So we could say
             <MathDisp>{String.raw`
             \begin{bmatrix}4 & 3 & 9 & 6\\ 0 & 4 & 8 & 5\\ 7 & 7 & 2 & 1\end{bmatrix} \in \I^{3\times 4}.
-            `}</MathDisp>- <Math>{String.raw`\zeros`}</Math>: A matrix (or vector) with all entries equal to 0 (the size of the matrix is usually clear by context).</li>
+            `}</MathDisp>
+        </li>
+        <li><Math>{String.raw`\zeros`}</Math>: A matrix (or vector) with all entries equal to 0 (the size of the matrix is usually clear by context).</li>
         <li><Math>{String.raw`\identity`}</Math>: A square matrix with all entries equal to 0, except the diagonal where all entries equal 1 (the size of the matrix is usually clear by context). This looks like:
             <MathDisp>{String.raw`
                 \begin{bmatrix}

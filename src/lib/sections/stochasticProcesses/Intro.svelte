@@ -334,5 +334,5 @@
     colabId=1Ssl7Xsb-o1y1S5RFQTI4uMRsr7LKpPer
     gistId=dc232799604bb34fdc9ff891fd9fcbeb
     refId=probPython
-    desc='Calculation probabilities with Python'
+    desc='Calculating probabilities with Python'
 />
