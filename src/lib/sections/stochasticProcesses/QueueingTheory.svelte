@@ -21,7 +21,7 @@
     The next area of stochastic processes we will study is <em>queueing theory</em>  which you could call the study of waiting in lines. The models we see here could be seen as a special class of (continuous-time) Markov chains, but the theory is well-developed outside of that formalism, so we won't be referring back to our Markov chain chapter here.
 </BodyText>
 <BodyText>
-    Perhaps studying people standing in lines sounds like it would not be of much use - but actually, this is pretty practical! It is of course applicable to customer services of all types, and several Edelman prizes have been won by queueing applications (see for example [here](https://pubsonline.informs.org/doi/10.1287/inte.6.1pt2.4) and [here](https://pubsonline.informs.org/doi/10.1287/inte.24.1.6)).<CitationRef refId=classText/> highlights several other examples in section 17.3
+    Perhaps studying people standing in lines sounds like it would not be of much use - but actually, this is pretty practical! It is of course applicable to customer services of all types, and several Edelman prizes have been won by queueing applications (see for example <a href='https://pubsonline.informs.org/doi/10.1287/inte.6.1pt2.4'>here</a> and <a href='https://pubsonline.informs.org/doi/10.1287/inte.24.1.6'>here</a>).<CitationRef refId=classText/> highlights several other examples in section 17.3
 </BodyText>
 
 <Heading level=3 refId=queueExample>Initial example</Heading>
@@ -87,7 +87,7 @@
 
 <Heading level=3 refId=exponentialPoissonDistributions>Exponential and Poisson distributions</Heading>
 <BodyText>
-    In queueing systems, there are two places where randomness comes into play: in determining the service times and interarrival times. In real life, the distributions governing these processes could take on many forms. But, as we've mentioned, in much of queueing theory we assume these numbers are pulled independently from an exponential distribution. The reason for this is two-fold: The first reason is that the form of the exponential distribution gives it several nice properties that we're about to explore, and these properties make our calculations fairly simple. The second reason is that several real-life processes have been shown to follow distributions closely approximating an exponential distribution<Footnote>[This old paper](https://geodesy.noaa.gov/library/pdfs/C&GS_TB_0017.pdf) discusses how closely the interarrival times for earthquakes match the exponential distribution.</Footnote>.
+    In queueing systems, there are two places where randomness comes into play: in determining the service times and interarrival times. In real life, the distributions governing these processes could take on many forms. But, as we've mentioned, in much of queueing theory we assume these numbers are pulled independently from an exponential distribution. The reason for this is two-fold: The first reason is that the form of the exponential distribution gives it several nice properties that we're about to explore, and these properties make our calculations fairly simple. The second reason is that several real-life processes have been shown to follow distributions closely approximating an exponential distribution<Footnote><a href='https://geodesy.noaa.gov/library/pdfs/C&GS_TB_0017.pdf'>This old paper</a> discusses how closely the interarrival times for earthquakes match the exponential distribution.</Footnote>.
 </BodyText>
 
 <BodyText>
@@ -464,7 +464,7 @@ s\mu && n>s
 <MathDisp>P_0\sum_{n=0}^\infty\left(\frac{\lambda}{\mu}\right)^n=P_0\sum_{n=0}^\infty\rho^n=1
 </MathDisp>
 <BodyText>
-    We've assumed that <Math>\lambda<s\mu</Math>, so <Math>\rho=\frac{\lambda}{\mu}<1</Math> and hence the above reduces to (due to the standard result on the sum of [geometric series](https://en.wikipedia.org/wiki/Geometric_series)):
+    We've assumed that <Math>\lambda<s\mu</Math>, so <Math>\rho=\frac{\lambda}{\mu}<1</Math> and hence the above reduces to (due to the standard result on the sum of <a href='https://en.wikipedia.org/wiki/Geometric_series'>geometric series</a>):
 </BodyText>
 
 <MathDisp>P_0\left(\frac{1}{1-\rho}\right)=1
