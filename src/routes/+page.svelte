@@ -9,6 +9,8 @@
     import Python from "$lib/sections/Python.svelte";
     import LinearProgramming from "$lib/sections/linearProgramming/LinearProgramming.svelte";
     import IntegerProgramming from "$lib/sections/integerProgramming/IntegerProgramming.svelte";
+    import NonlinearProgramming from "$lib/sections/nonlinearProgramming/NonlinearProgramming.svelte";
+    import StochasticProcesses from "$lib/sections/stochasticProcesses/StochasticProcesses.svelte";
     
     let innerWidth = 0;
     const notesMaxWidth = 800;
@@ -58,6 +60,8 @@
                     <Python />
                     <LinearProgramming />
                     <IntegerProgramming />
+                    <NonlinearProgramming />
+                    <StochasticProcesses />
                     <Appendix />
                     <Bibliography />
                 </div>

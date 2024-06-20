@@ -24,8 +24,8 @@ const macros = {
     '\\bpi': '\\mathbb{\pi}',
     '\\Q': '\\mathbf{Q}',
     '\\indicator': '\\boldsymbol{1}',
-    '\\prob': 'P!\\left( #1 \\right)',
-    '\\E': 'E!\\left( #1 \\right)',
+    '\\prob': 'P\\left( #1 \\right)',
+    '\\E': 'E\\left( #1 \\right)',
     '\\Var': '\\text{Var}!\\left( #1 \\right)'
 }
 
