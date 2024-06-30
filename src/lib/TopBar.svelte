@@ -1,5 +1,7 @@
 <script lang=ts>
     import { showToc } from "./stores";
+
+    export let smallScreen = false;
 </script>
 
 <div class=topBar>
@@ -11,9 +13,11 @@
     <div class=courseNum>
         IMSE 780
     </div>
-    <div class=term>
-        Fall 2023
-    </div>
+    {#if !smallScreen}
+        <div class=term>
+            Fall 2023
+        </div>
+    {/if}
 </div>
 
 <style>

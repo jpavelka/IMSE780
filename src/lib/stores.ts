@@ -58,5 +58,14 @@ for (const d of citationsData.data) {
 const citations = writable(citationsObj);
 const showToc = writable(false);
 const appendixProofs = writable([]);
+const popupShown = writable(false);
+// todo: these are not really stores, just constants. Define somewhere else
+const notesMaxWidth = 800;
+const tocWidth = 350;
+const minPopupSideWidth = 400;
 
-export { sections, citations, figures, equations, showToc, notebooks, theorems, appendixProofs }
+export {
+  sections, citations, figures, equations, showToc, notebooks,
+  theorems, appendixProofs, popupShown, notesMaxWidth, tocWidth,
+  minPopupSideWidth
+}

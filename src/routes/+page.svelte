@@ -1,7 +1,7 @@
 <script lang="ts">
     import TopBar from "$lib/TopBar.svelte";
     import TOC from "$lib/TOC.svelte";
-    import { showToc, sections } from "$lib/stores";
+    import { showToc, sections, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth } from "$lib/stores";
     import Appendix from "$lib/sections/appendix/Appendix.svelte";
     import Bibliography from "$lib/Bibliography.svelte";
     import Welcome from "$lib/sections/Welcome.svelte";
@@ -13,8 +13,6 @@
     import StochasticProcesses from "$lib/sections/stochasticProcesses/StochasticProcesses.svelte";
     
     let innerWidth = 0;
-    const notesMaxWidth = 800;
-    const tocWidth = 350;
 
     $: stillLoading = Object.values($sections.headingTexts).map(s => {
         const spl = s.split(':');
@@ -49,19 +47,20 @@
             <div class=loading>Loading...</div>
         {/if}
         <div style={'display:' + (stillLoading ? 'none' : 'block')}>
-            <TopBar />
+            <TopBar smallScreen={innerWidth < 400}/>
             <div class=underBar on:click={bodyClick}>
                 <TOC />
                 <div
                     class={"notesContent" + ($showToc && (innerWidth - tocWidth > notesMaxWidth) ? ' noteContentShifted' : '')}
+                    style={`margin:${($popupShown && (innerWidth - notesMaxWidth > minPopupSideWidth)) ? 'none' : 'auto'}`}
                 >
                     <Welcome />
                     <IntroToOr />
                     <Python />
                     <LinearProgramming />
-                    <IntegerProgramming />
+                    <!-- <IntegerProgramming />
                     <NonlinearProgramming />
-                    <StochasticProcesses />
+                    <StochasticProcesses /> -->
                     <Appendix />
                     <Bibliography />
                 </div>
@@ -83,7 +82,6 @@
         max-width: calc(var(--notesMaxWidth) * 1px);
         padding: 1rem;
         font-family: Georgia, serif;
-        margin: auto;
         height: 100%;
     }
     .noteContentShifted {
@@ -105,6 +103,12 @@
     }
     :global(body *) {
         scroll-margin-top: 4.5rem;
+    }
+    :global(.basicCenter) {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
     }
     @keyframes -global-line-pulse {
         0% {
