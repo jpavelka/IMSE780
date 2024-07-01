@@ -69,7 +69,7 @@
     .popupSide {
         left: calc((var(--notesMaxWidth) + 20) * 1px);
         transform: translateY(-2rem);
-        max-width: calc((var(--totalWidth) - var(--notesMaxWidth) - 20) * 0.9 * 1px);
+        width: calc((var(--totalWidth) - var(--notesMaxWidth) - 40) * 0.9 * 1px);
     }
     .popupTop {
         top: 0;

@@ -51,16 +51,15 @@
             <div class=underBar on:click={bodyClick}>
                 <TOC />
                 <div
-                    class={"notesContent" + ($showToc && (innerWidth - $tocWidth > $notesMaxWidth) ? ' noteContentShifted' : '')}
-                    style={`margin:${($popupShown && (innerWidth - $notesMaxWidth > $minPopupSideWidth)) ? 'none' : 'auto'}`}
+                    class={"notesContent" + ($showToc && (innerWidth - $tocWidth > $notesMaxWidth) ? ' noteContentShifted' : '') + ($popupShown && (innerWidth - $notesMaxWidth > $minPopupSideWidth) ? ' noteContentWithPopup' : '')}
                 >
                     <Welcome />
                     <IntroToOr />
                     <Python />
                     <LinearProgramming />
-                    <!-- <IntegerProgramming />
+                    <IntegerProgramming />
                     <NonlinearProgramming />
-                    <StochasticProcesses /> -->
+                    <StochasticProcesses />
                     <Appendix />
                     <Bibliography />
                 </div>
@@ -83,9 +82,19 @@
         padding: 1rem;
         font-family: Georgia, serif;
         height: 100%;
+        position: absolute;
+        left: calc((var(--totalWidth) - var(--notesMaxWidth)) / 2 * 1px);
+        transition: all .5s;
+        -webkit-transition: all .5s;
+        -moz-transition: all .5s;
+        -o-transition: all .5s;
+        -ms-transition: all .5s;
+    }
+    .noteContentWithPopup {
+        left: 20px;
     }
     .noteContentShifted {
-        padding-left: calc(var(--tocWidth) * 1px)
+        left: calc(var(--tocWidth) * 1px)
     }
     .loading {
         text-align: center;
