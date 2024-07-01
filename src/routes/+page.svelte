@@ -39,8 +39,8 @@
 
 <div style="
     --totalWidth: {innerWidth};
-    --notesMaxWidth: {notesMaxWidth};
-    --tocWidth: {tocWidth};
+    --notesMaxWidth: {$notesMaxWidth};
+    --tocWidth: {$tocWidth};
 ">
     <div class=allContent>
         {#if stillLoading}
@@ -51,8 +51,8 @@
             <div class=underBar on:click={bodyClick}>
                 <TOC />
                 <div
-                    class={"notesContent" + ($showToc && (innerWidth - tocWidth > notesMaxWidth) ? ' noteContentShifted' : '')}
-                    style={`margin:${($popupShown && (innerWidth - notesMaxWidth > minPopupSideWidth)) ? 'none' : 'auto'}`}
+                    class={"notesContent" + ($showToc && (innerWidth - $tocWidth > $notesMaxWidth) ? ' noteContentShifted' : '')}
+                    style={`margin:${($popupShown && (innerWidth - $notesMaxWidth > $minPopupSideWidth)) ? 'none' : 'auto'}`}
                 >
                     <Welcome />
                     <IntroToOr />

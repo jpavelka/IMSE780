@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { readable, writable } from "svelte/store";
 import { Cite } from "@citation-js/core";
 import { plugins } from '@citation-js/core';
 import * as bibtexPlugin from '@citation-js/plugin-bibtex';
@@ -59,10 +59,9 @@ const citations = writable(citationsObj);
 const showToc = writable(false);
 const appendixProofs = writable([]);
 const popupShown = writable(false);
-// todo: these are not really stores, just constants. Define somewhere else
-const notesMaxWidth = 800;
-const tocWidth = 350;
-const minPopupSideWidth = 400;
+const notesMaxWidth = readable(800);
+const tocWidth = readable(350);
+const minPopupSideWidth = readable(400);
 
 export {
   sections, citations, figures, equations, showToc, notebooks,

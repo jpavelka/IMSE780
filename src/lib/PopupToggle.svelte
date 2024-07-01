@@ -35,7 +35,7 @@
         }
         return checkForOpenPopups();
     });
-    $: popupLoc = innerWidth - notesMaxWidth > minPopupSideWidth ? 'Side' : 'Center';
+    $: popupLoc = innerWidth - $notesMaxWidth > $minPopupSideWidth ? 'Side' : 'Center';
 </script>
 
 <svelte:window bind:innerWidth />
