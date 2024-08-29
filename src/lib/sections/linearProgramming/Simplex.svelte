@@ -53,7 +53,7 @@
      The simplex algorithm makes use of the following key fact of linear programs:
 </BodyText>
 
-<Theorem refId=cornerPointOpt proofPlacement=appendix>
+<Theorem refId=cornerPointOpt hideProof={true}>
      <BodyText>
           If a linear program has an optimal solution (i.e. not unbounded or infeasible), then it has an optimal solution that is a corner-point feasible solution.
      </BodyText>

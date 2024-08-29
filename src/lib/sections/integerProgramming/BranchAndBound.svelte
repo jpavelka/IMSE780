@@ -32,7 +32,7 @@
     We've plotted this problem below. As we've seen before, the plotted points are the feasible integer solutions, while the gray-shaded area corresponds to the feasible region of the problem's LP relaxation. We'd like to solve this problem, and while we don't know how to solve IPs yet, we <em>can</em> solve the underlying LP relaxation. Furthermore, we know the following must hold<Footnote>For the uninitiated, A <em>proposition</em> is again like a theorem, and the below statement could have been called a theorem just a well. But we tend to use the work "proposition" instead when the result is a little more obvious.</Footnote>:
 </BodyText>
 
-<Theorem thmType=proposition proofPlacement=none refId=integerLpOptimalSolution>
+<Theorem thmType=proposition refId=integerLpOptimalSolution>
     <BodyText>
         Suppose <Math>P</Math> is an integer program, and further suppose that <Math>P</Math>'s LP relaxation has an optimal solution <Math>\x</Math> that is also integer. Then <Math>\x</Math> is an optimal solution to <Math>P</Math> as well.
     </BodyText>

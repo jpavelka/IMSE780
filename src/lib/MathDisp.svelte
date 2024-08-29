@@ -21,7 +21,7 @@
 
 <div style="display:flex;align-items:center">
     <div style={"flex-grow:1;font-size:1.3rem;" + (ignoreOverflow ? "" : "overflow-x:auto")} id={refId}>
-        <KatexDisp {options} fontSize={fontSize}>
+        <KatexDisp {options} fontSize={fontSize} refId={refId}>
             <slot />
         </KatexDisp>
     </div>

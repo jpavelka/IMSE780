@@ -57,14 +57,14 @@ for (const d of citationsData.data) {
 
 const citations = writable(citationsObj);
 const showToc = writable(false);
-const appendixProofs = writable([]);
 const popupShown = writable(false);
 const notesMaxWidth = readable(800);
 const tocWidth = readable(350);
 const minPopupSideWidth = readable(400);
+const eqReferenced = writable([]);
 
 export {
   sections, citations, figures, equations, showToc, notebooks,
-  theorems, appendixProofs, popupShown, notesMaxWidth, tocWidth,
+  theorems, popupShown, notesMaxWidth, tocWidth, eqReferenced,
   minPopupSideWidth
 }

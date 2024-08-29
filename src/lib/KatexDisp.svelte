@@ -1,11 +1,14 @@
 <script lang="ts">
     import katex from "katex";
     import { macros } from "./latexMacros.ts";
+    import viewport from './useViewportAction';
+    import { eqReferenced } from './stores';
 
     export let options;
     export let fontSize;
+    export let refId = undefined;
     export let extraStyle = '';
-    export let math =undefined;
+    export let math = undefined;
 	export let mouseOverFunction = undefined;
 	export let mouseOutFunction = undefined;
     
@@ -17,6 +20,10 @@
     options = {...options, ...{macros: macros}}
     
     $: katexString = katex.renderToString(s, options);
+    $: seen = false
+    $: if ($eqReferenced.includes(refId)) {
+        seen = true;
+    }
 </script>
 
 <svelte:head>
@@ -29,4 +36,16 @@
 </svelte:head>
 
 <span style="display:none" bind:this={data}><slot /></span>
-<span style={style} on:mouseover={mouseOverFunction} on:mouseout={mouseOutFunction}>{@html katexString}</span>
+<span
+    style={style}
+    on:mouseover={mouseOverFunction}
+    on:mouseout={mouseOutFunction}
+    use:viewport
+    on:enterViewport={() => seen = true}
+>
+    {#if seen}
+        {@html katexString}
+    {:else}
+        {s}
+    {/if}
+</span>

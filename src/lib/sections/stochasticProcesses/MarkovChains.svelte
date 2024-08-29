@@ -483,7 +483,7 @@ f_{20}=\frac{p^{2} - 2 p + 1}{p^{2} - p + 1}
     It turns out that, under fairly common conditions, these properties <em>do</em> hold. In fact, there is often a handy way to solve for these long-run probabilities. The main result (which is beyond the scope of this class to prove) is as follows:
 </BodyText>
 
-<Theorem refId=markovSteadyState proofPlacement=none>
+<Theorem refId=markovSteadyState>
     <BodyText>
         For any irreducible ergodic Markov chain with transition matrix <Math>\mathbf{P}</Math> and any state <Math>j</Math>, the limit
         <MathDisp>

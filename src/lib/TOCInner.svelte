@@ -9,7 +9,7 @@
 
 {#each hierarchy as s, i}
     <div class=tocItem>
-        <a class=tocA href={'#' + s.id} style={`margin-left: ${(s.level - 1) * 5}pt`}>{@html $sections.headingTexts[s.id]}</a>
+        <a class=tocA href={'#' + s.id} style={`margin-left: ${(s.level - 1) * 20}pt`}>{@html $sections.headingTexts[s.id]}</a>
         {#if (s.hierarchy || []).length > 0}
             <span class=tocExpand on:click={() => toggleExpand(i)}>{expand[i] ? '-' : '+'}</span>
         {/if}
@@ -23,8 +23,8 @@
 
 <style>
     .tocItem {
-        font-size: 1.5rem;
-        line-height: 1.9rem;transition: 0.3s;
+        font-size: 1.6rem;
+        line-height: 2.1rem;transition: 0.3s;
         border-bottom: 1pt solid lightgray;
         padding: 0.5rem;
         display: flex;

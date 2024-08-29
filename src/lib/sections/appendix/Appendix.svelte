@@ -3,7 +3,6 @@
     import BadIps from "./BadIps.svelte";
     import LinearAlgebra from "./LinearAlgebra.svelte";
     import ColabMath from "./ColabMath.svelte";
-    import SelectedProofs from "./SelectedProofs.svelte";
     import Symbols from "./Symbols.svelte";
 </script>
 
@@ -12,4 +11,3 @@
 <LinearAlgebra/>
 <ColabMath/>
 <BadIps/>
-<SelectedProofs/>

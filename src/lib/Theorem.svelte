@@ -1,12 +1,12 @@
 <script>
     import { refNumbering } from "$lib";
-    import BodyText from "./BodyText.svelte";
-    import { appendixProofs, theorems } from "./stores";
+    import { theorems } from "./stores";
+    import { slide } from 'svelte/transition';
 
     export let refId;
-    export let proofPlacement = "inText";
     export let thmType = "theorem";
     export let name = undefined;
+    export let hideProof = false;
 
     refId = refNumbering(theorems, refId, "thm");
     const thmNum = $theorems.numbers[refId];
@@ -16,14 +16,8 @@
     });
     const thmDivId = refId;
     const proofDivId = "proofEl:" + refId;
-    if (proofPlacement === "appendix") {
-        appendixProofs.update((p) => {
-            p = p || [];
-            p.push({ thm: thmDivId, proof: proofDivId });
-            return p;
-        });
-    }
     $: returnId = $theorems.returnIds[refId];
+    $: showProof = hideProof;
 </script>
 
 <div
@@ -50,23 +44,24 @@
         >
     {/if}
 </div>
-{#if proofPlacement !== "none"}
+{#if $$slots.proof}
     <div
         class="proof"
         id={proofDivId}
-        style={`display:${proofPlacement === "appendix" ? "none" : "block"}`}
     >
-        <div class="proofText">Proof:</div>
-        <div class="proofContainer">
-            <slot name="proof" />
+        <div class="proofText">
+            Proof:
+            {#if !hideProof}
+                <button on:click={() => showProof = !showProof}>{showProof ? 'Hide' : 'Show'}</button>
+            {/if}
         </div>
-        <div class="qed">∎</div>
+        {#if showProof}
+            <div class="proofContainer" transition:slide>
+                <slot name="proof" />
+                <div class="qed">∎</div>
+            </div>
+        {/if}
     </div>
-{/if}
-{#if proofPlacement === "appendix"}
-    <BodyText
-        >(<a href={"#" + proofDivId + ":Appendix"}>Proof</a> in the appendix)</BodyText
-    >
 {/if}
 
 <style>

@@ -119,7 +119,7 @@
     Note that the first group of constraints just say that the net amount leaving each vertex has to be equal to the demand of the vertex. Also note that I did not specify that the <Math>x_{ij}</Math> variables are required to be integers. There are two reasons for this: first, you could imagine a scenario (say, where <Math>x_{ij}</Math> represents gallons of water flowing through a pipe) where you are ok with non-integer solutions. But the more fundamental reason is due to the following theorem (a proof to which is beyond the scope of the class):
 </BodyText>
 
-<Theorem refId=networkFlowInteger proofPlacement=none>
+<Theorem refId=networkFlowInteger>
     <BodyText>
         If the demands <Math>b_i</Math> and capacities <Math>h_{ij}</Math> are all integral, then every corner-point solution to <EquationRef refId=networkFlow/> is integral.
     </BodyText>
@@ -262,7 +262,7 @@ x_1,x_2,x_3&\in\I_+
     Basically, building a CG inequality consists of creating linear combinations of the constraints defining <Math>P</Math>, then rounding down each coefficient. The <em>CG procedure</em> is the process of generating GC inequalities and adding them to the formulation for <Math>P</Math>. From there, you could build new cutting planes by taking linear combinations of the newly-added inequalities, which could also be added to the formulation for <Math>P</Math>. And it turns out that you can generate <em>any</em> valid inequality by repeating this procedure (though once again, the proof is beyond the scope of this course):
 </BodyText>
 
-<Theorem refId=cgFinite proofPlacement=none>
+<Theorem refId=cgFinite>
     <BodyText>
         Every valid inequality for <Math>P</Math>'s integer hull can be obtained by applying the CG procedure a finite number of times.
     </BodyText>

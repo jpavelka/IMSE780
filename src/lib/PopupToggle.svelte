@@ -6,15 +6,6 @@
     let popupEl
     const handleClose = (e) => {
         show = false;
-        // let keepPopupShown = false;
-        // for (const el of document.getElementsByClassName('popup')) {
-        //     if (el.style.display === 'block' && el !== e.target.parentNode) {
-        //         keepPopupShown = true;
-        //     }
-        // }
-        // popupShown.update(x => {
-        //     return keepPopupShown;
-        // });
     }
     let checkForOpenPopups = () => {}
     onMount(() => {

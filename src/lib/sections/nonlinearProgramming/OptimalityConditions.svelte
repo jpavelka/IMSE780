@@ -104,7 +104,7 @@ b_m-g_m(\x) = 0\\
 <BodyText>
     With that out of the way, let's present the main result
 </BodyText>
-<Theorem refId=kktConditions proofPlacement=none>
+<Theorem refId=kktConditions>
     <BodyText>
         Assume <Math>f,g_1,\dots,g_m</Math> are differentiable functions satisfying certain regularity conditions. Then <Math>\x^*\in\R^n</Math> can be an optimal solution for the nonlinear program only if there exists <Math>\mathbf{u}\in\R^m</Math> such that all the following conditions are satisfied:
         <ol>
@@ -141,7 +141,7 @@ b_m-g_m(\x) = 0\\
     I'll note again that these are <em>necessary</em> conditions for an optimal solution, not <em>sufficient</em> ones. So even if some <Math>\x'</Math> satisfies these conditions, it does not necessarily mean that <Math>\x'</Math> is an optimal solution. But there are conditions under which the above KKT conditions do guarantee optimality (maybe you can guess what they are...)
 </BodyText>
 
-<Theorem refId=kktConditionsConcaveConvex proofPlacement=none>
+<Theorem refId=kktConditionsConcaveConvex>
     <BodyText>
         Consider the setup of <TheoremRef refId=kktConditions/> and futher assume that <Math>f</Math> is a concave function and that <Math>g_1,g_2,\dots,g_m</Math> are each convex functions. Then <Math>\x^*</Math> is an optimal solution for the nonlinear program if and only if the KKT conditions of <TheoremRef refId=kktConditions/> hold.
     </BodyText>

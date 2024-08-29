@@ -136,7 +136,7 @@
      \end{align*}
 </MathDisp>
 
-<Theorem refId=dualEqualityForm proofPlacement=appendix>
+<Theorem refId=dualEqualityForm hideProof={true}>
      <BodyText>
           The systems in <EquationRef refId=augmentedLpDual/> give a valid primal/dual pair.
      </BodyText>
@@ -224,7 +224,7 @@
     A nice fact about duality is that the primal-dual relationship is symmetric, i.e.
 </BodyText>
 
-<Theorem refId=dualOfDual proofPlacement=appendix>
+<Theorem refId=dualOfDual hideProof={true}>
      <BodyText>
          The dual of the dual problem is equivalent to the primal problem.
      </BodyText>

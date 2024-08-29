@@ -1,6 +1,7 @@
 <script lang=ts>
     import { equations } from "./stores";
     import PopupToggle from "./PopupToggle.svelte";
+    import { eqReferenced } from "./stores";
     export let refId: String;
     
     refId = 'eqn:' + refId
@@ -18,22 +19,36 @@
         showPopup = !showPopup;
         const popupEl = document.getElementById(retId);
         if (popupEl?.childElementCount === 1) {
-            const el = document.getElementById(refId);
-            const clonedNode = el.cloneNode(true);
-            clonedNode.id += 'Ref' + refNum;
-            popupEl?.appendChild(clonedNode);
-            const linkEl = document.createElement('a');
-            linkEl.innerHTML = 'jump to'
-            linkEl.setAttribute('href', '#' + refId);
-            linkEl.style.fontSize = '1.2rem';
-            linkEl.style.float = 'right';
-            linkEl.onclick = () => {
-                equations.update(s => {
-                    s.returnIds[refId] = retId;
-                    return s
-                })
+            let timeout = 0;
+            if (!$eqReferenced.includes(refId)) {
+                eqReferenced.update(x => {
+                    x.push(refId);
+                    return x
+                });
+                timeout = 500;
             }
-            popupEl?.appendChild(linkEl);
+            const idEl = document.createElement('div');
+            idEl.textContent = 'Eq. ' + $equations.numbers[refId];
+            idEl.style.fontWeight = 'bold';
+            popupEl?.appendChild(idEl);
+            setTimeout(function (){
+                const el = document.getElementById(refId);
+                const clonedNode = el.cloneNode(true);
+                clonedNode.id += 'Ref' + refNum;
+                popupEl?.appendChild(clonedNode);
+                const linkEl = document.createElement('a');
+                linkEl.innerHTML = 'jump to'
+                linkEl.setAttribute('href', '#' + refId);
+                linkEl.style.fontSize = '1.2rem';
+                linkEl.style.float = 'right';
+                linkEl.onclick = () => {
+                    equations.update(s => {
+                        s.returnIds[refId] = retId;
+                        return s
+                    })
+                }
+                popupEl?.appendChild(linkEl);
+            }, timeout);
         }
     };
 </script>

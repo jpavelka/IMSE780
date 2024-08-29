@@ -139,7 +139,7 @@
     The appeal of working with convex functions is due to the following result:
 </BodyText>
 
-<Theorem refId=convexLocalOptIsGlobalOpt proofPlacement=appendix>
+<Theorem refId=convexLocalOptIsGlobalOpt hideProof={true}>
     <BodyText>
         Suppose <Math>f</Math> is a convex function and <Math>x^*</Math> is a local minimum for <Math>f</Math>. Then <Math>x^*</Math> is also a global minimum for <Math>f</Math>.
     </BodyText>
