@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import TopBar from "$lib/TopBar.svelte";
     import TOC from "$lib/TOC.svelte";
-    import { showToc, sections, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth } from "$lib/stores";
+    import { showToc, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth } from "$lib/stores";
     import Appendix from "$lib/sections/appendix/Appendix.svelte";
     import Bibliography from "$lib/Bibliography.svelte";
     import Welcome from "$lib/sections/Welcome.svelte";
@@ -13,11 +14,8 @@
     import StochasticProcesses from "$lib/sections/stochasticProcesses/StochasticProcesses.svelte";
     
     let innerWidth = 0;
-
-    $: stillLoading = Object.values($sections.headingTexts).map(s => {
-        const spl = s.split(':');
-        return spl[spl.length - 1].trim();
-    }).filter(s => s === 'undefined').length > 0;
+    let stillLoading = true;
+    let stillScrolling = true;
 
     const bodyClick = (e) => {
         if ($showToc) {
@@ -33,6 +31,17 @@
             });
         }
     }
+    onMount(() => {
+        const { hash } = document.location;
+        const scrollTo = hash && document.getElementById(hash.slice(1));
+        stillLoading = false;
+        setTimeout(() => {
+            if (scrollTo) {
+                scrollTo.scrollIntoView();
+            }
+            stillScrolling = false;
+        }, 100)
+    });
 </script>
 
 <svelte:window bind:innerWidth />
@@ -44,11 +53,14 @@
 ">
     <div class=allContent>
         {#if stillLoading}
-            <div class=loading>Loading...</div>
+            <div class=loading>
+                <div>Your notes are loading.</div>
+                <div>Hang in there, this can take some time.</div>
+            </div>
         {/if}
         <div style={'display:' + (stillLoading ? 'none' : 'block')}>
             <TopBar smallScreen={innerWidth < 400}/>
-            <div class=underBar on:click={bodyClick}>
+            <div class=underBar on:click={bodyClick} style={'visibility:' + (stillScrolling ? 'hidden' : 'visible')}>
                 <TOC />
                 <div
                     class={"notesContent" + ($showToc && (innerWidth - $tocWidth > $notesMaxWidth) ? ' noteContentShifted' : '') + ($popupShown && (innerWidth - $notesMaxWidth > $minPopupSideWidth) ? ' noteContentWithPopup' : '')}
@@ -58,10 +70,10 @@
                     <Python />
                     <LinearProgramming />
                     <IntegerProgramming />
-                    <!-- <NonlinearProgramming />
+                    <NonlinearProgramming />
                     <StochasticProcesses />
                     <Appendix />
-                    <Bibliography /> -->
+                    <Bibliography />
                 </div>
             </div>
         </div>
@@ -101,6 +113,7 @@
         text-align: center;
         font-size: 1.5rem;
         margin-top: 3rem;
+        padding: 1pt;
     }
     :global(img) {
         display: block;

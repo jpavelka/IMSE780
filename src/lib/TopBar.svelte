@@ -32,7 +32,7 @@
         display: flex;
         justify-content: space-between;
         font-family: Georgia, serif;
-        z-index: 2;
+        z-index: 3;
     }
     .topBar > div {
         padding: 0.5rem 1rem;

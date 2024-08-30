@@ -9,7 +9,7 @@
 
 <style>
     .toc {
-        height: 100%;
+        height: calc(100% - 4rem);
         width: 0;
         position: fixed;
         z-index: 2;

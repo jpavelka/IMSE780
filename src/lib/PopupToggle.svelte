@@ -50,12 +50,13 @@
         padding: 1rem;
         box-shadow: 2px 3px 5px #999;
         z-index: 1;
-        max-width: 90%;
+        max-width: 100%;
     }
     .popupCenter {
         left: 50%;
         transform: translateX(-50%);
-        max-width: calc(var(--noteMaxWidth) * 0.9 * 1px);
+        max-width: calc(min(var(--notesMaxWidth) * 0.9, var(--totalWidth) * 0.8) * 1px);
+        min-width: calc(min(var(--notesMaxWidth) * 0.8, var(--totalWidth) * 0.7) * 1px);
     }
     .popupSide {
         left: calc((var(--notesMaxWidth) + 20) * 1px);

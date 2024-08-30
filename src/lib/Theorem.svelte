@@ -1,7 +1,6 @@
 <script>
     import { refNumbering } from "$lib";
     import { theorems } from "./stores";
-    import { slide } from 'svelte/transition';
 
     export let refId;
     export let thmType = "theorem";
@@ -55,12 +54,10 @@
                 <button on:click={() => showProof = !showProof}>{showProof ? 'Hide' : 'Show'}</button>
             {/if}
         </div>
-        {#if showProof}
-            <div class="proofContainer" transition:slide>
-                <slot name="proof" />
-                <div class="qed">∎</div>
-            </div>
-        {/if}
+        <div class="proofContainer" style="display:{showProof ? 'block' : 'none'}">
+            <slot name="proof" />
+            <div class="qed">∎</div>
+        </div>
     </div>
 {/if}
 
