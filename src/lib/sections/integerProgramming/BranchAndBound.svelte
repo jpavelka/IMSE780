@@ -62,7 +62,10 @@ P^1: &&&                        &\quad  P^2: \\
      && x_1,x_2 & \in \ \ \I_+  &\quad       && x_1,x_2 & \in \ \ \I_+
 \end{align*}
 </MathDisp>
-What have we done here? Let's look at the image below, where we've plotted the LP relaxations and feasible integer points for both <Math>P^1</Math> and <Math>P^2</Math>. If you hit the "Toggle Plots" button, you can look back at the original problem <Math>P</Math> and the optimal solution for that LP relaxation.
+
+<BodyText>
+    What have we done here? Let's look at the image below, where we've plotted the LP relaxations and feasible integer points for both <Math>P^1</Math> and <Math>P^2</Math>. If you hit the "Toggle Plots" button, you can look back at the original problem <Math>P</Math> and the optimal solution for that LP relaxation.
+</BodyText>
 
 <!-- todo: redo this -->
 <!-- <div>

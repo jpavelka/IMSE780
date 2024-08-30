@@ -58,10 +58,10 @@
                     <Python />
                     <LinearProgramming />
                     <IntegerProgramming />
-                    <NonlinearProgramming />
+                    <!-- <NonlinearProgramming />
                     <StochasticProcesses />
                     <Appendix />
-                    <Bibliography />
+                    <Bibliography /> -->
                 </div>
             </div>
         </div>
@@ -76,14 +76,15 @@
     }
     .underBar {
         margin-top: 4rem;
+        max-width: var(--totalWidth);
     }
     .notesContent {
-        max-width: calc(var(--notesMaxWidth) * 1px);
+        max-width: calc(min((var(--totalWidth) - 50) * 1px, var(--notesMaxWidth) * 1px));
         padding: 1rem;
         font-family: Georgia, serif;
         height: 100%;
         position: absolute;
-        left: calc((var(--totalWidth) - var(--notesMaxWidth)) / 2 * 1px);
+        left: calc(max(0px, (var(--totalWidth) - var(--notesMaxWidth)) / 2 * 1px));
         transition: all .5s;
         -webkit-transition: all .5s;
         -moz-transition: all .5s;

@@ -1,8 +1,8 @@
 <script lang="ts">
     import katex from "katex";
     import { macros } from "./latexMacros.ts";
-    import viewport from './useViewportAction';
     import { eqReferenced } from './stores';
+    import { afterUpdate } from 'svelte';
 
     export let options;
     export let fontSize;
@@ -24,6 +24,16 @@
     $: if ($eqReferenced.includes(refId)) {
         seen = true;
     }
+    let posEl;
+    let pos;
+    let scrollY;
+    let innerHeight
+    afterUpdate(() => {
+		pos = posEl.offsetTop;
+	});
+    $: if (Math.abs(pos - scrollY) <= 2 * innerHeight) {
+        seen = true;
+    }
 </script>
 
 <svelte:head>
@@ -36,12 +46,12 @@
 </svelte:head>
 
 <span style="display:none" bind:this={data}><slot /></span>
+<svelte:window bind:scrollY bind:innerHeight />
 <span
+    bind:this={posEl}
     style={style}
     on:mouseover={mouseOverFunction}
     on:mouseout={mouseOutFunction}
-    use:viewport
-    on:enterViewport={() => seen = true}
 >
     {#if seen}
         {@html katexString}
