@@ -19,7 +19,6 @@
     $: s = s.replaceAll('{:underscore:}', '_');
     options = {...options, ...{macros: macros}}
     
-    $: katexString = katex.renderToString(s, options);
     $: seen = false
     $: if ($eqReferenced.includes(refId)) {
         seen = true;
@@ -54,7 +53,7 @@
     on:mouseout={mouseOutFunction}
 >
     {#if seen}
-        {@html katexString}
+        {@html katex.renderToString(s, options)}
     {:else}
         {s}
     {/if}
