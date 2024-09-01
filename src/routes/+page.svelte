@@ -56,6 +56,7 @@
             <div class=loading>
                 <div>Your notes are loading.</div>
                 <div>Hang in there, this can take some time.</div>
+                <div class=loader></div>
             </div>
         {/if}
         <div style={'display:' + (stillLoading ? 'none' : 'block')}>
@@ -144,4 +145,27 @@
             stroke-width: 2;
         }
     }
+    .loader {
+        border: 0.4rem solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 0.4rem solid #7f7f7f;
+        width: 2rem;
+        height: 2rem;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        margin: 1rem auto;
+    }
+
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        33% { transform: rotate(90deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        33% { transform: rotate(90deg); }
+        100% { transform: rotate(360deg); }
+    }
+  
 </style>
