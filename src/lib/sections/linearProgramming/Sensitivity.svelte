@@ -29,7 +29,7 @@
 
 <Heading level=3 refId=shadowPrices>Shadow Prices</Heading>
 <BodyText>
-  Consider a resource allocation problem, like e.g. our sample LP <EquationRef refId=prototypeLp/>, where the problem is of the form <EquationRef refId=standardFormLpMatrix/> and the constraints denote how much of each resource is needed for each possible activity. In these cases, at the optimal basis the reduced costs <Math>\c_B\B\inv\b-\c</Math> corresponding to the slack variable for each constraint denote the so-called <em>_shadow price_</em> of the associated resource.
+  Consider a resource allocation problem, like e.g. our sample LP <EquationRef refId=prototypeLp/>, where the problem is of the form <EquationRef refId=standardFormLpMatrix/> and the constraints denote how much of each resource is needed for each possible activity. In these cases, at the optimal basis the reduced costs <Math>\c_B\B\inv\b-\c</Math> corresponding to the slack variable for each constraint denote the so-called <em>shadow price</em> of the associated resource.
 </BodyText>
 
 <BodyText>

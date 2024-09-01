@@ -8,6 +8,7 @@
     import SectionRef from "$lib/SectionRef.svelte";
     import Theorem from "$lib/Theorem.svelte";
     import TheoremRef from "$lib/TheoremRef.svelte";
+    import YoutubeEmbed from "$lib/YoutubeEmbed.svelte";
 </script>
 
 <Heading level=2 refId=branchAndBound>Branch and bound</Heading>
@@ -308,7 +309,8 @@ P^1: &&&                        &\quad  P^2: \\
     UPDATE: Just after presenting this in class, I happened upon the following podcast where the guest is the creator of the solver SCIP and currently heads R&D for Gurobi. According to him, the "most fractional" rule is (maybe worse than?) useless.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/8bhIW27vCUQ?si=uVfwGTgca0xboEaT&amp;start=3378" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='8bhIW27vCUQ' params={{start: 3378}} />
+
 <BodyText>
     Another technique, which we will not cover in detail here, is called <em>strong branching</em>  The idea is to take each fractional-valued variable and see how much the LP relaxation's objective will change if <Math>x_i</Math> is rounded down versus if <Math>x_i</Math> is rounded up. The idea is that choosing a branching variable that induces larger variations in bounds is more likely to lead to quicker pruning, and thus help to minimize the size of the branch and bound tree. The downside is that this determination requires solving (or at least running several simplex iterations on) a different LP for each fractional variable, which can take significant amounts of time. Most solvers will use some strong branching, but only apply it selectively when they think the extra work up front will be rewarded by significantly smaller search trees later.
 </BodyText>

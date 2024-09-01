@@ -11,6 +11,7 @@
 
     import gradientTable from "$lib/images/gradient-example-table.png";
     import gradientFigure from "$lib/images/gradient-example-image.png";
+    import YoutubeEmbed from "$lib/YoutubeEmbed.svelte";
 </script>
 
 <Heading level=2 refId=multiVarUnconstrained>Multi-variable unconstrained optimization</Heading>
@@ -64,7 +65,8 @@
     So those are the basics of the gradient search method. Before we get too much further into details, maybe we should pause a second to try to build a bit of intuition? I'd like to display some graphs to try to help you visualize the gradient search process, but we really need 3d plots for that, and that's not my strength. So I went out and found this short Youtube video instead. Note that the video uses the term <em>gradient descent</em> for this procedure and they are solving a minimization problem. Don't worry though, it's basically the same algorithm and the intuitions are the same.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/qg4PchTECck" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='qg4PchTECck' />
+
 <BodyText>
     In the video, he talks about a few different ways to decide the step size <Math>t</Math> (<Math>\eta</Math> in the video). As he said, there are many different flavors of gradient descent, and the selection of <Math>t</Math> is a big differentiator. And the choice of <Math>t</Math> can have a big effect on how many iterations are required before converging.
 </BodyText>

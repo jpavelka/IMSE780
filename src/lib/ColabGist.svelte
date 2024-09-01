@@ -1,6 +1,7 @@
 <script lang='ts'>
     import { refNumbering } from "$lib";
     import { notebooks } from "./stores";
+    import { afterUpdate } from 'svelte';
 
     export let colabId
     export let gistId
@@ -20,15 +21,37 @@
     refId = refNumbering(notebooks, refId, 'nb');
     const nbNum = $notebooks.numbers[refId];
 
+    let seen = false;
+    let posEl;
+    let pos;
+    let scrollY;
+    let innerHeight;
+    afterUpdate(() => {
+        pos = (posEl || {offsetTop: 0}).offsetTop;
+        if (pos > 0 && Math.abs(pos - scrollY) <= 2 * innerHeight) {
+            seen = true;
+        } else {
+            seen = false;
+        }
+    })
+
     // todo: some method to update gist from colab
 </script>
 
+<svelte:window bind:scrollY bind:innerHeight />
 <div class=nbTitle><b>Notebook {nbNum}:</b> {desc}</div>
-<iframe
-    id={gistId}
-    src={`https://notebooks.githubusercontent.com/view/ipynb?enc_url=${encUrl}`}
-    title={'Notebook Embed ' + gistId}
->Viewer requires iframe</iframe>
+<div id={gistId} bind:this={posEl}>
+    {#if seen}
+        <iframe
+            src={`https://notebooks.githubusercontent.com/view/ipynb?enc_url=${encUrl}`}
+            title={'Notebook Embed ' + gistId}
+        >
+            Viewer requires iframe
+        </iframe>
+    {:else}
+        <div>Waiting for notebook to load...</div>
+    {/if}
+</div>
 
 <style>
     iframe {

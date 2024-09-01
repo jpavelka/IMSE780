@@ -4,6 +4,7 @@
     import CitationRef from "$lib/CitationRef.svelte";
     import Heading from "$lib/Heading.svelte";
     import SectionRef from "$lib/SectionRef.svelte";
+    import YoutubeEmbed from "$lib/YoutubeEmbed.svelte";
 </script>
 
 <Heading level=2 refId=reinforcementLearning>Reinforcement learning</Heading>
@@ -38,39 +39,39 @@
     In the first video of our series, we'll get a brief introduction to RL, and a formulation of Markov decision processes. His MDP formulation is slightly different from ours and uses different notation, but I think you'll still be able to recognize it. One big difference, though, is that in the video the objective is not maximizing the long-run expected reward per time step. Instead, he uses a notion of <em>total discounted future reward</em>  which is another common criterion for optimizing MDPs. Additionally, there are notions here that we did not mention in class - sampled episodes, terminal states, etc. They weren't important for what we learned already in class, but they will play a part here.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/NFo9v_yKQXA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='NFo9v_yKQXA' />
 
 <Heading level=3 refId=RLVid2>Bellman equations, dynamic programming, generalized policy iteration (video 2)</Heading>
 <BodyText>
     In this video, we're still just dealing with MDPs. The solution method he talks about, <em>policy iteration</em>  is a more practical way to go about solving MDPs than the linear programming method we presented in <SectionRef refId=mdpLp/>. It also uses the notion of <a href='https://en.wikipedia.org/wiki/Dynamic_programming'><em>dynamic programming</em></a>, which is a technique of recursively breaking a problem down into simpler sub-problems, and using the optimal solutions of the sub-problems to inform the solutions of the larger problems. It is a notion that pops up in optimization algorithms for several types of problems, so I'm glad to give you some exposure to it here.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/_j6pvGEchWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='_j6pvGEchWU' />
 
 <Heading level=3 refId=RLVid3>Monte Carlo and off-policy methods (video 3)</Heading>
 <BodyText>
     In this video we're no longer just dealing with MDPs, but learning techniques that can be useful for actual reinforcement learning! The difference is that we no longer assume any knowledge of the state transition probabilities. Therefore the potential rewards from each state must be learned by interactions with the environment. That means lots of simulations, and an appearance of the important <em>exploration vs. exploitation</em> tradeoff central to RL solution methods. In the end, the video applies what we've learned to determine optimal play for the casino game blackjack.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/bpUszPiWM7o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='bpUszPiWM7o' />
 
 <Heading level=3 refId=RLVid4>Temporal difference learning (video 4)</Heading>
 <BodyText>
     In this video, we'll learn what amount to tweaks to the Monte Carlo method from the last video. These tweaks can help improve performance of the learning process.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/AJiG3ykOxmY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='AJiG3ykOxmY' />
 
 <Heading level=3 refId=RLVid5>Function approximation (video 5)</Heading>
 <BodyText>
     Now we'll move on to cases where the set of states is no longer discrete. Things get a little more abstract from here. But we do see a return of our old friend, gradient descent!
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/Vky0WVh_FSk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='Vky0WVh_FSk' />
 
 <Heading level=3 refId=RLVid6>Policy gradient methods (video 6)</Heading>
 <BodyText>
     This final video touches on a neat class of algorithms for reinforcement learning when the state space is huge.
 </BodyText>
 
-<iframe class="basicCenter" width="560" height="315" src="https://www.youtube.com/embed/e20EY4tFC_Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<YoutubeEmbed videoId='e20EY4tFC_Q' />

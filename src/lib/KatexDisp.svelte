@@ -26,13 +26,13 @@
     let posEl;
     let pos;
     let scrollY;
-    let innerHeight
+    let innerHeight;
     afterUpdate(() => {
-		pos = posEl.offsetTop;
-	});
-    $: if (Math.abs(pos - scrollY) <= 2 * innerHeight) {
-        seen = true;
-    }
+        pos = (posEl || {offsetTop: 0}).offsetTop;
+        if (pos > 0 && Math.abs(pos - scrollY) <= 2 * innerHeight) {
+            seen = true;
+        }
+    })
 </script>
 
 <svelte:head>
