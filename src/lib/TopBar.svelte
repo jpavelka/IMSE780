@@ -1,24 +1,26 @@
 <script lang=ts>
-    import { showToc } from "./stores";
+    import { printMode, showToc } from "./stores";
 
     export let smallScreen = false;
 </script>
 
-<div class=topBar>
-    <div class=contents on:click={() => {
-        showToc.update(s => !s);
-    }}>
-        Contents
-    </div>
-    <div class=courseNum>
-        IMSE 780
-    </div>
-    {#if !smallScreen}
-        <div class=term>
-            Fall 2023
+{#if !$printMode}
+    <div class=topBar>
+        <div class=contents on:click={() => {
+            showToc.update(s => !s);
+        }}>
+            Contents
         </div>
-    {/if}
-</div>
+        <div class=courseNum>
+            IMSE 780
+        </div>
+        {#if !smallScreen}
+            <div class=term>
+                Fall 2023
+            </div>
+        {/if}
+    </div>
+{/if}
 
 <style>
     .topBar {

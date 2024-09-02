@@ -1,7 +1,7 @@
 <script lang="ts">
     import katex from "katex";
     import { macros } from "./latexMacros.ts";
-    import { eqReferenced } from './stores';
+    import { eqReferenced, printMode } from './stores';
     import { afterUpdate } from 'svelte';
 
     export let options;
@@ -52,7 +52,7 @@
     on:mouseover={mouseOverFunction}
     on:mouseout={mouseOutFunction}
 >
-    {#if seen}
+    {#if seen || $printMode}
         {@html katex.renderToString(s, options)}
     {:else}
         {s}

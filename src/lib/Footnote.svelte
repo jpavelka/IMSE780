@@ -1,15 +1,20 @@
 <script lang="ts">
     import PopupToggle from "./PopupToggle.svelte";
+    import { printMode } from "./stores";
     $: showPopup = false;
     const popupOpenClose = () => {
         showPopup = !showPopup;
     };
 </script>
 
-<PopupToggle show={showPopup}>
-    <slot/>
-</PopupToggle>
-<span class="footnote" on:click={popupOpenClose}>[note]</span>
+{#if $printMode}
+    <span></span>
+{:else}
+    <PopupToggle show={showPopup}>
+        <slot/>
+    </PopupToggle>
+    <span class="footnote" on:click={popupOpenClose}>[note]</span>
+{/if}
 
 <style>
     .footnote {

@@ -1,6 +1,7 @@
 <script lang='ts'>
     import { refNumbering } from "$lib";
-    import { notebooks } from "./stores";
+    import BodyText from "./BodyText.svelte";
+    import { notebooks, printMode } from "./stores";
     import { afterUpdate } from 'svelte';
 
     export let colabId
@@ -34,22 +35,28 @@
             seen = false;
         }
     })
-
+    const gistUrlBase = 'https://colab.research.google.com/gist/jpavelka/'
     // todo: some method to update gist from colab
 </script>
 
 <svelte:window bind:scrollY bind:innerHeight />
 <div class=nbTitle><b>Notebook {nbNum}:</b> {desc}</div>
 <div id={gistId} bind:this={posEl}>
-    {#if seen}
-        <iframe
-            src={`https://notebooks.githubusercontent.com/view/ipynb?enc_url=${encUrl}`}
-            title={'Notebook Embed ' + gistId}
-        >
-            Viewer requires iframe
-        </iframe>
+    {#if $printMode}
+        <BodyText>
+            (Find the notebook at <a href={gistUrlBase + gistId}>{gistUrlBase}<wbr>{gistId}</a>)
+        </BodyText>
     {:else}
-        <div>Waiting for notebook to load...</div>
+        {#if seen}
+            <iframe
+                src={`https://notebooks.githubusercontent.com/view/ipynb?enc_url=${encUrl}`}
+                title={'Notebook Embed ' + gistId}
+            >
+                Viewer requires iframe
+            </iframe>
+        {:else}
+            <div>Waiting for notebook to load...</div>
+        {/if}        
     {/if}
 </div>
 

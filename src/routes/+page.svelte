@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import TopBar from "$lib/TopBar.svelte";
     import TOC from "$lib/TOC.svelte";
-    import { showToc, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth } from "$lib/stores";
+    import { showToc, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth, printMode } from "$lib/stores";
     import Appendix from "$lib/sections/appendix/Appendix.svelte";
     import Bibliography from "$lib/Bibliography.svelte";
     import Welcome from "$lib/sections/Welcome.svelte";
@@ -40,7 +40,9 @@
                 scrollTo.scrollIntoView();
             }
             stillScrolling = false;
-        }, 100)
+        }, 100);
+        window.onbeforeprint = () => printMode.update(() => true);
+        window.onafterprint = () => printMode.update(() => false)
     });
 </script>
 
@@ -64,7 +66,13 @@
             <div class=underBar on:click={bodyClick} style={'visibility:' + (stillScrolling ? 'hidden' : 'visible')}>
                 <TOC />
                 <div
-                    class={"notesContent" + ($showToc && (innerWidth - $tocWidth > $notesMaxWidth) ? ' noteContentShifted' : '') + ($popupShown && (innerWidth - $notesMaxWidth > $minPopupSideWidth) ? ' noteContentWithPopup' : '')}
+                    class={
+                        "notesContent" +
+                        ($printMode ? ' notesPrint' : 
+                            ($showToc && (innerWidth - $tocWidth > $notesMaxWidth) ? ' noteContentShifted' : '') +
+                            ($popupShown && (innerWidth - $notesMaxWidth > $minPopupSideWidth) ? ' noteContentWithPopup' : '')
+                        )
+                    }
                 >
                     <Welcome />
                     <IntroToOr />
@@ -75,8 +83,12 @@
                     <StochasticProcesses />
                     <Appendix />
                     <Bibliography />
+                <div class=afterNotes></div>
                 </div>
             </div>
+            {#if !$printMode}
+                <div class=footer>© Copyright 2024, Jeffrey Pavelka</div>
+            {/if}
         </div>
     </div>
 </div>
@@ -103,6 +115,11 @@
         -moz-transition: all .5s;
         -o-transition: all .5s;
         -ms-transition: all .5s;
+    }
+    .notesPrint {
+        left: auto;
+        padding: 2rem;
+        font-size: 0.4rem;
     }
     .noteContentWithPopup {
         left: 20px;
@@ -145,6 +162,18 @@
             stroke-width: 2;
         }
     }
+    .afterNotes {
+        height: 3rem;
+    }
+    .footer {
+        position: fixed;
+        bottom: 0;
+        text-align: center;
+        width: 100%;
+        background: white;
+        border-top: 1pt solid lightgray;
+        font-size: 0.8rem;
+    }
     .loader {
         border: 0.4rem solid #f3f3f3;
         border-radius: 50%;
@@ -155,13 +184,11 @@
         animation: spin 2s linear infinite;
         margin: 1rem auto;
     }
-
     @-webkit-keyframes spin {
         0% { -webkit-transform: rotate(0deg); }
         33% { transform: rotate(90deg); }
         100% { -webkit-transform: rotate(360deg); }
     }
-
     @keyframes spin {
         0% { transform: rotate(0deg); }
         33% { transform: rotate(90deg); }
