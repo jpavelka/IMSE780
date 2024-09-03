@@ -12,7 +12,7 @@
         height: calc(100% - 4rem);
         width: 0;
         position: fixed;
-        z-index: 2;
+        z-index: 3;
         top: 0;
         left: 0;
         background-color: #ebebeb;

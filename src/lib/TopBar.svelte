@@ -34,7 +34,7 @@
         display: flex;
         justify-content: space-between;
         font-family: Georgia, serif;
-        z-index: 3;
+        z-index: 4;
     }
     .topBar > div {
         padding: 0.5rem 1rem;

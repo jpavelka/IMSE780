@@ -3,15 +3,8 @@
     import TopBar from "$lib/TopBar.svelte";
     import TOC from "$lib/TOC.svelte";
     import { showToc, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth, printMode, highlightKeyPoints } from "$lib/stores";
-    import Appendix from "$lib/sections/appendix/Appendix.svelte";
-    import Bibliography from "$lib/Bibliography.svelte";
-    import Welcome from "$lib/sections/Welcome.svelte";
-    import IntroToOr from "$lib/sections/IntroToOR.svelte";
-    import Python from "$lib/sections/Python.svelte";
-    import LinearProgramming from "$lib/sections/linearProgramming/LinearProgramming.svelte";
-    import IntegerProgramming from "$lib/sections/integerProgramming/IntegerProgramming.svelte";
-    import NonlinearProgramming from "$lib/sections/nonlinearProgramming/NonlinearProgramming.svelte";
-    import StochasticProcesses from "$lib/sections/stochasticProcesses/StochasticProcesses.svelte";
+    import Sections from "$lib/sections/Sections.svelte";
+    import CurrentSectionDisp from "$lib/CurrentSectionDisp.svelte";
     
     let innerWidth = 0;
     let stillLoading = true;
@@ -65,6 +58,7 @@
             <TopBar smallScreen={innerWidth < 400}/>
             <div class=underBar on:click={bodyClick} style={'visibility:' + (stillScrolling ? 'hidden' : 'visible')}>
                 <TOC />
+                <CurrentSectionDisp />
                 <div
                     class={
                         "notesContent" +
@@ -74,16 +68,8 @@
                         )
                     }
                 >
-                    <Welcome />
-                    <IntroToOr />
-                    <Python />
-                    <LinearProgramming />
-                    <IntegerProgramming />
-                    <NonlinearProgramming />
-                    <StochasticProcesses />
-                    <Appendix />
-                    <Bibliography />
-                <div class=afterNotes></div>
+                    <Sections />
+                    <div class=afterNotes></div>
                 </div>
             </div>
             {#if !$printMode}
@@ -151,7 +137,7 @@
         margin: 0;
     }
     :global(body *) {
-        scroll-margin-top: 4.5rem;
+        scroll-margin-top: 7rem;
     }
     :global(.basicCenter) {
         position: relative;
@@ -208,5 +194,4 @@
         33% { transform: rotate(90deg); }
         100% { transform: rotate(360deg); }
     }
-  
 </style>
