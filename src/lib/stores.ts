@@ -63,9 +63,10 @@ const tocWidth = readable(350);
 const minPopupSideWidth = readable(400);
 const eqReferenced = writable([]);
 const printMode = writable(false);
+const highlightKeyPoints = writable(false);
 
 export {
   sections, citations, figures, equations, showToc, notebooks,
   theorems, popupShown, notesMaxWidth, tocWidth, eqReferenced,
-  minPopupSideWidth, printMode
+  minPopupSideWidth, printMode, highlightKeyPoints
 }

@@ -6,12 +6,13 @@
     import Footnote from "$lib/Footnote.svelte";
     import Heading from "$lib/Heading.svelte";
     import caseStudies from "$lib/images/or-case-studies.png";
+    import Key from "$lib/Key.svelte";
 
 </script>
 <Heading level=1 refId=intoToOR>Introduction to OR</Heading>
 
 <BodyText>
-    In this section we'll cover the big picture questions: What is Operations Research? Where did it come from? What can I do with it? I hope to impress upon you that OR is a seriously set of tools, and that it has a huge impact on the world today.
+    In this section we'll cover the big picture questions: <Key>What is Operations Research? Where did it come from? What can I do with it?</Key> I hope to impress upon you that OR is a seriously useful set of tools, and that it has a huge impact on the world today.
 </BodyText>
 
 <Heading level=2 refId=whatIsOR>What is Operations Research?</Heading>

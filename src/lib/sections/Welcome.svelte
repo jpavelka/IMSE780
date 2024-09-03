@@ -3,25 +3,25 @@
     import CitationRef from "$lib/CitationRef.svelte";
     import Footnote from "$lib/Footnote.svelte";
     import Heading from "$lib/Heading.svelte";
+    import Key from "$lib/Key.svelte";
 </script>
 
 <Heading level="1" refId="welcome">Welcome!</Heading>
 
 <BodyText>
-    You're reading the class notes for <em
-        >IMSE 780: Methods of Operations Research</em
-    > taught at Kansas State University during the Fall 2023 semester. This course
-    is intended to give an overview of Operations Research (OR) at the graduate level.
-    After this course, students will have a basic familiarity with various OR methodologies
-    and be able to recognize when the methods can be applied in real-life scenarios.
-    Students should also be able to apply the chosen methodology via Python code.
+    You're reading the class notes for <em>IMSE 780: Methods of Operations Research</em>
+    taught at Kansas State University during the Fall 2023 semester. This course
+    is intended to give an <Key>overview of Operations Research (OR) at the graduate level</Key>.
+    After this course, students will have a <Key>basic familiarity with various OR methodologies</Key>
+    and be able to <Key>recognize when the methods can be applied in real-life scenarios</Key>.
+    Students should also be able to <Key>apply the chosen methodology via Python code</Key>.
 </BodyText>
 
 <Heading level="2" refId="courseMaterials">Course materials</Heading>
 
 <!-- todo: assignments link -->
 <BodyText>
-    The core of this course will be taught from these notes. Additionally, I
+    The core of this course will be taught from these notes. Additionally, <Key>I
     encourage students to use the textbook <em
         >Introduction to Operations Research</em
     >
@@ -31,9 +31,9 @@
         10th edition from 2015. Nothing about the course will require you to
         have a certain edition, or any book at all. But I think it's a very
         useful reference.</Footnote
-    >. The syllabus, assignments, and other course materials may be found via
-    the <a href="https://k-state.instructure.com/">class Canvas site</a>. Course
-    homeworks/assignments may be found <a id="toAssignments">here</a>.
+    ></Key>. The syllabus, assignments, and other <Key>course materials may be found via
+    the <a href="https://k-state.instructure.com/">class Canvas site</a></Key>. Course
+    <Key>homeworks/assignments may be found <a id="toAssignments">here</a></Key>.
 </BodyText>
 
 <Heading level="2" refId="noteNotes">Notes on these notes</Heading>

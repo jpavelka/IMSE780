@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import TopBar from "$lib/TopBar.svelte";
     import TOC from "$lib/TOC.svelte";
-    import { showToc, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth, printMode } from "$lib/stores";
+    import { showToc, popupShown, notesMaxWidth, tocWidth, minPopupSideWidth, printMode, highlightKeyPoints } from "$lib/stores";
     import Appendix from "$lib/sections/appendix/Appendix.svelte";
     import Bibliography from "$lib/Bibliography.svelte";
     import Welcome from "$lib/sections/Welcome.svelte";
@@ -87,7 +87,15 @@
                 </div>
             </div>
             {#if !$printMode}
-                <div class=footer>© Copyright 2024, Jeffrey Pavelka</div>
+                <div class=footer>
+                    © Copyright 2024, Jeffrey Pavelka
+                    <span
+                        class=footerActions
+                        on:click={() => highlightKeyPoints.update(x => !x)}
+                    >
+                        &#128273;
+                    </span>
+                </div>
             {/if}
         </div>
     </div>
@@ -173,6 +181,12 @@
         background: white;
         border-top: 1pt solid lightgray;
         font-size: 0.8rem;
+    }
+    .footerActions {
+        float: right;
+        padding-right: 1rem;
+        font-size: 0.8rem;
+        cursor: pointer;
     }
     .loader {
         border: 0.4rem solid #f3f3f3;

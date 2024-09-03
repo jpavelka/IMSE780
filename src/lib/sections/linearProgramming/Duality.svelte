@@ -5,6 +5,7 @@
     import EquationRef from "$lib/EquationRef.svelte";
     import Footnote from "$lib/Footnote.svelte";
     import Heading from "$lib/Heading.svelte";
+    import Key from "$lib/Key.svelte";
     import Math from "$lib/Math.svelte";
     import MathDisp from "$lib/MathDisp.svelte";
     import SectionRef from "$lib/SectionRef.svelte";
@@ -20,7 +21,7 @@
 
 <Heading level=3 refId=corporateTakeover>The corporate takeover</Heading>
 <BodyText>
-    Suppose you really want to get into the glass manufacturing business. You figure that Wyndor Glass Co. (the company from <SectionRef refId=exampleLp/>, where we derived our sample LP <EquationRef refId=prototypeLp/>) might be willing to sell you time in their facilities. But you don't just want <em>some</em> time, you have big plans and could really use <em>all</em> their facility time for the next week. You decide to propose to buy their facility time at a cost of <Math>y_i</Math> per hour in facility <Math>i\in\{1, 2, 3\}</Math>. How do you know what price to propose?
+    Suppose you really want to get into the glass manufacturing business. You figure that Wyndor Glass Co. (the company from <SectionRef refId=exampleLp/>, where we derived our sample LP <EquationRef refId=prototypeLp/>) might be willing to sell you time in their facilities. But you don't just want <em>some</em> time, you have big plans and could really use <em>all</em> their facility time for the next week. You decide to propose to <Key>buy their facility time at a cost of <Math>y_i</Math> per hour in facility <Math>i\in\{1, 2, 3\}</Math></Key>. How do you know what price to propose?
 </BodyText>
 <BodyText>
     You know a little bit about linear programming now, so you decide to solve an LP to guide your decision. Naturally, you want to pay the least amount possible for their facility time. Since the facilities are open for 4, 12, and 18 hours per week respectively, your objective is to minimize <Math>4y_1 + 12y_2 + 18y_3</Math>.
