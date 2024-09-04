@@ -29,6 +29,9 @@
             }
             const idEl = document.createElement("div");
             idEl.textContent = "Eq. " + $equations.numbers[refId];
+            if (!!$equations.names[refId]){
+                idEl.textContent += ` (${$equations.names[refId]})`
+            }
             idEl.style.fontWeight = "bold";
             popupEl?.appendChild(idEl);
             setTimeout(function () {

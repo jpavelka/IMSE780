@@ -6,6 +6,7 @@
     export let refId: string = "";
     export let ignoreOverflow: boolean = false;
     export let fontSize = '1';
+    export let name = '';
 
     const options = {
         displayMode: true,
@@ -15,6 +16,12 @@
     if (refId !== "") {
         refId = refNumbering(equations, refId, 'eqn');
         eqnNum = $equations.numbers[refId]
+        if (name !== "") {
+            equations.update(e => {
+                e.names[refId] = name;
+                return e
+            })
+        }
     }
     $: returnId = $equations.returnIds[refId];
 </script>

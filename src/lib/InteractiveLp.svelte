@@ -54,10 +54,12 @@
         )
     }
     const vertices = getVertices(constraintInfo);
+    let innerWidth: number;
 </script>
 
+<svelte:window bind:innerWidth />
 <Figure {refId}>
-    <div style=margin-bottom:1rem;overflow-x:scroll>
+    <div style={`margin-bottom:1rem;${innerWidth - svgWidth < 50 ? 'overflow-x:scroll;' : ''}`}>
         <svg
             style={`height:${svgHeight}px;width:${svgWidth}px`}
             class=svgBase

@@ -74,7 +74,7 @@
     Lastly, we know that <Math>x_1</Math> and <Math>x_2</Math> cannot be negative (there is no way to produce a negative number of products), so <Math>x_1 \geq 0</Math> and <Math>x_2 \geq 0</Math> must be part of our formulation as well. Bringing it all together, we can write the problem formulation as:
 </BodyText>
 
-<MathDisp refId=prototypeLp>
+<MathDisp refId=prototypeLp name={'Wyndor LP'}>
     {String.raw`
         \begin{align*}
         \max && 3x_1 + 5x_2 & \\

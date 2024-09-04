@@ -37,12 +37,14 @@ const equations: Writable<{
   secCounts: {[key: string]: number},
   numbers: {[key: string]: string},
   numRefs: {[key: string]: number},
-  returnIds: {[key: string]: string}
+  returnIds: {[key: string]: string},
+  names: {[key: string]: string}
 }> = writable({
   secCounts: {},
   numbers: {},
   numRefs: {},
-  returnIds: {}
+  returnIds: {},
+  names: {}
 })
 
 const notebooks: Writable<{
