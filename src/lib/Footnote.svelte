@@ -12,8 +12,9 @@
 {:else}
     <PopupToggle show={showPopup}>
         <slot/>
-    </PopupToggle>
-    <span class="footnote" on:click={popupOpenClose}>[note]</span>
+    </PopupToggle><span
+        class="footnote" on:click={popupOpenClose}
+    >[note]</span>
 {/if}
 
 <style>
@@ -22,6 +23,5 @@
         color: green;
         vertical-align: super;
         font-size: 0.7rem;
-        margin-left: -0.5em;
     }
 </style>

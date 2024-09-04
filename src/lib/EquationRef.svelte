@@ -1,5 +1,5 @@
 <script lang=ts>
-    import { equations } from "./stores";
+    import { equations, printMode } from "./stores";
     import PopupToggle from "./PopupToggle.svelte";
     import { eqReferenced } from "./stores";
     export let refId: String;
@@ -53,11 +53,19 @@
     };
 </script>
 
-<PopupToggle show={showPopup} divId={retId}>
-</PopupToggle>
-<span class=eqRef id={retId} on:click={() => {
-    popupOpenClose();
-}}>Eq. {$equations.numbers[refId]}</span>
+{#if $printMode}
+    <a class=eqRef href={`#${refId}`}>
+        Eq. {$equations.numbers[refId]}
+    </a>
+{:else}
+    <PopupToggle
+        show={showPopup} divId={retId}>
+    </PopupToggle><span
+        class=eqRef id={retId} on:click={popupOpenClose}
+    >
+        Eq. {$equations.numbers[refId]}
+    </span>
+{/if}
 
 <style>
     .eqRef {

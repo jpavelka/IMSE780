@@ -21,7 +21,7 @@ const macros = {
     '\\NP': '\\mathcal{NP}',
     '\\floor': '\\lfloor #1 \\rfloor',
     '\\ceil': '\\lceil #1 \\rceil',
-    '\\bpi': '\\mathbb{\pi}',
+    '\\bpi': '\\mathbb{\\pi}',
     '\\Q': '\\mathbf{Q}',
     '\\indicator': '\\boldsymbol{1}',
     '\\prob': 'P\\left( #1 \\right)',

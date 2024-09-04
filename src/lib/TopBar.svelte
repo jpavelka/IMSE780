@@ -6,7 +6,7 @@
 
 {#if !$printMode}
     <div class=topBar>
-        <div class=contents on:click={() => {
+        <div id='contentsClick' class=contents on:click={() => {
             showToc.update(s => !s);
         }}>
             Contents

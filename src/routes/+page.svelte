@@ -11,9 +11,9 @@
     let stillScrolling = true;
 
     const bodyClick = (e) => {
-        if ($showToc) {
-            let el = e.target;
-            while (el.tagName !== 'BODY') {
+        let el = e.target;
+        if ($showToc && el.id !== 'contentsClick') {
+            while (!['BODY', 'HTML'].includes(el.tagName)) {
                 if ([...el.classList].includes('toc')) {
                     return
                 }
@@ -37,6 +37,11 @@
         window.onbeforeprint = () => printMode.update(() => true);
         window.onafterprint = () => printMode.update(() => false)
     });
+    try {
+        document.onclick = bodyClick
+    } catch {
+
+    }
 </script>
 
 <svelte:window bind:innerWidth />
@@ -56,7 +61,7 @@
         {/if}
         <div style={'display:' + (stillLoading ? 'none' : 'block')}>
             <TopBar smallScreen={innerWidth < 400}/>
-            <div class=underBar on:click={bodyClick} style={'visibility:' + (stillScrolling ? 'hidden' : 'visible')}>
+            <div class=underBar style={'visibility:' + (stillScrolling ? 'hidden' : 'visible')}>
                 <TOC />
                 <CurrentSectionDisp />
                 <div
@@ -137,7 +142,7 @@
         margin: 0;
     }
     :global(body *) {
-        scroll-margin-top: 7rem;
+        scroll-margin-top: 7.5rem;
     }
     :global(.basicCenter) {
         position: relative;

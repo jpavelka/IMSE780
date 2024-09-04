@@ -15,8 +15,7 @@
 
 <PopupToggle show={showPopup}>
     {citeObj.biblio}
-</PopupToggle>
-<span class="ref" on:click={popupOpenClose}>
+</PopupToggle><span class="ref" on:click={popupOpenClose}>
     {citeObj.refStr}
 </span>
 

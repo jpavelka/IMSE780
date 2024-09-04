@@ -57,7 +57,7 @@
 </script>
 
 <Figure {refId}>
-    <div style=margin-bottom:1rem>
+    <div style=margin-bottom:1rem;overflow-x:scroll>
         <svg style={`height:${svgHeight}px;width:${svgWidth}px`} class=svgBase on:click={(e) => svgClickFunc(e)}>
             {#each constraintInfo.filter(cInfo => !cInfo.nonNegConstraint) as cInfo}
                 <Constraint {constants} {cInfo} />

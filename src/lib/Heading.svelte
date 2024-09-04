@@ -51,7 +51,7 @@
     })
 </script>
 
-<span style="display:none" bind:this={data}><slot /></span>
+<span style="display:none" class="headingData" bind:this={data}><slot /></span>
 {#if (levelInt || 1) === 1 && secNum !== '1'}
     <hr style="margin-top:3rem;margin-bottom:5rem" />
 {/if}

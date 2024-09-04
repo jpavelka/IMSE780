@@ -39,10 +39,9 @@
 </script>
 
 <PopupToggle show={showPopup} divId={retId}>
-</PopupToggle>
-<span class=thmRef id={retId} on:click={() => {
-    popupOpenClose();
-}}>{$theorems.thmTypes[refId]} {$theorems.numbers[refId]}</span>
+</PopupToggle><span
+    class=thmRef id={retId} on:click={popupOpenClose}
+>{$theorems.thmTypes[refId]} {$theorems.numbers[refId]}</span>
 
 <style>
     .thmRef {
