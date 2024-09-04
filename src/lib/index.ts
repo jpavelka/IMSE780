@@ -1,7 +1,7 @@
 import { sections } from "./stores";
-import { get } from "svelte/store";
+import { get, type Writable } from "svelte/store";
 
-const refNumbering = (refStore, refId, refPre) => {
+const refNumbering = (refStore: Writable<any>, refId: string, refPre: string) => {
     refId = refPre + ":" + refId;
     const sec = get(sections).hierarchy.length;
     if (!Object.keys(get(refStore).secCounts).includes(sec + '')) {

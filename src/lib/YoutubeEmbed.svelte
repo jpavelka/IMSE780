@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
     export let videoId
     export let params = undefined
     import { afterUpdate } from 'svelte';
@@ -12,10 +12,10 @@
     }
 
     $: seen = false
-    let posEl;
-    let pos;
-    let scrollY;
-    let innerHeight;
+    let posEl: HTMLElement;
+    let pos: number;
+    let scrollY: number;
+    let innerHeight: number;
     afterUpdate(() => {
         pos = (posEl || {offsetTop: 0}).offsetTop;
         if (pos > 0 && Math.abs(pos - scrollY) <= 2 * innerHeight) {

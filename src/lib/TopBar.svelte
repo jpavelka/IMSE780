@@ -6,9 +6,15 @@
 
 {#if !$printMode}
     <div class=topBar>
-        <div id='contentsClick' class=contents on:click={() => {
-            showToc.update(s => !s);
-        }}>
+        <div
+            id='contentsClick'
+            class=contents
+            role=button
+            tabindex="0"
+            aria-label="Toggle show TOC"
+            on:keydown={() => {showToc.update(s => !s)}}
+            on:click={() => {showToc.update(s => !s)}}
+        >
             Contents
         </div>
         <div class=courseNum>

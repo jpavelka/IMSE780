@@ -10,14 +10,14 @@
     let stillLoading = true;
     let stillScrolling = true;
 
-    const bodyClick = (e) => {
-        let el = e.target;
-        if ($showToc && el.id !== 'contentsClick') {
+    const bodyClick = (e: MouseEvent) => {
+        let el = e.target as HTMLElement;
+        if ($showToc && el?.id !== 'contentsClick') {
             while (!['BODY', 'HTML'].includes(el.tagName)) {
                 if ([...el.classList].includes('toc')) {
                     return
                 }
-                el = el.parentNode;
+                el = el?.parentNode as HTMLElement;
             }
             showToc.update(() => {
                 return false
@@ -82,6 +82,10 @@
                     © Copyright 2024, Jeffrey Pavelka
                     <span
                         class=footerActions
+                        role=button
+                        tabindex="0"
+                        aria-label="Highlight key points"
+                        on:keydown={() => highlightKeyPoints.update(x => !x)}
                         on:click={() => highlightKeyPoints.update(x => !x)}
                     >
                         &#128273;

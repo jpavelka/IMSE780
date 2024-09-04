@@ -20,13 +20,13 @@
     const encUrl = toHex(`https://raw.githubusercontent.com/gist/jpavelka/${gistId}/raw`);
 
     refId = refNumbering(notebooks, refId, 'nb');
-    const nbNum = $notebooks.numbers[refId];
+    const nbNum: string = $notebooks.numbers[refId];
 
     let seen = false;
-    let posEl;
+    let posEl: HTMLElement;
     let pos;
-    let scrollY;
-    let innerHeight;
+    let scrollY: number;
+    let innerHeight: number;
     afterUpdate(() => {
         pos = (posEl || {offsetTop: 0}).offsetTop;
         if (pos > 0 && Math.abs(pos - scrollY) <= 2 * innerHeight) {

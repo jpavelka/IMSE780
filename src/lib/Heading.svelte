@@ -43,7 +43,7 @@
         })
     }
     $: returnId = $sections.returnIds[refId];
-    let data;
+    let data: HTMLElement;
     $: headingText =  `${includeDispSecNum ? (!!level ? secNum : '') + (!!level ? ": " : "") : ""}${data?.innerHTML}`;
     $: sections.update(s => {
         s.headingTexts[refId] = headingText;

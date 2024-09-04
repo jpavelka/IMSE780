@@ -21,6 +21,7 @@
 </script>
 
 <foreignObject
+    class=svgPlotText
     x={pix[0]}
     y={pix[1]}
     height={height}

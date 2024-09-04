@@ -1,15 +1,15 @@
 <script lang="ts">
     import { refNumbering } from "$lib";
     import { figures } from "./stores";
-    export let refId: String;
+    export let refId: string;
 
-    refId = refNumbering(figures, refId, 'fig');
+    refId = refNumbering(figures, refId, "fig");
     const figNum = $figures.numbers[refId];
 </script>
 
 <div class="figDiv">
     <slot />
-    <div class="caption"><b>Figure {figNum}:</b> <slot name='caption' /></div>
+    <div class="caption"><b>Figure {figNum}:</b> <slot name="caption" /></div>
 </div>
 
 <style>

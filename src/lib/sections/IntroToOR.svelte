@@ -58,7 +58,7 @@
 </BodyText>
 
 <Figure refId="tspPic">
-    <img src='https://www.math.uwaterloo.ca/tsp/usa50/img/newsweek_medium.jpg' alt="TSP image" />
+    <img src='https://www.math.uwaterloo.ca/tsp/usa50/img/newsweek_medium.jpg' alt="TSP example map" />
     <span slot="caption">The shortest tour through 49 US cities.</span>
 </Figure>
 

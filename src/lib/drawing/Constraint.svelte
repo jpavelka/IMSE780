@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
     import Math from "$lib/Math.svelte";
     import Line from "./Line.svelte";
     import PlotText from "./PlotText.svelte";

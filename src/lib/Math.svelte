@@ -10,10 +10,15 @@
 		displayMode: false,
 		throwOnError: false,
 	};
-	let el;
+	let el: HTMLElement;
 	$: {
 		if (!!el) {
-			alwaysRender = [...el.parentElement.classList].includes("headingData");
+			const parent = el.parentElement || {classList: []}
+			alwaysRender = (
+				(new Set([...parent.classList])).intersection(
+					new Set(["headingData", "svgPlotText", "popup"])
+				).size > 0
+			);
 		}
 	}
 </script>

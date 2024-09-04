@@ -1,8 +1,8 @@
-<script>
+<script lang='ts'>
     import { sections } from "./stores";
     export let hierarchy;
     let expand = hierarchy.map(() => false);
-    const toggleExpand = (i) => {
+    const toggleExpand = (i: number) => {
         expand[i] = !expand[i];
     }
 </script>
@@ -11,7 +11,16 @@
     <div class=tocItem>
         <a class=tocA href={'#' + s.id} style={`margin-left: ${(s.level - 1) * 20}pt`}>{@html $sections.headingTexts[s.id]}</a>
         {#if (s.hierarchy || []).length > 0}
-            <span class=tocExpand on:click={() => toggleExpand(i)}>{expand[i] ? '-' : '+'}</span>
+            <span
+                class=tocExpand
+                role=button
+                tabindex="0"
+                aria-label="Toggle expand"
+                on:keydown={() => toggleExpand(i)}
+                on:click={() => toggleExpand(i)}
+            >
+                {expand[i] ? '-' : '+'}
+            </span>
         {/if}
     </div>
     {#if (s.hierarchy || []).length > 0}

@@ -1,17 +1,17 @@
-<script>
+<script lang="ts">
     import { onMount } from "svelte";
     import { popupShown, notesMaxWidth, minPopupSideWidth } from "./stores";
-    export let show
+    export let show: Boolean
     export let divId = ''
-    let popupEl
-    const handleClose = (e) => {
+    let popupEl: HTMLElement
+    const handleClose = (e: any) => {
         show = false;
     }
-    let checkForOpenPopups = () => {}
+    let checkForOpenPopups = () => {return false}
     onMount(() => {
         checkForOpenPopups = () => {
             let keepPopupShown = false;
-            for (const el of document.getElementsByClassName('popup')) {
+            for (let el of Array.from(document.getElementsByClassName('popup') as HTMLCollectionOf<HTMLElement>)) {
                 if (el.style.display === 'block' && el !== popupEl) {
                     keepPopupShown = true;
                 }
@@ -20,7 +20,7 @@
         }
     })
     let innerWidth = 0;
-    $: popupShown.update(x => {
+    $: popupShown.update(() => {
         if (show) {
             return true;
         }
@@ -37,7 +37,14 @@
     class={`popup popup${popupLoc}`}
     id={divId}
 >
-    <div class="closeX" on:click={handleClose}>×</div>
+    <div
+        class="closeX"
+        role=button
+        tabindex="0"
+        aria-label="Toggle popup"
+        on:keydown={handleClose}
+        on:click={handleClose}
+    >×</div>
     <slot/>
 </div>
 

@@ -20,7 +20,7 @@
         startPt={x[0]}
         endPt={x[1]}
         color={'red'}
-        lineWidth={2}
+        lineWidth={`${2}`}
         styleExtra={`animation:line-pulse 6s infinite;opacity:${x[2] ? 0 : 1}`}
     />
 {/each}

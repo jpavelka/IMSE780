@@ -38,9 +38,9 @@
     $: pointFeasible = checkPtFeasible(pointToShow, constraintInfo);
     $: pointObjVal = objective[0] * pointToShow[0] + objective[1] * pointToShow[1];
     $: objValToPlot = pointObjVal;
-    let svgClickFunc = (e) => {return};
+    let svgClickFunc = (e: MouseEvent) => {return};
     if (choosePoints || chooseObjVals) {
-        svgClickFunc = (e) => {
+        svgClickFunc = (e: MouseEvent) => {
             pointToShow = pixToCoord(constants, e.offsetX, e.offsetY).map(x => {
                 return Math.round(10 * x) / 10
             })
@@ -58,7 +58,15 @@
 
 <Figure {refId}>
     <div style=margin-bottom:1rem;overflow-x:scroll>
-        <svg style={`height:${svgHeight}px;width:${svgWidth}px`} class=svgBase on:click={(e) => svgClickFunc(e)}>
+        <svg
+            style={`height:${svgHeight}px;width:${svgWidth}px`}
+            class=svgBase
+            role=button
+            tabindex="0"
+            aria-label=""
+            on:keydown={(e) => {}}
+            on:click={(e) => svgClickFunc(e)}
+        >
             {#each constraintInfo.filter(cInfo => !cInfo.nonNegConstraint) as cInfo}
                 <Constraint {constants} {cInfo} />
             {/each}

@@ -13,7 +13,12 @@
     <PopupToggle show={showPopup}>
         <slot/>
     </PopupToggle><span
-        class="footnote" on:click={popupOpenClose}
+        class="footnote"
+        role=button
+        tabindex="0"
+        aria-label="Toggle popup"
+        on:keydown={popupOpenClose}
+        on:click={popupOpenClose}
     >[note]</span>
 {/if}
 
