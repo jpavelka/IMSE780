@@ -31,7 +31,7 @@
         pos = (posEl || {offsetTop: 0}).offsetTop;
         if (pos > 0 && Math.abs(pos - scrollY) <= 2 * innerHeight) {
             seen = true;
-        } else {
+        } else if (pos > 0 && Math.abs(pos - scrollY) > 4 * innerHeight) {
             seen = false;
         }
     })

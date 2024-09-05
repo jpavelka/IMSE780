@@ -38,16 +38,16 @@
             }
         }
     }
-    $: lastSelectedSec = undefined;
-    $: if (!!lastSelectedSec && !secsToDisplay.includes(lastSelectedSec)) {
-        lastSelectedSec = undefined;
-        const dispEl = document.getElementById('sectionContextDisplay');
+    $: lastSelectedSec = '';
+    $: if (lastSelectedSec !== '' && !secsToDisplay.includes(lastSelectedSec)) {
+        lastSelectedSec = '';
+        const dispEl = document.getElementById('sectionContextDisplay') as HTMLElement;
         dispEl.style.display = 'none';
     }
-    const secContextDisp = (sec) => {
+    const secContextDisp = (sec: string) => {
         lastSelectedSec = sec;
         const contextEl = document.getElementById(sec + 'Context');
-        const dispEl = document.getElementById('sectionContextDisplay');
+        const dispEl = document.getElementById('sectionContextDisplay') as HTMLElement;
         dispEl.innerHTML = `<a href=#${sec} style=color:blue;>Link</a>: `;
         if (contextEl?.innerHTML !== '') {    
             dispEl.innerHTML += contextEl?.innerHTML;
@@ -55,6 +55,11 @@
             dispEl.innerHTML += '<span style=color:gray;font-style:italic;>Section description not available<span>'
         }
         dispEl.style.display = 'block';
+    }
+    const secContextLeave = () => {
+        const dispEl = document.getElementById('sectionContextDisplay') as HTMLElement;
+        dispEl.style.display = 'none';
+        lastSelectedSec = '';
     }
 </script>
 
@@ -64,11 +69,8 @@
 {:else}
     <div
         class=sectionDispContainer
-        on:mouseleave={() => {
-            const dispEl = document.getElementById('sectionContextDisplay');
-            dispEl.style.display = 'none';
-            lastSelectedSec = undefined;
-        }}
+        role=tooltip
+        on:mouseleave={secContextLeave}
     >
         <div class=sectionDisp>
             <br>
@@ -76,8 +78,12 @@
                 <span
                     class='sectionDispText'
                     style={lastSelectedSec === sec ? 'font-weight:bold;' : ''}
+                    role=button
+                    tabindex="0"
                     on:click={() => secContextDisp(sec)}
+                    on:keydown={() => secContextDisp(sec)}
                     on:mouseover={() => secContextDisp(sec)}
+                    on:focus={() => secContextDisp(sec)}
                 >
                     {@html $sections.headingTexts[sec]}
                 </span>
