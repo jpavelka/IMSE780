@@ -16,7 +16,7 @@
 
 <Heading level=2 refId=lpPostOpt>Post-optimality analysis</Heading>
 <BodyText>
-  After a linear program has been solved, it is often the case that you'd like to consider separate, but similar scenarios for you problem of interest. In the case of our example LP <EquationRef refId=prototypeLp/>, the company might like to know how much the solution would change if they could add another hour of production time to one of their facilities. Additionally, often when a problem is formulated, the exact data (<Math>\A, \b, \c</Math>) that is used is only an estimate, or subject to decisions made by upper management. In these cases we might like to know something about how the objective could change with small updates to these values. These activities all fall under the heading of <em>_post-optimality analysis_</em>  and LP theory gives us some tools for dealing with them.
+  After a linear program has been solved, it is often the case that you'd like to consider separate, but similar scenarios for you problem of interest. In the case of our example LP <EquationRef refId=prototypeLp/>, the company might like to know how much the solution would change if they could add another hour of production time to one of their facilities. Additionally, often when a problem is formulated, the exact data (<Math>\A, \b, \c</Math>) that is used is only an estimate, or subject to decisions made by upper management. In these cases we might like to know something about how the objective could change with small updates to these values. These activities all fall under the heading of <em>post-optimality analysis</em>  and LP theory gives us some tools for dealing with them.
 </BodyText>
 
 <Heading level=3 refId=lpReopt>Re-optimization</Heading>

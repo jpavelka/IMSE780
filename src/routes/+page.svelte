@@ -146,7 +146,7 @@
         margin: 0;
     }
     :global(body *) {
-        scroll-margin-top: 7.5rem;
+        scroll-margin-top: 8rem;
     }
     :global(.basicCenter) {
         position: relative;

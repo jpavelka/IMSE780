@@ -11,14 +11,16 @@ const sections: Writable<{
   numRefs: {[key: string]: number},
   returnIds: {[key: string]: string},
   headingTexts: {[key: string]: string},
-  dispSecNums: {[key: string]: string}
+  dispSecNums: {[key: string]: string},
+  contexts: {[key: string]: string}
 }> = writable({
   hierarchy: [],
   numbers: {},
   numRefs: {},
   returnIds: {},
   headingTexts: {},
-  dispSecNums: {}
+  dispSecNums: {},
+  contexts: {}
 });
 
 const figures: Writable<{

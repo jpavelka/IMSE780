@@ -52,6 +52,9 @@
 </script>
 
 <span style="display:none" class="headingData" bind:this={data}><slot /></span>
+<span style="display:none" id={refId + 'Context'}>
+    <slot name="context" />
+</span>
 {#if (levelInt || 1) === 1 && secNum !== '1'}
     <hr style="margin-top:3rem;margin-bottom:5rem" />
 {/if}

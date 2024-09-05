@@ -38,22 +38,55 @@
             }
         }
     }
+    $: lastSelectedSec = undefined;
+    $: if (!!lastSelectedSec && !secsToDisplay.includes(lastSelectedSec)) {
+        lastSelectedSec = undefined;
+        const dispEl = document.getElementById('sectionContextDisplay');
+        dispEl.style.display = 'none';
+    }
+    const secContextDisp = (sec) => {
+        lastSelectedSec = sec;
+        const contextEl = document.getElementById(sec + 'Context');
+        const dispEl = document.getElementById('sectionContextDisplay');
+        dispEl.innerHTML = `<a href=#${sec} style=color:blue;>Link</a>: `;
+        if (contextEl?.innerHTML !== '') {    
+            dispEl.innerHTML += contextEl?.innerHTML;
+        } else {
+            dispEl.innerHTML += '<span style=color:gray;font-style:italic;>Section description not available<span>'
+        }
+        dispEl.style.display = 'block';
+    }
 </script>
 
 <svelte:window bind:scrollY bind:innerHeight bind:innerWidth />
 {#if doNotShow}
     <span></span>
 {:else}
-    <div class=sectionDispContainer>
+    <div
+        class=sectionDispContainer
+        on:mouseleave={() => {
+            const dispEl = document.getElementById('sectionContextDisplay');
+            dispEl.style.display = 'none';
+            lastSelectedSec = undefined;
+        }}
+    >
         <div class=sectionDisp>
             <br>
             {#each secsToDisplay as sec}
-                <a href={`#${sec}`}>{@html $sections.headingTexts[sec]}</a>
+                <span
+                    class='sectionDispText'
+                    style={lastSelectedSec === sec ? 'font-weight:bold;' : ''}
+                    on:click={() => secContextDisp(sec)}
+                    on:mouseover={() => secContextDisp(sec)}
+                >
+                    {@html $sections.headingTexts[sec]}
+                </span>
                 {#if sec !== secsToDisplay[secsToDisplay.length - 1]}
                     <span style=font-size:0.8rem>&#10095;</span>&nbsp;
                 {/if}
             {/each}
         </div>
+        <div id='sectionContextDisplay' style='display:none;margin-top:0.5rem;'></div>
     </div>
     <br>
     <br>
@@ -67,10 +100,13 @@
         width: 100%;
         border-bottom: 1pt solid gray;
         z-index: 2;
-    }
-    .sectionDisp {
+        font-size: 1.05rem;
         padding-left: 1rem;
         padding-right: 1rem;
         padding-bottom: 0.5rem;
+    }
+    .sectionDispText {
+        color: purple;
+        cursor: pointer;
     }
 </style>

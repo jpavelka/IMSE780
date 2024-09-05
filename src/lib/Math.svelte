@@ -13,12 +13,8 @@
 	let el: HTMLElement;
 	$: {
 		if (!!el) {
-			const parent = el.parentElement || {classList: []}
-			alwaysRender = (
-				(new Set([...parent.classList])).intersection(
-					new Set(["headingData", "svgPlotText", "popup"])
-				).size > 0
-			);
+			const parent = el.parentElement || {classList: []};
+			alwaysRender = ![...parent.classList].includes('bodyText');
 		}
 	}
 </script>

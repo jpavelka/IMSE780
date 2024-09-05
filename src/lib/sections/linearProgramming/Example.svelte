@@ -9,7 +9,12 @@
     import Math from "$lib/Math.svelte";
     import lpExampleData from "$lib/images/lp-example-data.png";
 </script>
-<Heading level="2" refId="exampleLp">An example LP</Heading>
+<Heading level="2" refId="exampleLp">
+    An example LP
+    <span slot='context'>
+        Developing our first example linear program, which we will build on for the duration of the notes. <Math>x_1</Math>
+    </span>
+</Heading>
 
 <BodyText>
     Before we pile up too many definitions, maybe we should see an example problem where we can get more hands-on. The following comes from <CitationRef refId="classText" />, section 3.1.

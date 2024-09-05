@@ -11,7 +11,10 @@
     import Notes from "./Notes.svelte";
 </script>
 
-<Heading level="1" refId="lp">Linear programming</Heading>
+<Heading level="1" refId="lp">
+    Linear programming
+    <span slot=context>Learning about the most important class of optimization problems, the linear program.</span>
+</Heading>
 
 <BodyText>
     In the family of OR techniques, linear programming (LP) is certainly the matriarch. It was among the first methods to be seriously studied and find broad applications. To this day, LPs are relevant and used across industry to inform decision-making and help best make use of scarce resources.
